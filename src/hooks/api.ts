@@ -18,4 +18,4 @@ const useAccount = async () => {
   })
 }
 
-export default { useAccount, decodeToken }
+export { useAccount }

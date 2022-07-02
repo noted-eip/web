@@ -35,22 +35,47 @@ const Input: React.FC<InputHTMLAttributes<HTMLInputElement> & InputProps> = ({
   const backgroundStyles = 'bg-white dark:bg-gray-medium'
   const textStyles = 'dark:text-white'
 
-  const inputElement = (
-    <input
-      className={`${baseStyles} ${backgroundStyles} ${textStyles}`}
-      {...props}
-      onFocus={() => {
-        setFocus(true)
-        if (showError && !isInvalidBlur) {
-          setShowError(false)
-        }
-      }}
-      onBlur={() => {
-        setFocus(false)
-        setShowError(true)
-      }}
-    />
-  )
+  const container = (<div>
+    <div
+      className={`${baseContainerStyles} ${shadowStyles} ${backgroundStyles} ${borderStyles} ${props.disabled ? 'opacity-50' : ''
+      }`}
+    >
+      {leadingText ? (
+        <div className='px-3 py-2 lg:text-base text-gray-500 bg-gray-50 dark:bg-gray-light dark:text-gray-300 border-r border-gray-300 dark:border-gray-500'>
+          {leadingText}
+        </div>
+      ) : null}
+      <input
+        className={`${baseStyles} ${backgroundStyles} ${textStyles}`}
+        {...props}
+        onFocus={() => {
+          setFocus(true)
+          if (showError && !isInvalidBlur) {
+            setShowError(false)
+          }
+        }}
+        onBlur={() => {
+          setFocus(false)
+          setShowError(true)
+        }}
+      />
+
+      {trailingText ? (
+        <div className='px-3 py-2 lg:text-base text-gray-500 bg-gray-50 dark:bg-gray-light dark:text-gray-300 border-l border-gray-300 dark:border-gray-500'>
+          {trailingText}
+        </div>
+      ) : null}
+    </div>
+    <div className='h-4'>
+      {isInvalid || (isInvalidBlur && showError) ? (
+        <p className='mx-2 my-1 text-xs text-red-500'>
+          {errorMessage || tooltip}
+        </p>
+      ) : tooltip && focus ? (
+        <p className='mx-2 my-1 text-xs text-gray-500'>{tooltip}</p>
+      ) : null}
+    </div>
+  </div>)
 
   if (label) {
     return (
@@ -58,35 +83,11 @@ const Input: React.FC<InputHTMLAttributes<HTMLInputElement> & InputProps> = ({
         <span className='mb-1 ml-1 text-gray-600 dark:text-gray-400'>
           {label}
         </span>
-        <div
-          className={`${baseContainerStyles} ${shadowStyles} ${backgroundStyles} ${borderStyles} ${props.disabled ? 'opacity-50' : ''
-          }`}
-        >
-          {leadingText ? (
-            <div className='px-3 py-2 lg:text-base text-gray-500 bg-gray-50 dark:bg-gray-light dark:text-gray-300 border-r border-gray-300 dark:border-gray-500'>
-              {leadingText}
-            </div>
-          ) : null}
-          {inputElement}
-          {trailingText ? (
-            <div className='px-3 py-2 lg:text-base text-gray-500 bg-gray-50 dark:bg-gray-light dark:text-gray-300 border-l border-gray-300 dark:border-gray-500'>
-              {trailingText}
-            </div>
-          ) : null}
-        </div>
-        <div className='h-4'>
-          {isInvalid || (isInvalidBlur && showError) ? (
-            <p className='mx-2 my-1 text-xs text-red-500'>
-              {errorMessage || tooltip}
-            </p>
-          ) : tooltip && focus ? (
-            <p className='mx-2 my-1 text-xs text-gray-500'>{tooltip}</p>
-          ) : null}
-        </div>
+        {container}
       </label>
     )
   }
-  return inputElement
+  return container
 }
 
 export default Input
