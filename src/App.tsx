@@ -1,14 +1,20 @@
 import React from 'react'
 import { QueryClientProvider } from 'react-query'
 import { apiQueryClient } from './lib/api'
-import Router from './views/Router'
+import AuthenticatedRouter from './views/AuthenticatedRouter'
+import { BrowserRouter } from 'react-router-dom'
+import UnauthenticatedRouter from './views/UnauthenticatedRouter'
 
 const App: React.FC = () => {
-  return <div>
+  const [isAuthenticated, setAuthenticated] = React.useState(false)
+
+  return <BrowserRouter>
     <QueryClientProvider client={apiQueryClient}>
-      <Router isAuthenticated={true} />
+      {
+        isAuthenticated ? <AuthenticatedRouter /> : <UnauthenticatedRouter />
+      }
     </QueryClientProvider>
-  </div>
+  </BrowserRouter>
 }
 
 export default App
