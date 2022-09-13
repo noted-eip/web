@@ -32,7 +32,7 @@ const Input: React.FC<InputHTMLAttributes<HTMLInputElement> & InputProps> = ({
     isInvalid || (isInvalidBlur && showError)
       ? 'border border-red-500'
       : 'border border-gray-300 dark:border-gray-500 focus-within:border-blue-500 dark:focus-within:border-blue-500'
-  const backgroundStyles = 'bg-white dark:bg-gray-medium'
+  const backgroundStyles = 'bg-white dark:bg-gray-700'
   const textStyles = 'dark:text-white'
 
   const container = (<div>
