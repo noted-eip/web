@@ -1,8 +1,6 @@
 import jwt_decode from 'jwt-decode'
 import { QueryClient } from 'react-query'
 
-const API_BASE = 'http://localhost:3000'
-
 const apiQueryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -11,17 +9,12 @@ const apiQueryClient = new QueryClient({
   },
 })
 
-type TDecodedToken = {
-  uid: string
-  role: string
-}
-
-const decodeToken = (token: string): TDecodedToken => {
-  const decodedToken = jwt_decode(token) as TDecodedToken
+const decodeToken = (token: string): {uid: string, role: string} => {
+  const decodedToken = jwt_decode(token) as {uid: string, role: string}
   if (decodedToken && decodedToken.uid && decodedToken.role) {
     return decodedToken
   }
   throw new Error('token cannot be decoded, missing fields')
 }
 
-export { apiQueryClient, decodeToken, API_BASE }
+export { apiQueryClient, decodeToken }
