@@ -1,6 +1,7 @@
 import React from 'react'
 import Input from '../../components/form/Input'
 import { useCreateAccount } from '../../hooks/api/accounts'
+import { validateName, validateEmail, validatePassword } from '../../lib/validators'
 
 const SignupView: React.FC = () => {
   const createAccountMutation = useCreateAccount()
@@ -14,9 +15,9 @@ const SignupView: React.FC = () => {
         e.preventDefault()
         createAccountMutation.mutate({email, password, name})
       }}>
-        <Input label='Name' value={name} onChange={(e) => setName(e.target.value as string)} />
-        <Input label='Email' value={email} onChange={(e) => setEmail(e.target.value as string)} />
-        <Input label='Password' type='password' value={password} onChange={(e) => setPassword(e.target.value as string)} />
+        <Input label='Name' value={name} onChange={(e) => setName(e.target.value as string)} isInvalidBlur={!!validateName(name)} errorMessage={validateName(name)} />
+        <Input label='Email' value={email} onChange={(e) => setEmail(e.target.value as string)} isInvalidBlur={!!validateEmail(email)} errorMessage={validateEmail(email)} />
+        <Input label='Password' type='password' value={password} onChange={(e) => setPassword(e.target.value as string)} isInvalidBlur={!!validatePassword(password)} errorMessage={validatePassword(password)} />
         <button className='bg-blue-600 text-white rounded py-2'>Submit</button>
       </form>
     </div>
