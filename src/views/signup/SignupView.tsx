@@ -13,7 +13,6 @@ import { AuthenticateResponse, CreateAccountResponse } from '../../types/api'
 const SignupView: React.FC = () => {
   const navigate = useNavigate()
   const auth = useNoAuthContext()
-  
   const [name, setName] = React.useState('')
   const [nameValid, setNameValid] = React.useState(false)
   const [password, setPassword] = React.useState('')
