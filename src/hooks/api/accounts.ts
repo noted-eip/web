@@ -5,17 +5,11 @@ import { apiQueryClient, decodeToken } from '../../lib/api'
 import { API_BASE } from '../../lib/env'
 import { CreateAccountRequest, CreateAccountResponse, GetAccountRequest } from '../../types/api'
 
-const useCreateAccount = () => {
-  return useMutation(async (req: CreateAccountRequest) => {
-    return await axios.post(`${API_BASE}/accounts`, req)
-  }, { 
-    onSuccess: (data: AxiosResponse<CreateAccountResponse, unknown>) => {
-      apiQueryClient.invalidateQueries(['accounts', data.data.account.id])
-    }
-  })
+export const createAccount = async (req: CreateAccountRequest) => {
+  return await axios.post(`${API_BASE}/accounts`, req)
 }
 
-const useGetAccount = (req: GetAccountRequest) => {
+export const getAccount = (req: GetAccountRequest) => {
   const auth = useAuthContext()
   return useQuery(['accounts', req.id], async () => {
     const token = await auth.token()
@@ -27,5 +21,3 @@ const useGetAccount = (req: GetAccountRequest) => {
     })
   })
 }
-
-export { useGetAccount, useCreateAccount }

@@ -22,3 +22,12 @@ export type GetAccountRequest = {
 export type GetAccountResponse = {
     account: Account;
 }
+
+export type AuthenticateRequest = {
+    email: string;
+    password: string;
+}
+
+export type AuthenticateResponse = {
+    token: string;
+}

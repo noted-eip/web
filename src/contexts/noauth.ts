@@ -24,6 +24,7 @@ export class NoAuthContextManager {
 
   public signin(token: string) {
     localStorage.setItem(LS_AUTH_TOKEN_KEY, token)
+    console.log(this.setToken)
     this.setToken(token)
   }
 

@@ -7,6 +7,7 @@ const AuthenticatedRouter: React.FC = () => {
   return (
     <Routes>
       <Route path='/' element={<HomeView />}></Route>
+      <Route path='*' element={<div>Not Found</div>}></Route>
     </Routes>
   )
 }

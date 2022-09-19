@@ -9,11 +9,13 @@ import UnauthenticatedRouter from './views/UnauthenticatedRouter'
 
 const App: React.FC = () => {
   const [token, setToken] = React.useState<null | string>(null)
+  console.log(token, setToken)
   const noAuthContext = new NoAuthContextManager(setToken)
   const authContext = new AuthContextManager(token, setToken)
 
   React.useEffect(() => {
     noAuthContext.attemptSigninFromLocalStorage()
+    console.log('attemptSigninFromLocalStorage()')
   }, [])
 
   return <div>
