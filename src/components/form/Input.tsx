@@ -32,10 +32,10 @@ const Input: React.FC<InputHTMLAttributes<HTMLInputElement> & InputProps> = ({
     isInvalid || (isInvalidBlur && showError)
       ? 'border border-red-500'
       : 'border border-gray-300 dark:border-gray-500 focus-within:border-blue-500 dark:focus-within:border-blue-500'
-  const backgroundStyles = 'bg-white dark:bg-gray-medium'
+  const backgroundStyles = 'bg-white dark:bg-gray-700'
   const textStyles = 'dark:text-white'
 
-  const container = (<div>
+  const container = (<div className='w-[300px]'>
     <div
       className={`${baseContainerStyles} ${shadowStyles} ${backgroundStyles} ${borderStyles} ${props.disabled ? 'opacity-50' : ''
       }`}
@@ -68,11 +68,11 @@ const Input: React.FC<InputHTMLAttributes<HTMLInputElement> & InputProps> = ({
     </div>
     <div className='h-4'>
       {isInvalid || (isInvalidBlur && showError) ? (
-        <p className='mx-2 my-1 text-xs text-red-500'>
+        <span className='mx-2 my-1 text-xs text-red-500'>
           {errorMessage || tooltip}
-        </p>
+        </span>
       ) : tooltip && focus ? (
-        <p className='mx-2 my-1 text-xs text-gray-500'>{tooltip}</p>
+        <span className='mx-2 my-1 text-xs text-gray-500'>{tooltip}</span>
       ) : null}
     </div>
   </div>)
