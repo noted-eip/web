@@ -1,3 +1,26 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Headings */
+@layer components {
+    h1 {
+        @apply text-xl lg:text-2xl xl:text-3xl font-medium text-gray-800;
+    }
+
+    h2 {
+        @apply text-lg lg:text-xl xl:text-2xl;
+    }
+
+    h3 {
+        @apply text-gray-500 font-semibold uppercase text-sm lg:text-sm xl:text-sm;
+    }
+
+    h4 {
+        @apply text-base font-medium;
+    }
+
+    h5 {
+        @apply text-gray-400 text-xs;
+    }
+}
