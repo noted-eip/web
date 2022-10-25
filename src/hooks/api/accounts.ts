@@ -1,9 +1,9 @@
-import axios, { AxiosResponse } from 'axios'
-import { useMutation, useQuery } from 'react-query'
+import axios from 'axios'
+import { useQuery } from 'react-query'
 import { useAuthContext } from '../../contexts/auth'
-import { apiQueryClient, decodeToken } from '../../lib/api'
+import { decodeToken } from '../../lib/api'
 import { API_BASE } from '../../lib/env'
-import { CreateAccountRequest, CreateAccountResponse, GetAccountRequest } from '../../types/api'
+import { CreateAccountRequest, GetAccountRequest } from '../../types/api'
 
 export const createAccount = async (req: CreateAccountRequest) => {
   return await axios.post(`${API_BASE}/accounts`, req)
