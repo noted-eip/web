@@ -3,13 +3,16 @@ import ReactDOM from 'react-dom/client'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 import './styles/index.css'
+import LocaleManager from './i18n/LocaleManager'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 )
 root.render(
   <React.StrictMode>
+    {/*<LocaleManager>*/}
     <App />
+    {/*</LocaleManager>*/}
   </React.StrictMode>
 )
 
