@@ -7,7 +7,8 @@ export interface INotes {
 
 export interface INote {
   name: string;
-  firstChars: string;
+  firstChars?: string;
+  authorName?: string;
 }
 
 export const fakeGroup: INotes = {
@@ -18,11 +19,11 @@ export const fakeGroup: INotes = {
 }
 
 export const fakeNotes: INote[] = [
-  {name: 'Arithmétique 1', firstChars: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque interdum in metus id porttitor. Phasellus.'},
-  {name: 'Arithmétique 2', firstChars: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque interdum in metus id porttitor. Phasellus.'},
-  {name: 'Blabla 1', firstChars: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque interdum in metus id porttitor. Phasellus.'},
-  {name: 'Blibli 1', firstChars: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque interdum in metus id porttitor. Phasellus.'},
-  {name: 'Kakao 1', firstChars: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque interdum in metus id porttitor. Phasellus.'},
-  {name: 'Musique 1', firstChars: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque interdum in metus id porttitor. Phasellus.'},
-  {name: 'Physique 1', firstChars: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque interdum in metus id porttitor. Phasellus.'}
+  {name: 'Arithmétique 1', firstChars: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque interdum in metus id porttitor. Phasellus.', authorName: 'killian'},
+  {name: 'Arithmétique 2', firstChars: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque interdum in metus id porttitor. Phasellus.', authorName: 'charlie'},
+  {name: 'Blabla 1', firstChars: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque interdum in metus id porttitor. Phasellus.', authorName: 'clément'},
+  {name: 'Blibli 1', firstChars: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque interdum in metus id porttitor. Phasellus.', authorName: 'théo'},
+  {name: 'Kakao 1', firstChars: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque interdum in metus id porttitor. Phasellus.', authorName: 'arthur'},
+  {name: 'Musique 1', firstChars: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque interdum in metus id porttitor. Phasellus.', authorName: 'guillaume'},
+  {name: 'Physique 1', firstChars: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque interdum in metus id porttitor. Phasellus.', authorName: 'julien'}
 ]
