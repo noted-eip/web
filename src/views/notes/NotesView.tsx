@@ -58,7 +58,7 @@ const NotesView: React.FC = () => {
 
   const rowNotesView = (<div>
     {notesHeader}
-    <div className="grid grid-rows-1 gap-1 md:grid-rows-2 md:gap-2 lg:grid-rows-4 lg:gap-4">
+    <div className="grid grid-rows-1 gap-1">
       {noteList.map((e) => {
         return <NoteRec key={e.name} name={e.name} authorName={e.authorName}/>
       })}
