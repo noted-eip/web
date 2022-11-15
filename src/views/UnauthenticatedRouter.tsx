@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom'
 import SigninView from './signin/SigninView'
 import SignupView from './signup/SignupView'
 import WelcomeView from './welcome/WelcomeView'
+import NotesView from './notes/NotesView'
 
 // Describes routes that are available to unauthenticated users.
 const UnauthenticatedRouter: React.FC = () => {
@@ -11,6 +12,7 @@ const UnauthenticatedRouter: React.FC = () => {
       <Route path='/' element={<WelcomeView />}></Route>
       <Route path='/signin' element={<SigninView />}></Route>
       <Route path='/signup' element={<SignupView />}></Route>
+      <Route path='/notes/:id' element={<NotesView />}></Route>
     </Routes>
   )
 }
