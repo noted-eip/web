@@ -1,7 +1,11 @@
 import React from 'react'
+import PanelNavigation from '../components/view/PanelNavigation'
 
 const GroupSettingsPanel: React.FC = () => {
-  return <div></div>
+  return <div className={'mt-xl mx-xl h-full'}>
+    <PanelNavigation />
+    <p>This is the group settings panel</p>
+  </div>
 }
 
 export default GroupSettingsPanel
