@@ -5,11 +5,14 @@ import { TPanelKey, usePanelContext } from '../../contexts/panel'
 
 const HomeView: React.FC = () => {
   const homeViewPanels: TPanelKey[] = ['group-overview', 'group-chat','group-settings']
-  const { panels, setPanels } = usePanelContext()
+  const { activePanel, setActivePanel, panels, setPanels } = usePanelContext()
 
   React.useEffect(() => {
     if (homeViewPanels !== panels) {
       setPanels(homeViewPanels)
+    }
+    if (!homeViewPanels.includes(activePanel)) {
+      setActivePanel(homeViewPanels[0])
     }
   }, [])
 
