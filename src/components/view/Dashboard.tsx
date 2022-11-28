@@ -17,14 +17,14 @@ const Sidebar: React.FC = () => {
   ]
 
   return <div className='border-r border-gray-300 h-screen'>
-    <div className='m-lg mt-xl lg:m-xl'>
+    <div className='m-lg mt-xl xl:m-xl'>
       <img className='h-[36px] w-[36px]' src='https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png' />
-      <Input className='w-full mt-lg hidden lg:block' placeholder='Search' type="text" />
+      <Input className='w-full mt-lg hidden xl:block' placeholder='Search' type="text" />
       <div>
         {links.map((el, idx) => {
           return <Link to={el.path} key={`sidebar-nav-${idx}`} className={`flex first:mt-lg mt-sm hover:bg-gray-100  p-2 cursor-pointer rounded-md ${currentPath == el.path ? 'bg-gray-100' : ''}`}>
             <el.icon className='text-gray-400 h-5 w-5' />
-            <span className='ml-xs text-sm font-medium text-gray-600 hidden lg:block'>{el.title}</span>
+            <span className='ml-xs text-sm font-medium text-gray-600 hidden xl:block'>{el.title}</span>
           </Link>
         })}
       </div>
@@ -52,7 +52,7 @@ const Dashboard: React.FC = () => {
   const [panels, setPanels] = React.useState<TPanelKey[]>([])
 
   return <PanelContext.Provider value={{activePanel, setActivePanel, panels, setPanels}}>
-    <div className='w-screen h-screen bg-white grid grid-cols-[68px_auto_400px] lg:grid-cols-[216px_auto_400px]'>
+    <div className='w-screen h-screen bg-white grid lg:grid-cols-[68px_auto_386px] xl:grid-cols-[216px_auto_400px]'>
       <Sidebar />
       <Outlet />
       <Panel />
