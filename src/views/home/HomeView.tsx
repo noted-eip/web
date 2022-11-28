@@ -1,5 +1,4 @@
 import React from 'react'
-import { ChevronDownIcon } from '@heroicons/react/24/outline'
 import DashboardHeader from '../../components/view/DashboardHeader'
 import { TPanelKey, usePanelContext } from '../../contexts/panel'
 
@@ -26,7 +25,7 @@ const HomeView: React.FC = () => {
       <h2>Home</h2>
     </DashboardHeader>
     <div className='flex'>
-      <div className='border-2 border-dashed border-gray-300 h-48 m-lg xl:m-xl p-xl w-full flex items-center justify-center text-gray-400'>View Body</div>
+      <div className='border-2 border-dashed border-gray-300 h-[1024px] m-lg xl:m-xl p-xl w-full flex items-center justify-center text-gray-400'>View Body</div>
     </div>
   </div>
   

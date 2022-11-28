@@ -2,7 +2,7 @@ import { ChevronDownIcon } from '@heroicons/react/24/solid'
 import React from 'react'
 
 const DashboardHeader: React.FC<React.PropsWithChildren> = (props) => {
-  return <div className='h-[36px] mt-xl mx-lg xl:mx-xl flex items-center justify-between'>
+  return <div className='shadow-[0_20px_7px_0px_rgba(255,255,255,1)] h-[60px] lg:px-lg xl:px-xl sticky top-0 pt-xl bg-white flex items-center justify-between'>
     {props.children}
     <div className='flex items-center'>
       <div className='rounded border border-gray-300 text-sm flex cursor-pointer'>

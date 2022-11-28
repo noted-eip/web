@@ -1,6 +1,6 @@
 import { Cog6ToothIcon, Square2StackIcon, UserIcon } from '@heroicons/react/24/solid'
 import React from 'react'
-import { Link, Outlet } from 'react-router-dom'
+import { Link, Outlet, useLocation } from 'react-router-dom'
 import { PanelContext, TPanelKey, usePanelContext } from '../../contexts/panel'
 import GroupChatPanel from '../../panels/GroupChatPanel'
 import GroupOverviewPanel from '../../panels/GroupOverviewPanel'
@@ -8,7 +8,7 @@ import GroupSettingsPanel from '../../panels/GroupSettingsPanel'
 import Input from '../form/Input'
 
 const Sidebar: React.FC = () => {
-  const currentPath = ''
+  const currentPath = useLocation().pathname
 
   const links = [
     {path: '/', icon: Square2StackIcon, title: 'Home'},
@@ -41,7 +41,7 @@ const panels = [
 const Panel: React.FC = () => {
   const { activePanel: panel } = usePanelContext()
 
-  return <div className='h-screen border-l border-gray-300 hidden lg:block'>
+  return <div className='h-screen border-l border-gray-300 hidden lg:block overflow-x-hidden overflow-y-scroll'>
     {panels.map((el, idx) => <div key={`panel-${el.key}-${idx}`} className={`${panel == el.key ? '' : 'hidden'}`}><el.component /></div>)}
   </div>
 }
@@ -54,7 +54,9 @@ const Dashboard: React.FC = () => {
   return <PanelContext.Provider value={{activePanel, setActivePanel, panels, setPanels}}>
     <div className='w-screen h-screen bg-white grid grid-cols-[auto] md:grid-cols-[68px_auto] lg:grid-cols-[68px_auto_386px] xl:grid-cols-[216px_auto_400px]'>
       <Sidebar />
-      <Outlet />
+      <div className='overflow-y-scroll'>
+        <Outlet />
+      </div>
       <Panel />
     </div>
   </PanelContext.Provider>
