@@ -2,8 +2,8 @@ import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 import Dashboard from '../components/view/Dashboard'
 import HomeView from './home/HomeView'
-import ProfileView from './home/ProfileView'
-import SettingsView from './home/SettingsView'
+import ProfileView from './profile/ProfileView'
+import SettingsView from './settings/SettingsView'
 
 // Describes routes that are available to authenticated users.
 const AuthenticatedRouter: React.FC = () => {

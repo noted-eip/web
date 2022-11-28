@@ -5,7 +5,7 @@ import { panelMetadata } from '../../lib/panels'
 const PanelNavigation: React.FC = () => {
   const { activePanel, setActivePanel, panels } = usePanelContext()
 
-  return <div className='h-[36px] w-full grid grid-flow-col mb-lg'>
+  return <div className='h-[36px] w-full grid grid-flow-col lg:mb-lg xl:mb-xl'>
     {panels.map((panelKey, idx) => {
       const md = panelMetadata[panelKey]
       return <div key={`panel-navigation-${panelKey}-${idx}`} className='flex items-center justify-center'>

@@ -4,7 +4,9 @@ import PanelNavigation from '../components/view/PanelNavigation'
 const GroupOverviewPanel: React.FC = () => {
   return <div className={'mt-xl lg:mx-lg xl:mx-xl h-full'}>
     <PanelNavigation />
-    <p>This is the group overview panel</p>
+    <div className='flex'>
+      <div className='border-2 border-dashed border-gray-300 h-48 w-full flex items-center justify-center text-gray-400'>Overview Panel</div>
+    </div>
   </div>
 }
 

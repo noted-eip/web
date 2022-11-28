@@ -16,7 +16,7 @@ const Sidebar: React.FC = () => {
     {path: '/settings', icon: Cog6ToothIcon, title: 'Settings'},
   ]
 
-  return <div className='border-r border-gray-300 h-screen'>
+  return <div className='border-r border-gray-300 h-screen hidden md:block'>
     <div className='m-lg mt-xl xl:m-xl'>
       <img className='h-[36px] w-[36px]' src='https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png' />
       <Input className='w-full mt-lg hidden xl:block' placeholder='Search' type="text" />
@@ -41,7 +41,7 @@ const panels = [
 const Panel: React.FC = () => {
   const { activePanel: panel } = usePanelContext()
 
-  return <div className='h-screen border-l border-gray-300'>
+  return <div className='h-screen border-l border-gray-300 hidden lg:block'>
     {panels.map((el, idx) => <div key={`panel-${el.key}-${idx}`} className={`${panel == el.key ? '' : 'hidden'}`}><el.component /></div>)}
   </div>
 }
@@ -52,7 +52,7 @@ const Dashboard: React.FC = () => {
   const [panels, setPanels] = React.useState<TPanelKey[]>([])
 
   return <PanelContext.Provider value={{activePanel, setActivePanel, panels, setPanels}}>
-    <div className='w-screen h-screen bg-white grid lg:grid-cols-[68px_auto_386px] xl:grid-cols-[216px_auto_400px]'>
+    <div className='w-screen h-screen bg-white grid grid-cols-[auto] md:grid-cols-[68px_auto] lg:grid-cols-[68px_auto_386px] xl:grid-cols-[216px_auto_400px]'>
       <Sidebar />
       <Outlet />
       <Panel />
