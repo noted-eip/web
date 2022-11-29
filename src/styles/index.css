@@ -15,7 +15,7 @@
     }
 
     h2 {
-        @apply text-lg lg:text-xl xl:text-2xl text-gray-800;
+        @apply text-xl xl:text-2xl text-gray-800;
     }
 
     h3 {

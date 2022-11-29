@@ -1,50 +1,8 @@
-import { Cog6ToothIcon, Square2StackIcon, UserIcon } from '@heroicons/react/24/solid'
 import React from 'react'
-import { Link, Outlet, useLocation } from 'react-router-dom'
-import { PanelContext, TPanelKey, usePanelContext } from '../../contexts/panel'
-import GroupChatPanel from '../../panels/GroupChatPanel'
-import GroupOverviewPanel from '../../panels/GroupOverviewPanel'
-import GroupSettingsPanel from '../../panels/GroupSettingsPanel'
-import Input from '../form/Input'
-
-const Sidebar: React.FC = () => {
-  const currentPath = useLocation().pathname
-
-  const links = [
-    {path: '/', icon: Square2StackIcon, title: 'Home'},
-    {path: '/profile', icon: UserIcon, title: 'Profile'},
-    {path: '/settings', icon: Cog6ToothIcon, title: 'Settings'},
-  ]
-
-  return <div className='border-r border-gray-300 h-screen hidden md:block'>
-    <div className='m-lg mt-xl xl:m-xl'>
-      <img className='h-[36px] w-[36px]' src='https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png' />
-      <Input className='w-full mt-lg hidden xl:block' placeholder='Search' type="text" />
-      <div>
-        {links.map((el, idx) => {
-          return <Link to={el.path} key={`sidebar-nav-${idx}`} className={`flex first:mt-lg mt-sm hover:bg-gray-100  p-2 cursor-pointer rounded-md ${currentPath == el.path ? 'bg-gray-100' : ''}`}>
-            <el.icon className='text-gray-400 h-5 w-5' />
-            <span className='ml-xs text-sm font-medium text-gray-600 hidden xl:block'>{el.title}</span>
-          </Link>
-        })}
-      </div>
-    </div>
-  </div>
-}
-
-const panels = [
-  {key: 'group-overview', component: GroupOverviewPanel},
-  {key: 'group-chat', component: GroupChatPanel},
-  {key: 'group-settings', component: GroupSettingsPanel},
-]
-
-const Panel: React.FC = () => {
-  const { activePanel: panel } = usePanelContext()
-
-  return <div className='h-screen border-l border-gray-300 hidden lg:block overflow-x-hidden overflow-y-scroll'>
-    {panels.map((el, idx) => <div key={`panel-${el.key}-${idx}`} className={`${panel == el.key ? '' : 'hidden'}`}><el.component /></div>)}
-  </div>
-}
+import { Outlet } from 'react-router-dom'
+import { PanelContext, TPanelKey } from '../../contexts/panel'
+import { Panel } from './Panel'
+import { Sidebar } from './Sidebar'
 
 // Dashboard is the parent component of most views in the application.
 const Dashboard: React.FC = () => {
@@ -54,9 +12,7 @@ const Dashboard: React.FC = () => {
   return <PanelContext.Provider value={{activePanel, setActivePanel, panels, setPanels}}>
     <div className='w-screen h-screen bg-white grid grid-cols-[auto] md:grid-cols-[68px_auto] lg:grid-cols-[68px_auto_386px] xl:grid-cols-[216px_auto_400px]'>
       <Sidebar />
-      <div className='overflow-y-scroll'>
-        <Outlet />
-      </div>
+      <Outlet />
       <Panel />
     </div>
   </PanelContext.Provider>
