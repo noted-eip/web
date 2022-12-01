@@ -2,7 +2,7 @@ import { AxiosResponse } from 'axios'
 import React from 'react'
 import { useMutation } from 'react-query'
 import { useNavigate } from 'react-router-dom'
-import Input from '../../components/form/Input'
+import OldInput from '../../components/form/OldInput'
 import { useNoAuthContext } from '../../contexts/noauth'
 import { authenticate } from '../../hooks/api/authenticate'
 import { validateEmail } from '../../lib/validators'
@@ -30,7 +30,7 @@ const SigninView: React.FC = () => {
         e.preventDefault()
         authenticateMutation.mutate({email, password})
       }}>
-        <Input 
+        <OldInput 
           label='Email'
           value={email}
           onChange={(e) => {
@@ -40,7 +40,7 @@ const SigninView: React.FC = () => {
           }}
           isInvalidBlur={!emailValid}
           errorMessage='Invalid email address' />
-        <Input
+        <OldInput
           label='Password'
           type='password'
           value={password}

@@ -5,7 +5,19 @@ module.exports = {
     './src/**/*.{js,jsx,ts,tsx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      spacing: {
+        '2xl': '32px',
+        'xl': '24px',
+        'lg': '16px',
+        'md': '12px',
+        'sm': '8px',
+        'xs': '6px',
+        'xxs': '4px',
+      }
+    }
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/forms'),
+  ],
 }

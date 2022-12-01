@@ -2,7 +2,7 @@ import { AxiosResponse } from 'axios'
 import React from 'react'
 import { useMutation } from 'react-query'
 import { useNavigate } from 'react-router-dom'
-import Input from '../../components/form/Input'
+import OldInput from '../../components/form/OldInput'
 import { useNoAuthContext } from '../../contexts/noauth'
 import { createAccount } from '../../hooks/api/accounts'
 import { authenticate } from '../../hooks/api/authenticate'
@@ -41,7 +41,7 @@ const SignupView: React.FC = () => {
         e.preventDefault()
         createAccountMutation.mutate({email, password, name})
       }}>
-        <Input
+        <OldInput
           label='Name'
           value={name}
           onChange={(e) => {
@@ -51,7 +51,7 @@ const SignupView: React.FC = () => {
           }}
           isInvalidBlur={!nameValid}
           errorMessage='Invalid name'/>
-        <Input 
+        <OldInput 
           label='Email'
           value={email}
           onChange={(e) => {
@@ -61,7 +61,7 @@ const SignupView: React.FC = () => {
           }}
           isInvalidBlur={!emailValid}
           errorMessage='Invalid email address' />
-        <Input
+        <OldInput
           label='Password'
           type='password'
           tooltip='6 characters, letters numbers and symbols'
