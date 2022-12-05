@@ -2,6 +2,7 @@ import React from 'react'
 import {fakeGroup} from './fakeNotesData'
 import {fakeNotes} from './fakeNotesData'
 import NoteCard from '../../components/card/NoteCard'
+import {Accordion} from '../../components/accordion/Accordion'
 // import NoteRec from '../../components/card/NoteRec'
 
 const NotesView: React.FC = () => {
@@ -67,6 +68,7 @@ const NotesView: React.FC = () => {
       </div>
     </form>)
 
+  // TODO: this is the note list of the group detail page
   const colNotesView = (<div>
     <div className="grid grid-cols-1 gap-1 md:grid-cols-2 md:gap-2 lg:grid-cols-4 lg:gap-4">
       {noteList.map((e) => {
@@ -75,29 +77,27 @@ const NotesView: React.FC = () => {
     </div>
   </div>)
 
+  const notesAccordion = (
+    <div>
+      <Accordion title="Oui" content="J'aime les chattes"/>
+    </div>
+  )
+
+  // TODO: put the add button at the end (is it better to use a grid or a flex)
   return (<div className="m-3">
     {/*{notesHeaderUp}*/}
     <div className="flex item-center mb-2">
       <h2 className="flex-initial w-64 text-3xl text-left font-bold"> Mes notes </h2>
-      {/*      <button type="submit" className="flex-initial w-auto space-x-2 p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg rounded-l-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-l-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-          strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+      <button className="flex space-x-2 items-center px-3 py-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md drop-shadow-md">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
         </svg>
-        <span className="text-black">Ajouter une nouvelle note</span>
-      </button>*/}
-      <button className="flex space-x-2 items-center px-3 py-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 rounded-md drop-shadow-md">
-        <svg className="fill-[#1E1E1E]" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20"
-          viewBox="0 0 24 24">
-          <path
-            d="M 10 2 L 9 3 L 3 3 L 3 5 L 21 5 L 21 3 L 15 3 L 14 2 L 10 2 z M 4.3652344 7 L 5.8925781 20.263672 C 6.0245781 21.253672 6.877 22 7.875 22 L 16.123047 22 C 17.121047 22 17.974422 21.254859 18.107422 20.255859 L 19.634766 7 L 4.3652344 7 z">
-          </path>
-        </svg>
-        <span className="text-[#1E1E1E]">Delete</span>
+        <span className="text-[#1E1E1E]">Ajouter une nouvelle note</span>
       </button>
     </div>
     {searchBar}
-    {colNotesView}
+    {/*{colNotesView}*/}
+    {notesAccordion}
   </div>)
 }
 
