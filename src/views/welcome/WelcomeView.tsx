@@ -10,6 +10,8 @@ const WelcomeView: React.FC = () => {
       <Link to='/signup'>Go to the /signup page!</Link>
       <br/>
       <Link to='/notes/:id'>Go to the /notes page!</Link>
+      <br/>
+      <Link to='/tests'>Go to the /tests page!</Link>
     </div>
   )
 }
