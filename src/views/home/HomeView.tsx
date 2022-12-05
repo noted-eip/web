@@ -1,20 +1,11 @@
 import React from 'react'
-import Input from '../../components/form/Input'
+import NotesView from '../notes/NotesView'
+import ViewSkeleton from '../../components/view/ViewSkeleton'
 
 const HomeView: React.FC = () => {
-  const [text, setText] = React.useState('')
-  const [invalid, setInvalid] = React.useState(false)
-
-  return (
-    <div className='flex justify-center items-center w-screen h-screen'>
-      <div>
-        <Input value={text} tooltip='Example tooltip' label='Message' errorMessage='Way too long!' isInvalid={invalid} onChange={(e) => {
-          setText(e.target.value)
-          setInvalid(e.target.value.length > 5)
-        }} />
-      </div>
-    </div>
-  )
+  return <ViewSkeleton title='Home' panels={['group-overview', 'group-chat','group-settings']}>
+    <div className='border-2 border-dashed border-gray-300 mb-lg xl:mb-xl h-[1024px] mx-lg xl:mx-xl w-full flex justify-center text-gray-400'><NotesView /></div>
+  </ViewSkeleton>
 }
 
 export default HomeView

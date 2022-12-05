@@ -70,7 +70,7 @@ const NotesView: React.FC = () => {
 
   // TODO: this is the note list of the group detail page
   const colNotesView = (<div>
-    <div className="grid grid-cols-1 gap-1 md:grid-cols-2 md:gap-2 lg:grid-cols-4 lg:gap-4">
+    <div className="grid grid-cols-1 gap-1 md:grid-cols-2 md:gap-2 lg:grid-cols-3 lg:gap-3">
       {noteList.map((e) => {
         return <NoteCard key={e.name} name={e.name} firstChars={e.firstChars}/>
       })}
