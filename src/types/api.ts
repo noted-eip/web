@@ -4,6 +4,12 @@ export type Account = {
     email: string;
 }
 
+export type Note = {
+    id: string;
+    title: string;
+    content?: string[];
+}
+
 export type CreateAccountRequest = {
     name: string;
     email: string;
@@ -30,4 +36,12 @@ export type AuthenticateRequest = {
 
 export type AuthenticateResponse = {
     token: string;
+}
+
+export type CreateNoteRequest = {
+    note: Note;
+}
+
+export type GetNoteRequest = {
+    note: Note;
 }
