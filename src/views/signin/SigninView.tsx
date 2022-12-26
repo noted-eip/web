@@ -6,7 +6,7 @@ import OldInput from '../../components/form/OldInput'
 import { useNoAuthContext } from '../../contexts/noauth'
 import { authenticate } from '../../hooks/api/authenticate'
 import { validateEmail } from '../../lib/validators'
-import { AuthenticateResponse } from '../../types/api'
+import { AuthenticateResponse } from '../../types/api/accounts'
 
 const SigninView: React.FC = () => {
   const navigate = useNavigate()

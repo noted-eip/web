@@ -3,7 +3,7 @@ import { useQuery } from 'react-query'
 import { useAuthContext } from '../../contexts/auth'
 import { decodeToken } from '../../lib/api'
 import { API_BASE } from '../../lib/env'
-import { CreateAccountRequest, GetAccountRequest } from '../../types/api'
+import { CreateAccountRequest, GetAccountRequest } from '../../types/api/accounts'
 
 export const createAccount = async (req: CreateAccountRequest) => {
   return await axios.post(`${API_BASE}/accounts`, req)
