@@ -21,3 +21,11 @@ export type GetGroupRequest = {
 export type GetGroupResponse = {
     group: Group;
 }
+
+export type UpdateGroupRequest = {
+    group_id: string;
+}
+
+export type UpdateGroupResponse = {
+    group: Group;
+}

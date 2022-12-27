@@ -1,8 +1,9 @@
 import { Menu, Transition } from '@headlessui/react'
 import { PlusIcon } from '@heroicons/react/24/outline'
-import { ChevronDownIcon } from '@heroicons/react/24/solid'
+import { ChevronDownIcon, UserIcon } from '@heroicons/react/24/solid'
 import React from 'react'
 import { useGroupContext } from '../../contexts/group'
+import { useGetGroup } from '../../hooks/api/groups'
 import { Group } from '../../types/api/groups'
 
 const GroupSelectDropdownItem: React.FC<{group: Group}> = props => {
@@ -16,26 +17,7 @@ const GroupSelectDropdownItem: React.FC<{group: Group}> = props => {
 
 const GroupSelectDropdown: React.FC = () => {
   const groupContext = useGroupContext()
-  const groups: Group[] = [
-    {
-      id: '1234',
-      name: 'Noted 2022',
-      description: 'Not much to see here',
-      created_at: '2022'
-    },
-    {
-      id: '1244',
-      name: 'Advanced Computing THU',
-      description: 'Not much to see here',
-      created_at: '2022'
-    },
-    {
-      id: '1254',
-      name: 'Epitech Promo 2024',
-      description: 'Not much to see here',
-      created_at: '2022'
-    }
-  ]
+  const getGroupQ = useGetGroup({ group_id: groupContext.groupID as string })
 
   return <div>
     <Menu as='div' className='relative'>
@@ -45,13 +27,15 @@ const GroupSelectDropdown: React.FC = () => {
             {
               groupContext.groupID === null ? 
                 <React.Fragment>
-                  <div className='h-6 w-6 ml-1 bg-gray-200 rounded' />
+                  <UserIcon className='h-4 w-4 mx-2 text-gray-500' />
                   <p className='text-gray-700 text-sm font-normal pl-2'>Select a group</p>
                 </React.Fragment>
                 :
                 <React.Fragment>
-                  <img className='h-8 w-8 p-[1px] mr-[3px]' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJjxQSevxZSdV9xXy7LWCvgmJTAKaeaF3Kj0GWU_FrypKqrlN3xZOD9r125HbaO9SauK0&usqp=CAU' />
-                  Noted 2022
+                  <UserIcon className='h-4 w-4 mx-2 text-gray-500' />
+                  {
+                    getGroupQ.isSuccess ? getGroupQ.data?.data.group.name : <div className='h-4 w-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded animate-pulse'></div>
+                  }
                 </React.Fragment>
             }
           </div>
@@ -70,9 +54,9 @@ const GroupSelectDropdown: React.FC = () => {
         leaveTo="transform opacity-0 scale-95"
       >
         <Menu.Items className="absolute right-0 mt-1 w-72 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          {
+          {/* {
             groups.map((el, idx) => <GroupSelectDropdownItem group={el} key={`group-select-dropdown-group-${el.id}-${idx}`} />)
-          }
+          } */}
           <div className='px-4 py-3 text-sm flex items-center text-gray-700 cursor-pointer hover:bg-gray-100'>
             <PlusIcon className='text-gray-400 h-6 w-6 mr-3' />
             Create a group
