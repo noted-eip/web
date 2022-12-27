@@ -14,6 +14,10 @@ export type CreateGroupResponse = {
     group: Group;
 }
 
+export type GetGroupRequest = {
+    group_id: string;    
+}
+
 export type GetGroupResponse = {
     group: Group;
 }

@@ -7,7 +7,7 @@ import { Group } from '../../types/api/groups'
 
 const GroupSelectDropdownItem: React.FC<{group: Group}> = props => {
   return <Menu.Item>
-    {(active) => <div className='px-4 py-3 text-sm flex items-center cursor-pointer hover:bg-gray-100'>
+    {() => <div className='px-4 py-3 text-sm flex items-center cursor-pointer hover:bg-gray-100'>
       <img className='rounded bg-gray-300 h-6 w-6 mr-3' />
       {props.group.name}
     </div>}
@@ -45,8 +45,8 @@ const GroupSelectDropdown: React.FC = () => {
             {
               groupContext.groupID === null ? 
                 <React.Fragment>
-                  <div className='h-7 w-7 ml-1 bg-gray-200 rounded' />
-                  <p className='text-gray-700 text-sm font-normal pl-1'>Select a group</p>
+                  <div className='h-6 w-6 ml-1 bg-gray-200 rounded' />
+                  <p className='text-gray-700 text-sm font-normal pl-2'>Select a group</p>
                 </React.Fragment>
                 :
                 <React.Fragment>

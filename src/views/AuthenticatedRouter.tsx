@@ -14,7 +14,7 @@ const AuthenticatedRouter: React.FC = () => {
   React.useEffect(() => {
     const lsGroupID = window.localStorage.getItem(LS_GROUP_ID_KEY)
     if (lsGroupID !== null) {
-      setGroupID(groupID)
+      setGroupID(lsGroupID)
     }
   }, [])
 
