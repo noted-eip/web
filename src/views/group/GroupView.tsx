@@ -4,8 +4,6 @@ import { Outlet, useNavigate, useParams } from 'react-router-dom'
 import ViewSkeleton from '../../components/view/ViewSkeleton'
 import { useGroupContext } from '../../contexts/group'
 import { useCreateGroup } from '../../hooks/api/groups'
-import GroupViewBody from './GroupViewNotesTab'
-import GroupViewMenu from './GroupViewMenu'
 
 const NoGroupEmptyState: React.FC = () => {
   const createGroupQ = useCreateGroup()

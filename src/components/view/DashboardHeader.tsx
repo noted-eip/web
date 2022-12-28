@@ -1,6 +1,6 @@
 import { Menu, Transition } from '@headlessui/react'
 import { PlusIcon } from '@heroicons/react/24/outline'
-import { ChevronDownIcon, UserIcon } from '@heroicons/react/24/solid'
+import { ChevronDownIcon } from '@heroicons/react/24/solid'
 import React from 'react'
 import { useAuthContext } from '../../contexts/auth'
 import { useGroupContext } from '../../contexts/group'
@@ -64,7 +64,7 @@ const GroupSelectDropdown: React.FC = () => {
           {
             listGroupsQ.isSuccess ?
               listGroupsQ.data.data.groups.map((el, idx) => <GroupSelectDropdownItem key={`group-select-dropdown-group-${el.id}-${idx}`} onClick={() => {groupContext.changeGroup(el.id)}} >
-                <img className='rounded bg-gray-200 h-6 w-6 mr-3' />
+                <div className='rounded bg-gradient-to-br from-orange-400 to-pink-400 h-6 w-6 mr-3' />
                 {el.name}
               </GroupSelectDropdownItem>) 
               :

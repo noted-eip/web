@@ -23,7 +23,8 @@ export type GetGroupResponse = {
 }
 
 export type UpdateGroupRequest = {
-    group_id: string;
+    group: Partial<Group>;
+    update_mask: {paths: string[]}
 }
 
 export type UpdateGroupResponse = {
