@@ -34,12 +34,12 @@ const GroupSelectDropdown: React.FC = () => {
             {
               groupContext.groupID === null ? 
                 <React.Fragment>
-                  <UserIcon className='h-4 w-4 mx-2 text-gray-500' />
+                  <div className='h-4 w-4 mx-2 bg-gradient-to-br from-orange-400 to-pink-400 rounded' />
                   <p className='text-gray-700 text-sm font-normal pl-2'>Select a group</p>
                 </React.Fragment>
                 :
                 <React.Fragment>
-                  <UserIcon className='h-4 w-4 mx-2 text-gray-500' />
+                  <div className='h-4 w-4 mx-2 bg-gradient-to-br from-orange-400 to-pink-400 rounded' />
                   {
                     getGroupQ.isSuccess ? getGroupQ.data?.data.group.name : <div className='h-4 w-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded animate-pulse'></div>
                   }

@@ -30,3 +30,7 @@
         @apply text-gray-400 text-xs;
     }
 }
+
+.skeleton {
+    @apply rounded bg-gradient-to-br animate-pulse from-gray-100 to-gray-200
+}

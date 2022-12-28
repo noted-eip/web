@@ -1,4 +1,5 @@
-import { ChatBubbleLeftIcon, Cog6ToothIcon, UserIcon } from '@heroicons/react/24/solid'
+import { BoltIcon, ChatBubbleLeftIcon, Cog6ToothIcon, UserIcon } from '@heroicons/react/24/solid'
+import GroupActivityPanel from '../panels/GroupActivityPanel'
 import GroupChatPanel from '../panels/GroupChatPanel'
 import GroupOverviewPanel from '../panels/GroupOverviewPanel'
 import GroupSettingsPanel from '../panels/GroupSettingsPanel'
@@ -8,6 +9,11 @@ export const panelMetadata = {
     displayName: 'Chat',
     icon: ChatBubbleLeftIcon,
     component: GroupChatPanel,
+  },
+  'group-activity': {
+    displayName: 'Activity',
+    icon: BoltIcon,
+    component: GroupActivityPanel,
   },
   'group-settings': {
     displayName: 'Settings',

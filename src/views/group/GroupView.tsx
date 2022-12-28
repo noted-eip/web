@@ -1,8 +1,11 @@
 import { CheckIcon, PlusIcon, UserPlusIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import React from 'react'
+import { Outlet, useNavigate, useParams } from 'react-router-dom'
 import ViewSkeleton from '../../components/view/ViewSkeleton'
 import { useGroupContext } from '../../contexts/group'
 import { useCreateGroup } from '../../hooks/api/groups'
+import GroupViewBody from './GroupViewNotesTab'
+import GroupViewMenu from './GroupViewMenu'
 
 const NoGroupEmptyState: React.FC = () => {
   const createGroupQ = useCreateGroup()
@@ -56,14 +59,36 @@ const NoGroupEmptyState: React.FC = () => {
   </div>
 }
 
-const HomeView: React.FC = () => {
+const GroupView: React.FC = () => {
   const groupContext = useGroupContext()
+  const routerParams = useParams()
+  const navigate = useNavigate()
+  const [isLoading, setIsLoading] = React.useState(true)
 
-  return <ViewSkeleton title='Home' panels={['group-overview', 'group-chat','group-settings']}>
-    <div className='mb-lg xl:mb-xl mx-lg xl:mx-xl w-full flex items-center justify-center'>
-      {groupContext.groupID === null ? <NoGroupEmptyState /> : <div>Full State</div>}
-    </div>
+  React.useEffect(() => {
+    if (groupContext.groupID && !routerParams.groupId) {
+      navigate(`/group/${groupContext.groupID}`)
+    }  
+    if (routerParams.groupId && routerParams.groupId !== groupContext.groupID) {
+      groupContext.changeGroup(routerParams.groupId)
+    }
+    setIsLoading(false)
+  })
+  
+  if (isLoading) {
+    return <div></div>
+  }
+
+  return <ViewSkeleton title='Home' panels={['group-activity', 'group-chat']}>
+    {
+      groupContext.groupID ?
+        <div className='mb-lg mx-lg xl:mb-xl xl:mx-xl w-full'>  
+          <Outlet />
+        </div>
+        :
+        <NoGroupEmptyState />
+    }
   </ViewSkeleton>
 }
 
-export default HomeView
+export default GroupView

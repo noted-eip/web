@@ -11,16 +11,18 @@ const App: React.FC = () => {
   const [token, setToken] = React.useState<null | string>(null)
   const noAuthContext = new NoAuthContextManager(setToken)
   const authContext = new AuthContextManager(token, setToken)
+  const [hasLoaded, setHasLoaded] = React.useState(false)
 
   React.useEffect(() => {
     noAuthContext.attemptSigninFromLocalStorage()
+    setHasLoaded(true)
   }, [])
 
   return <div>
     <BrowserRouter>
       <QueryClientProvider client={apiQueryClient}>
         {
-          token !== null ?
+          !hasLoaded ? <div /> : token !== null ?
             <AuthContext.Provider value={authContext}>
               <AuthenticatedRouter />
             </AuthContext.Provider>
