@@ -29,3 +29,13 @@ export type UpdateGroupRequest = {
 export type UpdateGroupResponse = {
     group: Group;
 }
+
+export type ListGroupsRequest = {
+    account_id: string;
+    offset?: number;
+    limit?: number;
+}
+
+export type ListGroupsResponse = {
+    groups: Group[];
+}

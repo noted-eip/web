@@ -2,22 +2,29 @@ import { Menu, Transition } from '@headlessui/react'
 import { PlusIcon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, UserIcon } from '@heroicons/react/24/solid'
 import React from 'react'
+import { useAuthContext } from '../../contexts/auth'
 import { useGroupContext } from '../../contexts/group'
-import { useGetGroup } from '../../hooks/api/groups'
-import { Group } from '../../types/api/groups'
+import { useCreateGroup, useGetGroup, useListGroups } from '../../hooks/api/groups'
+import LoaderIcon from '../icons/LoaderIcon'
 
-const GroupSelectDropdownItem: React.FC<{group: Group}> = props => {
+const GroupSelectDropdownItem: React.FC<React.PropsWithChildren & { onClick?: undefined | (() => void) }> = props => {
   return <Menu.Item>
-    {() => <div className='px-4 py-3 text-sm flex items-center cursor-pointer hover:bg-gray-100'>
-      <img className='rounded bg-gray-300 h-6 w-6 mr-3' />
-      {props.group.name}
+    {() => <div className='px-4 py-3 text-sm flex items-center cursor-pointer hover:bg-gray-100' onClick={props.onClick}>
+      {props.children}
     </div>}
   </Menu.Item>
 }
 
 const GroupSelectDropdown: React.FC = () => {
+  const auth = useAuthContext()
   const groupContext = useGroupContext()
   const getGroupQ = useGetGroup({ group_id: groupContext.groupID as string })
+  const listGroupsQ = useListGroups({ account_id: auth.userID })
+  const createGroupQ = useCreateGroup({
+    onSuccess: (data) => {
+      groupContext.changeGroup(data.data.group.id)
+    }
+  })
 
   return <div>
     <Menu as='div' className='relative'>
@@ -54,12 +61,36 @@ const GroupSelectDropdown: React.FC = () => {
         leaveTo="transform opacity-0 scale-95"
       >
         <Menu.Items className="absolute right-0 mt-1 w-72 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          {
+            listGroupsQ.isSuccess ?
+              listGroupsQ.data.data.groups.map((el, idx) => <GroupSelectDropdownItem key={`group-select-dropdown-group-${el.id}-${idx}`} onClick={() => {groupContext.changeGroup(el.id)}} >
+                <img className='rounded bg-gray-200 h-6 w-6 mr-3' />
+                {el.name}
+              </GroupSelectDropdownItem>) 
+              :
+              <GroupSelectDropdownItem>
+                <div className='rounded bg-gradient-to-br animate-pulse from-gray-100 to-gray-200 h-6 w-6 mr-3' />
+                <p className='h-4 w-32 animate-pulse bg-gradient-to-br from-gray-100 to-gray-200 rounded'></p>
+              </GroupSelectDropdownItem>
+          }
           {/* {
             groups.map((el, idx) => <GroupSelectDropdownItem group={el} key={`group-select-dropdown-group-${el.id}-${idx}`} />)
           } */}
-          <div className='px-4 py-3 text-sm flex items-center text-gray-700 cursor-pointer hover:bg-gray-100'>
-            <PlusIcon className='text-gray-400 h-6 w-6 mr-3' />
-            Create a group
+          <div className='px-4 py-3 text-sm flex items-center text-gray-700 cursor-pointer hover:bg-gray-100' onClick={() => {
+            createGroupQ.mutate({ name: 'My Group', description: 'Created on ' + (new Date()).toDateString() })
+          }}>
+            {
+              createGroupQ.isLoading ?
+                <React.Fragment>
+                  <LoaderIcon className='text-gray-400 h-6 w-6 mr-3' />
+                  Creating...
+                </React.Fragment>
+                :
+                <React.Fragment>
+                  <PlusIcon className='text-gray-400 h-6 w-6 mr-3' />
+                  Create a group
+                </React.Fragment>
+            }
           </div>
         </Menu.Items>
       </Transition>

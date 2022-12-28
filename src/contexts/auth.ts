@@ -1,7 +1,9 @@
 import React from 'react'
+import { decodeToken } from '../lib/api'
 import { LS_AUTH_TOKEN_KEY } from '../lib/constants'
 
 type TAuthContext = {
+  userID: string
   logout: () => void
   token: () => Promise<string>
 };
@@ -19,10 +21,15 @@ export const useAuthContext = () => {
 }
 
 export class AuthContextManager {
-  constructor(private _token: string | null, private _setToken: React.Dispatch<React.SetStateAction<null | string>>) {}
+  constructor(private _token: string | null, private _setToken: React.Dispatch<React.SetStateAction<null | string>>) {
+    this.userID = this._token ? decodeToken(this._token).uid : ''
+  }
+
+  public userID: string
 
   public logout() {
     localStorage.removeItem(LS_AUTH_TOKEN_KEY)
+    this.userID = ''
     this._setToken(null)
   }
 
