@@ -6,7 +6,12 @@ import { useGroupContext } from '../../contexts/group'
 import { useCreateGroup } from '../../hooks/api/groups'
 
 const NoGroupEmptyState: React.FC = () => {
-  const createGroupQ = useCreateGroup()
+  const groupContext = useGroupContext()
+  const createGroupQ = useCreateGroup({
+    onSuccess: (data) => {
+      groupContext.changeGroup(data.data.group.id)
+    },
+  })
 
   return <div className='flex w-full h-full flex-col items-center pt-12'>
     <UserPlusIcon className='h-12 w-12 text-gray-400 stroke-1' />

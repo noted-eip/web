@@ -30,21 +30,13 @@ const GroupSelectDropdown: React.FC = () => {
     <Menu as='div' className='relative'>
       <Menu.Button as='button' className='flex items-center !outline-none'>
         <div className='rounded border border-gray-300 text-sm flex cursor-pointer'>
-          <div className='font-medium text-gray-800 flex items-center h-[34px]'>
-            {
-              groupContext.groupID === null ? 
-                <React.Fragment>
-                  <div className='h-4 w-4 mx-2 bg-gradient-to-br from-orange-400 to-pink-400 rounded' />
-                  <p className='text-gray-700 text-sm font-normal pl-2'>Select a group</p>
-                </React.Fragment>
-                :
-                <React.Fragment>
-                  <div className='h-4 w-4 mx-2 bg-gradient-to-br from-orange-400 to-pink-400 rounded' />
-                  {
-                    getGroupQ.isSuccess ? getGroupQ.data?.data.group.name : <div className='h-4 w-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded animate-pulse'></div>
-                  }
-                </React.Fragment>
-            }
+          <div className='font-medium text-gray-800 flex items-center h-[34px]'>            
+            <React.Fragment>
+              <div className='h-4 w-4 mx-2 bg-gradient-to-br from-orange-400 to-pink-400 rounded' />
+              {
+                getGroupQ.isSuccess ? getGroupQ.data?.data.group.name : <div className='h-4 w-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded animate-pulse'></div>
+              }
+            </React.Fragment>
           </div>
           <div className='border-l border-gray-300 flex items-center justify-center px-1 ml-2'>
             <ChevronDownIcon className='h-4 w-4 stroke-[10px] text-gray-500' />
@@ -63,7 +55,7 @@ const GroupSelectDropdown: React.FC = () => {
         <Menu.Items className="absolute right-0 mt-1 w-72 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           {
             listGroupsQ.isSuccess ?
-              listGroupsQ.data.data.groups.map((el, idx) => <GroupSelectDropdownItem key={`group-select-dropdown-group-${el.id}-${idx}`} onClick={() => {groupContext.changeGroup(el.id)}} >
+              listGroupsQ.data.data.groups && listGroupsQ.data.data.groups.map((el, idx) => <GroupSelectDropdownItem key={`group-select-dropdown-group-${el.id}-${idx}`} onClick={() => {groupContext.changeGroup(el.id)}} >
                 <div className='rounded bg-gradient-to-br from-orange-400 to-pink-400 h-6 w-6 mr-3' />
                 {el.name}
               </GroupSelectDropdownItem>) 
@@ -73,9 +65,6 @@ const GroupSelectDropdown: React.FC = () => {
                 <p className='h-4 w-32 animate-pulse bg-gradient-to-br from-gray-100 to-gray-200 rounded'></p>
               </GroupSelectDropdownItem>
           }
-          {/* {
-            groups.map((el, idx) => <GroupSelectDropdownItem group={el} key={`group-select-dropdown-group-${el.id}-${idx}`} />)
-          } */}
           <div className='px-4 py-3 text-sm flex items-center text-gray-700 cursor-pointer hover:bg-gray-100' onClick={() => {
             createGroupQ.mutate({ name: 'My Group', description: 'Created on ' + (new Date()).toDateString() })
           }}>
@@ -99,10 +88,17 @@ const GroupSelectDropdown: React.FC = () => {
 } 
 
 const DashboardHeader: React.FC<React.PropsWithChildren> = (props) => {
+  const groupContext = useGroupContext()
+
   return <div className='pb-lg xl:pb-xl pt-xl px-lg xl:px-xl bg-white'>
     <div className='flex items-center justify-between max-h-[36px] h-[36px]'>
       {props.children}
-      <GroupSelectDropdown />
+      {
+        groupContext.groupID ? 
+          <GroupSelectDropdown />
+          :
+          null
+      }
     </div>
   </div>
 }
