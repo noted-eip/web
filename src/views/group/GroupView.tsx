@@ -1,12 +1,15 @@
-import { CheckIcon, PlusIcon, UserPlusIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { ArrowRightIcon, CheckIcon, PlusIcon, UserPlusIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import React from 'react'
 import { Outlet, useNavigate, useParams } from 'react-router-dom'
 import ViewSkeleton from '../../components/view/ViewSkeleton'
+import { useAuthContext } from '../../contexts/auth'
 import { useGroupContext } from '../../contexts/group'
-import { useCreateGroup } from '../../hooks/api/groups'
+import { useCreateGroup, useListGroups } from '../../hooks/api/groups'
 
 const NoGroupEmptyState: React.FC = () => {
   const groupContext = useGroupContext()
+  const authContext = useAuthContext()
+  const listGroupsQ = useListGroups({ account_id: authContext.userID })
   const createGroupQ = useCreateGroup({
     onSuccess: (data) => {
       groupContext.changeGroup(data.data.group.id)
@@ -17,6 +20,19 @@ const NoGroupEmptyState: React.FC = () => {
     <UserPlusIcon className='h-12 w-12 text-gray-400 stroke-1' />
     <p className='font-medium text-gray-700 mt-4'>No Group</p>
     <p className='text-sm text-gray-500'>Create or join a group to start writing!</p>
+    <div>
+      {
+        listGroupsQ.isSuccess && listGroupsQ.data.data.groups.map((el, idx) => <div key={`group-view-no-group-list-${el.id}-${idx}`}
+          className='flex items-center justify-between p-2 w-80 border border-gray-200 cursor-pointer rounded mt-4'
+          onClick={() => groupContext.changeGroup(el.id)}>
+          <div className='flex items-center'>
+            <div className='h-6 w-6 bg-gradient-to-br from-orange-300 to-red-300 rounded mr-2'/>
+            <span className='text-gray-700 text-sm'>{el.name}</span>
+          </div>
+          <ArrowRightIcon className='w-6 h-6 p-1 stroke-2 text-gray-500 hover:bg-gray-50 rounded-full cursor-pointer' />
+        </div>) 
+      }
+    </div>
     <button onClick={() => { createGroupQ.mutate({
       name: 'My Group',
       description: 'Created on ' + (new Date()).toDateString()

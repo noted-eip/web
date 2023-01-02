@@ -4,7 +4,7 @@ import { ChevronDownIcon } from '@heroicons/react/24/solid'
 import React from 'react'
 import { useAuthContext } from '../../contexts/auth'
 import { useGroupContext } from '../../contexts/group'
-import { useCreateGroup, useGetGroup, useListGroups } from '../../hooks/api/groups'
+import { useCreateGroup, useGetCurrentGroup, useListGroups } from '../../hooks/api/groups'
 import LoaderIcon from '../icons/LoaderIcon'
 
 const GroupSelectDropdownItem: React.FC<React.PropsWithChildren & { onClick?: undefined | (() => void) }> = props => {
@@ -18,7 +18,7 @@ const GroupSelectDropdownItem: React.FC<React.PropsWithChildren & { onClick?: un
 const GroupSelectDropdown: React.FC = () => {
   const auth = useAuthContext()
   const groupContext = useGroupContext()
-  const getGroupQ = useGetGroup({ group_id: groupContext.groupID as string })
+  const getGroupQ = useGetCurrentGroup()
   const listGroupsQ = useListGroups({ account_id: auth.userID })
   const createGroupQ = useCreateGroup({
     onSuccess: (data) => {
