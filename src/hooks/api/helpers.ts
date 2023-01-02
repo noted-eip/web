@@ -2,6 +2,7 @@
 import axios, { AxiosError, AxiosResponse } from 'axios'
 import { useMutation, UseMutationOptions, useQuery, UseQueryOptions } from 'react-query'
 import { useAuthContext } from '../../contexts/auth'
+import { apiQueryClient } from '../../lib/api'
 import { API_BASE } from '../../lib/env'
 import { APIError } from '../../types/api/error'
 
@@ -68,8 +69,6 @@ export function newMutationHook<REQ = any, RES = any>(
         }
       }
 
-      // TODO: Split the request field to allow for query parameters and 
-      // prevent sending unecessary data.
       return axios.request({
         method,
         data: filteredReq,
@@ -81,6 +80,18 @@ export function newMutationHook<REQ = any, RES = any>(
       })
     }, {
       ...options,
+      onMutate: async (variables) => {
+        await apiQueryClient.cancelQueries({ queryKey: path(variables) })
+      },
+      onSuccess: (result, variables, context) => {
+        const queryPath = path(variables).split('/')
+
+        apiQueryClient.invalidateQueries({ queryKey: queryPath[0] })
+        apiQueryClient.invalidateQueries({ queryKey: queryPath[1] })
+        if (options?.onSuccess) {
+          options.onSuccess(result, variables, context)
+        }
+      },
     })
   }
 }
