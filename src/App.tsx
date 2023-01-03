@@ -18,22 +18,20 @@ const App: React.FC = () => {
     setHasLoaded(true)
   }, [])
 
-  return <div>
-    <BrowserRouter>
-      <QueryClientProvider client={apiQueryClient}>
-        {
-          !hasLoaded ? <div /> : token !== null ?
-            <AuthContext.Provider value={authContext}>
-              <AuthenticatedRouter />
-            </AuthContext.Provider>
-            : 
-            <NoAuthContext.Provider value={noAuthContext}>
-              <UnauthenticatedRouter />
-            </NoAuthContext.Provider>
-        }
-      </QueryClientProvider>
-    </BrowserRouter>
-  </div>
+  return <BrowserRouter>
+    <QueryClientProvider client={apiQueryClient}>
+      {
+        !hasLoaded ? null : token !== null ?
+          <AuthContext.Provider value={authContext}>
+            <AuthenticatedRouter />
+          </AuthContext.Provider>
+          : 
+          <NoAuthContext.Provider value={noAuthContext}>
+            <UnauthenticatedRouter />
+          </NoAuthContext.Provider>
+      }
+    </QueryClientProvider>
+  </BrowserRouter>
 }
 
 export default App

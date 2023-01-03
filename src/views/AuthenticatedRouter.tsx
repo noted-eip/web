@@ -7,6 +7,7 @@ import GroupView from './group/GroupView'
 import GroupViewNotesTab from './group/GroupViewNotesTab'
 import GroupViewSettingsTab from './group/GroupViewSettingsTab'
 import GroupViewUpgradeTab from './group/GroupViewUpgradeTab'
+import NotFoundView from './notfound/NotFoundView'
 import ProfileView from './profile/ProfileView'
 import SettingsView from './settings/SettingsView'
 
@@ -37,6 +38,7 @@ const AuthenticatedRouter: React.FC = () => {
           <Route path='profile' element={<ProfileView />} />
           <Route path='settings' element={<SettingsView />} />
         </Route>
+        <Route path='*' element={<NotFoundView />} />
       </Routes>
     </GroupContext.Provider>
   )
