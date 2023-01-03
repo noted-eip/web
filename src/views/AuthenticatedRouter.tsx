@@ -1,6 +1,5 @@
 import React from 'react'
 import { Route, Routes, useNavigate } from 'react-router-dom'
-import ErrorBoundary from '../components/eboundary/ErrorBoundary'
 import Dashboard from '../components/view/Dashboard'
 import { GroupContext } from '../contexts/group'
 import { LS_GROUP_ID_KEY } from '../lib/constants'
