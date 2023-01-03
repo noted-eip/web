@@ -2,6 +2,7 @@
 
 - Review all files and encapsulate
 - Skeleton library
+- Editable field library
 - All group operations should changeGroup on fail
 
 # Future
