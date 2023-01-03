@@ -1,5 +1,6 @@
 import React from 'react'
 import { Route, Routes, useNavigate } from 'react-router-dom'
+import ErrorBoundary from '../components/eboundary/ErrorBoundary'
 import Dashboard from '../components/view/Dashboard'
 import { GroupContext } from '../contexts/group'
 import { LS_GROUP_ID_KEY } from '../lib/constants'
@@ -16,21 +17,23 @@ const AuthenticatedRouter: React.FC = () => {
   const navigate = useNavigate()
   const [groupID, setGroupID] = React.useState<string | null>(window.localStorage.getItem(LS_GROUP_ID_KEY))
 
+  const changeGroup = (val) => {
+    setGroupID(val)
+    if (val === null) {
+      window.localStorage.removeItem(LS_GROUP_ID_KEY)
+      navigate('/')
+    } else {
+      window.localStorage.setItem(LS_GROUP_ID_KEY, val)
+      navigate(`/group/${val}`)
+    }
+  }
+
   return (
-    <GroupContext.Provider value={{groupID, changeGroup: (val) => {
-      setGroupID(val)
-      if (val === null) {
-        window.localStorage.removeItem(LS_GROUP_ID_KEY)
-        navigate('/')
-      } else {
-        window.localStorage.setItem(LS_GROUP_ID_KEY, val)
-        navigate(`/group/${val}`)
-      }
-    }}}>
+    <GroupContext.Provider value={{groupID, changeGroup}}>
       <Routes>
         <Route path='/' element={<Dashboard />}>
           <Route path='' element={<GroupView />} />
-          <Route path='group/:groupId' element={<GroupView />} >
+          <Route path='group/:groupId' element={<GroupView />}>
             <Route path='' element={<GroupViewNotesTab />} />
             <Route path='settings' element={<GroupViewSettingsTab />} />
             <Route path='upgrade' element={<GroupViewUpgradeTab />} />
