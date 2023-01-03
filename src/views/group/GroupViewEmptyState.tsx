@@ -21,7 +21,7 @@ const GroupViewEmptyState: React.FC = () => {
     <div>
       {
         listGroupsQ.isSuccess && listGroupsQ.data.data.groups?.map((el, idx) => <div key={`group-view-no-group-list-${el.id}-${idx}`}
-          className='flex items-center justify-between p-2 w-80 border border-gray-200 cursor-pointer rounded mt-4'
+          className='flex items-center justify-between p-2 w-80 border border-gray-200 cursor-pointer rounded mt-2 first:mt-4'
           onClick={() => groupContext.changeGroup(el.id)}>
           <div className='flex items-center'>
             <div className='h-6 w-6 bg-gradient-to-br from-orange-300 to-red-300 rounded mr-2'/>
