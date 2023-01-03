@@ -1,6 +1,6 @@
 import React from 'react'
 import { decodeToken } from '../lib/api'
-import { LS_AUTH_TOKEN_KEY } from '../lib/constants'
+import { LS_AUTH_TOKEN_KEY, LS_GROUP_ID_KEY } from '../lib/constants'
 
 type TAuthContext = {
   userID: string
@@ -29,6 +29,7 @@ export class AuthContextManager {
 
   public logout() {
     localStorage.removeItem(LS_AUTH_TOKEN_KEY)
+    localStorage.removeItem(LS_GROUP_ID_KEY)
     this.userID = ''
     this._setToken(null)
   }

@@ -22,7 +22,7 @@ const NoGroupEmptyState: React.FC = () => {
     <p className='text-sm text-gray-500'>Create or join a group to start writing!</p>
     <div>
       {
-        listGroupsQ.isSuccess && listGroupsQ.data.data.groups.map((el, idx) => <div key={`group-view-no-group-list-${el.id}-${idx}`}
+        listGroupsQ.isSuccess && listGroupsQ.data.data.groups?.map((el, idx) => <div key={`group-view-no-group-list-${el.id}-${idx}`}
           className='flex items-center justify-between p-2 w-80 border border-gray-200 cursor-pointer rounded mt-4'
           onClick={() => groupContext.changeGroup(el.id)}>
           <div className='flex items-center'>

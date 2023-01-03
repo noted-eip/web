@@ -84,10 +84,10 @@ export function newMutationHook<REQ = any, RES = any>(
         await apiQueryClient.cancelQueries({ queryKey: path(variables) })
       },
       onSuccess: (result, variables, context) => {
-        const queryPath = path(variables).split('/')
+        const queryPath = path(variables)
 
-        apiQueryClient.invalidateQueries({ queryKey: queryPath[0] })
-        apiQueryClient.invalidateQueries({ queryKey: queryPath[1] })
+        apiQueryClient.invalidateQueries({ queryKey: queryPath })
+        apiQueryClient.invalidateQueries({ queryKey: queryPath.split('/')[0] })
         if (options?.onSuccess) {
           options.onSuccess(result, variables, context)
         }
