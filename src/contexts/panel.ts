@@ -1,6 +1,6 @@
 import React from 'react'
 
-export type TPanelKey = 'group-chat' | 'group-settings' | 'group-overview'
+export type TPanelKey = 'group-chat' | 'group-settings' | 'group-overview' | 'group-activity'
 
 export type TPanelContext = {
   activePanel: TPanelKey

@@ -19,7 +19,7 @@
     }
 
     h3 {
-        @apply text-gray-500 font-semibold uppercase text-sm lg:text-sm xl:text-sm;
+        @apply text-gray-500 font-medium uppercase text-xs lg:text-xs xl:text-xs;
     }
 
     h4 {
@@ -29,4 +29,8 @@
     h5 {
         @apply text-gray-400 text-xs;
     }
+}
+
+.skeleton {
+    @apply rounded bg-gradient-to-br animate-pulse from-gray-100 to-gray-200
 }
