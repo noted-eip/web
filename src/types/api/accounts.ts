@@ -15,8 +15,8 @@ export type CreateAccountResponse = {
 }
 
 export type GetAccountRequest = {
-    id: string;
-    email: string;
+    account_id?: string;
+    email?: string;
 }
 
 export type GetAccountResponse = {

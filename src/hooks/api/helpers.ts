@@ -6,6 +6,8 @@ import { apiQueryClient } from '../../lib/api'
 import { API_BASE } from '../../lib/env'
 import { APIError } from '../../types/api/error'
 
+export type QueryHookOptions<RES = any> = UseQueryOptions<AxiosResponse<RES, any>, AxiosError<APIError, unknown>, AxiosResponse<RES, any>, string>
+
 export type QueryHookParams<REQ = any, RES = any> = {
   req: REQ,
   options?: UseQueryOptions<AxiosResponse<RES, any>, AxiosError<APIError, unknown>, AxiosResponse<RES, any>, string>

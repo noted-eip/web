@@ -5,6 +5,12 @@ export type Group = {
     created_at: string;
 }
 
+export type GroupMember = {
+    account_id: string;
+    role: string;
+    created_at: string;
+}
+
 export type CreateGroupRequest = {
     name: string;
     description: string;
@@ -24,7 +30,7 @@ export type GetGroupResponse = {
 
 export type UpdateGroupRequest = {
     group: Partial<Group>;
-    update_mask: {paths: string[]}
+    update_mask: string;
 }
 
 export type UpdateGroupResponse = {
@@ -39,4 +45,41 @@ export type ListGroupsRequest = {
 
 export type ListGroupsResponse = {
     groups: Group[];
+}
+
+export type GetGroupMemberRequest = {
+    group_id: string;
+    account_id: string;
+}
+
+export type GetGroupMemberResponse = {
+    member: GroupMember;
+}
+
+export type UpdateGroupMemberRequest = {
+    group_id: string;
+    account_id: string;
+    member: Partial<GroupMember>;
+    update_mask: string;
+}
+
+export type UpdateGroupMemberResponse = {
+    member: GroupMember;
+}
+
+export type RemoveGroupMemberRequest = {
+    group_id: string;
+    account_id: string;
+}
+
+export type RemoveGroupMemberResponse = unknown
+
+export type ListGroupMembersRequest = {
+    group_id: string;
+    limit?: number;
+    offset?: number;
+}
+
+export type ListGroupMembersResponse = {
+    members: GroupMember[];
 }

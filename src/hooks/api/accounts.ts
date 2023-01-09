@@ -3,7 +3,8 @@ import { useQuery } from 'react-query'
 import { useAuthContext } from '../../contexts/auth'
 import { decodeToken } from '../../lib/api'
 import { API_BASE } from '../../lib/env'
-import { CreateAccountRequest, GetAccountRequest } from '../../types/api/accounts'
+import { CreateAccountRequest, GetAccountRequest, GetAccountResponse } from '../../types/api/accounts'
+import { newQueryHook } from './helpers'
 
 export const createAccount = async (req: CreateAccountRequest) => {
   return await axios.post(`${API_BASE}/accounts`, req)
@@ -11,7 +12,7 @@ export const createAccount = async (req: CreateAccountRequest) => {
 
 export const getAccount = (req: GetAccountRequest) => {
   const auth = useAuthContext()
-  return useQuery(['accounts', req.id], async () => {
+  return useQuery(['accounts', req.account_id], async () => {
     const token = await auth.token()
     const decodedToken = decodeToken(token)  
     return axios.get(`${API_BASE}/accounts/${decodedToken.uid}`, {
@@ -21,3 +22,10 @@ export const getAccount = (req: GetAccountRequest) => {
     })
   })
 }
+
+export const useGetAccount = newQueryHook<GetAccountRequest, GetAccountResponse>(
+  (req) => {
+    return req.account_id ? `accounts/${req.account_id}` : `accounts/by-email/${req.email}`
+  },
+  ['account_id', 'email']
+)
