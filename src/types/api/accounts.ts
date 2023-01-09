@@ -31,3 +31,12 @@ export type AuthenticateRequest = {
 export type AuthenticateResponse = {
     token: string;
 }
+
+export type UpdateAccountRequest = {
+    account: Partial<Account>;
+    update_mask: string;
+}
+
+export type UpdateAccountResponse = {
+    account: Account;
+}
