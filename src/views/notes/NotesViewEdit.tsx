@@ -13,13 +13,13 @@ const NotesViewEdit: React.FC = () => {
     {getNoteQ?.data && <><p>Title: {getNoteQ?.data?.data.note.title}</p>
       <p>created_at: {getNoteQ?.data?.data.note.created_at}</p>
       <p>modified_at: {getNoteQ?.data?.data.note.modified_at}</p>
+      <br />
       {getNoteQ?.data?.data.note.blocks?.map((e, idx) => {
 
         return (<div key={e.id}>
-          {`BLOCK ${idx} `}
-          {e.heading && `header: ${e.heading} `}
-          {e.paragraph && `paragraph: ${e.paragraph} `}
-          type: {e.type}
+          <br />
+          <h2 className="justify-items-center">{e.heading}</h2>
+          {e.paragraph}
         </div>)
       })}
     </>}
