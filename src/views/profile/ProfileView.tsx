@@ -36,7 +36,7 @@ const ProfileView: React.FC = () => {
   const onChangeName = (e) => {
     e.preventDefault()
     console.log(newName)
-    // updateAccountQ.mutate({ account: { id: authorContext.userID as string, name: newName }, update_mask: 'name' })
+    updateAccountQ.mutate({ account: { id: authorContext.userID as string, name: newName }, update_mask: 'name' })
     setEditName(false)
   }
 
