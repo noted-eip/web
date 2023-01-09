@@ -10,6 +10,7 @@ import GroupViewUpgradeTab from './group/GroupViewUpgradeTab'
 import NotFoundView from './notfound/NotFoundView'
 import ProfileView from './profile/ProfileView'
 import SettingsView from './settings/SettingsView'
+import NotesView from './notes/NotesView'
 
 // Describes routes that are available to authenticated users.
 const AuthenticatedRouter: React.FC = () => {
@@ -36,6 +37,7 @@ const AuthenticatedRouter: React.FC = () => {
             <Route path='' element={<GroupViewNotesTab />} />
             <Route path='settings' element={<GroupViewSettingsTab />} />
             <Route path='upgrade' element={<GroupViewUpgradeTab />} />
+            <Route path='notes/:notesId' element={<NotesView />} />
           </Route>
           <Route path='profile' element={<ProfileView />} />
           <Route path='settings' element={<SettingsView />} />

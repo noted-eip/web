@@ -29,7 +29,7 @@ const GroupView: React.FC = () => {
   return <ViewSkeleton title='Home' panels={['group-chat','group-activity']}>
     {
       groupContext.groupID ?
-        <div className='mb-lg mx-lg xl:mb-xl xl:mx-xl w-full'>  
+        <div className='mb-lg mx-lg xl:mb-xl xl:mx-xl w-full'>
           <Outlet />
         </div>
         :

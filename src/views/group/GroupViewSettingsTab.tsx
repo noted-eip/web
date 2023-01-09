@@ -11,7 +11,7 @@ import { useDebounce } from 'usehooks-ts'
 import LoaderIcon from '../../components/icons/LoaderIcon'
 import { useSendInvite } from '../../hooks/api/invites'
 
-const GroupViewSettingsTabEditGroup: React.FC = () => {
+export const GroupViewSettingsTabEditGroup: React.FC = () => {
   const [editName, setEditName] = React.useState(false)
   const [editDescription, setEditDescription] = React.useState(false)
   const groupContext = useGroupContext()
