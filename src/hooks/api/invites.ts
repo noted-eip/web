@@ -3,7 +3,8 @@ import { newMutationHook, newQueryHook } from './helpers'
 
 export const useSendInvite = newMutationHook<SendInviteRequest, SendInviteResponse>({
   method: 'post',
-  path: () => 'invites'
+  path: () => 'invites',
+  invalidate: () => ['invites'],
 })
 
 export const useGetInvite = newQueryHook<GetInviteRequest, GetInviteResponse>(
@@ -14,13 +15,15 @@ export const useGetInvite = newQueryHook<GetInviteRequest, GetInviteResponse>(
 export const useAcceptInvite = newMutationHook<AcceptInviteRequest, AcceptInviteResponse>({
   method: 'post',
   path: (req) => `invites/${req.invite_id}/accept`,
-  pathFields: ['invite_id']
+  pathFields: ['invite_id'],
+  invalidate: () => ['invites']
 })
 
 export const useDenyInvite = newMutationHook<DenyInviteRequest, DenyInviteResponse>({
   method: 'post',
   path: (req) => `invites/${req.invite_id}/deny`,
-  pathFields: ['invite_id']
+  pathFields: ['invite_id'],
+  invalidate: () => ['invites']
 })
 
 export const useListInvites = newQueryHook<ListInvitesRequest, ListInvitesResponse>(

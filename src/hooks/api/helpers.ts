@@ -51,7 +51,8 @@ export function newMutationHook<REQ = any, RES = any>(config: {
   path: (req: REQ) => string,
   pathFields?: string[],
   queryParameterFields?: string[],
-  invalidate?: (req: REQ) => string[]
+  invalidate?: (req: REQ) => string[],
+  customOptions?: UseMutationOptions<AxiosResponse<RES, unknown>, AxiosError<APIError, unknown>, REQ>
 }) {
   return (options?: UseMutationOptions<AxiosResponse<RES, unknown>, AxiosError<APIError, unknown>, REQ>) => {
     const auth = useAuthContext()
@@ -82,6 +83,7 @@ export function newMutationHook<REQ = any, RES = any>(config: {
         }
       })
     }, {
+      ...config?.customOptions,
       ...options,
       onMutate: async (variables) => {
         await apiQueryClient.cancelQueries({ queryKey: config.path(variables) })
@@ -92,8 +94,12 @@ export function newMutationHook<REQ = any, RES = any>(config: {
         apiQueryClient.invalidateQueries({ queryKey: queryPath })
         apiQueryClient.invalidateQueries({ queryKey: queryPath.split('/')[0] })
 
-        if (config.invalidate) {
+        if (config?.invalidate) {
           config.invalidate(variables).map((el) => apiQueryClient.invalidateQueries({ queryKey: el }))
+        }
+
+        if (config?.customOptions?.onSuccess) {
+          config.customOptions.onSuccess(result, variables, context)
         }
 
         if (options?.onSuccess) {

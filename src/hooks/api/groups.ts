@@ -1,4 +1,6 @@
+import { useAuthContext } from '../../contexts/auth'
 import { useGroupContext } from '../../contexts/group'
+import { apiQueryClient } from '../../lib/api'
 import { CreateGroupRequest, CreateGroupResponse, GetGroupRequest, GetGroupResponse, ListGroupMembersRequest, ListGroupMembersResponse, ListGroupsRequest, ListGroupsResponse, UpdateGroupMemberRequest, UpdateGroupMemberResponse, UpdateGroupRequest, UpdateGroupResponse, RemoveGroupMemberRequest, RemoveGroupMemberResponse, GetGroupMemberRequest, GetGroupMemberResponse } from '../../types/api/groups'
 import { newMutationHook, newQueryHook, QueryHookOptions, QueryHookParams } from './helpers'
 
@@ -47,14 +49,28 @@ export const useUpdateGroupMember = newMutationHook<UpdateGroupMemberRequest, Up
   method:  'patch',
   path: (req) => `groups/${req.group_id}/members/${req.account_id}`,
   pathFields: ['group_id','account_id'],
-  invalidate: (req) => [`groups/${req.group_id}/members`,`groups/${req.group_id}/members/${req.member.account_id}`] 
+  invalidate: (req) => [`groups/${req.group_id}/members`] 
 })
 
-export const useRemoveGroupMember = newMutationHook<RemoveGroupMemberRequest, RemoveGroupMemberResponse>({
-  method: 'delete',
-  path: (req) => `groups/${req.group_id}/members/${req.account_id}`,
-  pathFields: ['group_id','account_id']
-})
+export const useRemoveGroupMember = () => {
+  const authContext = useAuthContext()
+  const groupContext = useGroupContext()
+  
+  return newMutationHook<RemoveGroupMemberRequest, RemoveGroupMemberResponse>({
+    method: 'delete',
+    path: (req) => `groups/${req.group_id}/members/${req.account_id}`,
+    pathFields: ['group_id','account_id'],
+    customOptions: {
+      onSuccess: (result, variables) => {
+        if (authContext.userID === variables.account_id) {
+          groupContext.changeGroup(null)
+        } else {
+          apiQueryClient.invalidateQueries({ queryKey: `groups/${variables.group_id}/members` })
+        }
+      }
+    }
+  })()
+}
 
 export const useListGroupMembers = newQueryHook<ListGroupMembersRequest, ListGroupMembersResponse>(
   (req) => `groups/${req.group_id}/members`,
@@ -63,7 +79,6 @@ export const useListGroupMembers = newQueryHook<ListGroupMembersRequest, ListGro
 
 export const useListCurrentGroupMembers = (req: Omit<ListGroupMembersRequest, 'group_id'>, options?: QueryHookOptions<ListGroupMembersResponse>) => {
   const groupContext = useGroupContext()
-
 
   return useListGroupMembers({...req, group_id: groupContext.groupID as string}, {
     ...options,

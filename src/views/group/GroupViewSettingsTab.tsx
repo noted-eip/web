@@ -1,5 +1,5 @@
-import { PencilIcon, UserIcon, UserMinusIcon } from '@heroicons/react/24/solid'
-import { ArrowPathIcon, CheckIcon, EllipsisVerticalIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { PencilIcon, UserIcon } from '@heroicons/react/24/solid'
+import { ArrowPathIcon, CheckIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import React from 'react'
 import { useGroupContext } from '../../contexts/group'
 import { useGetGroup, useListCurrentGroupMembers, useRemoveGroupMember, useUpdateGroup, useUpdateGroupMember } from '../../hooks/api/groups'

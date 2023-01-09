@@ -35,8 +35,8 @@ export const useGetAccount = newQueryHook<GetAccountRequest, GetAccountResponse>
   ['account_id', 'email']
 )
 
-export const useUpdateAccount = newMutationHook<UpdateAccountRequest, UpdateAccountResponse>(
-  'patch',
-  (req) => `accounts/${req.account.id}`,
-  ['account_id']
-)
+export const useUpdateAccount = newMutationHook<UpdateAccountRequest, UpdateAccountResponse>({
+  method: 'patch',
+  path: (req) => `accounts/${req.account.id}`,
+  pathFields: ['account_id']
+})

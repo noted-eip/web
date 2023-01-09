@@ -5,35 +5,30 @@ export type Block = {
   paragraph?: string;
 }
 
-export type CreateNotesRequest = {
-  title: string;
-  blocks?: Block[];
-}
-
-export type CreateNotesResponse = {
+export type Note = {
   id: string;
   title: string;
   author_id: string;
   blocks?: Block[];
   created_at: string;
   modified_at: string;
+}
+
+export type CreateNoteRequest = {
+  group_id: string;
+  note: { title: string, author_id: string };
+}
+
+export type CreateNoteResponse = {
+  note: Note;
 }
 
 export type GetNoteRequest = {
   note_id: string;
 }
 
-export type NoteResponse = {
-  id: string;
-  author_id: string;
-  title: string;
-  blocks?: Block[];
-  created_at: string;
-  modified_at: string;
-}
-
 export type GetNoteResponse = {
-  note: NoteResponse;
+  note: Note;
 }
 
 export type GetNotesResponse = {
@@ -42,4 +37,12 @@ export type GetNotesResponse = {
   title: string;
   created_at: string;
   modified_at: string;
+}
+
+export type ListNotesRequest = {
+  author_id: string;
+}
+
+export type ListNotesResponse = {
+  notes: Note[];
 }
