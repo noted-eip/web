@@ -2,10 +2,10 @@ import { useGroupContext } from '../../contexts/group'
 import { CreateGroupRequest, CreateGroupResponse, GetGroupRequest, GetGroupResponse, ListGroupMembersRequest, ListGroupMembersResponse, ListGroupsRequest, ListGroupsResponse, UpdateGroupMemberRequest, UpdateGroupMemberResponse, UpdateGroupRequest, UpdateGroupResponse, RemoveGroupMemberRequest, RemoveGroupMemberResponse, GetGroupMemberRequest, GetGroupMemberResponse } from '../../types/api/groups'
 import { newMutationHook, newQueryHook, QueryHookOptions, QueryHookParams } from './helpers'
 
-export const useCreateGroup = newMutationHook<CreateGroupRequest, CreateGroupResponse>(
-  'post',
-  () => 'groups'
-)
+export const useCreateGroup = newMutationHook<CreateGroupRequest, CreateGroupResponse>({
+  method: 'post',
+  path: () => 'groups'
+})
 
 export const useGetGroup = newQueryHook<GetGroupRequest, GetGroupResponse>(
   (req) => `groups/${req.group_id}`,
@@ -27,11 +27,12 @@ export const useGetCurrentGroup = (params?: QueryHookParams) => {
   })
 }
 
-export const useUpdateGroup = newMutationHook<UpdateGroupRequest, UpdateGroupResponse>(
-  'patch',
-  (req) => `groups/${req.group.id}`,
-  ['group.id']
-)
+export const useUpdateGroup = newMutationHook<UpdateGroupRequest, UpdateGroupResponse>({
+  method: 'patch',
+  path: (req) => `groups/${req.group.id}`,
+  pathFields: ['group.id'],
+  invalidate: (req) => [`groups/${req.group.id}/members`]
+})
 
 export const useListGroups = newQueryHook<ListGroupsRequest, ListGroupsResponse>(
   () => 'groups',
@@ -42,17 +43,18 @@ export const useGetGroupMember = newQueryHook<GetGroupMemberRequest, GetGroupMem
   ['group_id','account_id']
 )
 
-export const useUpdateGroupMember = newMutationHook<UpdateGroupMemberRequest, UpdateGroupMemberResponse>(
-  'patch',
-  (req) => `groups/${req.group_id}/members/${req.account_id}`,
-  ['group_id','account_id']
-)
+export const useUpdateGroupMember = newMutationHook<UpdateGroupMemberRequest, UpdateGroupMemberResponse>({
+  method:  'patch',
+  path: (req) => `groups/${req.group_id}/members/${req.account_id}`,
+  pathFields: ['group_id','account_id'],
+  invalidate: (req) => [`groups/${req.group_id}/members`,`groups/${req.group_id}/members/${req.member.account_id}`] 
+})
 
-export const useRemoveGroupMember = newMutationHook<RemoveGroupMemberRequest, RemoveGroupMemberResponse>(
-  'delete',
-  (req) => `groups/${req.group_id}/members/${req.account_id}`,
-  ['group_id','account_id']
-)
+export const useRemoveGroupMember = newMutationHook<RemoveGroupMemberRequest, RemoveGroupMemberResponse>({
+  method: 'delete',
+  path: (req) => `groups/${req.group_id}/members/${req.account_id}`,
+  pathFields: ['group_id','account_id']
+})
 
 export const useListGroupMembers = newQueryHook<ListGroupMembersRequest, ListGroupMembersResponse>(
   (req) => `groups/${req.group_id}/members`,

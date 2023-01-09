@@ -46,35 +46,36 @@ export type MutationHookParams<REQ = any, RES = any> = {
   options?: UseMutationOptions<AxiosResponse<RES, unknown>, AxiosError<APIError, unknown>, REQ>,
 }
 
-export function newMutationHook<REQ = any, RES = any>(
+export function newMutationHook<REQ = any, RES = any>(config: {
   method: 'put' | 'post' | 'patch' | 'delete',
   path: (req: REQ) => string,
   pathFields?: string[],
   queryParameterFields?: string[],
-) {
+  invalidate?: (req: REQ) => string[]
+}) {
   return (options?: UseMutationOptions<AxiosResponse<RES, unknown>, AxiosError<APIError, unknown>, REQ>) => {
     const auth = useAuthContext()
     return useMutation(async (req: REQ) => {
       const params = {}
       const filteredReq = {...req}
 
-      if (queryParameterFields) {
-        for (let index = 0; index < queryParameterFields.length; index++) {
-          params[queryParameterFields[index]] = req[queryParameterFields[index]]
-          filteredReq[queryParameterFields[index]] = undefined
+      if (config.queryParameterFields) {
+        for (let index = 0; index < config.queryParameterFields.length; index++) {
+          params[config.queryParameterFields[index]] = req[config.queryParameterFields[index]]
+          filteredReq[config.queryParameterFields[index]] = undefined
         }
       }
 
-      if (pathFields) {
-        for (let index = 0; index < pathFields.length; index++) {
-          filteredReq[pathFields[index]] = undefined
+      if (config.pathFields) {
+        for (let index = 0; index < config.pathFields.length; index++) {
+          filteredReq[config.pathFields[index]] = undefined
         }
       }
 
       return axios.request({
-        method,
+        method: config.method,
         data: filteredReq,
-        url: `${API_BASE}/${path(req)}`,
+        url: `${API_BASE}/${config.path(req)}`,
         params,
         headers: {
           'Authorization': `Bearer ${await auth.token()}`,
@@ -83,13 +84,18 @@ export function newMutationHook<REQ = any, RES = any>(
     }, {
       ...options,
       onMutate: async (variables) => {
-        await apiQueryClient.cancelQueries({ queryKey: path(variables) })
+        await apiQueryClient.cancelQueries({ queryKey: config.path(variables) })
       },
       onSuccess: (result, variables, context) => {
-        const queryPath = path(variables)
+        const queryPath = config.path(variables)
 
         apiQueryClient.invalidateQueries({ queryKey: queryPath })
         apiQueryClient.invalidateQueries({ queryKey: queryPath.split('/')[0] })
+
+        if (config.invalidate) {
+          config.invalidate(variables).map((el) => apiQueryClient.invalidateQueries({ queryKey: el }))
+        }
+
         if (options?.onSuccess) {
           options.onSuccess(result, variables, context)
         }
