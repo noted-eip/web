@@ -3,12 +3,13 @@ import React from 'react'
 import { useMutation } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 import OldInput from '../../components/form/OldInput'
+import { addAccountToDevelopmentContext, useDevelopmentContext } from '../../contexts/dev'
 import { useNoAuthContext } from '../../contexts/noauth'
 import { createAccount } from '../../hooks/api/accounts'
 import { authenticate } from '../../hooks/api/authenticate'
-import { apiQueryClient } from '../../lib/api'
+import { apiQueryClient, decodeToken } from '../../lib/api'
 import { validateName, validateEmail, validatePassword } from '../../lib/validators'
-import { AuthenticateResponse, CreateAccountResponse } from '../../types/api/accounts'
+import { Account, AuthenticateResponse, CreateAccountResponse } from '../../types/api/accounts'
 
 const SignupView: React.FC = () => {
   const navigate = useNavigate()
@@ -19,13 +20,19 @@ const SignupView: React.FC = () => {
   const [passwordValid, setPasswordValid] = React.useState(false)
   const [email, setEmail] = React.useState('')
   const [emailValid, setEmailValid] = React.useState(false)
+  const developmentContext = useDevelopmentContext()
 
   const authenticateMutation = useMutation(authenticate, {
     onSuccess: (data: AxiosResponse<AuthenticateResponse, unknown>) => {
+      const tokenData = decodeToken(data.data.token)
+      if (developmentContext !== undefined) {
+        addAccountToDevelopmentContext(tokenData.uid, data.data.token, developmentContext.setAccounts)
+      }   
       auth.signin(data.data.token)
       navigate('/')
     }
   })
+
   const createAccountMutation = useMutation(createAccount, { 
     onSuccess: (data: AxiosResponse<CreateAccountResponse, unknown>) => {
       apiQueryClient.invalidateQueries(['accounts', data.data.account.id])

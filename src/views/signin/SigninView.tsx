@@ -3,8 +3,10 @@ import React from 'react'
 import { useMutation } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 import OldInput from '../../components/form/OldInput'
+import { addAccountToDevelopmentContext, useDevelopmentContext } from '../../contexts/dev'
 import { useNoAuthContext } from '../../contexts/noauth'
 import { authenticate } from '../../hooks/api/authenticate'
+import { decodeToken } from '../../lib/api'
 import { validateEmail } from '../../lib/validators'
 import { AuthenticateResponse } from '../../types/api/accounts'
 
@@ -14,9 +16,14 @@ const SigninView: React.FC = () => {
   const [password, setPassword] = React.useState('')
   const [email, setEmail] = React.useState('')
   const [emailValid, setEmailValid] = React.useState(false)
+  const developmentContext = useDevelopmentContext()
 
   const authenticateMutation = useMutation(authenticate, {
     onSuccess: (data: AxiosResponse<AuthenticateResponse, unknown>) => {
+      const tokenData = decodeToken(data.data.token)
+      if (developmentContext !== undefined) {
+        addAccountToDevelopmentContext(tokenData.uid, data.data.token, developmentContext.setAccounts)
+      }
       auth.signin(data.data.token)
       navigate('/')
     }
