@@ -32,15 +32,15 @@ const InviteListItem: React.FC<{ invite: Invite }> = props => {
     <div className='flex items-center justify-end'>
       {
         getGroupQ.isSuccess && <React.Fragment>
-          <div className='flex hover:scale-105 transition-all items-center px-2 p-1 rounded-full text-red-700 font-medium hover:bg-red-200 bg-red-100 text-xs cursor-pointer'
+          <div className='group flex items-center px-2 p-1 rounded-full text-red-700 font-medium hover:bg-red-200 bg-red-100 text-xs cursor-pointer'
             onClick={() => denyInviteQ.mutate({ invite_id: props.invite.id })}>
             Deny
-            <XMarkIcon className='text-red-700 ml-1 h-3 w-3 stroke-[3px]' />
+            <XMarkIcon className='group-hover:scale-[120%] transition-all text-red-700 ml-1 h-3 w-3 stroke-[3px]' />
           </div>
-          <div className='ml-2 hover:scale-105 transition-all flex items-center px-2 p-1 rounded-full text-green-700 font-medium hover:bg-green-200 bg-green-100 text-xs cursor-pointer'
+          <div className='group ml-2 flex items-center px-2 p-1 rounded-full text-green-700 font-medium hover:bg-green-200 bg-green-100 text-xs cursor-pointer'
             onClick={() => acceptInviteQ.mutate({ invite_id: props.invite.id })}>
             Accept
-            <CheckIcon className='text-green-700 ml-1 h-3 w-3 stroke-[3px]' />
+            <CheckIcon className='group-hover:scale-[120%] transition-all text-green-700 ml-1 h-3 w-3 stroke-[3px]' />
           </div>
         </React.Fragment>
       }
@@ -55,7 +55,7 @@ const ProfileViewInvitesSection: React.FC = () => {
 
   return <div className='mt-4 w-full bg-gray-50 rounded-md border border-gray-100'>
     {/* Header */}
-    <div className='p-5 flex items-center justify-between pb-3 border-b border-[#efefef]'>
+    <div className='p-5 flex items-center justify-between border-b border-[#efefef]'>
       <div className='flex items-center'>
         <InboxIcon className='ml-2 text-gray-600 h-5 w-5 mr-2' />
         <p className='text-gray-600 text-md font-medium'>Invites</p>
@@ -102,7 +102,6 @@ const ProfileViewAccountSection: React.FC = () => {
 
   const onChangeName = (e) => {
     e.preventDefault()
-    console.log(newName)
     updateAccountQ.mutate({ account: { id: authContext.userID as string, name: newName }, update_mask: 'name' })
     setEditName(false)
   }

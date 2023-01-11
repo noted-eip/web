@@ -61,11 +61,31 @@ export const Sidebar: React.FC = () => {
   return <div className='border-r border-gray-300 h-screen hidden md:flex flex-col'>
     <div className='m-lg mt-xl xl:m-xl h-full flex flex-col justify-between'>
       <div>
+        {/* Logo */}
         <div className='h-[36px] w-[36px] bg-gray-200 rounded-md border border-gray-300' />
-        <Input className='w-full lg:mt-lg xl:mt-xl hidden xl:block' placeholder='Search' type="text" />
+
+        {/* Account Indicator */}
+        <div className='group border lg:mt-lg xl:mt-xl border-gray-200 rounded-md flex items-center justify-between p-1'>
+          <div className='flex items-center'>
+            <div className='bg-gradient-radial hidden xl:block to-green-200 from-teal-300 h-7 w-7 rounded-md mr-2' />
+            {getAccountQ.isSuccess ?
+              <span className='text-xs hidden xl:block font-medium text-gray-700'>{getAccountQ.data.data.account.name}</span>
+              :
+              getAccountQ.isError ?
+                <div className='skeleton-error h-4 w-24' />
+                :
+                <div className='skeleton h-4 w-24' />
+            }
+          </div>
+          <div className='hidden group-hover:flex w-6 h-6 justify-center items-center rounded-md hover:bg-gray-100 cursor-pointer'>
+            <ArrowRightOnRectangleIcon className='h-4 w-4 text-gray-500 stroke-2 mr-1' onClick={() => authContext.logout()} />
+          </div>
+        </div>
+
+        {/* Navigation */}
         <div>
           {links.map((el, idx) => {
-            return <Link to={el.path} key={`sidebar-nav-${idx}`} className={`flex justify-between first:mt-lg mt-sm hover:bg-gray-100  p-2 cursor-pointer rounded-md ${currentPath == el.path ? 'bg-gray-100' : ''}`}>
+            return <Link to={el.path} key={`sidebar-nav-${idx}`} className={`flex justify-between mt-sm hover:bg-gray-100  p-2 cursor-pointer rounded-md ${currentPath == el.path ? 'bg-gray-100' : ''}`}>
               <div className='flex items-center'>
                 <el.icon className='text-gray-400 h-5 w-5' />
                 <span className='ml-xs text-sm font-medium text-gray-600 hidden xl:block'>{el.title}</span>
@@ -86,22 +106,6 @@ export const Sidebar: React.FC = () => {
             })}
           </div>
         }
-        <div className='border border-gray-200 rounded-md flex items-center justify-between p-1'>
-          <div className='flex items-center'>
-            <div className='bg-gradient-radial hidden xl:block to-green-200 from-teal-300 h-7 w-7 rounded-md mr-2' />
-            {getAccountQ.isSuccess ?
-              <span className='text-xs hidden xl:block font-medium text-gray-700'>{getAccountQ.data.data.account.name}</span>
-              :
-              getAccountQ.isError ?
-                <div className='skeleton-error h-4 w-24' />
-                :
-                <div className='skeleton h-4 w-24' />
-            }
-          </div>
-          <div className='w-6 h-6 justify-center items-center flex rounded-md hover:bg-gray-100 cursor-pointer'>
-            <ArrowRightOnRectangleIcon className='h-4 w-4 text-gray-500 stroke-2 mr-1' onClick={() => authContext.logout()} />
-          </div>
-        </div>
       </div>
     </div>
   </div>

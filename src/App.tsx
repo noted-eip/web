@@ -22,10 +22,6 @@ const App: React.FC = () => {
     setHasLoaded(true)
   }, [])
 
-  console.log(TOGGLE_DEV_FEATURES)
-
-  console.log(accounts)
-
   return <BrowserRouter>
     <DevelopmentContext.Provider value={TOGGLE_DEV_FEATURES ? { accounts, setAccounts} : undefined}>
       <QueryClientProvider client={apiQueryClient}>

@@ -6,31 +6,32 @@ import { apiQueryClient } from '../../lib/api'
 import { API_BASE } from '../../lib/env'
 import { APIError } from '../../types/api/error'
 
-export type QueryHookOptions<RES = any> = UseQueryOptions<AxiosResponse<RES, any>, AxiosError<APIError, unknown>, AxiosResponse<RES, any>, string>
+export type QueryHookOptions<RES = any> = UseQueryOptions<AxiosResponse<RES, any>, AxiosError<APIError, unknown>, AxiosResponse<RES, any>, any[]>
 
 export type QueryHookParams<REQ = any, RES = any> = {
   req: REQ,
-  options?: UseQueryOptions<AxiosResponse<RES, any>, AxiosError<APIError, unknown>, AxiosResponse<RES, any>, string>
+  options?: UseQueryOptions<AxiosResponse<RES, any>, AxiosError<APIError, unknown>, AxiosResponse<RES, any>, any[]>
 }
 
 export function newQueryHook<REQ = any, RES = any>(
   path: (req: REQ) => string,
   pathFields?: string[]
 ) {
-  return (req: REQ, options?: UseQueryOptions<AxiosResponse<RES, any>, AxiosError<APIError, unknown>, AxiosResponse<RES, any>, string>) => {
+  return (req: REQ, options?: UseQueryOptions<AxiosResponse<RES, any>, AxiosError<APIError, unknown>, AxiosResponse<RES, any>, any[]>) => {
     const auth = useAuthContext()
+    const requestPath = path(req)
+    const params = {...req}
+  
+    if (pathFields) {
+      for (let index = 0; index < pathFields.length; index++) {
+        params[pathFields[index]] = undefined
+      }
+    }
+
     return useQuery({
       ...options,
-      queryKey: path(req),
+      queryKey: [...requestPath.split('/'), {params}],
       queryFn: async () => {
-        const params = {...req}
-  
-        if (pathFields) {
-          for (let index = 0; index < pathFields.length; index++) {
-            params[pathFields[index]] = undefined
-          }
-        }
-    
         return axios.get(`${API_BASE}/${path(req)}`, {
           headers: {
             'Authorization': `Bearer ${await auth.token()}`,
@@ -51,11 +52,12 @@ export function newMutationHook<REQ = any, RES = any>(config: {
   path: (req: REQ) => string,
   pathFields?: string[],
   queryParameterFields?: string[],
-  invalidate?: (req: REQ) => string[],
+  invalidate?: (req: REQ) => any[],
   customOptions?: UseMutationOptions<AxiosResponse<RES, unknown>, AxiosError<APIError, unknown>, REQ>
 }) {
   return (options?: UseMutationOptions<AxiosResponse<RES, unknown>, AxiosError<APIError, unknown>, REQ>) => {
     const auth = useAuthContext()
+    
     return useMutation(async (req: REQ) => {
       const params = {}
       const filteredReq = {...req}
@@ -89,10 +91,14 @@ export function newMutationHook<REQ = any, RES = any>(config: {
         await apiQueryClient.cancelQueries({ queryKey: config.path(variables) })
       },
       onSuccess: (result, variables, context) => {
-        const queryPath = config.path(variables)
+        const queryPath = config.path(variables).split('/')
 
-        apiQueryClient.invalidateQueries({ queryKey: queryPath })
-        apiQueryClient.invalidateQueries({ queryKey: queryPath.split('/')[0] })
+        let params: any = null
+        if (config.queryParameterFields) {
+          params = Object.fromEntries(config.queryParameterFields.map(k => [k, variables[k]]))
+        }
+
+        apiQueryClient.invalidateQueries({ queryKey: [...queryPath,  {params}] })
 
         if (config?.invalidate) {
           config.invalidate(variables).map((el) => apiQueryClient.invalidateQueries({ queryKey: el }))

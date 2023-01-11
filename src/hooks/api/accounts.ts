@@ -29,9 +29,7 @@ export const getAccount = (req: GetAccountRequest) => {
 }
 
 export const useGetAccount = newQueryHook<GetAccountRequest, GetAccountResponse>(
-  (req) => {
-    return req.account_id ? `accounts/${req.account_id}` : `accounts/by-email/${req.email}`
-  },
+  (req) => { return req.account_id ? `accounts/${req.account_id}` : `accounts/by-email/${req.email}` },
   ['account_id', 'email']
 )
 

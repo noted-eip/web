@@ -9,7 +9,7 @@ import { createAccount } from '../../hooks/api/accounts'
 import { authenticate } from '../../hooks/api/authenticate'
 import { apiQueryClient, decodeToken } from '../../lib/api'
 import { validateName, validateEmail, validatePassword } from '../../lib/validators'
-import { Account, AuthenticateResponse, CreateAccountResponse } from '../../types/api/accounts'
+import { AuthenticateResponse, CreateAccountResponse } from '../../types/api/accounts'
 
 const SignupView: React.FC = () => {
   const navigate = useNavigate()

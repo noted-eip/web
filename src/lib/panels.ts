@@ -1,6 +1,7 @@
-import { BoltIcon, ChatBubbleLeftIcon, Cog6ToothIcon, UserIcon } from '@heroicons/react/24/solid'
+import { BoltIcon, ChatBubbleLeftIcon, PencilIcon } from '@heroicons/react/24/solid'
 import GroupActivityPanel from '../panels/GroupActivityPanel'
 import GroupChatPanel from '../panels/GroupChatPanel'
+import NoteRecommendationsPanel from '../panels/NoteRecommendationsPanel'
 
 export const panelMetadata = {
   'group-chat': {
@@ -12,5 +13,10 @@ export const panelMetadata = {
     displayName: 'Activity',
     icon: BoltIcon,
     component: GroupActivityPanel,
+  },
+  'note-recommendations': {
+    displayName: 'Companion',
+    icon: PencilIcon,
+    component: NoteRecommendationsPanel,
   },
 }

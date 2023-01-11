@@ -1,4 +1,4 @@
-import { PencilIcon, UserIcon } from '@heroicons/react/24/solid'
+import { EnvelopeIcon, PencilIcon, UserIcon } from '@heroicons/react/24/solid'
 import { ArrowPathIcon, CheckIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import React from 'react'
 import { useGroupContext } from '../../contexts/group'
@@ -9,8 +9,9 @@ import { GroupMember } from '../../types/api/groups'
 import { useGetAccount } from '../../hooks/api/accounts'
 import { useDebounce } from 'usehooks-ts'
 import LoaderIcon from '../../components/icons/LoaderIcon'
-import { useSendInvite } from '../../hooks/api/invites'
+import { useListInvites, useSendInvite } from '../../hooks/api/invites'
 import { useAuthContext } from '../../contexts/auth'
+import { Invite } from '../../types/api/invites'
 
 export const GroupViewSettingsTabEditGroup: React.FC = () => {
   const [editName, setEditName] = React.useState(false)
@@ -120,7 +121,7 @@ const GroupMemberListItem: React.FC<{ member: GroupMember }> = props => {
   const removeGroupQ = useRemoveGroupMember()
   const updateGroupMemberQ = useUpdateGroupMember()
 
-  return <div className='group px-5 h-16 grid grid-cols-4 hover:bg-gray-100 cursor-default'>
+  return <div className='group grid grid-cols-[30%_40%_20%_10%] px-5 h-16 hover:bg-gray-100 cursor-default'>
     <div className='flex items-center'>
       <div className='h-9 w-9 bg-gradient-radial to-green-200 from-teal-300 rounded-md' />
       <div className='font-medium text-sm text-gray-800 pl-3'>
@@ -134,10 +135,10 @@ const GroupMemberListItem: React.FC<{ member: GroupMember }> = props => {
         account.isSuccess ? <p className='text-sm text-gray-500'>{account.data.data.account.email}</p> : <div className='skeleton w-48 h-4' />
       }
     </div>
-    <div className='flex items-center justify-center'>
+    <div className='flex items-center'>
       {
         props.member.role === 'admin' ?
-          <div className='float-right text-xs font-medium p-1 px-2 text-purple-600 bg-purple-200 ml-2 rounded-full'>Admin</div>
+          <div className='float-right text-xs font-medium p-1 px-2 text-purple-600 bg-purple-200 rounded-full'>Admin</div>
           :
           <div
             className='opacity-75 hover:opacity-100 group-hover:visible invisible float-right text-xs font-medium p-[2px] cursor-pointer px-[6px] border-2 border-gray-400 border-dashed text-gray-600 bg-gray-200 ml-2 rounded-full'
@@ -151,7 +152,7 @@ const GroupMemberListItem: React.FC<{ member: GroupMember }> = props => {
         props.member.account_id !== authContext.userID && props.member.role === 'admin' ? 
           null
           :
-          <div className='invisible group-hover:visible hover:bg-gray-200 p-2 rounded-md cursor-pointer'
+          <div className='opacity-75 group-hover:opacity-100 hover:bg-gray-200 p-2 rounded-md cursor-pointer'
             onClick={() => removeGroupQ.mutate({ account_id: props.member.account_id, group_id: groupContext.groupID as string })} >
             <TrashIcon className='text-gray-400 stroke-2 h-5 w-5' />
           </div>
@@ -179,9 +180,9 @@ const GroupViewSettingsTabMembersSection: React.FC = () => {
     setAccountEmailSearch('')
   }
 
-  return <div className='pt-5 overflow-hidden mt-4 bg-gray-50 rounded-md border border-gray-100'>
+  return <div className='overflow-hidden mt-4 bg-gray-50 rounded-md border border-gray-100'>
     {/* Header */}
-    <div className='px-5 flex items-center justify-between pb-3 border-b border-[#efefef]'>
+    <div className='p-5 flex items-center justify-between border-b border-gray-200'>
       <div className='flex items-center'>
         <UserIcon className='ml-2 text-gray-600 h-5 w-5 mr-2' />
         <p className='text-gray-600 text-md font-medium'>Members</p>
@@ -230,10 +231,80 @@ const GroupViewSettingsTabMembersSection: React.FC = () => {
 
     {/* List */}
     <div className='grid grid-cols-1 w-full'>
+      <div className='grid grid-cols-[30%_40%_20%_10%] px-5 h-8 border-b border-gray-200'>
+        <span className='leading-8 text-sm font-medium text-gray-500'>NAME</span>
+        <span className='leading-8 text-sm font-medium text-gray-500'>EMAIL</span>
+        <span className='leading-8 text-sm font-medium text-gray-500'>ROLE</span>
+        <span className='leading-8 text-sm font-medium text-gray-500 text-end'>ACTIONS</span>
+      </div>
       {
         listMembersQ.isSuccess ? listMembersQ.data.data.members?.map((el, idx) => <GroupMemberListItem
           key={`group-member-list-${el.account_id}-${idx}`}
           member={el} />)
+          :
+          <div className='px-5'>
+            <div className='skeleton h-6 my-5 w-full' />
+            <div className='skeleton h-6 my-5 w-full' />
+          </div>
+      }
+    </div>
+  </div>
+}
+
+const PendingInviteListItem: React.FC<{ invite: Invite }> = props => {
+  const senderAccountQ = useGetAccount({ account_id: props.invite.sender_account_id })
+  const recipientAccountQ = useGetAccount({ account_id: props.invite.recipient_account_id })
+
+  return <div className='group px-5 h-16 grid grid-cols-[35%_35%_20%_10%] hover:bg-gray-100 cursor-default'>
+    <div className='flex items-center'>
+      <div className='h-6 w-6 bg-gradient-radial to-green-200 from-teal-300 rounded-md' />
+      <div className='font-medium text-sm text-gray-800 pl-3'>
+        {recipientAccountQ.isSuccess ? recipientAccountQ.data.data.account.name : <div className='skeleton w-16 h-4' />}
+      </div>
+    </div>
+    <div className='flex items-center'>
+      <div className='h-6 w-6 bg-gradient-radial to-green-200 from-teal-300 rounded-md' />
+      <div className='font-medium text-sm text-gray-800 pl-3'>
+        {senderAccountQ.isSuccess ? senderAccountQ.data.data.account.name : <div className='skeleton w-16 h-4' />}
+      </div>
+    </div>
+    <div className='text-gray-500 text-sm leading-[64px]'>
+      a week
+    </div>
+    <div className='flex items-center justify-end'>
+      <div className='opacity-75 group-hover:opacity-100 hover:bg-gray-200 p-2 rounded-md cursor-pointer'>
+        <TrashIcon className='text-gray-400 stroke-2 h-5 w-5' />
+      </div>
+    </div>
+  </div>
+}
+
+const GroupViewSettingsTabPendingInvitesSection: React.FC = () => {
+  const groupContext = useGroupContext()
+  const authContext = useAuthContext()
+  const listInvitesQ = useListInvites({ group_id: groupContext.groupID as string, sender_account_id: authContext.userID })
+
+  return <div className='overflow-hidden mt-4 bg-gray-50 rounded-md border border-gray-100'>
+    {/* Header */}
+    <div className='p-5 flex items-center justify-between border-b border-gray-200'>
+      <div className='flex items-center'>
+        <EnvelopeIcon className='ml-2 text-gray-600 h-5 w-5 mr-2' />
+        <p className='text-gray-600 text-md font-medium'>Pending Invites</p>
+      </div>
+    </div>
+
+    {/* List */}
+    <div className='grid grid-cols-1 w-full'>
+      <div className='grid grid-cols-[35%_35%_20%_10%] px-5 h-8 border-b border-gray-200'>
+        <span className='leading-8 text-sm font-medium text-gray-500'>NAME</span>
+        <span className='leading-8 text-sm font-medium text-gray-500'>INVITED BY</span>
+        <span className='leading-8 text-sm font-medium text-gray-500'>EXPIRES IN</span>
+        <span className='leading-8 text-sm font-medium text-gray-500 text-end'>ACTIONS</span>
+      </div>
+      {
+        listInvitesQ.isSuccess ? listInvitesQ.data.data.invites?.map((el, idx) => <PendingInviteListItem
+          key={`group-view-pending-invites-list-${el.id}-${idx}`}
+          invite={el} />)
           :
           <div>
             <div className='skeleton h-6 w-full mt-2 mb-6' />
@@ -253,6 +324,7 @@ const GroupViewSettingsTab: React.FC = () => {
     <div className='w-full flex flex-col'>
       <GroupViewSettingsTabEditGroup />
       <GroupViewSettingsTabMembersSection />
+      <GroupViewSettingsTabPendingInvitesSection />
     </div>
   </div>
 }
