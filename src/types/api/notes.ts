@@ -46,3 +46,13 @@ export type ListNotesRequest = {
 export type ListNotesResponse = {
   notes: Note[];
 }
+
+export type InsertBlockRequest = {
+  note_id: string; 
+  block: Omit<Block, 'id'>
+  index: number
+}
+
+export type InsertBlockResponse = {
+  block: Block
+}

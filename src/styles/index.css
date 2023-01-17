@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
+@font-face {
+    font-family: Inter;
+    src: url('../assets/fonts/Inter/Inter-VariableFont_slnt,wght.ttf');
+}
+
 * {
     font-family: 'Inter', sans-serif;
 }
@@ -33,4 +38,8 @@
 
 .skeleton {
     @apply rounded bg-gradient-to-br animate-pulse from-gray-100 to-gray-200
+}
+
+.skeleton-error {
+    @apply rounded bg-gradient-to-br animate-pulse from-red-100 to-red-200
 }

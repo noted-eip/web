@@ -6,7 +6,10 @@ import { newMutationHook, newQueryHook, QueryHookOptions, QueryHookParams } from
 
 export const useCreateGroup = newMutationHook<CreateGroupRequest, CreateGroupResponse>({
   method: 'post',
-  path: () => 'groups'
+  path: () => 'groups',
+  invalidate: () => [
+    ['groups']
+  ]
 })
 
 export const useGetGroup = newQueryHook<GetGroupRequest, GetGroupResponse>(
@@ -16,7 +19,6 @@ export const useGetGroup = newQueryHook<GetGroupRequest, GetGroupResponse>(
 
 export const useGetCurrentGroup = (params?: QueryHookParams) => {
   const groupContext = useGroupContext()
-
 
   return useGetGroup({group_id: groupContext.groupID as string, ...params?.req}, {
     ...params?.options,
@@ -33,7 +35,9 @@ export const useUpdateGroup = newMutationHook<UpdateGroupRequest, UpdateGroupRes
   method: 'patch',
   path: (req) => `groups/${req.group.id}`,
   pathFields: ['group.id'],
-  invalidate: (req) => [`groups/${req.group.id}/members`]
+  invalidate: () => [
+    ['groups']
+  ]
 })
 
 export const useListGroups = newQueryHook<ListGroupsRequest, ListGroupsResponse>(
@@ -49,7 +53,9 @@ export const useUpdateGroupMember = newMutationHook<UpdateGroupMemberRequest, Up
   method:  'patch',
   path: (req) => `groups/${req.group_id}/members/${req.account_id}`,
   pathFields: ['group_id','account_id'],
-  invalidate: (req) => [`groups/${req.group_id}/members`] 
+  invalidate: (req) => [
+    ['groups', req.group_id, 'members']
+  ] 
 })
 
 export const useRemoveGroupMember = () => {
@@ -65,7 +71,7 @@ export const useRemoveGroupMember = () => {
         if (authContext.userID === variables.account_id) {
           groupContext.changeGroup(null)
         } else {
-          apiQueryClient.invalidateQueries({ queryKey: `groups/${variables.group_id}/members` })
+          apiQueryClient.invalidateQueries({ queryKey: ['groups', variables.group_id, 'members'] })
         }
       }
     }

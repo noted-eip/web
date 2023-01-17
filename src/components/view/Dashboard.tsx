@@ -6,7 +6,7 @@ import { Sidebar } from './Sidebar'
 
 // Dashboard is the parent component of most views in the application.
 const Dashboard: React.FC = () => {
-  const [activePanel, setActivePanel] = React.useState<TPanelKey>('group-overview')
+  const [activePanel, setActivePanel] = React.useState<TPanelKey>('group-chat')
   const [panels, setPanels] = React.useState<TPanelKey[]>([])
 
   return <PanelContext.Provider value={{activePanel, setActivePanel, panels, setPanels}}>
