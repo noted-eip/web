@@ -4,7 +4,7 @@ import ViewSkeleton from '../../components/view/ViewSkeleton'
 import { useGetNote, useInsertBlock } from '../../hooks/api/notes'
 import { Block } from '../../types/api/notes'
 
-const NoteViewBlockItem: React.FC<{ block: Block }> = props => {
+const NoteViewBlockItem: React.FC<{ block: Block }> = () => {
   return <div className='focus:outline-none focus:bg-gray-50 rounded-md border border-gray-100 p-2 bg-gray-50' contentEditable></div>
 }
 
