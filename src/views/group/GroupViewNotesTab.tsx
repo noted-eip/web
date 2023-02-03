@@ -31,7 +31,7 @@ const GroupViewNotesTab: React.FC = () => {
   const getGroupQ = useGetGroup({ group_id: groupContext.groupID as string })
   const navigate = useNavigate()
   const createNoteQ = useCreateNote({
-    onSuccess: (data, variables, context) => {
+    onSuccess: (data) => {
       navigate(`./note/${data.data.note.id}`)
     }
   })

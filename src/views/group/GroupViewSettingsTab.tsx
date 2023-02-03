@@ -141,7 +141,7 @@ const GroupMemberListItem: React.FC<{ member: GroupMember }> = props => {
           <div className='float-right text-xs font-medium p-1 px-2 text-purple-600 bg-purple-200 rounded-full'>Admin</div>
           :
           <div
-            className='opacity-75 hover:opacity-100 group-hover:visible invisible float-right text-xs font-medium p-[2px] cursor-pointer px-[6px] border-2 border-gray-400 border-dashed text-gray-600 bg-gray-200 ml-2 rounded-full'
+            className='opacity-75 hover:opacity-100 group-hover:visible invisible float-right text-xs font-medium p-[2px] cursor-pointer px-[6px] border-2 border-gray-400 border-dashed text-gray-600 bg-gray-200 rounded-full'
             onClick={() => updateGroupMemberQ.mutate({ account_id: props.member.account_id, group_id: groupContext.groupID as string, member: { role: 'admin' }, update_mask: 'role'})}>
             Admin
           </div>
@@ -302,13 +302,17 @@ const GroupViewSettingsTabPendingInvitesSection: React.FC = () => {
         <span className='leading-8 text-sm font-medium text-gray-500 text-end'>ACTIONS</span>
       </div>
       {
-        listInvitesQ.isSuccess ? listInvitesQ.data.data.invites?.map((el, idx) => <PendingInviteListItem
-          key={`group-view-pending-invites-list-${el.id}-${idx}`}
-          invite={el} />)
+        listInvitesQ.isSuccess ?
+          listInvitesQ.data.data.invites ?
+            listInvitesQ.data.data.invites.map((el, idx) => <PendingInviteListItem
+              key={`group-view-pending-invites-list-${el.id}-${idx}`}
+              invite={el} />)
+            :
+            <div className='text-sm text-gray-400 p-4 flex justify-center'>No pending invites for this group</div>
           :
-          <div>
-            <div className='skeleton h-6 w-full mt-2 mb-6' />
-            <div className='skeleton h-6 w-full' />
+          <div className='px-5'>
+            <div className='skeleton h-6 my-6 w-full' />
+            <div className='skeleton h-6 my-6 w-full' />
           </div>
       }
     </div>

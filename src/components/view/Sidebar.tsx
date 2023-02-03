@@ -9,7 +9,6 @@ import { useListInvites } from '../../hooks/api/invites'
 import { apiQueryClient } from '../../lib/api'
 import { LS_AUTH_TOKEN_KEY, LS_GROUP_ID_KEY } from '../../lib/constants'
 import { TOGGLE_DEV_FEATURES } from '../../lib/env'
-import Input from '../form/Input'
 
 const DevAccountItem: React.FC<{ account: { id: string, token: string }}> = props => {
   const authContext = useAuthContext()
