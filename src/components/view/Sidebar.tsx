@@ -19,7 +19,7 @@ import { TOGGLE_DEV_FEATURES } from '../../lib/env'
 
 const DevAccountItem: React.FC<{ account: { id: string; token: string } }> = (props) => {
   const authContext = useAuthContext()
-  const getAccountQ = useGetAccount({ account_id: props.account.id })
+  const getAccountQ = useGetAccount({accountId: props.account.id})
   const setAccounts = useDevelopmentContext()?.setAccounts
 
   if (!setAccounts) return null
@@ -58,7 +58,7 @@ export const Sidebar: React.FC = () => {
   const authContext = useAuthContext()
   const currentPath = useLocation().pathname
   const listInvitesQ = useListInvites({ recipient_account_id: authContext.userID })
-  const getAccountQ = useGetAccount({ account_id: authContext.userID })
+  const getAccountQ = useGetAccount({accountId: authContext.userID})
   const accountsMap = useDevelopmentContext()?.accounts
   const [accounts, setAccounts] = React.useState<{ token: string; id: string }[]>()
 

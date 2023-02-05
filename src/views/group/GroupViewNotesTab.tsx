@@ -10,7 +10,7 @@ import { Note } from '../../types/api/notes'
 import { useGetAccount } from '../../hooks/api/accounts'
 
 const NotesListGridItem: React.FC<{ note: Note }> = (props) => {
-  const authorQ = useGetAccount({ account_id: props.note.author_id })
+  const authorQ = useGetAccount({accountId: props.note.author_id})
   const navigate = useNavigate()
 
   return (

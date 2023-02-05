@@ -1,48 +1,59 @@
-import axios from 'axios'
-import { useQuery } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 import { useAuthContext } from '../../contexts/auth'
-import { decodeToken } from '../../lib/api'
-import { API_BASE } from '../../lib/env'
-import {
-  CreateAccountRequest,
-  GetAccountRequest,
-  GetAccountResponse,
-  UpdateAccountRequest,
-  UpdateAccountResponse,
-} from '../../types/api/accounts'
-import { newMutationHook, newQueryHook } from './helpers'
+import { openapiClient } from '../../lib/api'
+import { V1Account, V1AuthenticateRequest, V1AuthenticateResponse, V1CreateAccountRequest, V1CreateAccountResponse, V1GetAccountResponse } from '../../protorepo/openapi/typescript-axios'
+import { axiosRequestOptionsWithAuthorization, MutationHookOptions, QueryHookOptions } from './helpers'
 
-export const createAccount = async (req: CreateAccountRequest) => {
-  return await axios.post(`${API_BASE}/accounts`, req)
-}
-
-export const getAccount = (req: GetAccountRequest) => {
+export type GetAccountRequest = {accountId: string, email?: string};
+export const useGetAccount = (req: GetAccountRequest, options?: QueryHookOptions<GetAccountRequest, V1GetAccountResponse>) => {
   const auth = useAuthContext()
-  return useQuery(['accounts', req.account_id], async () => {
-    const token = await auth.token()
-    const decodedToken = decodeToken(token)
-    return axios.get(`${API_BASE}/accounts/${decodedToken.uid}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
+  return useQuery({
+    queryKey: [],
+    queryFn: async () => {
+      return openapiClient.accountsAPIGetAccount(req.accountId, req.email, await axiosRequestOptionsWithAuthorization(auth))
+    },
+    ...options,
   })
 }
 
-export const useGetAccount = newQueryHook<GetAccountRequest, GetAccountResponse>(
-  (req) => {
-    return req.account_id
-      ? `accounts/${req.account_id}`
-      : `accounts/by-email/${req.email}`
-  },
-  ['account_id', 'email']
-)
+export type CreateAccountRequest = {body: V1CreateAccountRequest};
+export const useCreateAccount = (options?: MutationHookOptions<CreateAccountRequest, V1CreateAccountResponse>) => {
+  return useMutation({
+    mutationFn: async (req: {body: V1CreateAccountRequest}) => {
+      return openapiClient.accountsAPICreateAccount(req.body, {})
+    },
+    ...options,
+  })
+}
 
-export const useUpdateAccount = newMutationHook<
-UpdateAccountRequest,
-UpdateAccountResponse
->({
-  method: 'patch',
-  path: (req) => `accounts/${req.account.id}`,
-  pathFields: ['account_id'],
-})
+export type UpdateAccountRequest = {accountId: string, body: V1Account};
+export const useUpdateAccount = (options?: MutationHookOptions<UpdateAccountRequest, V1CreateAccountResponse>) => {
+  const auth = useAuthContext()
+  return useMutation({
+    mutationFn: async (req: UpdateAccountRequest) => {
+      return openapiClient.accountsAPIUpdateAccount(req.accountId, req.body, undefined, await axiosRequestOptionsWithAuthorization(auth))
+    },
+    ...options,
+  })
+}
+
+export type DeleteAccountRequest =  {accountId: string};
+export const useDeleteAccount = (options?: MutationHookOptions<DeleteAccountRequest, object>) => {
+  const auth = useAuthContext()
+  return useMutation({
+    mutationFn: async (req: DeleteAccountRequest) => {
+      return openapiClient.accountsAPIDeleteAccount(req.accountId, await axiosRequestOptionsWithAuthorization(auth))
+    },
+    ...options,
+  })
+}
+
+export type AuthenticateRequest =  {body: V1AuthenticateRequest};
+export const useAuthenticate = (options?: MutationHookOptions<AuthenticateRequest, V1AuthenticateResponse>) => {
+  return useMutation({
+    mutationFn: async (req: AuthenticateRequest) => {
+      return openapiClient.accountsAPIAuthenticate(req.body, {})
+    },
+    ...options,
+  })
+}

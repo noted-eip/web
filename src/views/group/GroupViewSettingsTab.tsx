@@ -162,7 +162,7 @@ export const GroupViewSettingsTabEditGroup: React.FC = () => {
 const GroupMemberListItem: React.FC<{ member: GroupMember }> = (props) => {
   const authContext = useAuthContext()
   const groupContext = useGroupContext()
-  const account = useGetAccount({ account_id: props.member.account_id })
+  const account = useGetAccount({accountId: props.member.account_id})
   const removeGroupQ = useRemoveGroupMember()
   const updateGroupMemberQ = useUpdateGroupMember()
 
@@ -231,10 +231,7 @@ const GroupMemberListItem: React.FC<{ member: GroupMember }> = (props) => {
 const GroupViewSettingsTabMembersSection: React.FC = () => {
   const groupContext = useGroupContext()
   const [accountEmailSearch, setAccountEmailSearch] = React.useState<string>('')
-  const searchAccountQ = useGetAccount(
-    { email: accountEmailSearch },
-    { enabled: false, retry: false }
-  )
+  const searchAccountQ = useGetAccount({accountId: '', email: accountEmailSearch}, {enabled: false, retry: false})
   const sendInviteQ = useSendInvite()
   const listMembersQ = useListCurrentGroupMembers({}, {})
   const debouncedValue = useDebounce<string>(accountEmailSearch, 1000)
@@ -345,12 +342,8 @@ const GroupViewSettingsTabMembersSection: React.FC = () => {
 }
 
 const PendingInviteListItem: React.FC<{ invite: Invite }> = (props) => {
-  const senderAccountQ = useGetAccount({
-    account_id: props.invite.sender_account_id,
-  })
-  const recipientAccountQ = useGetAccount({
-    account_id: props.invite.recipient_account_id,
-  })
+  const senderAccountQ = useGetAccount({accountId: props.invite.sender_account_id})
+  const recipientAccountQ = useGetAccount({accountId: props.invite.recipient_account_id})
 
   return (
     <div className='group grid h-16 cursor-default grid-cols-[35%_35%_20%_10%] px-5 hover:bg-gray-100'>

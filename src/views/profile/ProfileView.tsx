@@ -9,6 +9,7 @@ import { useAuthContext } from '../../contexts/auth'
 import { useGetGroup } from '../../hooks/api/groups'
 import { useAcceptInvite, useDenyInvite, useListInvites } from '../../hooks/api/invites'
 import { Invite } from '../../types/api/invites'
+import { V1Account } from '../../protorepo/openapi/typescript-axios'
 
 const InviteListItem: React.FC<{ invite: Invite }> = (props) => {
   const getGroupQ = useGetGroup({ group_id: props.invite.group_id })
@@ -100,7 +101,7 @@ const ProfileViewAccountSection: React.FC = () => {
   const [editName, setEditName] = React.useState(false)
   const [newName, setNewName] = React.useState<string | undefined>(undefined)
   const updateAccountQ = useUpdateAccount()
-  const getAccountQ = useGetAccount({ account_id: authContext.userID })
+  const getAccountQ = useGetAccount({accountId: authContext.userID})
   const newNameInputRef = React.createRef<HTMLInputElement>()
 
   useClickOutside(newNameInputRef, () => {
@@ -109,16 +110,13 @@ const ProfileViewAccountSection: React.FC = () => {
 
   React.useEffect(() => {
     if (newName === undefined || !editName) {
-      setNewName(getAccountQ.isSuccess ? getAccountQ.data.data.account.name : '')
+      setNewName(getAccountQ.isSuccess ? getAccountQ.data.data.account?.name : '')
     }
   }, [getAccountQ])
 
   const onChangeName = (e) => {
     e.preventDefault()
-    updateAccountQ.mutate({
-      account: { id: authContext.userID as string, name: newName },
-      update_mask: 'name',
-    })
+    updateAccountQ.mutate({accountId: authContext.userID as string, body: {name: newName} as V1Account})
     setEditName(false)
   }
 
@@ -153,13 +151,13 @@ const ProfileViewAccountSection: React.FC = () => {
                   </form>
                 ) : (
                   <React.Fragment>
-                    <p className='font-medium'>{getAccountQ.data?.data.account.name}</p>
+                    <p className='font-medium'>{getAccountQ.data?.data.account?.name}</p>
                     <PencilIcon className='ml-2 hidden h-4 w-4 stroke-2 text-gray-400 group-hover:block' />
                   </React.Fragment>
                 )}
               </div>
               <div>
-                <p className='text-gray-700'>{getAccountQ.data?.data.account.email}</p>
+                <p className='text-gray-700'>{getAccountQ.data.data.account?.name}</p>
               </div>
             </React.Fragment>
           ) : (

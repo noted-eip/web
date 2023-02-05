@@ -2,7 +2,7 @@ import React from 'react'
 import { decodeToken } from '../lib/api'
 import { LS_AUTH_TOKEN_KEY, LS_GROUP_ID_KEY } from '../lib/constants'
 
-type TAuthContext = {
+export type TAuthContext = {
   userID: string
   logout: () => void
   token: () => Promise<string>

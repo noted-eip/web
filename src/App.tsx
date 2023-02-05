@@ -6,9 +6,10 @@ import { DevelopmentContext, TAccountsMap } from './contexts/dev'
 import { NoAuthContext, NoAuthContextManager } from './contexts/noauth'
 import { apiQueryClient } from './lib/api'
 import { LS_DEVELOPMENT_DATA_KEY } from './lib/constants'
-import { TOGGLE_DEV_FEATURES } from './lib/env'
+import { API_BASE, TOGGLE_DEV_FEATURES } from './lib/env'
 import AuthenticatedRouter from './views/AuthenticatedRouter'
 import UnauthenticatedRouter from './views/UnauthenticatedRouter'
+import { DefaultApiFactory } from './protorepo/openapi/typescript-axios'
 
 const App: React.FC = () => {
   const [token, setToken] = React.useState<null | string>(null)

@@ -22,7 +22,7 @@ import {
 import {
   newMutationHook,
   newQueryHook,
-  QueryHookOptions,
+  OldQueryHookOptions,
   QueryHookParams,
 } from './helpers'
 
@@ -109,7 +109,7 @@ ListGroupMembersResponse
 
 export const useListCurrentGroupMembers = (
   req: Omit<ListGroupMembersRequest, 'group_id'>,
-  options?: QueryHookOptions<ListGroupMembersResponse>
+  options?: OldQueryHookOptions<ListGroupMembersResponse>
 ) => {
   const groupContext = useGroupContext()
 

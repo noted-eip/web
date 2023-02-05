@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import axios, { AxiosError, AxiosResponse } from 'axios'
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { useMutation, UseMutationOptions, useQuery, UseQueryOptions } from 'react-query'
-import { useAuthContext } from '../../contexts/auth'
+import { TAuthContext, useAuthContext } from '../../contexts/auth'
 import { apiQueryClient } from '../../lib/api'
 import { API_BASE } from '../../lib/env'
 import { APIError } from '../../types/api/error'
 
-export type QueryHookOptions<RES = any> = UseQueryOptions<
+export type OldQueryHookOptions<RES = any> = UseQueryOptions<
 AxiosResponse<RES, any>,
 AxiosError<APIError, unknown>,
 AxiosResponse<RES, any>,
@@ -153,5 +153,27 @@ export function newMutationHook<REQ = any, RES = any>(config: {
         },
       }
     )
+  }
+}
+
+export type MutationHookOptions<REQ = any, RES = any> = UseMutationOptions<
+AxiosResponse<RES, REQ>,
+AxiosError<APIError, REQ>,
+REQ,
+unknown
+>
+
+export type QueryHookOptions<REQ = any, RES = any> = UseQueryOptions<
+AxiosResponse<RES, REQ>,
+AxiosError<APIError, REQ>,
+AxiosResponse<RES, REQ>,
+any[]
+>
+
+export const axiosRequestOptionsWithAuthorization = async (auth: TAuthContext): Promise<AxiosRequestConfig> => {
+  return {
+    headers: {
+      'Authorization': `Bearer ${await auth.token()}`
+    }
   }
 }

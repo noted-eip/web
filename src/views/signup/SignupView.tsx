@@ -1,15 +1,13 @@
 import { AxiosResponse } from 'axios'
 import React from 'react'
-import { useMutation } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 import OldInput from '../../components/form/OldInput'
 import { addAccountToDevelopmentContext, useDevelopmentContext } from '../../contexts/dev'
 import { useNoAuthContext } from '../../contexts/noauth'
-import { createAccount } from '../../hooks/api/accounts'
-import { authenticate } from '../../hooks/api/authenticate'
-import { apiQueryClient, decodeToken } from '../../lib/api'
+import { AuthenticateRequest, useAuthenticate, useCreateAccount } from '../../hooks/api/accounts'
+import { decodeToken } from '../../lib/api'
 import { validateName, validateEmail, validatePassword } from '../../lib/validators'
-import { AuthenticateResponse, CreateAccountResponse } from '../../types/api/accounts'
+import { V1AuthenticateResponse } from '../../protorepo/openapi/typescript-axios'
 
 const SignupView: React.FC = () => {
   const navigate = useNavigate()
@@ -21,28 +19,43 @@ const SignupView: React.FC = () => {
   const [email, setEmail] = React.useState('')
   const [emailValid, setEmailValid] = React.useState(false)
   const developmentContext = useDevelopmentContext()
-
-  const authenticateMutation = useMutation(authenticate, {
-    onSuccess: (data: AxiosResponse<AuthenticateResponse, unknown>) => {
-      const tokenData = decodeToken(data.data.token)
+  const authenticateMutation = useAuthenticate({
+    onSuccess: (data: AxiosResponse<V1AuthenticateResponse, AuthenticateRequest>) => {
+      const tokenData = decodeToken(data.data.token as string)
       if (developmentContext !== undefined) {
         addAccountToDevelopmentContext(
           tokenData.uid,
-          data.data.token,
+          data.data.token as string,
           developmentContext.setAccounts
         )
       }
-      auth.signin(data.data.token)
+      auth.signin(data.data.token as string)
       navigate('/')
     },
   })
+  const createAccountMutation = useCreateAccount({})
 
-  const createAccountMutation = useMutation(createAccount, {
-    onSuccess: (data: AxiosResponse<CreateAccountResponse, unknown>) => {
-      apiQueryClient.invalidateQueries(['accounts', data.data.account.id])
-      authenticateMutation.mutate({ email, password })
-    },
-  })
+  // const authenticateMutation = useMutation(authenticate, {
+  //   onSuccess: (data: AxiosResponse<AuthenticateResponse, unknown>) => {
+  //     const tokenData = decodeToken(data.data.token)
+  //     if (developmentContext !== undefined) {
+  //       addAccountToDevelopmentContext(
+  //         tokenData.uid,
+  //         data.data.token,
+  //         developmentContext.setAccounts
+  //       )
+  //     }
+  //     auth.signin(data.data.token)
+  //     navigate('/')
+  //   },
+  // })
+
+  // const createAccountMutation = useMutation(createAccount, {
+  //   onSuccess: (data: AxiosResponse<CreateAccountResponse, unknown>) => {
+  //     apiQueryClient.invalidateQueries(['accounts', data.data.account.id])
+  //     authenticateMutation.mutate({ email, password })
+  //   },
+  // })
 
   const formIsValid = () => {
     return nameValid && passwordValid && emailValid
@@ -54,7 +67,7 @@ const SignupView: React.FC = () => {
         className='grid grid-cols-1 gap-2'
         onSubmit={(e) => {
           e.preventDefault()
-          createAccountMutation.mutate({ email, password, name })
+          createAccountMutation.mutate({body: {name, email, password}})
         }}
       >
         <OldInput
