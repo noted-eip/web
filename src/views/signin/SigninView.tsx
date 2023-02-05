@@ -22,22 +22,31 @@ const SigninView: React.FC = () => {
     onSuccess: (data: AxiosResponse<AuthenticateResponse, unknown>) => {
       const tokenData = decodeToken(data.data.token)
       if (developmentContext !== undefined) {
-        addAccountToDevelopmentContext(tokenData.uid, data.data.token, developmentContext.setAccounts)
+        addAccountToDevelopmentContext(
+          tokenData.uid,
+          data.data.token,
+          developmentContext.setAccounts
+        )
       }
       auth.signin(data.data.token)
       navigate('/')
-    }
+    },
   })
-  
-  const formIsValid = () => { return emailValid }
+
+  const formIsValid = () => {
+    return emailValid
+  }
 
   return (
-    <div className='w-screen h-screen flex justify-center items-center'>
-      <form className='grid gap-2 grid-cols-1' onSubmit={(e) => {
-        e.preventDefault()
-        authenticateMutation.mutate({email, password})
-      }}>
-        <OldInput 
+    <div className='flex h-screen w-screen items-center justify-center'>
+      <form
+        className='grid grid-cols-1 gap-2'
+        onSubmit={(e) => {
+          e.preventDefault()
+          authenticateMutation.mutate({ email, password })
+        }}
+      >
+        <OldInput
           label='Email'
           value={email}
           onChange={(e) => {
@@ -46,16 +55,21 @@ const SigninView: React.FC = () => {
             setEmailValid(validateEmail(val) === undefined)
           }}
           isInvalidBlur={!emailValid}
-          errorMessage='Invalid email address' />
+          errorMessage='Invalid email address'
+        />
         <OldInput
           label='Password'
           type='password'
           value={password}
-          onChange={(e) => { setPassword(e.target.value) }} />
+          onChange={(e) => {
+            setPassword(e.target.value)
+          }}
+        />
         <button
-          className='bg-blue-600 text-white rounded py-2 mt-4 transform disabled:bg-gray-600'
-          disabled={!formIsValid() || authenticateMutation.isLoading}>
-            Submit
+          className='mt-4 rounded bg-blue-600 py-2 text-white disabled:bg-gray-600'
+          disabled={!formIsValid() || authenticateMutation.isLoading}
+        >
+          Submit
         </button>
       </form>
     </div>

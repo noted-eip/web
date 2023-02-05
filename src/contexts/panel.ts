@@ -7,7 +7,7 @@ export type TPanelContext = {
   setActivePanel: React.Dispatch<TPanelKey>
   panels: TPanelKey[]
   setPanels: React.Dispatch<TPanelKey[]>
-};
+}
 
 export const PanelContext = React.createContext<TPanelContext | undefined>(undefined)
 

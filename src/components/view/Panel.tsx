@@ -6,7 +6,9 @@ export const Panel: React.FC = () => {
   const { activePanel } = usePanelContext()
   const activePanelComponent = panelMetadata[activePanel].component
 
-  return <div className='h-screen !max-h-screen border-l border-gray-300 hidden lg:flex overflow-hidden'>
-    {activePanelComponent({}, {})}
-  </div>
+  return (
+    <div className='hidden h-screen !max-h-screen overflow-hidden border-l border-gray-300 lg:flex'>
+      {activePanelComponent({}, {})}
+    </div>
+  )
 }

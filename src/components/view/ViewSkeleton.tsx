@@ -3,11 +3,11 @@ import { TPanelKey, usePanelContext } from '../../contexts/panel'
 import DashboardHeader from './DashboardHeader'
 
 export type TViewSkeletonProps = {
-    title: string
-    panels: TPanelKey[]
+  title: string
+  panels: TPanelKey[]
 }
 
-const ViewSkeleton: React.FC<PropsWithChildren & TViewSkeletonProps> = props => {
+const ViewSkeleton: React.FC<PropsWithChildren & TViewSkeletonProps> = (props) => {
   const { activePanel, setActivePanel, panels, setPanels } = usePanelContext()
 
   React.useEffect(() => {
@@ -19,14 +19,14 @@ const ViewSkeleton: React.FC<PropsWithChildren & TViewSkeletonProps> = props => 
     }
   }, [])
 
-  return <div className='flex flex-col h-screen w-full !max-h-screen overflow-hidden'>
-    <DashboardHeader>
-      <h2>{props.title}</h2>
-    </DashboardHeader>
-    <div className='flex overflow-y-scroll h-full w-full'>
-      {props.children}
+  return (
+    <div className='flex h-screen !max-h-screen w-full flex-col overflow-hidden'>
+      <DashboardHeader>
+        <h2>{props.title}</h2>
+      </DashboardHeader>
+      <div className='flex h-full w-full overflow-y-scroll'>{props.children}</div>
     </div>
-  </div>
+  )
 }
 
 export default ViewSkeleton

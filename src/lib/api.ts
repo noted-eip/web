@@ -9,8 +9,8 @@ const apiQueryClient = new QueryClient({
   },
 })
 
-const decodeToken = (token: string): {uid: string, role: string | undefined} => {
-  const decodedToken = jwt_decode(token) as {uid: string, role: string | undefined}
+const decodeToken = (token: string): { uid: string; role: string | undefined } => {
+  const decodedToken = jwt_decode(token) as { uid: string; role: string | undefined }
   if (decodedToken && decodedToken.uid) {
     return decodedToken
   }

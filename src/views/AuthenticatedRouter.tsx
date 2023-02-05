@@ -15,7 +15,9 @@ import NoteView from './note/NotesView'
 // Describes routes that are available to authenticated users.
 const AuthenticatedRouter: React.FC = () => {
   const navigate = useNavigate()
-  const [groupID, setGroupID] = React.useState<string | null>(window.localStorage.getItem(LS_GROUP_ID_KEY))
+  const [groupID, setGroupID] = React.useState<string | null>(
+    window.localStorage.getItem(LS_GROUP_ID_KEY)
+  )
 
   const changeGroup = (val) => {
     setGroupID(val)
@@ -29,7 +31,7 @@ const AuthenticatedRouter: React.FC = () => {
   }
 
   return (
-    <GroupContext.Provider value={{groupID, changeGroup}}>
+    <GroupContext.Provider value={{ groupID, changeGroup }}>
       <Routes>
         <Route path='/' element={<Dashboard />}>
           <Route path='' element={<GroupView />} />
@@ -47,6 +49,5 @@ const AuthenticatedRouter: React.FC = () => {
     </GroupContext.Provider>
   )
 }
-
 
 export default AuthenticatedRouter
