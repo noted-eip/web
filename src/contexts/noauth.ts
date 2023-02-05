@@ -2,12 +2,10 @@ import React from 'react'
 import { LS_AUTH_TOKEN_KEY } from '../lib/constants'
 
 type TNoAuthContext = {
-  signin: (token: string) => void;
-};
+  signin: (token: string) => void
+}
 
-export const NoAuthContext = React.createContext<TNoAuthContext | undefined>(
-  undefined
-)
+export const NoAuthContext = React.createContext<TNoAuthContext | undefined>(undefined)
 
 // Manage unauthenticated user sessions. This context is only available whithin
 // unauthenticated views.

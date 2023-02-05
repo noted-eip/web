@@ -1,9 +1,9 @@
 import React from 'react'
 
 type TGroupContext = {
-  groupID: string | null,
+  groupID: string | null
   changeGroup: React.Dispatch<string | null>
-};
+}
 
 export const GroupContext = React.createContext<TGroupContext | undefined>(undefined)
 

@@ -1,54 +1,54 @@
 export type Block = {
-  id: string;
-  type: string;
-  heading?: string;
-  paragraph?: string;
+  id: string
+  type: string
+  heading?: string
+  paragraph?: string
 }
 
 export type Note = {
-  id: string;
-  title: string;
-  author_id: string;
-  blocks?: Block[];
-  created_at: string;
-  modified_at: string;
+  id: string
+  title: string
+  author_id: string
+  blocks?: Block[]
+  created_at: string
+  modified_at: string
 }
 
 export type CreateNoteRequest = {
-  group_id: string;
-  note: { title: string, author_id: string };
+  group_id: string
+  note: { title: string; author_id: string }
 }
 
 export type CreateNoteResponse = {
-  note: Note;
+  note: Note
 }
 
 export type GetNoteRequest = {
-  note_id: string;
+  note_id: string
 }
 
 export type GetNoteResponse = {
-  note: Note;
+  note: Note
 }
 
 export type GetNotesResponse = {
-  id: string;
-  author_id: string;
-  title: string;
-  created_at: string;
-  modified_at: string;
+  id: string
+  author_id: string
+  title: string
+  created_at: string
+  modified_at: string
 }
 
 export type ListNotesRequest = {
-  author_id: string;
+  author_id: string
 }
 
 export type ListNotesResponse = {
-  notes: Note[];
+  notes: Note[]
 }
 
 export type InsertBlockRequest = {
-  note_id: string; 
+  note_id: string
   block: Omit<Block, 'id'>
   index: number
 }

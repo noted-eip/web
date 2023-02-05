@@ -1,42 +1,42 @@
 export type Account = {
-    id: string;
-    name: string;
-    email: string;
+  id: string
+  name: string
+  email: string
 }
 
 export type CreateAccountRequest = {
-    name: string;
-    email: string;
-    password: string;
+  name: string
+  email: string
+  password: string
 }
 
 export type CreateAccountResponse = {
-    account: Account;
+  account: Account
 }
 
 export type GetAccountRequest = {
-    account_id?: string;
-    email?: string;
+  account_id?: string
+  email?: string
 }
 
 export type GetAccountResponse = {
-    account: Account;
+  account: Account
 }
 
 export type AuthenticateRequest = {
-    email: string;
-    password: string;
+  email: string
+  password: string
 }
 
 export type AuthenticateResponse = {
-    token: string;
+  token: string
 }
 
 export type UpdateAccountRequest = {
-    account: Partial<Account>;
-    update_mask: string;
+  account: Partial<Account>
+  update_mask: string
 }
 
 export type UpdateAccountResponse = {
-    account: Account;
+  account: Account
 }

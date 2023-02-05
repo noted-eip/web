@@ -26,28 +26,37 @@ const SignupView: React.FC = () => {
     onSuccess: (data: AxiosResponse<AuthenticateResponse, unknown>) => {
       const tokenData = decodeToken(data.data.token)
       if (developmentContext !== undefined) {
-        addAccountToDevelopmentContext(tokenData.uid, data.data.token, developmentContext.setAccounts)
-      }   
+        addAccountToDevelopmentContext(
+          tokenData.uid,
+          data.data.token,
+          developmentContext.setAccounts
+        )
+      }
       auth.signin(data.data.token)
       navigate('/')
-    }
+    },
   })
 
-  const createAccountMutation = useMutation(createAccount, { 
+  const createAccountMutation = useMutation(createAccount, {
     onSuccess: (data: AxiosResponse<CreateAccountResponse, unknown>) => {
       apiQueryClient.invalidateQueries(['accounts', data.data.account.id])
-      authenticateMutation.mutate({email, password})
-    }
+      authenticateMutation.mutate({ email, password })
+    },
   })
-  
-  const formIsValid = () => { return nameValid && passwordValid && emailValid }
+
+  const formIsValid = () => {
+    return nameValid && passwordValid && emailValid
+  }
 
   return (
-    <div className='w-screen h-screen flex justify-center items-center'>
-      <form className='grid gap-2 grid-cols-1' onSubmit={(e) => {
-        e.preventDefault()
-        createAccountMutation.mutate({email, password, name})
-      }}>
+    <div className='flex h-screen w-screen items-center justify-center'>
+      <form
+        className='grid grid-cols-1 gap-2'
+        onSubmit={(e) => {
+          e.preventDefault()
+          createAccountMutation.mutate({ email, password, name })
+        }}
+      >
         <OldInput
           label='Name'
           value={name}
@@ -57,8 +66,9 @@ const SignupView: React.FC = () => {
             setNameValid(validateName(val) === undefined)
           }}
           isInvalidBlur={!nameValid}
-          errorMessage='Invalid name'/>
-        <OldInput 
+          errorMessage='Invalid name'
+        />
+        <OldInput
           label='Email'
           value={email}
           onChange={(e) => {
@@ -67,7 +77,8 @@ const SignupView: React.FC = () => {
             setEmailValid(validateEmail(val) === undefined)
           }}
           isInvalidBlur={!emailValid}
-          errorMessage='Invalid email address' />
+          errorMessage='Invalid email address'
+        />
         <OldInput
           label='Password'
           type='password'
@@ -78,11 +89,17 @@ const SignupView: React.FC = () => {
             setPassword(val)
             setPasswordValid(validatePassword(val) === undefined)
           }}
-          isInvalidBlur={!passwordValid} />
+          isInvalidBlur={!passwordValid}
+        />
         <button
-          className='bg-blue-600 text-white rounded py-2 mt-4 transform disabled:bg-gray-600'
-          disabled={!formIsValid() || authenticateMutation.isLoading || createAccountMutation.isLoading}>
-            Submit
+          className='mt-4 rounded bg-blue-600 py-2 text-white disabled:bg-gray-600'
+          disabled={
+            !formIsValid() ||
+            authenticateMutation.isLoading ||
+            createAccountMutation.isLoading
+          }
+        >
+          Submit
         </button>
       </form>
     </div>

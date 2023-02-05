@@ -6,7 +6,7 @@ type TAuthContext = {
   userID: string
   logout: () => void
   token: () => Promise<string>
-};
+}
 
 export const AuthContext = React.createContext<TAuthContext | undefined>(undefined)
 
@@ -21,7 +21,10 @@ export const useAuthContext = () => {
 }
 
 export class AuthContextManager {
-  constructor(private _token: string | null, private _setToken: React.Dispatch<React.SetStateAction<null | string>>) {
+  constructor(
+    private _token: string | null,
+    private _setToken: React.Dispatch<React.SetStateAction<null | string>>
+  ) {
     this.userID = this._token ? decodeToken(this._token).uid : ''
   }
 

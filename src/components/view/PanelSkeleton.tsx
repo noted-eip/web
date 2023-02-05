@@ -1,13 +1,15 @@
 import React, { PropsWithChildren } from 'react'
 import PanelHeader from './PanelHeader'
 
-const PanelSkeleton: React.FC<PropsWithChildren> = props => {
-  return <div className={'flex flex-col h-full w-full'}>
-    <PanelHeader />
-    <div className='overflow-y-scroll h-full lg:px-lg xl:px-xl lg:pb-lg xl:pb-xl'>
-      {props.children}
+const PanelSkeleton: React.FC<PropsWithChildren> = (props) => {
+  return (
+    <div className={'flex h-full w-full flex-col'}>
+      <PanelHeader />
+      <div className='h-full overflow-y-scroll lg:px-lg lg:pb-lg xl:px-xl xl:pb-xl'>
+        {props.children}
+      </div>
     </div>
-  </div>
+  )
 }
 
 export default PanelSkeleton

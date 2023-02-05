@@ -1,5 +1,6 @@
 export const validateEmail = (email: string): undefined | string => {
-  const regex = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>().,;\s@"]+\.{0,1})+([^<>().,;:\s@"]{2,}|[\d.]+))$/
+  const regex =
+    /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>().,;\s@"]+\.{0,1})+([^<>().,;:\s@"]{2,}|[\d.]+))$/
   if (regex.test(email)) {
     return undefined
   }
@@ -21,4 +22,3 @@ export const validatePassword = (password: string): undefined | string => {
   }
   return 'Invalid password'
 }
-  

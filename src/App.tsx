@@ -13,7 +13,9 @@ import UnauthenticatedRouter from './views/UnauthenticatedRouter'
 const App: React.FC = () => {
   const [token, setToken] = React.useState<null | string>(null)
   const [hasLoaded, setHasLoaded] = React.useState(false)
-  const [accounts, setAccounts] = React.useState<TAccountsMap>(JSON.parse(window.localStorage.getItem(LS_DEVELOPMENT_DATA_KEY) || '{}'))
+  const [accounts, setAccounts] = React.useState<TAccountsMap>(
+    JSON.parse(window.localStorage.getItem(LS_DEVELOPMENT_DATA_KEY) || '{}')
+  )
   const noAuthContext = new NoAuthContextManager(setToken)
   const authContext = new AuthContextManager(token, setToken)
 
@@ -22,22 +24,25 @@ const App: React.FC = () => {
     setHasLoaded(true)
   }, [])
 
-  return <BrowserRouter>
-    <DevelopmentContext.Provider value={TOGGLE_DEV_FEATURES ? { accounts, setAccounts} : undefined}>
-      <QueryClientProvider client={apiQueryClient}>
-        {
-          !hasLoaded ? null : token !== null ?
+  return (
+    <BrowserRouter>
+      <DevelopmentContext.Provider
+        value={TOGGLE_DEV_FEATURES ? { accounts, setAccounts } : undefined}
+      >
+        <QueryClientProvider client={apiQueryClient}>
+          {!hasLoaded ? null : token !== null ? (
             <AuthContext.Provider value={authContext}>
               <AuthenticatedRouter />
             </AuthContext.Provider>
-            : 
+          ) : (
             <NoAuthContext.Provider value={noAuthContext}>
               <UnauthenticatedRouter />
             </NoAuthContext.Provider>
-        }
-      </QueryClientProvider>
-    </DevelopmentContext.Provider>
-  </BrowserRouter>
+          )}
+        </QueryClientProvider>
+      </DevelopmentContext.Provider>
+    </BrowserRouter>
+  )
 }
 
 export default App
