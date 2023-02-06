@@ -1,7 +1,7 @@
 import {
   ArrowRightIcon,
   ArrowRightOnRectangleIcon,
-  XMarkIcon,
+  XMarkIcon
 } from '@heroicons/react/24/outline'
 import { Cog6ToothIcon, Square2StackIcon, UserIcon } from '@heroicons/react/24/solid'
 import React from 'react'
@@ -9,7 +9,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { useAuthContext } from '../../contexts/auth'
 import {
   removeAccountFromDevelopmentContext,
-  useDevelopmentContext,
+  useDevelopmentContext
 } from '../../contexts/dev'
 import { useGetAccount } from '../../hooks/api/accounts'
 import { useListInvites } from '../../hooks/api/invites'
@@ -37,10 +37,10 @@ const DevAccountItem: React.FC<{ account: { id: string; token: string } }> = (pr
     >
       <div>
         <span className='float-right hidden text-gray-700 group-hover:underline xl:block'>
-          {getAccountQ.data?.data.account.name.slice(0, 9)}
+          {getAccountQ.data?.account.name.slice(0, 9)}
         </span>
         <span className='float-right text-gray-700 xl:hidden'>
-          {getAccountQ.data?.data.account.name[0]}
+          {getAccountQ.data?.account.name[0]}
         </span>
         <XMarkIcon
           className='float-right mr-1 h-4 w-3 stroke-2 text-gray-600 hover:stroke-[3px] hover:text-red-600'
@@ -97,7 +97,7 @@ export const Sidebar: React.FC = () => {
               <div className='mr-2 hidden h-7 w-7 rounded-md bg-gradient-radial from-teal-300 to-green-200 xl:block' />
               {getAccountQ.isSuccess ? (
                 <span className='hidden text-xs font-medium text-gray-700 xl:block'>
-                  {getAccountQ.data.data.account.name}
+                  {getAccountQ.data.account.name}
                 </span>
               ) : getAccountQ.isError ? (
                 <div className='skeleton-error h-4 w-24' />

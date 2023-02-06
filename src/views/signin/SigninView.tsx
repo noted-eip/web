@@ -1,11 +1,9 @@
-import { AxiosResponse } from 'axios'
 import React from 'react'
-import { useMutation } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 import OldInput from '../../components/form/OldInput'
 import { addAccountToDevelopmentContext, useDevelopmentContext } from '../../contexts/dev'
 import { useNoAuthContext } from '../../contexts/noauth'
-import { AuthenticateRequest, useAuthenticate } from '../../hooks/api/accounts'
+import { useAuthenticate } from '../../hooks/api/accounts'
 import { decodeToken } from '../../lib/api'
 import { validateEmail } from '../../lib/validators'
 import { V1AuthenticateResponse } from '../../protorepo/openapi/typescript-axios'
@@ -18,17 +16,16 @@ const SigninView: React.FC = () => {
   const [emailValid, setEmailValid] = React.useState(false)
   const developmentContext = useDevelopmentContext()
   const authenticateMutation = useAuthenticate({
-    onSuccess: (data: AxiosResponse<V1AuthenticateResponse, AuthenticateRequest>) => {
-      const token = data.data.token as string
-      const tokenData = decodeToken(token)
+    onSuccess: (data: V1AuthenticateResponse) => {
+      const tokenData = decodeToken(data.token)
       if (developmentContext !== undefined) {
         addAccountToDevelopmentContext(
           tokenData.uid,
-          token,
+          data.token,
           developmentContext.setAccounts
         )
       }
-      auth.signin(token)
+      auth.signin(data.token)
       navigate('/')
     },
   })

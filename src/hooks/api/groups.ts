@@ -3,27 +3,23 @@ import { useGroupContext } from '../../contexts/group'
 import { apiQueryClient } from '../../lib/api'
 import {
   CreateGroupRequest,
-  CreateGroupResponse,
-  GetGroupRequest,
+  CreateGroupResponse, GetGroupMemberRequest,
+  GetGroupMemberResponse, GetGroupRequest,
   GetGroupResponse,
   ListGroupMembersRequest,
   ListGroupMembersResponse,
   ListGroupsRequest,
-  ListGroupsResponse,
-  UpdateGroupMemberRequest,
+  ListGroupsResponse, RemoveGroupMemberRequest,
+  RemoveGroupMemberResponse, UpdateGroupMemberRequest,
   UpdateGroupMemberResponse,
   UpdateGroupRequest,
-  UpdateGroupResponse,
-  RemoveGroupMemberRequest,
-  RemoveGroupMemberResponse,
-  GetGroupMemberRequest,
-  GetGroupMemberResponse,
+  UpdateGroupResponse
 } from '../../types/api/groups'
 import {
   newMutationHook,
   newQueryHook,
   OldQueryHookOptions,
-  QueryHookParams,
+  QueryHookParams
 } from './helpers'
 
 export const useCreateGroup = newMutationHook<CreateGroupRequest, CreateGroupResponse>({

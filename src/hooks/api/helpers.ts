@@ -157,16 +157,16 @@ export function newMutationHook<REQ = any, RES = any>(config: {
 }
 
 export type MutationHookOptions<REQ = any, RES = any> = UseMutationOptions<
-AxiosResponse<RES, REQ>,
+RES,
 AxiosError<APIError, REQ>,
 REQ,
 unknown
 >
 
 export type QueryHookOptions<REQ = any, RES = any> = UseQueryOptions<
-AxiosResponse<RES, REQ>,
+RES,
 AxiosError<APIError, REQ>,
-AxiosResponse<RES, REQ>,
+RES,
 any[]
 >
 
@@ -177,3 +177,115 @@ export const axiosRequestOptionsWithAuthorization = async (auth: TAuthContext): 
     }
   }
 }
+
+export const newAccountCacheKey = (accountIdOrEmail: string) => {
+  return ['accounts', accountIdOrEmail]
+}
+
+export const newGroupCacheKey = (groupId: string) => {
+  return ['groups', groupId]
+}
+
+export const newMemberCacheKey = (groupId: string, accountId: string) => {
+  return ['groups/members', groupId, accountId]
+}
+
+export const newConversationCacheKey = (groupId: string, conversationId: string) => {
+  return ['groups/conversations', groupId, conversationId]
+}
+
+export const newMessagesCacheKey = (groupId: string, conversationId: string) => {
+  return ['groups/conversations/messages', groupId, conversationId]
+}
+
+export const newMessageCacheKey = (groupId: string, conversationId: string, messageId: string) => {
+  return ['groups/conversations/messages', groupId, conversationId, messageId]
+}
+
+export function onOptimisticMutationMutate<TRequest = any, TResponse = any>(
+  cacheKeyFn: (data: TRequest) => Array<any>,
+  mergeFn: (old: TResponse, data: TRequest) => TResponse,
+  options?: MutationHookOptions<TRequest, TResponse>
+) {
+  return async (data: TRequest): Promise<any> => {
+    const queryKey = cacheKeyFn(data)
+    await apiQueryClient.cancelQueries({queryKey})
+    const previous = apiQueryClient.getQueryData(queryKey)
+    apiQueryClient.setQueryData(queryKey, (old: TResponse | undefined) => {
+      if (old === undefined) return {} as TResponse
+      console.log('Merging old and desired Mutate', old, data, mergeFn(old, data))
+      return mergeFn(old, data)
+    })
+    if (options?.onMutate) options.onMutate(data)
+    return {previous}
+  }
+}
+
+export function onOptimisticMutationSuccess<TRequest = any, TResponse = any>(
+  cacheKeyFn: (data: TRequest) => Array<any>,
+  options?: MutationHookOptions<TRequest, TResponse>
+) {
+  return async (data, variables, context) => {
+    const queryKey = cacheKeyFn(data)
+    console.log('Setting query data Success', data)
+    apiQueryClient.setQueryData(queryKey, data)
+    if (options?.onSuccess) options.onSuccess(data, variables, context)
+  }
+}
+
+export function onOptimisticMutationError<TRequest = any, TResponse = any>(
+  cacheKeyFn: (data: TRequest) => Array<any>,
+  options?: MutationHookOptions<TRequest, TResponse>
+) {
+  return async (err, data, context) => {
+    const queryKey = cacheKeyFn(data)
+    console.log('Setting query data Error', data, context?.previous)
+    apiQueryClient.setQueryData(queryKey, context?.previous)
+    if (options?.onError) options.onError(err, data, context)
+  }
+}
+
+// TODO: On update nested objects, update main object.
+// TODO: On update listable objects, remove from list.
+export function makeUpdateMutationConfig<TRequest = any, TResponse = any>(
+  cacheKeyFn: (data: TRequest) => Array<any>,
+  mergeFn: (old: TResponse, data: TRequest) => TResponse,
+  fallback?: MutationHookOptions<TRequest, TResponse>
+): MutationHookOptions<TRequest, TResponse> {
+  return {
+    ...fallback,
+    onMutate: onOptimisticMutationMutate(cacheKeyFn, mergeFn, fallback),
+    onSuccess: onOptimisticMutationSuccess(cacheKeyFn, fallback),
+    onError: onOptimisticMutationError(cacheKeyFn, fallback) 
+  }
+}
+
+// TODO: On delete nested objects, update main object.
+// TODO: On delete listable objects, remove from list.
+// export function onDeleMutationConfig<TRequest = any, TResponse = any>(
+//   cacheKeyFn: (data: TRequest) => Array<any>,
+//   fallback?: MutationHookOptions<TRequest, TResponse>,
+// ) {
+//   return async (data: TRequest): Promise<any> => {
+//     const queryKey = cacheKeyFn(data)
+//     await apiQueryClient.cancelQueries({queryKey})
+//     const previous = apiQueryClient.getQueryData(queryKey)
+//     apiQueryClient.setQueryData(queryKey, (old: TResponse | undefined) => {
+//       if (old === undefined) return {} as TResponse
+//       console.log('Merging old and desired Mutate', old, data, mergeFn(old, data))
+//       return mergeFn(old, data)
+//     })
+//     if (options?.onMutate) options.onMutate(data)
+//     return {previous}
+//   }
+// }
+
+// export function makeDeleteMutationConfig<TRequest = any>(
+//   cacheKeyFn: (data: TRequest) => Array<any>,
+//   fallback?: MutationHookOptions<TRequest, object>,
+// ) {
+//   return {
+//     ...fallback,
+//     onMutate: onDeleMutationConfig(cacheKeyFn, fallback) 
+//   }
+// }

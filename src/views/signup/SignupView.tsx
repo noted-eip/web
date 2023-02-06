@@ -1,12 +1,11 @@
-import { AxiosResponse } from 'axios'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import OldInput from '../../components/form/OldInput'
 import { addAccountToDevelopmentContext, useDevelopmentContext } from '../../contexts/dev'
 import { useNoAuthContext } from '../../contexts/noauth'
-import { AuthenticateRequest, useAuthenticate, useCreateAccount } from '../../hooks/api/accounts'
+import { useAuthenticate, useCreateAccount } from '../../hooks/api/accounts'
 import { decodeToken } from '../../lib/api'
-import { validateName, validateEmail, validatePassword } from '../../lib/validators'
+import { validateEmail, validateName, validatePassword } from '../../lib/validators'
 import { V1AuthenticateResponse } from '../../protorepo/openapi/typescript-axios'
 
 const SignupView: React.FC = () => {
@@ -20,20 +19,24 @@ const SignupView: React.FC = () => {
   const [emailValid, setEmailValid] = React.useState(false)
   const developmentContext = useDevelopmentContext()
   const authenticateMutation = useAuthenticate({
-    onSuccess: (data: AxiosResponse<V1AuthenticateResponse, AuthenticateRequest>) => {
-      const tokenData = decodeToken(data.data.token as string)
+    onSuccess: (data: V1AuthenticateResponse) => {
+      const tokenData = decodeToken(data.token)
       if (developmentContext !== undefined) {
         addAccountToDevelopmentContext(
           tokenData.uid,
-          data.data.token as string,
+          data.token,
           developmentContext.setAccounts
         )
       }
-      auth.signin(data.data.token as string)
+      auth.signin(data.token)
       navigate('/')
     },
   })
-  const createAccountMutation = useCreateAccount({})
+  const createAccountMutation = useCreateAccount({
+    onSuccess: () => {
+      authenticateMutation.mutate({body: {email, password}})
+    },
+  })
 
   // const authenticateMutation = useMutation(authenticate, {
   //   onSuccess: (data: AxiosResponse<AuthenticateResponse, unknown>) => {
@@ -67,7 +70,7 @@ const SignupView: React.FC = () => {
         className='grid grid-cols-1 gap-2'
         onSubmit={(e) => {
           e.preventDefault()
-          createAccountMutation.mutate({body: {name, email, password}})
+          createAccountMutation.mutate({body: {name, email, password}}, )
         }}
       >
         <OldInput

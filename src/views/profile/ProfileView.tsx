@@ -110,7 +110,7 @@ const ProfileViewAccountSection: React.FC = () => {
 
   React.useEffect(() => {
     if (newName === undefined || !editName) {
-      setNewName(getAccountQ.isSuccess ? getAccountQ.data.data.account?.name : '')
+      setNewName(getAccountQ.isSuccess ? getAccountQ.data.account.name : '')
     }
   }, [getAccountQ])
 
@@ -151,13 +151,13 @@ const ProfileViewAccountSection: React.FC = () => {
                   </form>
                 ) : (
                   <React.Fragment>
-                    <p className='font-medium'>{getAccountQ.data?.data.account?.name}</p>
+                    <p className='font-medium'>{getAccountQ.data?.account.name}</p>
                     <PencilIcon className='ml-2 hidden h-4 w-4 stroke-2 text-gray-400 group-hover:block' />
                   </React.Fragment>
                 )}
               </div>
               <div>
-                <p className='text-gray-700'>{getAccountQ.data.data.account?.name}</p>
+                <p className='text-gray-700'>{getAccountQ?.data.account.email}</p>
               </div>
             </React.Fragment>
           ) : (

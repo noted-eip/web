@@ -9,6 +9,7 @@ const apiQueryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
+      staleTime: 3 * 60 * 1000,
     },
   },
 })

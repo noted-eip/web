@@ -172,7 +172,7 @@ const GroupMemberListItem: React.FC<{ member: GroupMember }> = (props) => {
         <div className='h-9 w-9 rounded-md bg-gradient-radial from-teal-300 to-green-200' />
         <div className='pl-3 text-sm font-medium text-gray-800'>
           {account.isSuccess ? (
-            account.data.data.account.name
+            account.data.account.name
           ) : (
             <div className='skeleton h-4 w-16' />
           )}
@@ -181,7 +181,7 @@ const GroupMemberListItem: React.FC<{ member: GroupMember }> = (props) => {
       <div className='flex items-center'>
         {account.isSuccess ? (
           <p className='text-sm text-gray-500'>
-            {account.data.data.account.email}
+            {account.data.account.email}
           </p>
         ) : (
           <div className='skeleton h-4 w-48' />
@@ -245,7 +245,7 @@ const GroupViewSettingsTabMembersSection: React.FC = () => {
   const onInviteFriend = () => {
     sendInviteQ.mutate({
       group_id: groupContext.groupID as string,
-      recipient_account_id: searchAccountQ.data?.data.account.id as string,
+      recipient_account_id: searchAccountQ.data?.account.id as string,
     })
     setAccountEmailSearch('')
   }
@@ -351,7 +351,7 @@ const PendingInviteListItem: React.FC<{ invite: Invite }> = (props) => {
         <div className='h-6 w-6 rounded-md bg-gradient-radial from-teal-300 to-green-200' />
         <div className='pl-3 text-sm font-medium text-gray-800'>
           {recipientAccountQ.isSuccess ? (
-            recipientAccountQ.data.data.account.name
+            recipientAccountQ.data.account.name
           ) : (
             <div className='skeleton h-4 w-16' />
           )}
@@ -361,7 +361,7 @@ const PendingInviteListItem: React.FC<{ invite: Invite }> = (props) => {
         <div className='h-6 w-6 rounded-md bg-gradient-radial from-teal-300 to-green-200' />
         <div className='pl-3 text-sm font-medium text-gray-800'>
           {senderAccountQ.isSuccess ? (
-            senderAccountQ.data.data.account.name
+            senderAccountQ.data.account.name
           ) : (
             <div className='skeleton h-4 w-16' />
           )}

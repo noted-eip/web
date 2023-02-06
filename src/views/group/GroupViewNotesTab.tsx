@@ -21,7 +21,7 @@ const NotesListGridItem: React.FC<{ note: Note }> = (props) => {
       <div className='mb-2 h-2/3 w-1/2 rounded-md bg-white shadow-md' />
       <div className='w-full text-center'>
         <div className='text-xs font-medium text-gray-800'>{props.note.title}</div>
-        <p className='text-xxs text-gray-500'>{authorQ.data?.data.account.name}</p>
+        <p className='text-xxs text-gray-500'>{authorQ.data?.account.name}</p>
       </div>
     </div>
   )
