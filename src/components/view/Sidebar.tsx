@@ -57,7 +57,7 @@ const DevAccountItem: React.FC<{ account: { id: string; token: string } }> = (pr
 export const Sidebar: React.FC = () => {
   const authContext = useAuthContext()
   const currentPath = useLocation().pathname
-  const listInvitesQ = useListInvites({ recipient_account_id: authContext.userID })
+  const listInvitesQ = useListInvites({ recipientAccountId: authContext.userID })
   const getAccountQ = useGetAccount({accountId: authContext.userID})
   const accountsMap = useDevelopmentContext()?.accounts
   const [accounts, setAccounts] = React.useState<{ token: string; id: string }[]>()
@@ -77,8 +77,8 @@ export const Sidebar: React.FC = () => {
       icon: UserIcon,
       title: 'Profile',
       numNotifications:
-        listInvitesQ.isSuccess && listInvitesQ.data.data.invites
-          ? listInvitesQ.data.data.invites.length
+        listInvitesQ.isSuccess && listInvitesQ.data.invites
+          ? listInvitesQ.data.invites.length
           : 0,
     },
     { path: '/settings', icon: Cog6ToothIcon, title: 'Settings', numNotifications: 0 },

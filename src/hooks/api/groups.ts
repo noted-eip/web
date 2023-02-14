@@ -1,124 +1,82 @@
+import { useMutation, useQuery } from 'react-query'
 import { useAuthContext } from '../../contexts/auth'
 import { useGroupContext } from '../../contexts/group'
-import { apiQueryClient } from '../../lib/api'
+import { apiQueryClient, openapiClient } from '../../lib/api'
+import { GroupsAPIUpdateGroupRequest, V1CreateGroupRequest, V1CreateGroupResponse, V1GetGroupResponse, V1ListGroupsResponse, V1UpdateGroupResponse } from '../../protorepo/openapi/typescript-axios'
 import {
-  CreateGroupRequest,
-  CreateGroupResponse, GetGroupMemberRequest,
-  GetGroupMemberResponse, GetGroupRequest,
-  GetGroupResponse,
-  ListGroupMembersRequest,
-  ListGroupMembersResponse,
-  ListGroupsRequest,
-  ListGroupsResponse, RemoveGroupMemberRequest,
-  RemoveGroupMemberResponse, UpdateGroupMemberRequest,
-  UpdateGroupMemberResponse,
-  UpdateGroupRequest,
-  UpdateGroupResponse
-} from '../../types/api/groups'
-import {
-  newMutationHook,
-  newQueryHook,
-  OldQueryHookOptions,
-  QueryHookParams
+  axiosRequestOptionsWithAuthorization,
+  makeUpdateMutationConfig,
+  MutationHookOptions,
+  newGroupCacheKey,
+  newGroupsCacheKey,
+  QueryHookOptions
 } from './helpers'
 
-export const useCreateGroup = newMutationHook<CreateGroupRequest, CreateGroupResponse>({
-  method: 'post',
-  path: () => 'groups',
-  invalidate: () => [['groups']],
-})
-
-export const useGetGroup = newQueryHook<GetGroupRequest, GetGroupResponse>(
-  (req) => `groups/${req.group_id}`,
-  ['group_id']
-)
-
-export const useGetCurrentGroup = (params?: QueryHookParams) => {
+export type CreateGroupRequest = {body: V1CreateGroupRequest};
+export const useCreateGroup = (options?: MutationHookOptions<CreateGroupRequest, V1CreateGroupResponse>) => {
+  const authContext = useAuthContext()
   const groupContext = useGroupContext()
-
-  return useGetGroup(
-    { group_id: groupContext.groupID as string, ...params?.req },
-    {
-      ...params?.options,
-      onError(error) {
-        groupContext.changeGroup(null)
-        if (params?.options?.onError) {
-          params.options.onError(error)
-        }
-      },
+  return useMutation({ 
+    mutationFn: async (req) => {
+      return (await openapiClient.groupsAPICreateGroup(req.body, await axiosRequestOptionsWithAuthorization(authContext))).data
+    },
+    ...options,
+    onSuccess: async (data, variables, context) => {
+      apiQueryClient.setQueryData(newGroupCacheKey(data.group.id), data)
+      groupContext.changeGroup(data.group.id)
+      if (options?.onSuccess) options.onSuccess(data, variables, context)
     }
-  )
+  })
 }
 
-export const useUpdateGroup = newMutationHook<UpdateGroupRequest, UpdateGroupResponse>({
-  method: 'patch',
-  path: (req) => `groups/${req.group.id}`,
-  pathFields: ['group.id'],
-  invalidate: () => [['groups']],
-})
+export type GetGroupRequest = {groupId: string};
+export const useGetGroup = (req: GetGroupRequest, options?: QueryHookOptions<GetGroupRequest, V1GetGroupResponse>) => {
+  const authContext = useAuthContext()
+  const queryKey = newGroupCacheKey(req.groupId)
+  return useQuery({
+    queryKey,
+    queryFn: async () => {
+      return (await openapiClient.groupsAPIGetGroup(req.groupId, undefined, await axiosRequestOptionsWithAuthorization(authContext))).data
+    },
+    ...options,
+  })
+}
 
-export const useListGroups = newQueryHook<ListGroupsRequest, ListGroupsResponse>(
-  () => 'groups'
-)
+export const useGetCurrentGroup = (options?: QueryHookOptions<GetGroupRequest, V1GetGroupResponse>) => {
+  const groupContext = useGroupContext()
+  return useGetGroup({groupId: groupContext.groupID as string}, {
+    ...options,
+    onError: (error) => {
+      groupContext.changeGroup(null)
+      if (options?.onError) options.onError(error)
+    }
+  })
+}
 
-export const useGetGroupMember = newQueryHook<
-GetGroupMemberRequest,
-GetGroupMemberResponse
->((req) => `groups/${req.group_id}/${req.account_id}`, ['group_id', 'account_id'])
-
-export const useUpdateGroupMember = newMutationHook<
-UpdateGroupMemberRequest,
-UpdateGroupMemberResponse
->({
-  method: 'patch',
-  path: (req) => `groups/${req.group_id}/members/${req.account_id}`,
-  pathFields: ['group_id', 'account_id'],
-  invalidate: (req) => [['groups', req.group_id, 'members']],
-})
-
-export const useRemoveGroupMember = () => {
+export type UpdateGroupRequest = {body: GroupsAPIUpdateGroupRequest};
+export const useUpdateCurrentGroup = (options?: MutationHookOptions<UpdateGroupRequest, V1UpdateGroupResponse>) => {
   const authContext = useAuthContext()
   const groupContext = useGroupContext()
 
-  return newMutationHook<RemoveGroupMemberRequest, RemoveGroupMemberResponse>({
-    method: 'delete',
-    path: (req) => `groups/${req.group_id}/members/${req.account_id}`,
-    pathFields: ['group_id', 'account_id'],
-    customOptions: {
-      onSuccess: (result, variables) => {
-        if (authContext.userID === variables.account_id) {
-          groupContext.changeGroup(null)
-        } else {
-          apiQueryClient.invalidateQueries({
-            queryKey: ['groups', variables.group_id, 'members'],
-          })
-        }
-      },
-    },
-  })()
+  return useMutation(async (req: UpdateGroupRequest) => {
+    return (await openapiClient.groupsAPIUpdateGroup(groupContext.groupID as string, req.body, await axiosRequestOptionsWithAuthorization(authContext))).data
+  },
+  makeUpdateMutationConfig(
+    () => newGroupCacheKey(groupContext.groupID as string),
+    (old, data) => { return {...old, group: {...old.group, ...data.body}}},
+    options)
+  )
 }
 
-export const useListGroupMembers = newQueryHook<
-ListGroupMembersRequest,
-ListGroupMembersResponse
->((req) => `groups/${req.group_id}/members`, ['group_id'])
-
-export const useListCurrentGroupMembers = (
-  req: Omit<ListGroupMembersRequest, 'group_id'>,
-  options?: OldQueryHookOptions<ListGroupMembersResponse>
-) => {
-  const groupContext = useGroupContext()
-
-  return useListGroupMembers(
-    { ...req, group_id: groupContext.groupID as string },
-    {
-      ...options,
-      onError(error) {
-        groupContext.changeGroup(null)
-        if (options?.onError) {
-          options.onError(error)
-        }
-      },
-    }
-  )
+export type ListGroupsRequest = {accountId: string, limit?: string, offset?: string};
+export const useListGroups = (req: ListGroupsRequest, options?: QueryHookOptions<ListGroupsRequest, V1ListGroupsResponse>) => {
+  const authContext = useAuthContext()
+  const queryKey = newGroupsCacheKey(req.accountId, req.limit, req.offset)
+  return useQuery({
+    queryKey: queryKey,
+    queryFn: async () => {
+      return (await openapiClient.groupsAPIListGroups(req.accountId, req.limit, req.offset, await axiosRequestOptionsWithAuthorization(authContext))).data
+    },
+    ...options,
+  })
 }

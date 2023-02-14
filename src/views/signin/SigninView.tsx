@@ -32,15 +32,15 @@ const SigninView: React.FC = () => {
 
   // const authenticateMutation = useMutation(authenticate, {
   //   onSuccess: (data: AxiosResponse<AuthenticateResponse, unknown>) => {
-  //     const tokenData = decodeToken(data.data.token)
+  //     const tokenData = decodeToken(data.token)
   //     if (developmentContext !== undefined) {
   //       addAccountToDevelopmentContext(
   //         tokenData.uid,
-  //         data.data.token,
+  //         data.token,
   //         developmentContext.setAccounts
   //       )
   //     }
-  //     auth.signin(data.data.token)
+  //     auth.signin(data.token)
   //     navigate('/')
   //   },
   // })

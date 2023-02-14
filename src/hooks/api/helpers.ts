@@ -1,160 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
-import { useMutation, UseMutationOptions, useQuery, UseQueryOptions } from 'react-query'
-import { TAuthContext, useAuthContext } from '../../contexts/auth'
+import { AxiosError, AxiosRequestConfig } from 'axios'
+import { UseMutationOptions, UseQueryOptions } from 'react-query'
+import { TAuthContext } from '../../contexts/auth'
 import { apiQueryClient } from '../../lib/api'
-import { API_BASE } from '../../lib/env'
 import { APIError } from '../../types/api/error'
-
-export type OldQueryHookOptions<RES = any> = UseQueryOptions<
-AxiosResponse<RES, any>,
-AxiosError<APIError, unknown>,
-AxiosResponse<RES, any>,
-any[]
->
-
-export type QueryHookParams<REQ = any, RES = any> = {
-  req: REQ
-  options?: UseQueryOptions<
-  AxiosResponse<RES, any>,
-  AxiosError<APIError, unknown>,
-  AxiosResponse<RES, any>,
-  any[]
-  >
-}
-
-export function newQueryHook<REQ = any, RES = any>(
-  path: (req: REQ) => string,
-  pathFields?: string[]
-) {
-  return (
-    req: REQ,
-    options?: UseQueryOptions<
-    AxiosResponse<RES, any>,
-    AxiosError<APIError, unknown>,
-    AxiosResponse<RES, any>,
-    any[]
-    >
-  ) => {
-    const auth = useAuthContext()
-    const requestPath = path(req)
-    const params = { ...req }
-
-    if (pathFields) {
-      for (let index = 0; index < pathFields.length; index++) {
-        params[pathFields[index]] = undefined
-      }
-    }
-
-    return useQuery({
-      ...options,
-      queryKey: [...requestPath.split('/'), { params }],
-      queryFn: async () => {
-        return axios.get(`${API_BASE}/${path(req)}`, {
-          headers: {
-            Authorization: `Bearer ${await auth.token()}`,
-          },
-          params,
-        })
-      },
-    })
-  }
-}
-
-export type MutationHookParams<REQ = any, RES = any> = {
-  options?: UseMutationOptions<
-  AxiosResponse<RES, unknown>,
-  AxiosError<APIError, unknown>,
-  REQ
-  >
-}
-
-export function newMutationHook<REQ = any, RES = any>(config: {
-  method: 'put' | 'post' | 'patch' | 'delete'
-  path: (req: REQ) => string
-  pathFields?: string[]
-  queryParameterFields?: string[]
-  invalidate?: (req: REQ) => any[]
-  customOptions?: UseMutationOptions<
-  AxiosResponse<RES, unknown>,
-  AxiosError<APIError, unknown>,
-  REQ
-  >
-}) {
-  return (
-    options?: UseMutationOptions<
-    AxiosResponse<RES, unknown>,
-    AxiosError<APIError, unknown>,
-    REQ
-    >
-  ) => {
-    const auth = useAuthContext()
-
-    return useMutation(
-      async (req: REQ) => {
-        const params = {}
-        const filteredReq = { ...req }
-
-        if (config.queryParameterFields) {
-          for (let index = 0; index < config.queryParameterFields.length; index++) {
-            params[config.queryParameterFields[index]] =
-              req[config.queryParameterFields[index]]
-            filteredReq[config.queryParameterFields[index]] = undefined
-          }
-        }
-
-        if (config.pathFields) {
-          for (let index = 0; index < config.pathFields.length; index++) {
-            filteredReq[config.pathFields[index]] = undefined
-          }
-        }
-
-        return axios.request({
-          method: config.method,
-          data: filteredReq,
-          url: `${API_BASE}/${config.path(req)}`,
-          params,
-          headers: {
-            Authorization: `Bearer ${await auth.token()}`,
-          },
-        })
-      },
-      {
-        ...config?.customOptions,
-        ...options,
-        onMutate: async (variables) => {
-          await apiQueryClient.cancelQueries({ queryKey: config.path(variables) })
-        },
-        onSuccess: (result, variables, context) => {
-          const queryPath = config.path(variables).split('/')
-
-          let params: any = null
-          if (config.queryParameterFields) {
-            params = Object.fromEntries(
-              config.queryParameterFields.map((k) => [k, variables[k]])
-            )
-          }
-
-          apiQueryClient.invalidateQueries({ queryKey: [...queryPath, { params }] })
-
-          if (config?.invalidate) {
-            config
-              .invalidate(variables)
-              .map((el) => apiQueryClient.invalidateQueries({ queryKey: el }))
-          }
-
-          if (config?.customOptions?.onSuccess) {
-            config.customOptions.onSuccess(result, variables, context)
-          }
-
-          if (options?.onSuccess) {
-            options.onSuccess(result, variables, context)
-          }
-        },
-      }
-    )
-  }
-}
 
 export type MutationHookOptions<REQ = any, RES = any> = UseMutationOptions<
 RES,
@@ -186,6 +35,10 @@ export const newGroupCacheKey = (groupId: string) => {
   return ['groups', groupId]
 }
 
+export const newGroupsCacheKey = (accountId: string, limit?: string, offset?: string) => {
+  return ['groups', { accountId, limit, offset }]
+}
+
 export const newMemberCacheKey = (groupId: string, accountId: string) => {
   return ['groups/members', groupId, accountId]
 }
@@ -200,6 +53,18 @@ export const newMessagesCacheKey = (groupId: string, conversationId: string) => 
 
 export const newMessageCacheKey = (groupId: string, conversationId: string, messageId: string) => {
   return ['groups/conversations/messages', groupId, conversationId, messageId]
+}
+
+export const newInvitesCacheKey = (senderAccountId?: string, recipientAccountId?: string, groupId?: string, limit?: number, offset?: number) => {
+  return ['invites', {senderAccountId, recipientAccountId, groupId, limit, offset}]
+}
+
+export const newInviteCacheKey = (groupId: string, inviteId: string) => {
+  return ['groups/invites', groupId, inviteId]
+}
+
+export const newNoteCacheKey = (groupId: string, noteId: string) => {
+  return ['groups/notes', groupId, noteId]
 }
 
 export function onOptimisticMutationMutate<TRequest = any, TResponse = any>(

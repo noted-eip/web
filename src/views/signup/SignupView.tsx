@@ -38,28 +38,6 @@ const SignupView: React.FC = () => {
     },
   })
 
-  // const authenticateMutation = useMutation(authenticate, {
-  //   onSuccess: (data: AxiosResponse<AuthenticateResponse, unknown>) => {
-  //     const tokenData = decodeToken(data.data.token)
-  //     if (developmentContext !== undefined) {
-  //       addAccountToDevelopmentContext(
-  //         tokenData.uid,
-  //         data.data.token,
-  //         developmentContext.setAccounts
-  //       )
-  //     }
-  //     auth.signin(data.data.token)
-  //     navigate('/')
-  //   },
-  // })
-
-  // const createAccountMutation = useMutation(createAccount, {
-  //   onSuccess: (data: AxiosResponse<CreateAccountResponse, unknown>) => {
-  //     apiQueryClient.invalidateQueries(['accounts', data.data.account.id])
-  //     authenticateMutation.mutate({ email, password })
-  //   },
-  // })
-
   const formIsValid = () => {
     return nameValid && passwordValid && emailValid
   }

@@ -4,22 +4,31 @@ import { apiQueryClient, openapiClient } from '../../lib/api'
 import { V1Account, V1AuthenticateRequest, V1AuthenticateResponse, V1CreateAccountRequest, V1CreateAccountResponse, V1GetAccountResponse, V1UpdateAccountResponse } from '../../protorepo/openapi/typescript-axios'
 import { axiosRequestOptionsWithAuthorization, makeUpdateMutationConfig, MutationHookOptions, newAccountCacheKey, QueryHookOptions } from './helpers'
 
-export type GetAccountRequest = {accountId: string, email?: string};
+export type GetAccountRequest = {accountId: string};
 export const useGetAccount = (req: GetAccountRequest, options?: QueryHookOptions<GetAccountRequest, V1GetAccountResponse>) => {
   const auth = useAuthContext()
-  const queryKey = newAccountCacheKey(req.email || req.accountId)
+  const queryKey = newAccountCacheKey(req.accountId)
+
   return useQuery({
     queryKey,
     queryFn: async () => {
-      return (await openapiClient.accountsAPIGetAccount(req.accountId, req.email, await axiosRequestOptionsWithAuthorization(auth))).data
+      return (await openapiClient.accountsAPIGetAccount(req.accountId, undefined, await axiosRequestOptionsWithAuthorization(auth))).data
     },
     ...options,
-    onSuccess: (data) => {
-      if (req.email) {
-        apiQueryClient.setQueryData(queryKey, data)
-      }
-      if (options?.onSuccess) options.onSuccess(data)
-    }
+  })
+}
+
+export type SearchAccountRequest = {email: string};
+export const useSearchAccount = (req: SearchAccountRequest, options?: QueryHookOptions<SearchAccountRequest, V1GetAccountResponse>) => {
+  const auth = useAuthContext()
+  const queryKey = newAccountCacheKey(req.email)
+
+  return useQuery({
+    queryKey,
+    queryFn: async () => {
+      return (await openapiClient.accountsAPIGetAccount2(req, await axiosRequestOptionsWithAuthorization(auth))).data
+    },
+    ...options,
   })
 }
 
@@ -39,9 +48,10 @@ export const useCreateAccount = (options?: MutationHookOptions<CreateAccountRequ
 
 export type UpdateAccountRequest = {accountId: string, body: V1Account};
 export const useUpdateAccount = (options?: MutationHookOptions<UpdateAccountRequest, V1UpdateAccountResponse>) => {
-  const auth = useAuthContext()
+  const authContext = useAuthContext()
+
   return useMutation(async (req: UpdateAccountRequest) => {
-    return (await openapiClient.accountsAPIUpdateAccount(req.accountId, req.body, undefined, await axiosRequestOptionsWithAuthorization(auth))).data
+    return (await openapiClient.accountsAPIUpdateAccount(req.accountId, req.body, undefined, await axiosRequestOptionsWithAuthorization(authContext))).data
   },
   makeUpdateMutationConfig(
     (data) => newAccountCacheKey(data.accountId),
@@ -52,9 +62,10 @@ export const useUpdateAccount = (options?: MutationHookOptions<UpdateAccountRequ
 
 export type DeleteAccountRequest =  {accountId: string};
 export const useDeleteAccount = (options?: MutationHookOptions<DeleteAccountRequest, object>) => {
-  const auth = useAuthContext()
+  const authContext = useAuthContext()
+
   return useMutation(async (req: DeleteAccountRequest) => {
-    return (await openapiClient.accountsAPIDeleteAccount(req.accountId, await axiosRequestOptionsWithAuthorization(auth))).data
+    return (await openapiClient.accountsAPIDeleteAccount(req.accountId, await axiosRequestOptionsWithAuthorization(authContext))).data
   }, options)
 }
 

@@ -1,35 +1,30 @@
-import { EnvelopeIcon, PencilIcon, UserIcon } from '@heroicons/react/24/solid'
 import {
   ArrowPathIcon,
   CheckIcon,
   TrashIcon,
-  XMarkIcon,
+  XMarkIcon
 } from '@heroicons/react/24/outline'
+import { EnvelopeIcon, PencilIcon, UserIcon } from '@heroicons/react/24/solid'
+import moment from 'moment'
 import React from 'react'
-import { useGroupContext } from '../../contexts/group'
-import {
-  useGetGroup,
-  useListCurrentGroupMembers,
-  useRemoveGroupMember,
-  useUpdateGroup,
-  useUpdateGroupMember,
-} from '../../hooks/api/groups'
-import GroupViewMenu from './GroupViewMenu'
-import useClickOutside from '../../hooks/click'
-import { GroupMember } from '../../types/api/groups'
-import { useGetAccount } from '../../hooks/api/accounts'
 import { useDebounce } from 'usehooks-ts'
 import LoaderIcon from '../../components/icons/LoaderIcon'
-import { useListInvites, useSendInvite } from '../../hooks/api/invites'
 import { useAuthContext } from '../../contexts/auth'
-import { Invite } from '../../types/api/invites'
+import { useGroupContext } from '../../contexts/group'
+import { useGetAccount, useSearchAccount } from '../../hooks/api/accounts'
+import { useGetCurrentGroup, useGetGroup, useUpdateCurrentGroup } from '../../hooks/api/groups'
+import { useSendInviteInCurrentGroup } from '../../hooks/api/invites'
+import { useRemoveMemberInCurrentGroup, useUpdateMemberInCurrentGroup } from '../../hooks/api/members'
+import useClickOutside from '../../hooks/click'
+import { V1GroupInvite, V1GroupMember } from '../../protorepo/openapi/typescript-axios'
+import GroupViewMenu from './GroupViewMenu'
 
 export const GroupViewSettingsTabEditGroup: React.FC = () => {
   const [editName, setEditName] = React.useState(false)
   const [editDescription, setEditDescription] = React.useState(false)
   const groupContext = useGroupContext()
-  const getGroupQ = useGetGroup({ group_id: groupContext.groupID as string })
-  const updateGroupQ = useUpdateGroup()
+  const getGroupQ = useGetGroup({ groupId: groupContext.groupID as string })
+  const updateGroupQ = useUpdateCurrentGroup()
   const [newName, setNewName] = React.useState<string | undefined>(undefined)
   const [newDescription, setNewDescription] = React.useState<
   string | undefined
@@ -47,33 +42,24 @@ export const GroupViewSettingsTabEditGroup: React.FC = () => {
 
   React.useEffect(() => {
     if (newName === undefined || !editName) {
-      setNewName(getGroupQ.isSuccess ? getGroupQ.data.data.group.name : '')
+      setNewName(getGroupQ.isSuccess ? getGroupQ.data.group.name : '')
     }
     if (newDescription === undefined || !editDescription) {
       setNewDescription(
-        getGroupQ.isSuccess ? getGroupQ.data.data.group.description : ''
+        getGroupQ.isSuccess ? getGroupQ.data.group.description : ''
       )
     }
   }, [getGroupQ])
 
   const onChangeName = (e) => {
     e.preventDefault()
-    updateGroupQ.mutate({
-      group: { id: groupContext.groupID as string, name: newName },
-      update_mask: 'name',
-    })
+    updateGroupQ.mutate({body: {name: newName}})
     setEditName(false)
   }
 
   const onChangeDescription = (e) => {
     e.preventDefault()
-    updateGroupQ.mutate({
-      group: {
-        id: groupContext.groupID as string,
-        description: newDescription,
-      },
-      update_mask: 'description',
-    })
+    updateGroupQ.mutate({body: {description: newDescription}})
     setEditDescription(false)
   }
 
@@ -110,7 +96,7 @@ export const GroupViewSettingsTabEditGroup: React.FC = () => {
                 ) : (
                   <React.Fragment>
                     <p className='font-medium'>
-                      {getGroupQ.data?.data.group.name}
+                      {getGroupQ.data?.group.name}
                     </p>
                     <PencilIcon className='ml-2 hidden h-4 w-4 stroke-2 text-gray-400 group-hover:block' />
                   </React.Fragment>
@@ -141,7 +127,7 @@ export const GroupViewSettingsTabEditGroup: React.FC = () => {
                 ) : (
                   <React.Fragment>
                     <p className='cursor-pointer text-sm text-gray-500'>
-                      {getGroupQ.data?.data.group.description}
+                      {getGroupQ.data?.group.description}
                     </p>
                     <PencilIcon className='ml-2 hidden h-4 w-4 stroke-2 text-gray-400 group-hover:block' />
                   </React.Fragment>
@@ -159,12 +145,11 @@ export const GroupViewSettingsTabEditGroup: React.FC = () => {
   )
 }
 
-const GroupMemberListItem: React.FC<{ member: GroupMember }> = (props) => {
+const GroupMemberListItem: React.FC<{ member: V1GroupMember }> = (props) => {
   const authContext = useAuthContext()
-  const groupContext = useGroupContext()
-  const account = useGetAccount({accountId: props.member.account_id})
-  const removeGroupQ = useRemoveGroupMember()
-  const updateGroupMemberQ = useUpdateGroupMember()
+  const account = useGetAccount({accountId: props.member.accountId})
+  const removeGroupQ = useRemoveMemberInCurrentGroup()
+  const updateGroupMemberQ = useUpdateMemberInCurrentGroup()
 
   return (
     <div className='group grid h-16 cursor-default grid-cols-[30%_40%_20%_10%] px-5 hover:bg-gray-100'>
@@ -188,7 +173,7 @@ const GroupMemberListItem: React.FC<{ member: GroupMember }> = (props) => {
         )}
       </div>
       <div className='flex items-center'>
-        {props.member.role === 'admin' ? (
+        {props.member.isAdmin ? (
           <div className='float-right rounded-full bg-purple-200 p-1 px-2 text-xs font-medium text-purple-600'>
             Admin
           </div>
@@ -197,10 +182,10 @@ const GroupMemberListItem: React.FC<{ member: GroupMember }> = (props) => {
             className='invisible float-right cursor-pointer rounded-full border-2 border-dashed border-gray-400 bg-gray-200 p-[2px] px-[6px] text-xs font-medium text-gray-600 opacity-75 hover:opacity-100 group-hover:visible'
             onClick={() =>
               updateGroupMemberQ.mutate({
-                account_id: props.member.account_id,
-                group_id: groupContext.groupID as string,
-                member: { role: 'admin' },
-                update_mask: 'role',
+                accountId: props.member.accountId,
+                body: {
+                  isAdmin: true,
+                } as V1GroupMember,
               })
             }
           >
@@ -209,15 +194,12 @@ const GroupMemberListItem: React.FC<{ member: GroupMember }> = (props) => {
         )}
       </div>
       <div className='flex items-center justify-end'>
-        {props.member.account_id !== authContext.userID &&
-        props.member.role === 'admin' ? null : (
+        {props.member.accountId !== authContext.userID &&
+        props.member.isAdmin ? null : (
             <div
               className='cursor-pointer rounded-md p-2 opacity-75 hover:bg-gray-200 group-hover:opacity-100'
               onClick={() =>
-                removeGroupQ.mutate({
-                  account_id: props.member.account_id,
-                  group_id: groupContext.groupID as string,
-                })
+                removeGroupQ.mutate({accountId: props.member.accountId})
               }
             >
               <TrashIcon className='h-5 w-5 stroke-2 text-gray-400' />
@@ -229,11 +211,10 @@ const GroupMemberListItem: React.FC<{ member: GroupMember }> = (props) => {
 }
 
 const GroupViewSettingsTabMembersSection: React.FC = () => {
-  const groupContext = useGroupContext()
+  const groupQ = useGetCurrentGroup()
   const [accountEmailSearch, setAccountEmailSearch] = React.useState<string>('')
-  const searchAccountQ = useGetAccount({accountId: '', email: accountEmailSearch}, {enabled: false, retry: false})
-  const sendInviteQ = useSendInvite()
-  const listMembersQ = useListCurrentGroupMembers({}, {})
+  const searchAccountQ = useSearchAccount({email: accountEmailSearch}, {enabled: false, retry: false})
+  const sendInviteQ = useSendInviteInCurrentGroup()
   const debouncedValue = useDebounce<string>(accountEmailSearch, 1000)
 
   React.useEffect(() => {
@@ -243,10 +224,7 @@ const GroupViewSettingsTabMembersSection: React.FC = () => {
   }, [debouncedValue])
 
   const onInviteFriend = () => {
-    sendInviteQ.mutate({
-      group_id: groupContext.groupID as string,
-      recipient_account_id: searchAccountQ.data?.account.id as string,
-    })
+    sendInviteQ.mutate({body: {recipientAccountId: searchAccountQ.data?.account.id as string}})
     setAccountEmailSearch('')
   }
 
@@ -323,10 +301,10 @@ const GroupViewSettingsTabMembersSection: React.FC = () => {
             ACTIONS
           </span>
         </div>
-        {listMembersQ.isSuccess ? (
-          listMembersQ.data.data.members?.map((el, idx) => (
+        {groupQ.isSuccess ? (
+          groupQ.data.group.members?.map((el, idx) => (
             <GroupMemberListItem
-              key={`group-member-list-${el.account_id}-${idx}`}
+              key={`group-member-list-${el.accountId}-${idx}`}
               member={el}
             />
           ))
@@ -341,9 +319,10 @@ const GroupViewSettingsTabMembersSection: React.FC = () => {
   )
 }
 
-const PendingInviteListItem: React.FC<{ invite: Invite }> = (props) => {
-  const senderAccountQ = useGetAccount({accountId: props.invite.sender_account_id})
-  const recipientAccountQ = useGetAccount({accountId: props.invite.recipient_account_id})
+const PendingInviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
+  const senderAccountQ = useGetAccount({accountId: props.invite.senderAccountId})
+  const recipientAccountQ = useGetAccount({accountId: props.invite.recipientAccountId})
+  const expiresInDateString = moment(props.invite.validUntil, 'YYYY-MM-DDTHH:mm:ssZ').fromNow()
 
   return (
     <div className='group grid h-16 cursor-default grid-cols-[35%_35%_20%_10%] px-5 hover:bg-gray-100'>
@@ -367,7 +346,7 @@ const PendingInviteListItem: React.FC<{ invite: Invite }> = (props) => {
           )}
         </div>
       </div>
-      <div className='text-sm leading-[64px] text-gray-500'>a week</div>
+      <div className='text-sm leading-[64px] text-gray-500'>{expiresInDateString}</div>
       <div className='flex items-center justify-end'>
         <div className='cursor-pointer rounded-md p-2 opacity-75 hover:bg-gray-200 group-hover:opacity-100'>
           <TrashIcon className='h-5 w-5 stroke-2 text-gray-400' />
@@ -378,12 +357,7 @@ const PendingInviteListItem: React.FC<{ invite: Invite }> = (props) => {
 }
 
 const GroupViewSettingsTabPendingInvitesSection: React.FC = () => {
-  const groupContext = useGroupContext()
-  const authContext = useAuthContext()
-  const listInvitesQ = useListInvites({
-    group_id: groupContext.groupID as string,
-    sender_account_id: authContext.userID,
-  })
+  const groupQ = useGetCurrentGroup()
 
   return (
     <div className='mt-4 overflow-hidden rounded-md border border-gray-100 bg-gray-50'>
@@ -399,7 +373,7 @@ const GroupViewSettingsTabPendingInvitesSection: React.FC = () => {
       <div className='grid w-full grid-cols-1'>
         <div className='grid h-8 grid-cols-[35%_35%_20%_10%] border-b border-gray-200 px-5'>
           <span className='text-sm font-medium leading-8 text-gray-500'>
-            NAME
+            DESTINED TO
           </span>
           <span className='text-sm font-medium leading-8 text-gray-500'>
             INVITED BY
@@ -411,9 +385,9 @@ const GroupViewSettingsTabPendingInvitesSection: React.FC = () => {
             ACTIONS
           </span>
         </div>
-        {listInvitesQ.isSuccess ? (
-          listInvitesQ.data.data.invites ? (
-            listInvitesQ.data.data.invites.map((el, idx) => (
+        {groupQ.isSuccess ? (
+          groupQ.data.group.invites?.length ? (
+            groupQ.data.group.invites.map((el, idx) => (
               <PendingInviteListItem
                 key={`group-view-pending-invites-list-${el.id}-${idx}`}
                 invite={el}

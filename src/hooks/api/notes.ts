@@ -1,34 +1,23 @@
-import { newMutationHook, newQueryHook } from './helpers'
-import {
-  CreateNoteRequest,
-  CreateNoteResponse,
-  GetNoteRequest,
-  GetNoteResponse,
-  InsertBlockRequest,
-  InsertBlockResponse,
-  ListNotesRequest,
-  ListNotesResponse,
-} from '../../types/api/notes'
+import { useMutation } from 'react-query'
+import { useAuthContext } from '../../contexts/auth'
+import { useGroupContext } from '../../contexts/group'
+import { apiQueryClient, openapiClient } from '../../lib/api'
+import { NotesAPICreateNoteRequest, V1CreateNoteResponse } from '../../protorepo/openapi/typescript-axios'
+import { axiosRequestOptionsWithAuthorization, MutationHookOptions, newNoteCacheKey } from './helpers'
 
-export const useCreateNote = newMutationHook<CreateNoteRequest, CreateNoteResponse>({
-  method: 'post',
-  path: (req) => `groups/${req.group_id}/notes`,
-  pathFields: ['group_id'],
-  invalidate: () => [['notes']],
-})
+export type CreateNoteRequest = {body: NotesAPICreateNoteRequest};
+export const useCreateNoteInCurrentGroup = (options?: MutationHookOptions<CreateNoteRequest, V1CreateNoteResponse>) => {
+  const authContext = useAuthContext()
+  const groupContext = useGroupContext() 
 
-export const useGetNote = newQueryHook<GetNoteRequest, GetNoteResponse>(
-  (req) => `notes/${req.note_id}`,
-  ['note_id']
-)
-
-export const useListNotes = newQueryHook<ListNotesRequest, ListNotesResponse>(
-  () => 'notes',
-  []
-)
-
-export const useInsertBlock = newMutationHook<InsertBlockRequest, InsertBlockResponse>({
-  method: 'post',
-  path: (req) => `notes/${req.note_id}/blocks`,
-  pathFields: ['note_id'],
-})
+  return useMutation({ 
+    mutationFn: async (req: CreateNoteRequest) => {
+      return (await openapiClient.notesAPICreateNote(groupContext.groupID as string, req.body, await axiosRequestOptionsWithAuthorization(authContext))).data
+    },
+    ...options,
+    onSuccess: async (data, variables, context) => {
+      apiQueryClient.setQueryData(newNoteCacheKey(groupContext.groupID as string, data.note.id), data)
+      if (options?.onSuccess) options.onSuccess(data, variables, context)
+    }
+  })
+}
