@@ -20,7 +20,7 @@ const SigninView: React.FC = () => {
       const tokenData = decodeToken(data.token)
       if (developmentContext !== undefined) {
         addAccountToDevelopmentContext(
-          tokenData.uid,
+          tokenData.aid,
           data.token,
           developmentContext.setAccounts
         )

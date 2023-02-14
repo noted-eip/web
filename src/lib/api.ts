@@ -14,9 +14,9 @@ const apiQueryClient = new QueryClient({
   },
 })
 
-const decodeToken = (token: string): { uid: string; role: string | undefined } => {
-  const decodedToken = jwt_decode(token) as { uid: string; role: string | undefined }
-  if (decodedToken && decodedToken.uid) {
+const decodeToken = (token: string): { aid: string } => {
+  const decodedToken = jwt_decode(token) as { aid: string }
+  if (decodedToken && decodedToken.aid) {
     return decodedToken
   }
   throw new Error('token cannot be decoded, missing fields')

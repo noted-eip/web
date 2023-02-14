@@ -25,7 +25,7 @@ export class AuthContextManager {
     private _token: string | null,
     private _setToken: React.Dispatch<React.SetStateAction<null | string>>
   ) {
-    this.userID = this._token ? decodeToken(this._token).uid : ''
+    this.userID = this._token ? decodeToken(this._token).aid : ''
   }
 
   public userID: string
