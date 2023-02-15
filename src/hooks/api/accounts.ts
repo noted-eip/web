@@ -2,7 +2,8 @@ import { useMutation, useQuery } from 'react-query'
 import { useAuthContext } from '../../contexts/auth'
 import { apiQueryClient, openapiClient } from '../../lib/api'
 import { V1Account, V1AuthenticateRequest, V1AuthenticateResponse, V1CreateAccountRequest, V1CreateAccountResponse, V1GetAccountResponse, V1UpdateAccountResponse } from '../../protorepo/openapi/typescript-axios'
-import { axiosRequestOptionsWithAuthorization, makeUpdateMutationConfig, MutationHookOptions, newAccountCacheKey, QueryHookOptions } from './helpers'
+import { newAccountCacheKey } from './cache'
+import { axiosRequestOptionsWithAuthorization, MutationHookOptions, QueryHookOptions } from './helpers'
 
 export type GetAccountRequest = {accountId: string};
 export const useGetAccount = (req: GetAccountRequest, options?: QueryHookOptions<GetAccountRequest, V1GetAccountResponse>) => {
@@ -46,27 +47,65 @@ export const useCreateAccount = (options?: MutationHookOptions<CreateAccountRequ
   })
 }
 
-export type UpdateAccountRequest = {accountId: string, body: V1Account};
-export const useUpdateAccount = (options?: MutationHookOptions<UpdateAccountRequest, V1UpdateAccountResponse>) => {
+export type UpdateMyAccountRequest = {body: V1Account};
+export const useUpdateMyAccount = (options?: MutationHookOptions<UpdateMyAccountRequest, V1UpdateAccountResponse>) => {
   const authContext = useAuthContext()
+  const currentAccountId = authContext.accountId as string
 
-  return useMutation(async (req: UpdateAccountRequest) => {
-    return (await openapiClient.accountsAPIUpdateAccount(req.accountId, req.body, undefined, await axiosRequestOptionsWithAuthorization(authContext))).data
+  return useMutation(async (req: UpdateMyAccountRequest) => {
+    return (await openapiClient.accountsAPIUpdateAccount(currentAccountId, req.body, undefined, await axiosRequestOptionsWithAuthorization(authContext))).data
   },
-  makeUpdateMutationConfig(
-    (data) => newAccountCacheKey(data.accountId),
-    (old, data) => { return {...old, account: {...old.account, ...data.body}}},
-    options)
-  )
+  {
+    ...options,
+    // Optimistically update to the new value.
+    onMutate: async (data) => {
+      const queryKey = newAccountCacheKey(currentAccountId)
+      await apiQueryClient.cancelQueries({ queryKey })
+      const previousAccount = apiQueryClient.getQueryData(queryKey) as V1GetAccountResponse | undefined
+
+      // Update self.
+      if (previousAccount) {
+        // @ts-expect-error ulterior check ensure data is present.
+        apiQueryClient.setQueryData(queryKey, (old: V1GetAccountResponse) => {
+          return {account: {...old.account, ...data.body}}
+        })
+      }
+
+      if (options?.onMutate) options.onMutate(data)
+      return {previousAccount}
+    },
+    // Rollback to the previous value.
+    onError: (error, data, context) => {
+      apiQueryClient.setQueryData(newAccountCacheKey(currentAccountId), context?.previousAccount)
+
+      if (options?.onError) options.onError(error, data, context)
+    },
+    // Set authoritative group state.
+    onSuccess: async (data, variables, context) => {
+      apiQueryClient.setQueryData(newAccountCacheKey(data.account.id), data)
+
+      if (options?.onSuccess) options.onSuccess(data, variables, context)
+    }
+  })
 }
 
-export type DeleteAccountRequest =  {accountId: string};
-export const useDeleteAccount = (options?: MutationHookOptions<DeleteAccountRequest, object>) => {
+export type DeleteMyAccountRequest = undefined;
+export const useDeleteAccount = (options?: MutationHookOptions<DeleteMyAccountRequest, object>) => {
   const authContext = useAuthContext()
+  const currentAccountId = authContext.accountId as string
 
-  return useMutation(async (req: DeleteAccountRequest) => {
-    return (await openapiClient.accountsAPIDeleteAccount(req.accountId, await axiosRequestOptionsWithAuthorization(authContext))).data
-  }, options)
+
+  return useMutation(async () => {
+    return (await openapiClient.accountsAPIDeleteAccount(currentAccountId, await axiosRequestOptionsWithAuthorization(authContext))).data
+  },
+  {
+    ...options,
+    // Log out the account.
+    onSuccess: async (data, variables, context) => {
+      authContext.logout()
+      if (options?.onSuccess) options.onSuccess(data, variables, context)
+    }
+  })
 }
 
 export type AuthenticateRequest =  {body: V1AuthenticateRequest};

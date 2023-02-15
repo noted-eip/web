@@ -50,7 +50,6 @@ const GroupViewNotesTab: React.FC = () => {
           ) : (
             <React.Fragment>
               <div className='skeleton h-7 w-56'></div>
-              <div className='skeleton h-7 w-56'></div>
             </React.Fragment>
           )}
         </div>

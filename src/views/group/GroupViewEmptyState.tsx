@@ -9,7 +9,7 @@ import { useCreateGroup, useListGroups } from '../../hooks/api/groups'
 const GroupViewEmptyState: React.FC = () => {
   const groupContext = useGroupContext()
   const authContext = useAuthContext()
-  const listGroupsQ = useListGroups({ accountId: authContext.userID })
+  const listGroupsQ = useListGroups({ accountId: authContext.accountId })
   const createGroupQ = useCreateGroup({
     onSuccess: (data) => {
       groupContext.changeGroup(data.group.id)

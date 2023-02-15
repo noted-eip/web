@@ -13,7 +13,7 @@ import { useAuthContext } from '../../contexts/auth'
 import { useGroupContext } from '../../contexts/group'
 import { useGetAccount, useSearchAccount } from '../../hooks/api/accounts'
 import { useGetCurrentGroup, useGetGroup, useUpdateCurrentGroup } from '../../hooks/api/groups'
-import { useSendInviteInCurrentGroup } from '../../hooks/api/invites'
+import { useRevokeInviteInCurrentGroup, useSendInviteInCurrentGroup } from '../../hooks/api/invites'
 import { useRemoveMemberInCurrentGroup, useUpdateMemberInCurrentGroup } from '../../hooks/api/members'
 import useClickOutside from '../../hooks/click'
 import { V1GroupInvite, V1GroupMember } from '../../protorepo/openapi/typescript-axios'
@@ -23,7 +23,7 @@ export const GroupViewSettingsTabEditGroup: React.FC = () => {
   const [editName, setEditName] = React.useState(false)
   const [editDescription, setEditDescription] = React.useState(false)
   const groupContext = useGroupContext()
-  const getGroupQ = useGetGroup({ groupId: groupContext.groupID as string })
+  const getGroupQ = useGetGroup({ groupId: groupContext.groupId as string })
   const updateGroupQ = useUpdateCurrentGroup()
   const [newName, setNewName] = React.useState<string | undefined>(undefined)
   const [newDescription, setNewDescription] = React.useState<
@@ -194,7 +194,7 @@ const GroupMemberListItem: React.FC<{ member: V1GroupMember }> = (props) => {
         )}
       </div>
       <div className='flex items-center justify-end'>
-        {props.member.accountId !== authContext.userID &&
+        {props.member.accountId !== authContext.accountId &&
         props.member.isAdmin ? null : (
             <div
               className='cursor-pointer rounded-md p-2 opacity-75 hover:bg-gray-200 group-hover:opacity-100'
@@ -323,6 +323,7 @@ const PendingInviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
   const senderAccountQ = useGetAccount({accountId: props.invite.senderAccountId})
   const recipientAccountQ = useGetAccount({accountId: props.invite.recipientAccountId})
   const expiresInDateString = moment(props.invite.validUntil, 'YYYY-MM-DDTHH:mm:ssZ').fromNow()
+  const revokeInviteQ = useRevokeInviteInCurrentGroup()
 
   return (
     <div className='group grid h-16 cursor-default grid-cols-[35%_35%_20%_10%] px-5 hover:bg-gray-100'>
@@ -348,8 +349,11 @@ const PendingInviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
       </div>
       <div className='text-sm leading-[64px] text-gray-500'>{expiresInDateString}</div>
       <div className='flex items-center justify-end'>
+        {/* TODO: Display this when the person can actually delete the invite */}
         <div className='cursor-pointer rounded-md p-2 opacity-75 hover:bg-gray-200 group-hover:opacity-100'>
-          <TrashIcon className='h-5 w-5 stroke-2 text-gray-400' />
+          <TrashIcon className='h-5 w-5 stroke-2 text-gray-400' onClick={() => {
+            revokeInviteQ.mutate({ inviteId: props.invite.id })
+          }} />
         </div>
       </div>
     </div>
@@ -416,7 +420,7 @@ const GroupViewSettingsTab: React.FC = () => {
         <div></div>
       </GroupViewMenu>
 
-      <div className='flex w-full flex-col'>
+      <div className='mb-8 flex w-full flex-col'>
         <GroupViewSettingsTabEditGroup />
         <GroupViewSettingsTabMembersSection />
         <GroupViewSettingsTabPendingInvitesSection />

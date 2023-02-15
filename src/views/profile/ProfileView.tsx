@@ -3,15 +3,15 @@ import { InboxIcon, PencilIcon } from '@heroicons/react/24/solid'
 import React from 'react'
 import ViewSkeleton from '../../components/view/ViewSkeleton'
 import { useAuthContext } from '../../contexts/auth'
-import { useGetAccount, useUpdateAccount } from '../../hooks/api/accounts'
+import { useGetAccount, useUpdateMyAccount } from '../../hooks/api/accounts'
 import { useGetGroup } from '../../hooks/api/groups'
-import { useAcceptInvite, useDenyInviteInCurrentGroup, useListInvites } from '../../hooks/api/invites'
+import { useAcceptInvite, useDenyInvite, useListInvites } from '../../hooks/api/invites'
 import useClickOutside from '../../hooks/click'
 import { V1Account, V1GroupInvite } from '../../protorepo/openapi/typescript-axios'
 
 const InviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
   const getGroupQ = useGetGroup({ groupId: props.invite.groupId as string })
-  const denyInviteQ = useDenyInviteInCurrentGroup()
+  const denyInviteQ = useDenyInvite()
   const acceptInviteQ = useAcceptInvite()
 
   return (
@@ -38,7 +38,7 @@ const InviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
           <React.Fragment>
             <div
               className='group flex cursor-pointer items-center rounded-full bg-red-100 p-1 px-3 text-xs font-medium text-red-700 hover:bg-red-200'
-              onClick={() => denyInviteQ.mutate({ inviteId: props.invite.id })}
+              onClick={() => denyInviteQ.mutate({ groupId: props.invite?.groupId as string, inviteId: props.invite.id })}
             >
               Deny
               <XMarkIcon className='ml-1 h-3 w-3 stroke-[3px] text-red-700 transition-all group-hover:scale-[120%]' />
@@ -59,7 +59,7 @@ const InviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
 
 const ProfileViewPendingInvitesSection: React.FC = () => {
   const authContext = useAuthContext()
-  const listInvitesQ = useListInvites({ recipientAccountId: authContext.userID })
+  const listInvitesQ = useListInvites({ recipientAccountId: authContext.accountId })
 
   return (
     <div className='mt-4 w-full rounded-md border border-gray-100 bg-gray-50'>
@@ -85,8 +85,8 @@ const ProfileViewPendingInvitesSection: React.FC = () => {
           )
         ) : (
           <div>
-            <div className='skeleton mt-2 mb-6 h-6 w-full' />
-            <div className='skeleton h-6 w-full' />
+            <div className='skeleton my-6 h-6 w-full' />
+            <div className='skeleton mb-6 h-6 w-full' />
           </div>
         )}
       </div>
@@ -98,8 +98,8 @@ const ProfileViewAccountSection: React.FC = () => {
   const authContext = useAuthContext()
   const [editName, setEditName] = React.useState(false)
   const [newName, setNewName] = React.useState<string | undefined>(undefined)
-  const updateAccountQ = useUpdateAccount()
-  const getAccountQ = useGetAccount({accountId: authContext.userID})
+  const updateAccountQ = useUpdateMyAccount()
+  const getAccountQ = useGetAccount({accountId: authContext.accountId})
   const newNameInputRef = React.createRef<HTMLInputElement>()
 
   useClickOutside(newNameInputRef, () => {
@@ -114,7 +114,7 @@ const ProfileViewAccountSection: React.FC = () => {
 
   const onChangeName = (e) => {
     e.preventDefault()
-    updateAccountQ.mutate({accountId: authContext.userID as string, body: {name: newName} as V1Account})
+    updateAccountQ.mutate({body: {name: newName} as V1Account})
     setEditName(false)
   }
 
@@ -160,7 +160,8 @@ const ProfileViewAccountSection: React.FC = () => {
             </React.Fragment>
           ) : (
             <React.Fragment>
-              <div className='skeleton h-6 w-48'></div>
+              <div className='skeleton h-4 w-48'></div>
+              <div className='skeleton mt-4 h-4 w-64'></div>
             </React.Fragment>
           )}
         </div>

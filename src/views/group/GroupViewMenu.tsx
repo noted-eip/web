@@ -32,7 +32,7 @@ const GroupViewMenu: React.FC<React.PropsWithChildren & { activeTab: string }> =
       {props.children}
       <RadioGroup
         value={props.activeTab}
-        onChange={(val) => navigate(`/group/${groupContext.groupID}/${val}`)}
+        onChange={(val) => navigate(`/group/${groupContext.groupId}/${val}`)}
         className='flex overflow-hidden rounded border border-gray-300'
       >
         {options.map((el, idx) => (

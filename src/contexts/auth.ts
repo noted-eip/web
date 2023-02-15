@@ -3,7 +3,7 @@ import { decodeToken } from '../lib/api'
 import { LS_AUTH_TOKEN_KEY, LS_GROUP_ID_KEY } from '../lib/constants'
 
 export type TAuthContext = {
-  userID: string
+  accountId: string
   logout: () => void
   token: () => Promise<string>
 }
@@ -25,15 +25,15 @@ export class AuthContextManager {
     private _token: string | null,
     private _setToken: React.Dispatch<React.SetStateAction<null | string>>
   ) {
-    this.userID = this._token ? decodeToken(this._token).aid : ''
+    this.accountId = this._token ? decodeToken(this._token).aid : ''
   }
 
-  public userID: string
+  public accountId: string
 
   public logout() {
     localStorage.removeItem(LS_AUTH_TOKEN_KEY)
     localStorage.removeItem(LS_GROUP_ID_KEY)
-    this.userID = ''
+    this.accountId = ''
     this._setToken(null)
   }
 

@@ -7,10 +7,10 @@ import GroupView from './group/GroupView'
 import GroupViewNotesTab from './group/GroupViewNotesTab'
 import GroupViewSettingsTab from './group/GroupViewSettingsTab'
 import GroupViewUpgradeTab from './group/GroupViewUpgradeTab'
+import NoteView from './note/NotesView'
 import NotFoundView from './notfound/NotFoundView'
 import ProfileView from './profile/ProfileView'
 import SettingsView from './settings/SettingsView'
-import NoteView from './note/NotesView'
 
 // Describes routes that are available to authenticated users.
 const AuthenticatedRouter: React.FC = () => {
@@ -31,7 +31,7 @@ const AuthenticatedRouter: React.FC = () => {
   }
 
   return (
-    <GroupContext.Provider value={{ groupID, changeGroup }}>
+    <GroupContext.Provider value={{ groupId: groupID, changeGroup }}>
       <Routes>
         <Route path='/' element={<Dashboard />}>
           <Route path='' element={<GroupView />} />

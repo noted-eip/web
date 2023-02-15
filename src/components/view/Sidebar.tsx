@@ -57,8 +57,8 @@ const DevAccountItem: React.FC<{ account: { id: string; token: string } }> = (pr
 export const Sidebar: React.FC = () => {
   const authContext = useAuthContext()
   const currentPath = useLocation().pathname
-  const listInvitesQ = useListInvites({ recipientAccountId: authContext.userID })
-  const getAccountQ = useGetAccount({accountId: authContext.userID})
+  const listInvitesQ = useListInvites({ recipientAccountId: authContext.accountId })
+  const getAccountQ = useGetAccount({accountId: authContext.accountId})
   const accountsMap = useDevelopmentContext()?.accounts
   const [accounts, setAccounts] = React.useState<{ token: string; id: string }[]>()
 
@@ -144,7 +144,7 @@ export const Sidebar: React.FC = () => {
           {TOGGLE_DEV_FEATURES && (
             <div className='mt-4 grid grid-cols-1 gap-2'>
               {accounts?.map((el, idx) => {
-                if (el.id === authContext.userID) return null
+                if (el.id === authContext.accountId) return null
                 return <DevAccountItem key={`account-key-${el.id}-${idx}`} account={el} />
               })}
             </div>

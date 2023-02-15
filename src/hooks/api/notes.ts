@@ -3,7 +3,8 @@ import { useAuthContext } from '../../contexts/auth'
 import { useGroupContext } from '../../contexts/group'
 import { apiQueryClient, openapiClient } from '../../lib/api'
 import { NotesAPICreateNoteRequest, V1CreateNoteResponse } from '../../protorepo/openapi/typescript-axios'
-import { axiosRequestOptionsWithAuthorization, MutationHookOptions, newNoteCacheKey } from './helpers'
+import { newNoteCacheKey } from './cache'
+import { axiosRequestOptionsWithAuthorization, MutationHookOptions } from './helpers'
 
 export type CreateNoteRequest = {body: NotesAPICreateNoteRequest};
 export const useCreateNoteInCurrentGroup = (options?: MutationHookOptions<CreateNoteRequest, V1CreateNoteResponse>) => {
@@ -12,11 +13,11 @@ export const useCreateNoteInCurrentGroup = (options?: MutationHookOptions<Create
 
   return useMutation({ 
     mutationFn: async (req: CreateNoteRequest) => {
-      return (await openapiClient.notesAPICreateNote(groupContext.groupID as string, req.body, await axiosRequestOptionsWithAuthorization(authContext))).data
+      return (await openapiClient.notesAPICreateNote(groupContext.groupId as string, req.body, await axiosRequestOptionsWithAuthorization(authContext))).data
     },
     ...options,
     onSuccess: async (data, variables, context) => {
-      apiQueryClient.setQueryData(newNoteCacheKey(groupContext.groupID as string, data.note.id), data)
+      apiQueryClient.setQueryData(newNoteCacheKey(groupContext.groupId as string, data.note.id), data)
       if (options?.onSuccess) options.onSuccess(data, variables, context)
     }
   })

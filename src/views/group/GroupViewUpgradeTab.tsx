@@ -5,7 +5,7 @@ import GroupViewMenu from './GroupViewMenu'
 
 const GroupViewUpgradeTab: React.FC = () => {
   const groupContext = useGroupContext()
-  const getGroupQ = useGetGroup({ groupId: groupContext.groupID as string })
+  const getGroupQ = useGetGroup({ groupId: groupContext.groupId as string })
 
   return (
     <div className='grid grid-rows-1 gap-8'>
