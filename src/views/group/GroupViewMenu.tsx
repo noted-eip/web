@@ -1,5 +1,5 @@
 import { RadioGroup } from '@headlessui/react'
-import { FolderIcon, UserIcon, SparklesIcon } from '@heroicons/react/24/solid'
+import { FolderIcon, SparklesIcon, UserIcon } from '@heroicons/react/24/solid'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useGroupContext } from '../../contexts/group'
@@ -28,12 +28,12 @@ const GroupViewMenu: React.FC<React.PropsWithChildren & { activeTab: string }> =
   ]
 
   return (
-    <div className='mt-2 flex justify-between'>
+    <div className='flex items-center justify-between'>
       {props.children}
       <RadioGroup
         value={props.activeTab}
-        onChange={(val) => navigate(`/group/${groupContext.groupID}/${val}`)}
-        className='mt-4 flex overflow-hidden rounded border border-gray-300'
+        onChange={(val) => navigate(`/group/${groupContext.groupId}/${val}`)}
+        className='flex overflow-hidden rounded border border-gray-300'
       >
         {options.map((el, idx) => (
           <RadioGroup.Option

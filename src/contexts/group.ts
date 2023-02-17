@@ -1,7 +1,7 @@
 import React from 'react'
 
 type TGroupContext = {
-  groupID: string | null
+  groupId: string | null
   changeGroup: React.Dispatch<string | null>
 }
 

@@ -1,14 +1,12 @@
-import { AxiosResponse } from 'axios'
 import React from 'react'
-import { useMutation } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 import OldInput from '../../components/form/OldInput'
 import { addAccountToDevelopmentContext, useDevelopmentContext } from '../../contexts/dev'
 import { useNoAuthContext } from '../../contexts/noauth'
-import { authenticate } from '../../hooks/api/authenticate'
+import { useAuthenticate } from '../../hooks/api/accounts'
 import { decodeToken } from '../../lib/api'
 import { validateEmail } from '../../lib/validators'
-import { AuthenticateResponse } from '../../types/api/accounts'
+import { V1AuthenticateResponse } from '../../protorepo/openapi/typescript-axios'
 
 const SigninView: React.FC = () => {
   const navigate = useNavigate()
@@ -17,21 +15,35 @@ const SigninView: React.FC = () => {
   const [email, setEmail] = React.useState('')
   const [emailValid, setEmailValid] = React.useState(false)
   const developmentContext = useDevelopmentContext()
-
-  const authenticateMutation = useMutation(authenticate, {
-    onSuccess: (data: AxiosResponse<AuthenticateResponse, unknown>) => {
-      const tokenData = decodeToken(data.data.token)
+  const authenticateMutation = useAuthenticate({
+    onSuccess: (data: V1AuthenticateResponse) => {
+      const tokenData = decodeToken(data.token)
       if (developmentContext !== undefined) {
         addAccountToDevelopmentContext(
-          tokenData.uid,
-          data.data.token,
+          tokenData.aid,
+          data.token,
           developmentContext.setAccounts
         )
       }
-      auth.signin(data.data.token)
+      auth.signin(data.token)
       navigate('/')
     },
   })
+
+  // const authenticateMutation = useMutation(authenticate, {
+  //   onSuccess: (data: AxiosResponse<AuthenticateResponse, unknown>) => {
+  //     const tokenData = decodeToken(data.token)
+  //     if (developmentContext !== undefined) {
+  //       addAccountToDevelopmentContext(
+  //         tokenData.uid,
+  //         data.token,
+  //         developmentContext.setAccounts
+  //       )
+  //     }
+  //     auth.signin(data.token)
+  //     navigate('/')
+  //   },
+  // })
 
   const formIsValid = () => {
     return emailValid
@@ -43,7 +55,7 @@ const SigninView: React.FC = () => {
         className='grid grid-cols-1 gap-2'
         onSubmit={(e) => {
           e.preventDefault()
-          authenticateMutation.mutate({ email, password })
+          authenticateMutation.mutate({body: {email, password}})
         }}
       >
         <OldInput
