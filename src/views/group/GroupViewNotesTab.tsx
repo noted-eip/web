@@ -1,32 +1,34 @@
 import { FolderIcon, PencilIcon } from '@heroicons/react/24/solid'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useGetAccount } from '../../hooks/api/accounts'
 import { useGetCurrentGroup } from '../../hooks/api/groups'
-import { useCreateNoteInCurrentGroup } from '../../hooks/api/notes'
+import { useCreateNoteInCurrentGroup, useListNotesInCurrentGroup } from '../../hooks/api/notes'
+import { V1Note } from '../../protorepo/openapi/typescript-axios'
 import GroupViewMenu from './GroupViewMenu'
 
-// const NotesListGridItem: React.FC<{ note: V1Note }> = (props) => {
-//   const authorQ = useGetAccount({accountId: props.note.authorAccountId})
-//   const navigate = useNavigate()
+const NotesListGridItem: React.FC<{ note: V1Note }> = (props) => {
+  const authorQ = useGetAccount({accountId: props.note.authorAccountId})
+  const navigate = useNavigate()
 
-//   return (
-//     <div
-//       className='flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-md bg-gray-50 p-2 transition-all hover:bg-gray-100 hover:shadow-inner'
-//       onClick={() => navigate(`./note/${props.note.id}`)}
-//     >
-//       <div className='mb-2 h-2/3 w-1/2 rounded-md bg-white shadow-md' />
-//       <div className='w-full text-center'>
-//         <div className='text-xs font-medium text-gray-800'>{props.note.title}</div>
-//         <p className='text-xxs text-gray-500'>{authorQ.data?.account.name}</p>
-//       </div>
-//     </div>
-//   )
-// }
+  return (
+    <div
+      className='flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-md border border-gray-100 bg-gray-50 p-2 transition-all hover:bg-gray-100 hover:shadow-inner'
+      onClick={() => navigate(`./note/${props.note.id}`)}
+    >
+      <div className='mb-2 h-2/3 w-1/2 rounded-md bg-white shadow-md' />
+      <div className='w-full text-center'>
+        <div className='text-xs font-medium text-gray-800'>{props.note.title}</div>
+        <p className='text-xxs text-gray-500'>{authorQ.data?.account.name}</p>
+      </div>
+    </div>
+  )
+}
 
 const GroupViewNotesTab: React.FC = () => {
-  // const listNotesQ = useListNotes({ author_id: authContext.userID })
-  const getGroupQ = useGetCurrentGroup()
   const navigate = useNavigate()
+  const listNotesQ = useListNotesInCurrentGroup({})
+  const getGroupQ = useGetCurrentGroup()
   const createNoteQ = useCreateNoteInCurrentGroup({
     onSuccess: (data) => {
       navigate(`./note/${data.note.id}`)
@@ -75,7 +77,7 @@ const GroupViewNotesTab: React.FC = () => {
 
       {/* Notes Grid */}
       <div className='grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-3 lg:grid-cols-3 lg:gap-4 xl:grid-cols-4'>
-        {/* {listNotesQ.isSuccess ? (
+        {listNotesQ.isSuccess ? (
           listNotesQ.data?.notes?.map((note, idx) => (
             <NotesListGridItem
               key={`group-view-notes-tab-grid-${note.id}-${idx}`}
@@ -84,7 +86,7 @@ const GroupViewNotesTab: React.FC = () => {
           ))
         ) : (
           <div className='skeleton h-48 w-full' />
-        )} */}
+        )}
         {/* New Note Button
       <div className='w-full h-48 items-center justify-center cursor-pointer p-2 border-gray-100 border rounded text-gray-600 flex flex-col'
         onClick={() => createNoteQ.mutate({ group_id: groupContext.groupID as string, note: { title: 'Untitled Note', author_id: 'ssss' }})}>
