@@ -3,7 +3,8 @@ import { TPanelKey, usePanelContext } from '../../contexts/panel'
 import DashboardHeader from './DashboardHeader'
 
 export type TViewSkeletonProps = {
-  title: string
+  title?: string
+  titleElement?: JSX.Element
   panels: TPanelKey[]
 }
 
@@ -22,7 +23,12 @@ const ViewSkeleton: React.FC<PropsWithChildren & TViewSkeletonProps> = (props) =
   return (
     <div className='flex h-screen !max-h-screen w-full flex-col overflow-hidden'>
       <DashboardHeader>
-        <h2>{props.title}</h2>
+        {
+          props.titleElement ?
+            props.titleElement
+            :
+            <h2>{props.title}</h2>
+        }
       </DashboardHeader>
       <div className='flex h-full w-full overflow-y-scroll'>{props.children}</div>
     </div>

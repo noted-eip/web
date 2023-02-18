@@ -1,84 +1,35 @@
 import React from 'react'
+import ViewSkeleton from '../../components/view/ViewSkeleton'
 
-// const NoteViewBlockItem: React.FC<{ block: V1Block }> = () => {
-//   return (
-//     <div
-//       className='rounded-md border border-gray-100 bg-gray-50 p-2 focus:bg-gray-50 focus:outline-none'
-//       contentEditable
-//     ></div>
-//   )
-// }
+const NoteViewHeader: React.FC = () => {
+  return <div className='flex items-center justify-center'>
+    <div className='flex h-8 w-8 items-center justify-center rounded-md bg-gray-100'>📝</div>
+    <div className='ml-2 w-96 rounded-md px-1 text-lg font-medium text-gray-600 ring-blue-200 focus:outline-none focus:ring-2' contentEditable>World War II</div>
+  </div>
+}
 
 const NoteView: React.FC = () => {
-  return <div>TODO</div>
-  // const noteId = location.pathname.split('/')[4]
-  // const noteQ = useGetNote(
-  //   { note_id: noteId },
-  //   {
-  //     onSuccess: (data) => {
-  //       setEndOfNote(data.note.blocks?.length || 0)
-  //     },
-  //   }
-  // )
-  // const insertBlockQ = useInsertBlock()
-  // const [endOfNote, setEndOfNote] = React.useState(0)
-
-  // const addBlockButtonTemplates = [
-  //   { icon: DocumentTextIcon, name: 'Paragraph', type: 'TYPE_PARAGRAPH' },
-  //   { icon: PencilIcon, name: 'Heading 1', type: 'TYPE_HEADING1' },
-  //   { icon: PencilIcon, name: 'Heading 2', type: 'TYPE_HEADING2' },
-  //   { icon: PencilIcon, name: 'Heading 3', type: 'TYPE_HEADING3' },
-  //   { icon: CodeBracketIcon, name: 'Code', type: 'TYPE_CODE' },
-  //   { icon: PhotoIcon, name: 'Image', type: 'TYPE_IMAGE' },
-  // ]
-
-  // return (
-  //   <ViewSkeleton
-  //     title={noteQ.data?.data.note.title || ''}
-  //     panels={['note-recommendations', 'group-chat']}
-  //   >
-  //     <div className='mx-lg mb-lg grid h-0 w-full grid-cols-1 gap-4 xl:mx-xl xl:mb-xl'>
-  //       {noteQ.isSuccess ? (
-  //         noteQ.data.note.blocks?.map((block, idx) => (
-  //           <NoteViewBlockItem
-  //             key={`note-view-note-block-${idx}-${block.id}`}
-  //             block={block}
-  //           />
-  //         ))
-  //       ) : (
-  //         <React.Fragment>
-  //           <div className='skeleton h-8 w-full' />
-  //           <div className='skeleton h-16 w-full' />
-  //           <div className='skeleton h-12 w-full' />
-  //         </React.Fragment>
-  //       )}
-
-  //       <div className='mt-2 grid grid-cols-6 gap-2'>
-  //         {addBlockButtonTemplates.map((el, idx) => {
-  //           return (
-  //             <div
-  //               key={`notes-view-add-block-button-${idx}`}
-  //               className='flex cursor-pointer items-center justify-center rounded border border-gray-200 p-1 text-sm text-gray-700'
-  //               onClick={() => {
-  //                 insertBlockQ.mutate({
-  //                   index: endOfNote,
-  //                   note_id: noteId,
-  //                   block: {
-  //                     type: 'TYPE_PARAGRAPH',
-  //                     paragraph: '',
-  //                   },
-  //                 })
-  //               }}
-  //             >
-  //               {el.name}
-  //               <el.icon className='ml-2 h-4 w-4 stroke-2 text-gray-700' />
-  //             </div>
-  //           )
-  //         })}
-  //       </div>
-  //     </div>
-  //   </ViewSkeleton>
-  // )
+  return <ViewSkeleton titleElement={<NoteViewHeader />} panels={['group-chat', 'group-activity', 'note-recommendations']}>
+    <div className='px-lg pb-lg focus:outline-none xl:px-xl xl:pb-2xl' >
+      {/* Heading 1 */}
+      <h1 className='pt-8 text-3xl font-medium text-gray-800 first:pt-0'>The Pre-Industrial Era</h1>
+      {/* Paragraph */}
+      <div className='pt-2 text-justify'>The Industrial Revolution was a major turning point in human history, marked by a profound shift from manual labor to machine-based manufacturing. It began in the mid-18th century in Britain and quickly spread throughout Europe and North America, fundamentally transforming the way goods were produced, distributed, and consumed.</div>
+      <div className='pt-2 text-justify'> The Industrial Revolution brought about numerous technological innovations, such as the steam engine and mechanized textile production, which dramatically increased the efficiency and productivity of factories.</div>
+      {/* Heading 2 */}
+      <h2 className='pt-6 text-2xl font-medium text-gray-800'>Cottage industries and handicraft production</h2>
+      <div className='pt-2 text-justify'>The Industrial Revolution was a major turning point in human history, marked by a profound shift from manual labor to machine-based manufacturing. It began in the mid-18th century in Britain and quickly spread throughout Europe and North America, fundamentally transforming the way goods were produced, distributed, and consumed.</div>
+      {/* Heading 3 */}
+      <h2 className='pt-5 text-xl font-medium text-gray-800'>Limitations of pre-industrial production</h2>
+      <div className='pt-2 text-justify'>The Industrial Revolution was a major turning point in human history, marked by a profound shift from manual labor to machine-based manufacturing. It began in the mid-18th century in Britain and quickly spread throughout Europe and North America, fundamentally transforming the way goods were produced, distributed, and consumed.</div>
+      {/* Heading 3 */}
+      <h2 className='pt-5 text-xl font-medium text-gray-800'>Some other headline thing</h2>
+      <div className='pt-2 text-justify'>The Industrial Revolution was a major turning point in human history, marked by a profound shift from manual labor to machine-based manufacturing. It began in the mid-18th century in Britain and quickly spread throughout Europe and North America, fundamentally transforming the way goods were produced, distributed, and consumed.</div>
+      {/* Heading 3 */}
+      <h2 className='pt-5 text-xl font-medium text-gray-800'>Say sike right now</h2>
+      <div className='pt-2 text-justify'>The Industrial Revolution was a major turning point in human history, marked by a profound shift from manual labor to machine-based manufacturing. It began in the mid-18th century in Britain and quickly spread throughout Europe and North America, fundamentally transforming the way goods were produced, distributed, and consumed.</div>
+    </div>
+  </ViewSkeleton>
 }
 
 export default NoteView
