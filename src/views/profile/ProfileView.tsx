@@ -1,9 +1,9 @@
 import { ArrowPathIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { InboxIcon, PencilIcon } from '@heroicons/react/24/solid'
+import { ExclamationTriangleIcon, InboxIcon, PencilIcon } from '@heroicons/react/24/solid'
 import React from 'react'
 import ViewSkeleton from '../../components/view/ViewSkeleton'
 import { useAuthContext } from '../../contexts/auth'
-import { useGetAccount, useUpdateMyAccount } from '../../hooks/api/accounts'
+import { useDeleteMyAccount, useGetAccount, useUpdateMyAccount } from '../../hooks/api/accounts'
 import { useGetGroup } from '../../hooks/api/groups'
 import { useAcceptInvite, useDenyInvite, useListInvites } from '../../hooks/api/invites'
 import useClickOutside from '../../hooks/click'
@@ -66,7 +66,7 @@ const ProfileViewPendingInvitesSection: React.FC = () => {
       {/* Header */}
       <div className='flex items-center justify-between border-b border-[#efefef] p-5'>
         <div className='flex items-center'>
-          <InboxIcon className='mx-2 h-5 w-5 text-gray-600' />
+          <InboxIcon className='mr-2 h-5 w-5 text-gray-600' />
           <p className='text-base font-medium text-gray-600'>Invites</p>
         </div>
       </div>
@@ -170,12 +170,44 @@ const ProfileViewAccountSection: React.FC = () => {
   )
 }
 
+const ProfileViewDangerZoneSection: React.FC = () => {
+  const deleteAccountQ = useDeleteMyAccount()
+
+  return (
+    <div className='mt-4 w-full rounded-md border border-gray-100 bg-gray-50'>
+      {/* Header */}
+      <div className='flex items-center justify-between border-b border-[#efefef] p-5'>
+        <div className='flex items-center'>
+          <ExclamationTriangleIcon className='mr-2 h-5 w-5 text-red-700' />
+          <p className='text-base font-medium text-red-700'>Danger Zone</p>
+        </div>
+      </div>
+
+      <div className='grid grid-cols-[40%_60%] p-5'>
+        <div>
+          <p className='mb-2 text-sm font-medium text-gray-800'>Delete my account</p>
+          <p className='text-xs text-gray-600'>This has the effect of permanently deleting all of your personal data including your notes.</p>
+        </div>
+        <div className='flex items-center justify-end'>
+          <button
+            className='rounded-md border border-gray-300 bg-white p-2 px-3 text-sm text-red-600 transition-all duration-100 hover:border-red-600 hover:bg-red-600 hover:text-white'
+            onClick={() => {deleteAccountQ.mutate(undefined)}}
+          >
+            Delete Account
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 const ProfileView: React.FC = () => {
   return (
     <ViewSkeleton title='Profile' panels={['group-chat', 'group-activity']}>
       <div className='mx-lg mb-lg w-full xl:mx-xl xl:mb-xl'>
         <ProfileViewAccountSection />
         <ProfileViewPendingInvitesSection />
+        <ProfileViewDangerZoneSection />
       </div>
     </ViewSkeleton>
   )
