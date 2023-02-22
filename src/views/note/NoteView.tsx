@@ -85,26 +85,26 @@ const NoteView: React.FC = () => {
       </div>
       {/* Menu */}
       <div className='flex'>
-        <div className='mr-2 flex cursor-pointer items-center rounded p-1 hover:bg-gray-100' onClick={() => {
+        <div className='group mr-2 flex cursor-pointer items-center rounded p-1 hover:bg-blue-50' onClick={() => {
           alert('Not Implemented')
         }}>
-          <DocumentDuplicateIcon className='mr-1 h-4 w-4 text-gray-500' />
-          <h5 className='text-gray-500'>Duplicate</h5>
+          <DocumentDuplicateIcon className='mr-1 h-4 w-4 text-gray-500 group-hover:text-blue-500' />
+          <h5 className='text-gray-500 group-hover:text-blue-500'>Duplicate</h5>
         </div>
-        <div className='mr-2 flex cursor-pointer items-center rounded p-1 hover:bg-gray-100' onClick={() => {
+        <div className='group mr-2 flex cursor-pointer items-center rounded p-1 hover:bg-blue-50' onClick={() => {
           alert('Not Implemented')
         }}>
-          <ShareIcon className='mr-1 h-4 w-4 text-gray-500' />
-          <h5 className='text-gray-500'>Share</h5>
+          <ShareIcon className='mr-1 h-4 w-4 text-gray-500 group-hover:text-blue-500' />
+          <h5 className='text-gray-500 group-hover:text-blue-500'>Share</h5>
         </div>
-        <div className='flex cursor-pointer items-center rounded p-1 hover:bg-gray-100' onClick={() => {
+        <div className='group flex cursor-pointer items-center rounded p-1 hover:bg-red-50' onClick={() => {
           deleteNoteQ.mutate({ noteId })
         }}>
           {
-            deleteNoteQ.isLoading ? <ArrowPathIcon className='mr-1 h-4 w-4 animate-spin text-gray-500' /> : <TrashIcon className='mr-1 h-4 w-4 text-gray-500' />
+            deleteNoteQ.isLoading ? <ArrowPathIcon className='mr-1 h-4 w-4 animate-spin text-gray-500 group-hover:text-red-600' /> : <TrashIcon className='mr-1 h-4 w-4 text-gray-500 group-hover:text-red-600' />
           }
           
-          <h5 className='text-gray-500'>Delete</h5>
+          <h5 className='text-gray-500 group-hover:text-red-600'>Delete</h5>
         </div>
       </div>
     </div>
