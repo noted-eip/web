@@ -1,5 +1,5 @@
-import { LinkIcon as LinkIconOutline, PencilIcon as PencilIconOutline, TrashIcon as TrashIconOutline } from '@heroicons/react/24/outline'
-import { FolderIcon, PencilIcon } from '@heroicons/react/24/solid'
+import { ArrowPathIcon, LinkIcon as LinkIconOutline, PencilIcon as PencilIconOutline, PlusIcon, TrashIcon as TrashIconOutline } from '@heroicons/react/24/outline'
+import { FolderIcon } from '@heroicons/react/24/solid'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useGetAccount } from '../../hooks/api/accounts'
@@ -138,13 +138,15 @@ const GroupViewNotesTab: React.FC = () => {
           type='text'
         />
         <button
-          className='ml-4 flex shrink-0 items-center rounded-md bg-blue-600 p-2 px-3 text-sm text-white transition-all hover:bg-blue-700 hover:shadow-md'
+          className='ml-4 flex shrink-0 items-center rounded-md bg-blue-50 p-2 px-3 text-sm  text-blue-500 transition-all'
           onClick={() => {
             createNoteQ.mutate({body: {title: 'Untitled Note'}})
           }}
         >
           New note
-          <PencilIcon className='ml-2 h-4 w-4 text-white' />
+          {
+            createNoteQ.isLoading ? <ArrowPathIcon className='ml-1 h-4 w-4 animate-spin text-blue-500' /> : <PlusIcon className='ml-1 h-4 w-4 stroke-2 text-blue-500' />
+          }
         </button>
       </div>
 

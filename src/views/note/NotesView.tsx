@@ -1,10 +1,15 @@
+import { ArrowPathIcon, DocumentDuplicateIcon, ShareIcon, TrashIcon } from '@heroicons/react/24/outline'
+import moment from 'moment'
 import React from 'react'
 import ContentEditable from 'react-contenteditable'
+import { useLocation, useNavigate } from 'react-router-dom'
 import ViewSkeleton from '../../components/view/ViewSkeleton'
-import { useGetNoteInCurrentGroup, useUpdateNoteInCurrentGroup } from '../../hooks/api/notes'
+import { useGetAccount } from '../../hooks/api/accounts'
+import { useDeleteNoteInCurrentGroup, useGetNoteInCurrentGroup, useUpdateNoteInCurrentGroup } from '../../hooks/api/notes'
 import { V1Note } from '../../protorepo/openapi/typescript-axios'
 
 const NoteViewHeader: React.FC = () => {
+  const location = useLocation()
   const [latestTitle, setLatestTitle] = React.useState<string>()
   const noteId = location.pathname.split('/')[4]
   const getNoteQ = useGetNoteInCurrentGroup({ noteId })
@@ -59,7 +64,56 @@ const NoteViewHeader: React.FC = () => {
 }
 
 const NoteView: React.FC = () => {
+  const location = useLocation()
+  const navigate = useNavigate()
+  const noteId = location.pathname.split('/')[4]
+  const noteQ = useGetNoteInCurrentGroup({ noteId })
+  const deleteNoteQ = useDeleteNoteInCurrentGroup({ onSuccess: () => { navigate('../..') }})
+  const modifiedAtRelative = noteQ.data && noteQ.data.note.modifiedAt && moment(noteQ.data.note.modifiedAt, 'YYYY-MM-DDTHH:mm:ss.SSSZ').fromNow()
+  const authorAccountQ = useGetAccount({ accountId: noteQ.data?.note.authorAccountId as string }, { enabled: !!noteQ.data?.note.authorAccountId })
+
   return <ViewSkeleton titleElement={<NoteViewHeader />} panels={['group-chat', 'group-activity', 'note-recommendations']}>
+    {/* Header */}
+    <div className='mx-xl flex h-10 w-full items-center justify-between rounded-md border border-gray-100 bg-gray-50 p-1 px-2'>
+      {/* Last edited by */}
+      <div className='flex items-center'>
+        <h5 className='mr-1 text-gray-500'>Last edited {modifiedAtRelative} by </h5>
+        <div className='flex cursor-pointer items-center rounded border bg-white p-[2px] px-1 text-xs'>
+          <div className='mr-1 h-3 w-3 rounded bg-gradient-radial from-teal-300 to-green-200' />
+          {authorAccountQ.data && authorAccountQ.data.account.name}
+        </div>
+      </div>
+      {/* Menu */}
+      <div className='flex'>
+        <div className='mr-2 flex cursor-pointer items-center rounded p-1 hover:bg-gray-100' onClick={() => {
+          alert('Not Implemented')
+        }}>
+          <DocumentDuplicateIcon className='mr-1 h-4 w-4 text-gray-500' />
+          <h5 className='text-gray-500'>Duplicate</h5>
+        </div>
+        <div className='mr-2 flex cursor-pointer items-center rounded p-1 hover:bg-gray-100' onClick={() => {
+          alert('Not Implemented')
+        }}>
+          <ShareIcon className='mr-1 h-4 w-4 text-gray-500' />
+          <h5 className='text-gray-500'>Share</h5>
+        </div>
+        <div className='flex cursor-pointer items-center rounded p-1 hover:bg-gray-100' onClick={() => {
+          deleteNoteQ.mutate({ noteId })
+        }}>
+          {
+            deleteNoteQ.isLoading ? <ArrowPathIcon className='mr-1 h-4 w-4 animate-spin text-gray-500' /> : <TrashIcon className='mr-1 h-4 w-4 text-gray-500' />
+          }
+          
+          <h5 className='text-gray-500'>Delete</h5>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
     {/* <div className='px-lg pb-lg focus:outline-none xl:px-xl xl:pb-2xl' >
       <h1 className='pt-8 text-3xl font-medium text-gray-800 first:pt-0'>The Pre-Industrial Era</h1>
       <div className='pt-2 text-justify'>The Industrial Revolution was a major turning point in human history, marked by a profound shift from manual labor to machine-based manufacturing. It began in the mid-18th century in Britain and quickly spread throughout Europe and North America, fundamentally transforming the way goods were produced, distributed, and consumed.</div>
