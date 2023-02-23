@@ -35,7 +35,7 @@ export const useUpdateMemberInCurrentGroup = (options?: MutationHookOptions<Upda
     onMutate: async (data) => {
       const queryKey = newMemberCacheKey(currentGroupId, data.accountId)
       await apiQueryClient.cancelQueries({ queryKey })
-      const previousMember = apiQueryClient.getQueryData(queryKey) as V1GetMemberResponse | undefined
+      let previousMember = apiQueryClient.getQueryData(queryKey) as V1GetMemberResponse | undefined
 
       // Update self.
       if (previousMember) {
@@ -49,7 +49,10 @@ export const useUpdateMemberInCurrentGroup = (options?: MutationHookOptions<Upda
         // @ts-expect-error ulterior check ensure data is present.
         apiQueryClient.setQueryData(newGroupCacheKey(currentGroupId), (old: V1GetGroupResponse) => {
           return {group: {...old.group, members: old.group.members?.map((member) => {
-            if (member.accountId == data.accountId) return {...member, ...data.body}
+            if (member.accountId == data.accountId) {
+              previousMember = {member}
+              return {...member, ...data.body}
+            }
             return member
           })}}
         })
@@ -70,7 +73,7 @@ export const useUpdateMemberInCurrentGroup = (options?: MutationHookOptions<Upda
           return {group: {...old.group, members: old.group.members?.map((member) => {
             if (member.accountId == data.accountId) return context?.previousMember?.member
             return member
-          })}}
+          }).filter((member) => member !== undefined)}}
         })
       }
 
