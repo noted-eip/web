@@ -24,6 +24,7 @@
     "react-scripts": "^5.0.1",
     "sanitize-html": "^1.27.5",
     "slate": "^0.91.1",
+    "slate-history": "^0.86.0",
     "slate-react": "^0.91.2",
     "tailwind-merge": "^1.8.1",
     "typescript": "^4.7.4",

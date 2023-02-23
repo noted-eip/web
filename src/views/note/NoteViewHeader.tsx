@@ -5,7 +5,7 @@ import { useDebounce } from 'usehooks-ts'
 import EditorTitleElement from '../../components/editor/EditorTitleElement'
 import { useGetNoteInCurrentGroup, useUpdateNoteInCurrentGroup } from '../../hooks/api/notes'
 import { useNoteIdFromUrl } from '../../hooks/url'
-import { CustomElement } from '../../lib/editor'
+import { NoteTitleElement } from '../../lib/editor'
 import { V1Note } from '../../protorepo/openapi/typescript-axios'
 
 const renderElement = (props: RenderElementProps) => {
@@ -42,7 +42,7 @@ const NoteViewHeader: React.FC = () => {
 
   const handleChange = (value: Descendant[]) => {
     if (editor.operations.some(op => 'set_selection' !== op.type)) {
-      const newTitle = (value[0] as CustomElement).children[0].text
+      const newTitle = (value[0] as unknown as NoteTitleElement).children[0].text
       setTitle(newTitle)
     }
   }
@@ -55,7 +55,7 @@ const NoteViewHeader: React.FC = () => {
         onChange={handleChange}
         value={[
           {
-            type: 'paragraph',
+            type: 'TYPE_PARAGRAPH',
             children: [{ text: noteQ.data.note.title }],
           },
         ]} >
