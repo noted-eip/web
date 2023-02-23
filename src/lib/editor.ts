@@ -1,13 +1,14 @@
-import { BaseEditor, Editor, Element as SlateElement, Point, Range, Transforms } from 'slate'
+import { BaseEditor, Descendant, Editor, Element as SlateElement, Point, Range, Transforms } from 'slate'
 import { ReactEditor } from 'slate-react'
+import { V1Block } from '../protorepo/openapi/typescript-axios'
 
 export type NoteTitleElement = { type: 'TYPE_NOTE_TITLE'; children: SlateText[] }
 export type ParagraphElement = { type: 'TYPE_PARAGRAPH'; children: SlateText[] }
 export type HeadingOneElement = { type: 'TYPE_HEADING_1'; children: SlateText[] }
 export type HeadingTwoElement = { type: 'TYPE_HEADING_2'; children: SlateText[] }
 export type HeadingThreeElement = { type: 'TYPE_HEADING_3'; children: SlateText[] }
-export type BulletListElement = { type: 'TYPE_BULLET_LIST'; children: SlateText[] }
-export type NumberListElement = { type: 'TYPE_NUMBER_LIST'; children: SlateText[] }
+export type BulletListElement = { type: 'TYPE_BULLET_LIST'; children: ListItemElement[] }
+export type NumberListElement = { type: 'TYPE_NUMBER_LIST'; children: ListItemElement[] }
 export type ListItemElement = { type: 'TYPE_LIST_ITEM'; children: SlateText[] }
 
 export type SlateText = { text: string }
@@ -23,7 +24,6 @@ declare module 'slate' {
 const SHORTCUTS = {
   '*': 'TYPE_LIST_ITEM',
   '-': 'TYPE_LIST_ITEM',
-  '+': 'TYPE_LIST_ITEM',
   '#': 'TYPE_HEADING_1',
   '##': 'TYPE_HEADING_2',
   '###': 'TYPE_HEADING_3',
@@ -60,11 +60,18 @@ export const withShortcuts = editor => {
           match: n => SlateElement.isElement(n) && Editor.isBlock(editor, n),
         })
 
-        if (type === 'TYPE_LIST_ITEM') {
-          const list: BulletListElement = {
-            type: 'TYPE_BULLET_LIST',
-            children: [],
-          }
+        if (beforeText === '*') {
+          const list: NumberListElement = {type: 'TYPE_NUMBER_LIST', children: []}
+          Transforms.wrapNodes(editor, list, {
+            match: n =>
+              !Editor.isEditor(n) &&
+              SlateElement.isElement(n) &&
+              n.type === 'TYPE_LIST_ITEM',
+          })
+        }
+
+        if (beforeText === '-') {
+          const list: BulletListElement = {type: 'TYPE_BULLET_LIST', children: []}
           Transforms.wrapNodes(editor, list, {
             match: n =>
               !Editor.isEditor(n) &&
@@ -81,6 +88,7 @@ export const withShortcuts = editor => {
   }
 
   editor.deleteBackward = (...args) => {
+    console.log('deleteText', args)
     const { selection } = editor
 
     if (selection && Range.isCollapsed(selection)) {
@@ -106,6 +114,13 @@ export const withShortcuts = editor => {
                 n.type === 'TYPE_BULLET_LIST',
               split: true,
             })
+            Transforms.unwrapNodes(editor, {
+              match: n =>
+                !Editor.isEditor(n) &&
+                SlateElement.isElement(n) &&
+                n.type === 'TYPE_NUMBER_LIST',
+              split: true,
+            })
           }
 
           return
@@ -117,4 +132,56 @@ export const withShortcuts = editor => {
   }
 
   return editor
+}
+
+export const noteBlocksToSlateElements = (blocks: V1Block[]): Descendant[] => {
+  const slateElements: Descendant[] = []
+
+  for (let i = 0; i < blocks.length; i++) {
+    switch (blocks[i].type) {
+      case 'TYPE_HEADING_1':
+        slateElements.push({ type: 'TYPE_HEADING_1', children: [{ text: blocks[i].heading || '' }] })
+        break
+      case 'TYPE_HEADING_2':
+        slateElements.push({ type: 'TYPE_HEADING_2', children: [{ text: blocks[i].heading || '' }] })
+        break
+      case 'TYPE_HEADING_3':
+        slateElements.push({ type: 'TYPE_HEADING_3', children: [{ text: blocks[i].heading || '' }] })
+        break
+      case 'TYPE_PARAGRAPH':
+        slateElements.push({ type: 'TYPE_PARAGRAPH', children: [{ text: blocks[i].paragraph || '' }] })
+        break
+      case 'TYPE_BULLET_POINT': {
+        const bulletPoints: ListItemElement[] = []
+        for (; i < blocks.length && blocks[i].type === 'TYPE_BULLET_POINT'; i++) {
+          bulletPoints.push({ type: 'TYPE_LIST_ITEM', children: [{ text: blocks[i].bulletPoint || '' }] })
+        }
+        slateElements.push({ type: 'TYPE_BULLET_LIST', children: bulletPoints})
+        break
+      }
+      case 'TYPE_NUMBER_POINT': {
+        const numberPoints: ListItemElement[] = []
+        for (; i < blocks.length && blocks[i].type === 'TYPE_NUMBER_POINT'; i++) {
+          numberPoints.push({ type: 'TYPE_LIST_ITEM', children: [{ text: blocks[i].numberPoint || '' }] })
+        }
+        slateElements.push({ type: 'TYPE_NUMBER_LIST', children: numberPoints})
+        break
+      }
+      case 'TYPE_CODE':
+        console.warn('Block with type TYPE_CODE is not supported in the editor, it will be overwritten.')
+        break
+      case 'TYPE_IMAGE':
+        console.warn('Block with type TYPE_IMAGE is not supported in the editor, it will be overwritten.')
+        break
+      case 'TYPE_MATH':
+        console.warn('Block with type TYPE_MATH is not supported in the editor, it will be overwritten.')
+        break
+      default:
+        console.warn(`Block with type ${blocks[i].type} is not known, it will be overwritten.`)
+    }
+  }
+
+  console.log('input', blocks, 'output', slateElements)
+
+  return slateElements
 }

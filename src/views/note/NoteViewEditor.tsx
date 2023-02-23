@@ -1,20 +1,21 @@
 import React from 'react'
-import { createEditor } from 'slate'
+import { createEditor, Descendant } from 'slate'
 import { withHistory } from 'slate-history'
 import { Editable, RenderElementProps, Slate, withReact } from 'slate-react'
 import { useGetNoteInCurrentGroup } from '../../hooks/api/notes'
 import { useNoteIdFromUrl } from '../../hooks/url'
-import { withShortcuts } from '../../lib/editor'
+import { noteBlocksToSlateElements, withShortcuts } from '../../lib/editor'
+import { V1Block } from '../../protorepo/openapi/typescript-axios'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Element: React.FC<RenderElementProps> = props => {
   switch (props.element.type) {
     case 'TYPE_HEADING_1':
-      return <h1 className='pb-4 text-2xl font-medium text-gray-700' {...props.attributes}>{props.children}</h1>
+      return <h1 onChange={(e) => console.log(e)} className='pt-4 pb-2 text-2xl font-medium text-gray-800' {...props.attributes}>{props.children}</h1>
     case 'TYPE_HEADING_2':
-      return <h2 className='pb-3 text-xl font-medium text-gray-700' {...props.attributes}>{props.children}</h2>
+      return <h2 className='pt-3 pb-2 text-xl font-medium text-gray-800' {...props.attributes}>{props.children}</h2>
     case 'TYPE_HEADING_3':
-      return <h3 className='pb-2 text-lg font-medium normal-case text-gray-700' {...props.attributes}>{props.children}</h3>
+      return <h3 className='py-2 text-lg font-medium normal-case text-gray-800' {...props.attributes}>{props.children}</h3>
     case 'TYPE_BULLET_LIST':
       return <ul className='list-inside list-disc py-1 text-sm' {...props.attributes}>{props.children}</ul>
     case 'TYPE_NUMBER_LIST':
@@ -22,7 +23,7 @@ const Element: React.FC<RenderElementProps> = props => {
     case 'TYPE_LIST_ITEM':
       return <li className='py-1 px-2 text-sm' {...props.attributes}>{props.children}</li>
     default:
-      return <p className='py-1 text-sm' {...props.attributes}>{props.children}</p>
+      return <p className='py-1 text-sm text-slate-800' {...props.attributes}>{props.children}</p>
   }
 }
 
@@ -46,29 +47,20 @@ const NoteViewEditor: React.FC = () => {
     </div>
   }
 
+  const handleEditorChange = (value: Descendant[]) => {
+    if (editor.operations.some(op => 'set_selection' !== op.type)) {
+      console.log(value)
+    }
+  }
+
   return <div>
     <Slate
-      onChange={value => {
-        const isAstChange = editor.operations.some(
-          op => 'set_selection' !== op.type
-        )
-        if (isAstChange) {
-          console.log(value)
-        }
-      }}
+      onChange={handleEditorChange}
       editor={editor}
-      value={[
-        {
-          type: 'TYPE_PARAGRAPH',
-          children: [
-            {
-              text: '',
-            },
-          ],
-        },
-      ]}>
+      value={noteBlocksToSlateElements(noteQuery.data?.note.blocks?.length ? noteQuery.data?.note.blocks : [{type: 'TYPE_PARAGRAPH', paragraph: ''} as V1Block])}>
       <Editable
-        className='m-lg px-1 xl:mx-xl'
+        autoFocus
+        className='m-lg min-h-[256px] px-1 xl:mx-xl'
         renderElement={renderElement} />
     </Slate>
   </div>
