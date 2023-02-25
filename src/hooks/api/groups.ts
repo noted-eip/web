@@ -133,10 +133,11 @@ export const useUpdateCurrentGroup = (options?: MutationHookOptions<UpdateCurren
   })
 }
 
-export type ListGroupsRequest = {accountId: string, limit?: string, offset?: string};
+export type ListGroupsRequest = {accountId: string, limit?: number, offset?: number};
 export const useListGroups = (req: ListGroupsRequest, options?: QueryHookOptions<ListGroupsRequest, V1ListGroupsResponse>) => {
   const authContext = useAuthContext()
   const queryKey = newGroupsCacheKey({accountId: req.accountId})
+
   return useQuery({
     queryKey: queryKey,
     queryFn: async () => {

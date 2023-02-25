@@ -148,7 +148,7 @@ export const GroupViewSettingsTabEditGroup: React.FC = () => {
 const GroupMemberListItem: React.FC<{ member: V1GroupMember }> = (props) => {
   const authContext = useAuthContext()
   const account = useGetAccount({accountId: props.member.accountId})
-  const removeGroupQ = useRemoveMemberInCurrentGroup()
+  const removeMemberQ = useRemoveMemberInCurrentGroup()
   const updateGroupMemberQ = useUpdateMemberInCurrentGroup()
 
   return (
@@ -193,18 +193,22 @@ const GroupMemberListItem: React.FC<{ member: V1GroupMember }> = (props) => {
           </div>
         )}
       </div>
+
+      
       <div className='flex items-center justify-end'>
+
         {props.member.accountId !== authContext.accountId &&
-        props.member.isAdmin ? null : (
-            <div
-              className='cursor-pointer rounded-md p-2 opacity-75 hover:bg-gray-200 group-hover:opacity-100'
-              onClick={() =>
-                removeGroupQ.mutate({accountId: props.member.accountId})
-              }
-            >
-              <TrashIcon className='h-5 w-5 stroke-2 text-gray-400' />
-            </div>
-          )}
+        props.member.isAdmin ? null : 
+          <div className='cursor-pointer opacity-75 group-hover:opacity-100'>
+            {
+              removeMemberQ.isLoading ?
+                <LoaderIcon className='h-9 w-9 p-2' />
+                :
+                <TrashIcon className='h-9 w-9 rounded-md stroke-2 p-2 text-gray-400 hover:bg-gray-200' onClick={() => {
+                  removeMemberQ.mutate({ accountId: props.member.accountId })
+                }} />
+            }
+          </div>}
       </div>
     </div>
   )
@@ -275,12 +279,12 @@ const GroupViewSettingsTabMembersSection: React.FC = () => {
             tabIndex={2}
             type='submit'
             disabled={!searchAccountQ.isSuccess}
-            className='ml-2 h-8 cursor-pointer rounded-md bg-blue-600 px-3 text-sm font-medium text-white transition-colors duration-150 disabled:bg-gray-300 disabled:text-gray-800'
+            className='ml-2 flex h-8 cursor-pointer items-center justify-center rounded-md bg-blue-600 px-3 text-sm font-medium text-white transition-colors duration-150 disabled:bg-gray-300 disabled:text-gray-800'
           >
             <span className={`${sendInviteQ.isLoading && 'invisible'}`}>
               Send invite
-              {sendInviteQ.isLoading && <LoaderIcon className='h-4 w-4' />}
             </span>
+            {sendInviteQ.isLoading && <LoaderIcon className='absolute h-5 w-5' />}
           </button>
         </form>
       </div>
@@ -350,10 +354,15 @@ const PendingInviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
       <div className='text-sm leading-[64px] text-gray-500'>{expiresInDateString}</div>
       <div className='flex items-center justify-end'>
         {/* TODO: Display this when the person can actually delete the invite */}
-        <div className='cursor-pointer rounded-md p-2 opacity-75 hover:bg-gray-200 group-hover:opacity-100'>
-          <TrashIcon className='h-5 w-5 stroke-2 text-gray-400' onClick={() => {
-            revokeInviteQ.mutate({ inviteId: props.invite.id })
-          }} />
+        <div className='cursor-pointer opacity-75 group-hover:opacity-100'>
+          {
+            revokeInviteQ.isLoading ?
+              <LoaderIcon className='h-9 w-9 p-2' />
+              :
+              <TrashIcon className='h-9 w-9 rounded-md stroke-2 p-2 text-gray-400 hover:bg-gray-200' onClick={() => {
+                revokeInviteQ.mutate({ inviteId: props.invite.id })
+              }} />
+          }
         </div>
       </div>
     </div>

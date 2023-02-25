@@ -90,10 +90,9 @@ export const useUpdateMyAccount = (options?: MutationHookOptions<UpdateMyAccount
 }
 
 export type DeleteMyAccountRequest = undefined;
-export const useDeleteAccount = (options?: MutationHookOptions<DeleteMyAccountRequest, object>) => {
+export const useDeleteMyAccount = (options?: MutationHookOptions<DeleteMyAccountRequest, object>) => {
   const authContext = useAuthContext()
   const currentAccountId = authContext.accountId as string
-
 
   return useMutation(async () => {
     return (await openapiClient.accountsAPIDeleteAccount(currentAccountId, await axiosRequestOptionsWithAuthorization(authContext))).data
