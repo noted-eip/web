@@ -64,7 +64,6 @@ const NoteViewEditor: React.FC<{ note: V1Note }> = props => {
     value={initialEditorState}>
     <Editable
       readOnly={authContext.accountId !== props.note.authorAccountId}
-      autoFocus
       className='m-lg min-h-[256px] px-1 xl:mx-xl'
       renderElement={renderElement} />
   </Slate>
