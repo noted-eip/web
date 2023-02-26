@@ -1,5 +1,6 @@
 import jwt_decode from 'jwt-decode'
 import { QueryClient } from 'react-query'
+
 import { DefaultApiFactory } from '../protorepo/openapi/typescript-axios'
 import { API_BASE } from './env'
 
@@ -22,4 +23,4 @@ const decodeToken = (token: string): { aid: string } => {
   throw new Error('token cannot be decoded, missing fields')
 }
 
-export { apiQueryClient, openapiClient, decodeToken }
+export { apiQueryClient, decodeToken,openapiClient }

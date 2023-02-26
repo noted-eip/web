@@ -2,6 +2,7 @@ import { Menu, Transition } from '@headlessui/react'
 import { PlusIcon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon } from '@heroicons/react/24/solid'
 import React from 'react'
+
 import { useAuthContext } from '../../contexts/auth'
 import { useGroupContext } from '../../contexts/group'
 import { useCreateGroup, useGetCurrentGroup, useListGroups } from '../../hooks/api/groups'

@@ -1,4 +1,5 @@
 import React from 'react'
+
 import ViewSkeleton from '../../components/view/ViewSkeleton'
 
 const SettingsView: React.FC = () => {

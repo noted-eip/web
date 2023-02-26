@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { usePanelContext } from '../../contexts/panel'
 import { panelMetadata } from '../../lib/panels'
 

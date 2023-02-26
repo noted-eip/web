@@ -1,7 +1,8 @@
 import React from 'react'
-import { createEditor, Descendant } from 'slate'
+import { createEditor,Descendant } from 'slate'
 import { Editable, RenderElementProps, Slate, withReact } from 'slate-react'
 import { useDebounce } from 'usehooks-ts'
+
 import EditorTitleElement from '../../components/editor/EditorTitleElement'
 import { useGetNoteInCurrentGroup, useUpdateNoteInCurrentGroup } from '../../hooks/api/notes'
 import { useNoteIdFromUrl } from '../../hooks/url'

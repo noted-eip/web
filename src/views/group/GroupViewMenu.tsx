@@ -2,6 +2,7 @@ import { RadioGroup } from '@headlessui/react'
 import { FolderIcon, SparklesIcon, UserIcon } from '@heroicons/react/24/solid'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+
 import { useGroupContext } from '../../contexts/group'
 
 const GroupViewMenu: React.FC<React.PropsWithChildren & { activeTab: string }> = (

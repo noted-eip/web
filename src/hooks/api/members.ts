@@ -1,10 +1,11 @@
 import { useMutation, useQuery } from 'react-query'
+
 import { useAuthContext } from '../../contexts/auth'
 import { useGroupContext } from '../../contexts/group'
 import { apiQueryClient, openapiClient } from '../../lib/api'
 import { V1GetGroupResponse, V1GetMemberResponse, V1GroupMember, V1ListGroupsResponse } from '../../protorepo/openapi/typescript-axios'
 import { newGroupCacheKey, newGroupsCacheKey, newMemberCacheKey } from './cache'
-import { axiosRequestOptionsWithAuthorization, MutationHookOptions, QueryHookOptions } from './helpers'
+import { axiosRequestOptionsWithAuthorization,MutationHookOptions, QueryHookOptions } from './helpers'
 
 type GetGroupMemberRequest = {accountId: string};
 export const useGetMemberInCurrentGroup = (req: GetGroupMemberRequest, options?: QueryHookOptions<GetGroupMemberRequest, V1GetMemberResponse>) => {

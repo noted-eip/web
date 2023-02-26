@@ -1,5 +1,6 @@
 import { BaseEditor, Descendant, Editor, Element as SlateElement, Point, Range, Transforms } from 'slate'
 import { ReactEditor } from 'slate-react'
+
 import { V1Block } from '../protorepo/openapi/typescript-axios'
 
 export type NoteTitleElement = { type: 'TYPE_NOTE_TITLE'; children: SlateText[] }
@@ -61,7 +62,7 @@ export const withShortcuts = editor => {
         })
 
         if (beforeText === '*') {
-          const list: NumberListElement = {type: 'TYPE_NUMBER_LIST', children: []}
+          const list: NumberListElement = { type: 'TYPE_NUMBER_LIST', children: [] }
           Transforms.wrapNodes(editor, list, {
             match: n =>
               !Editor.isEditor(n) &&
@@ -71,7 +72,7 @@ export const withShortcuts = editor => {
         }
 
         if (beforeText === '-') {
-          const list: BulletListElement = {type: 'TYPE_BULLET_LIST', children: []}
+          const list: BulletListElement = { type: 'TYPE_BULLET_LIST', children: [] }
           Transforms.wrapNodes(editor, list, {
             match: n =>
               !Editor.isEditor(n) &&
@@ -88,7 +89,6 @@ export const withShortcuts = editor => {
   }
 
   editor.deleteBackward = (...args) => {
-    console.log('deleteText', args)
     const { selection } = editor
 
     if (selection && Range.isCollapsed(selection)) {
@@ -153,18 +153,22 @@ export const noteBlocksToSlateElements = (blocks: V1Block[]): Descendant[] => {
         break
       case 'TYPE_BULLET_POINT': {
         const bulletPoints: ListItemElement[] = []
-        for (; i < blocks.length && blocks[i].type === 'TYPE_BULLET_POINT'; i++) {
+        for (; i < blocks.length && blocks[i].type === 'TYPE_BULLET_POINT';) {
           bulletPoints.push({ type: 'TYPE_LIST_ITEM', children: [{ text: blocks[i].bulletPoint || '' }] })
+          if (i + 1 < blocks.length && blocks[i + 1].type === 'TYPE_BULLET_POINT') i++
+          else break
         }
-        slateElements.push({ type: 'TYPE_BULLET_LIST', children: bulletPoints})
+        slateElements.push({ type: 'TYPE_BULLET_LIST', children: bulletPoints })
         break
       }
       case 'TYPE_NUMBER_POINT': {
         const numberPoints: ListItemElement[] = []
-        for (; i < blocks.length && blocks[i].type === 'TYPE_NUMBER_POINT'; i++) {
+        for (; i < blocks.length && blocks[i].type === 'TYPE_NUMBER_POINT';) {
           numberPoints.push({ type: 'TYPE_LIST_ITEM', children: [{ text: blocks[i].numberPoint || '' }] })
+          if (i + 1 < blocks.length && blocks[i + 1].type === 'TYPE_NUMBER_POINT') i++
+          else break
         }
-        slateElements.push({ type: 'TYPE_NUMBER_LIST', children: numberPoints})
+        slateElements.push({ type: 'TYPE_NUMBER_LIST', children: numberPoints })
         break
       }
       case 'TYPE_CODE':
@@ -181,7 +185,94 @@ export const noteBlocksToSlateElements = (blocks: V1Block[]): Descendant[] => {
     }
   }
 
-  console.log('input', blocks, 'output', slateElements)
-
   return slateElements
+}
+
+export const slateElementsToNoteBlocks = (elements: Descendant[]): V1Block[] => {
+  const blocks: V1Block[] = []
+
+  for (let i = 0; i < elements.length; i++) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const element = elements[i] as any
+
+    if (element.type) {
+      switch (element.type) {
+        case 'TYPE_HEADING_1':
+          blocks.push({ type: 'TYPE_HEADING_1', heading: element.children[0].text } as V1Block)
+          break
+        case 'TYPE_HEADING_2':
+          blocks.push({ type: 'TYPE_HEADING_2', heading: element.children[0].text } as V1Block)
+          break
+        case 'TYPE_HEADING_3':
+          blocks.push({ type: 'TYPE_HEADING_3', heading: element.children[0].text } as V1Block)
+          break
+        case 'TYPE_PARAGRAPH':
+          blocks.push({ type: 'TYPE_PARAGRAPH', paragraph: element.children[0].text } as V1Block)
+          break
+        case 'TYPE_BULLET_LIST':
+          for (const child of element.children) {
+            blocks.push({ type: 'TYPE_BULLET_POINT', bulletPoint: child.children[0].text } as V1Block)
+          }
+          break
+        case 'TYPE_NUMBER_LIST':
+          for (const child of element.children) {
+            blocks.push({ type: 'TYPE_NUMBER_POINT', numberPoint: child.children[0].text } as V1Block)
+          }
+          break
+      }
+    }
+  }
+
+  return blocks
+}
+
+export const blockArraysAreEqual = (a: V1Block[], b: V1Block[]): boolean => {
+  if (a.length !== b.length) {
+    return false
+  }
+
+  for (let i = 0; i < a.length; i++) {
+    if (a[i].type !== b[i].type) {
+      return false
+    }
+
+    switch (a[i].type) {
+      case 'TYPE_HEADING_1':
+      case 'TYPE_HEADING_2':
+      case 'TYPE_HEADING_3':
+      case 'TYPE_PARAGRAPH':
+        if (a[i].paragraph !== b[i].paragraph) {
+          return false
+        }
+        break
+      case 'TYPE_BULLET_POINT':
+        if (a[i].bulletPoint !== b[i].bulletPoint) {
+          return false
+        }
+        break
+      case 'TYPE_NUMBER_POINT':
+        if (a[i].numberPoint !== b[i].numberPoint) {
+          return false
+        }
+        break
+      case 'TYPE_CODE':
+        if (a[i].code?.lang !== b[i].code?.lang || a[i].code?.snippet !== b[i].code?.snippet) {
+          return false
+        }
+        break
+      case 'TYPE_IMAGE':
+        if (a[i].image?.url !== b[i].image?.url || a[i].image?.caption !== b[i].image?.caption) {
+          return false
+        }
+        break
+      case 'TYPE_MATH':
+        if (a[i].math !== b[i].math) {
+          return false
+        }
+        break
+      default:
+    }
+  }
+
+  return true
 }

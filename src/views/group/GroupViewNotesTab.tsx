@@ -2,6 +2,7 @@ import { ArrowPathIcon, LinkIcon as LinkIconOutline, PencilIcon as PencilIconOut
 import { FolderIcon } from '@heroicons/react/24/solid'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+
 import { useGetAccount } from '../../hooks/api/accounts'
 import { useGetCurrentGroup } from '../../hooks/api/groups'
 import { useCreateNoteInCurrentGroup, useDeleteNoteInCurrentGroup, useListNotesInCurrentGroup } from '../../hooks/api/notes'

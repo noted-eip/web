@@ -1,6 +1,7 @@
 import { ArrowPathIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { ExclamationTriangleIcon, InboxIcon, PencilIcon } from '@heroicons/react/24/solid'
 import React from 'react'
+
 import ViewSkeleton from '../../components/view/ViewSkeleton'
 import { useAuthContext } from '../../contexts/auth'
 import { useDeleteMyAccount, useGetAccount, useUpdateMyAccount } from '../../hooks/api/accounts'
