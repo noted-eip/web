@@ -1,5 +1,6 @@
 import React from 'react'
 import { Outlet, useNavigate, useParams } from 'react-router-dom'
+
 import ViewSkeleton from '../../components/view/ViewSkeleton'
 import { useGroupContext } from '../../contexts/group'
 import GroupViewEmptyState from './GroupViewEmptyState'

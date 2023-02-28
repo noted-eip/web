@@ -2,6 +2,7 @@ import {
   ArrowRightIcon, CheckIcon, PlusIcon, UserPlusIcon, XMarkIcon
 } from '@heroicons/react/24/solid'
 import React from 'react'
+
 import { useAuthContext } from '../../contexts/auth'
 import { useGroupContext } from '../../contexts/group'
 import { useCreateGroup, useListGroups } from '../../hooks/api/groups'

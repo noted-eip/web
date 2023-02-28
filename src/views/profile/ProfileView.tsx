@@ -1,6 +1,8 @@
 import { ArrowPathIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { ExclamationTriangleIcon, InboxIcon, PencilIcon } from '@heroicons/react/24/solid'
 import React from 'react'
+
+import LoaderIcon from '../../components/icons/LoaderIcon'
 import ViewSkeleton from '../../components/view/ViewSkeleton'
 import { useAuthContext } from '../../contexts/auth'
 import { useDeleteMyAccount, useGetAccount, useUpdateMyAccount } from '../../hooks/api/accounts'
@@ -36,20 +38,33 @@ const InviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
       <div className='flex items-center justify-end'>
         {getGroupQ.isSuccess && (
           <React.Fragment>
-            <div
-              className='group flex cursor-pointer items-center rounded-full bg-red-100 p-1 px-3 text-xs font-medium text-red-700 hover:bg-red-200'
+            <button
+              disabled={denyInviteQ.isLoading || acceptInviteQ.isLoading}
+              className='group flex cursor-pointer items-center rounded-full bg-red-100 p-1 px-3 text-xs font-medium text-red-700 hover:bg-red-200 disabled:bg-gray-100 disabled:text-gray-700'
               onClick={() => denyInviteQ.mutate({ groupId: props.invite?.groupId as string, inviteId: props.invite.id })}
             >
               Deny
-              <XMarkIcon className='ml-1 h-3 w-3 stroke-[3px] text-red-700 transition-all group-hover:scale-[120%]' />
-            </div>
-            <div
-              className='group ml-2 flex cursor-pointer items-center rounded-full bg-green-100 p-1 px-3 text-xs font-medium text-green-700 hover:bg-green-200'
+              {
+                denyInviteQ.isLoading ?
+                  <LoaderIcon className='ml-1 h-3 w-3' />
+                  :
+                  <XMarkIcon className='ml-1 h-3 w-3 stroke-[3px] text-red-700 transition-all group-hover:scale-[120%] group-disabled:text-gray-700' />
+              }
+              
+            </button>
+            <button
+              disabled={denyInviteQ.isLoading || acceptInviteQ.isLoading}
+              className='group ml-2 flex cursor-pointer items-center rounded-full bg-green-100 p-1 px-3 text-xs font-medium text-green-700 hover:bg-green-200 disabled:bg-gray-100 disabled:text-gray-700'
               onClick={() => acceptInviteQ.mutate({ groupId: props.invite.groupId as string, inviteId: props.invite.id })}
             >
               Accept
-              <CheckIcon className='ml-1 h-3 w-3 stroke-[3px] text-green-700 transition-all group-hover:scale-[120%]' />
-            </div>
+              {
+                acceptInviteQ.isLoading ?
+                  <LoaderIcon className='ml-1 h-3 w-3' />
+                  :
+                  <CheckIcon className='ml-1 h-3 w-3 stroke-[3px] text-green-700 transition-all group-hover:scale-[120%] group-disabled:text-gray-700' />
+              }
+            </button>
           </React.Fragment>
         )}
       </div>

@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { LS_DEVELOPMENT_DATA_KEY } from '../lib/constants'
 
 export type TAccountsMap = {

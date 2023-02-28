@@ -1,9 +1,10 @@
 import { useMutation } from 'react-query'
+
 import { useAuthContext } from '../../contexts/auth'
 import { useGroupContext } from '../../contexts/group'
 import { openapiClient } from '../../lib/api'
 import { NotesAPIInsertBlockRequest, V1Block, V1InsertBlockResponse, V1UpdateBlockResponse } from '../../protorepo/openapi/typescript-axios'
-import { axiosRequestOptionsWithAuthorization, MutationHookOptions } from './helpers'
+import { axiosRequestOptionsWithAuthorization,MutationHookOptions } from './helpers'
 
 // TODO: Side Effects
 export type InsertBlockRequestInCurrentGroupNote = { noteId: string, body: NotesAPIInsertBlockRequest};

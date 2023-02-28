@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AxiosError, AxiosRequestConfig } from 'axios'
 import { UseMutationOptions, UseQueryOptions } from 'react-query'
+
 import { TAuthContext } from '../../contexts/auth'
 import { APIError } from '../../types/api/error'
 

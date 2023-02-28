@@ -8,6 +8,7 @@ import { EnvelopeIcon, PencilIcon, UserIcon } from '@heroicons/react/24/solid'
 import moment from 'moment'
 import React from 'react'
 import { useDebounce } from 'usehooks-ts'
+
 import LoaderIcon from '../../components/icons/LoaderIcon'
 import { useAuthContext } from '../../contexts/auth'
 import { useGroupContext } from '../../contexts/group'
@@ -150,6 +151,7 @@ const GroupMemberListItem: React.FC<{ member: V1GroupMember }> = (props) => {
   const account = useGetAccount({accountId: props.member.accountId})
   const removeMemberQ = useRemoveMemberInCurrentGroup()
   const updateGroupMemberQ = useUpdateMemberInCurrentGroup()
+  const groupQ = useGetCurrentGroup()
 
   return (
     <div className='group grid h-16 cursor-default grid-cols-[30%_40%_20%_10%] px-5 hover:bg-gray-100'>
@@ -172,12 +174,14 @@ const GroupMemberListItem: React.FC<{ member: V1GroupMember }> = (props) => {
           <div className='skeleton h-4 w-48' />
         )}
       </div>
+      {/* Admin Badge */}
       <div className='flex items-center'>
         {props.member.isAdmin ? (
           <div className='float-right rounded-full bg-purple-200 p-1 px-2 text-xs font-medium text-purple-600'>
             Admin
           </div>
-        ) : (
+          // Dirty way of checking that the current user is an admin.
+        ) : groupQ.data?.group.members?.find((acc) => {return acc.accountId === authContext.accountId && acc.isAdmin}) && (
           <div
             className='invisible float-right cursor-pointer rounded-full border-2 border-dashed border-gray-400 bg-gray-200 p-[2px] px-[6px] text-xs font-medium text-gray-600 opacity-75 hover:opacity-100 group-hover:visible'
             onClick={() =>
@@ -193,10 +197,8 @@ const GroupMemberListItem: React.FC<{ member: V1GroupMember }> = (props) => {
           </div>
         )}
       </div>
-
-      
+      {/* Remove Group Member */}
       <div className='flex items-center justify-end'>
-
         {props.member.accountId !== authContext.accountId &&
         props.member.isAdmin ? null : 
           <div className='cursor-pointer opacity-75 group-hover:opacity-100'>

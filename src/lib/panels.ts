@@ -1,4 +1,5 @@
 import { BoltIcon, ChatBubbleLeftIcon, PencilIcon } from '@heroicons/react/24/solid'
+
 import GroupActivityPanel from '../panels/GroupActivityPanel'
 import GroupChatPanel from '../panels/GroupChatPanel'
 import NoteRecommendationsPanel from '../panels/NoteRecommendationsPanel'
