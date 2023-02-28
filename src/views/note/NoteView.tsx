@@ -20,7 +20,6 @@ function editorLoadingSkeleton(): React.ReactElement<unknown, string> | null {
   </div>
 }
 
-
 const NoteView: React.FC = () => {
   const noteId = useNoteIdFromUrl()
   const noteQuery = useGetNoteInCurrentGroup({ noteId })
