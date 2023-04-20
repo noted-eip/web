@@ -49,6 +49,7 @@ export const useGetGroup = (req: GetGroupRequest, options?: QueryHookOptions<Get
 
 export const useGetCurrentGroup = (options?: QueryHookOptions<GetGroupRequest, V1GetGroupResponse>) => {
   const groupContext = useGroupContext()
+  console.log('----Current group id : ', groupContext.groupId)
   return useGetGroup({groupId: groupContext.groupId as string}, {
     ...options,
     // If no access to the group, switch group.

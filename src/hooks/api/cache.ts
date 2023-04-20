@@ -52,3 +52,13 @@ export const newNotesCacheKey = (options?: { authorAccountId?: string, groupId?:
   options && ret.push(options)
   return ret
 }
+
+//export const newActivitiesCacheKey = (options?: { groupId?: string, limit?: number, offset?: number }) => {
+//  const ret: any[] = ['activities']
+//  options && ret.push(options)
+//  return ret
+//}
+
+export const newActivitiesCacheKey = (groupId: string) => {
+  return ['groups', groupId]
+}
