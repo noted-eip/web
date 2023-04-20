@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios'
 import React from 'react'
 import { useMutation } from 'react-query'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import OldInput from '../../components/form/OldInput'
 import { addAccountToDevelopmentContext, useDevelopmentContext } from '../../contexts/dev'
 import { useNoAuthContext } from '../../contexts/noauth'
@@ -71,6 +71,7 @@ const SigninView: React.FC = () => {
         >
           Submit
         </button>
+        <Link to='/reset_password_email' className='text-sm text-blue-500 underline'> Reset password </Link>
       </form>
     </div>
   )

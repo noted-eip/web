@@ -1,5 +1,6 @@
 import React from 'react'
 import notedLogo from '../../../assets/logo/noted_logo.png'
+import { Link } from 'react-router-dom'
 
 const HeaderLanding: React.FC = () => {
   return (
@@ -32,37 +33,40 @@ const HeaderLanding: React.FC = () => {
               <div className='w-full text-gray-600 dark:text-gray-300 lg:w-auto lg:pr-4 lg:pt-0'>
                 <ul className='flex flex-col gap-6 font-medium tracking-wide lg:flex-row lg:gap-0 lg:text-sm'>
                   <li>
-                    <a href='#features' className='block transition hover:text-black md:px-4'>
-                      <span>Blabla</span>
+                    <a href='#description' className='block transition hover:text-black md:px-4'>
+                      <span>Description</span>
                     </a>
                   </li>
                   <li>
-                    <a href='#solution' className='block transition hover:text-black md:px-4'>
-                      <span>Blabla</span>
+                    <a href='#timeline' className='block transition hover:text-black md:px-4'>
+                      <span>Timeline</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href='#team' className='block transition hover:text-black md:px-4'>
+                      <span>Team</span>
                     </a>
                   </li>
                 </ul>
               </div>
 
-              <div className='mt-12 lg:mt-0'>
-                <a
-                  href='#'
-                  className='relative flex h-9 w-full items-center justify-center px-4 before:absolute before:inset-0 before:rounded-full before:transition before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 sm:w-max'
+              <div className='mt-12 px-2 lg:mt-0'>
+                <Link to='/signin'
+                  className='relative flex h-9 w-full items-center justify-center px-4 before:absolute before:inset-0 before:rounded-full before:bg-black before:transition before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 sm:w-max'
                 >
-                  <span className='relative text-sm font-semibold text-black'
+                  <span className='relative text-sm font-semibold text-white'
                   >Login</span
                   >
-                </a>
+                </Link>
               </div>
-              <div className='mt-12 lg:mt-0'>
-                <a
-                  href='#'
-                  className='relative flex h-9 w-full items-center justify-center px-4 before:absolute before:inset-0 before:rounded-full before:transition before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 sm:w-max'
+              <div className='mt-12 px-2 lg:mt-0'>
+                <Link to='/signup'
+                  className='relative flex h-9 w-full items-center justify-center px-4 before:absolute before:inset-0 before:rounded-full before:bg-black before:transition before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95 sm:w-max'
                 >
-                  <span className='relative text-sm font-semibold text-black'
+                  <span className='relative text-sm font-semibold text-white'
                   >Register</span
                   >
-                </a>
+                </Link>
               </div>
             </div>
           </div>
