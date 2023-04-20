@@ -22,7 +22,7 @@ module.exports = {
   rules: {
     indent: 'off',
     '@typescript-eslint/indent': ['error', 2],
-    'linebreak-style': ['error', 'unix'],
+    'linebreak-style': ['off', 'unix'],
     'jsx-quotes': ['error', 'prefer-single'],
     quotes: ['error', 'single'],
     semi: ['error', 'never']
