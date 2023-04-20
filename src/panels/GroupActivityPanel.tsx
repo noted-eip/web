@@ -1,19 +1,44 @@
 import React from 'react'
+//import { useAuthContext } from '../contexts/auth'
+import { useNavigate } from 'react-router-dom'
 
 import PanelSkeleton from '../components/view/PanelSkeleton'
-//import { useAuthContext } from '../contexts/auth'
 import { useGetAccount } from '../hooks/api/accounts'
 import { useListActivities } from '../hooks/api/activities'
 import { /*useListGroups, */ useGetCurrentGroup,useGetGroup } from '../hooks/api/groups'
 import { useGetNoteInCurrentGroup/*, useGetCurrentGroup*/ } from '../hooks/api/notes'
 import { V1Group, V1GroupActivity } from '../protorepo/openapi/typescript-axios'
 
-//<p className='hover:underline'> zebi </p>
+function getNoteIdInEvent(event: string) {
+  let noteId = ''
+  if (event != undefined) {
+    const subStringFirstEvent = event.substring(
+      event.indexOf('>') + 1, 
+      event.length)
+    noteId = subStringFirstEvent.substring(
+      subStringFirstEvent.indexOf('<noteID:') + 8, 
+      subStringFirstEvent.indexOf('>'))
+  }
+  return noteId
+}
+
+function getGroupIdInEvent(event: string) {
+  let groupId = ''
+  if (event != undefined) {
+    const subStringFirstEvent = event.substring(
+      event.indexOf('>') + 1, 
+      event.length)
+    groupId = subStringFirstEvent.substring(
+      subStringFirstEvent.indexOf('<groupID:') + 9, 
+      subStringFirstEvent.indexOf('>'))
+  }
+  return groupId
+}
 
 function getAddNoteEvent(event: string) {
-  let username = 'someone'
+  let username = 'Someone'
   let noteTitle = 'a note'
-  const folder = 'x'
+  const folder = ''
  
   let everything = ''
   let firstPart = ''
@@ -27,26 +52,29 @@ function getAddNoteEvent(event: string) {
     everything = everything.substring(everything.indexOf('>') + 1, everything.length)
     secondPart = everything.substring(0, everything.indexOf('<'))
 
-    const userId = event.substring(
-      event.indexOf('<userID:') + 8, 
-      event.indexOf('>'))
+    const userId = event.substring(event.indexOf('<userID:') + 8, event.indexOf('>'))
     const getUserResponse = useGetAccount({ accountId: userId })
     if (getUserResponse.data?.account.name != undefined) {
       username = getUserResponse.data?.account.name
     }
 
-    const subStringFirstEvent = event.substring(
-      event.indexOf('>') + 1, 
-      event.length)
-    const noteId = subStringFirstEvent.substring(
-      subStringFirstEvent.indexOf('<noteID:') + 8, 
-      subStringFirstEvent.indexOf('>'))
+    const noteId = getNoteIdInEvent(event)
     const getNoteReponse = useGetNoteInCurrentGroup({ noteId: noteId })
     if (getNoteReponse.data?.note.title != undefined) {
       noteTitle = getNoteReponse.data?.note.title
     }
   }
-  return username + firstPart + noteTitle + secondPart + folder
+  return (username + firstPart + noteTitle + secondPart + folder)
+  /*
+    <div>
+      <div className='flex items-center'>
+        <p className='font-medium'>{username}</p>
+        {firstPart}
+        <p className='font-bold hover:underline'>{noteTitle}</p>
+        {secondPart + folder}
+      </div>
+    </div>
+    */
 }
 
 function getUpdateOnMemberEvent(event: string) {
@@ -65,26 +93,19 @@ function getUpdateOnMemberEvent(event: string) {
     everything = everything.substring(everything.indexOf('>') + 1, everything.length)
     secondPart = everything.substring(0, everything.indexOf('<'))
 
-    const userId = event.substring(
-      event.indexOf('<userID:') + 8, 
-      event.indexOf('>'))
+    const userId = event.substring(event.indexOf('<userID:') + 8, event.indexOf('>'))
     const getUserResponse = useGetAccount({ accountId: userId })
     if (getUserResponse.data?.account.name != undefined) {
       username = getUserResponse.data?.account.name
     }
 
-    const subStringFirstEvent = event.substring(
-      event.indexOf('>') + 1, 
-      event.length)
-    const groupId = subStringFirstEvent.substring(
-      subStringFirstEvent.indexOf('<groupID:') + 8, 
-      subStringFirstEvent.indexOf('>'))
+    const groupId = getGroupIdInEvent(event)
     const getGroupReponse = useGetGroup({ groupId: groupId })
     if (getGroupReponse.data?.group.name != undefined) {
       groupName = getGroupReponse.data?.group.name
     }
   }
-  return username + firstPart + groupName + secondPart
+  return (username + firstPart + groupName + secondPart)
 }
 
 function getDateFormat(unformatedDate: string) {
@@ -98,23 +119,47 @@ function getDateFormat(unformatedDate: string) {
     everything = everything.substring(everything.indexOf('T') + 1, everything.length)
     time = everything.substring(0, everything.indexOf('.'))
   }
-  return 'The ' + date + ' at ' + time + '.'
+  return ('The ' + date + ' at ' + time + '.')
+}
+
+function getRoute(activityType: string, currentGroupId: string, redirectId: string) {
+  let url
+  switch(activityType) { 
+    case 'ADD-NOTE': { 
+      url = `./group/${currentGroupId}/note/${redirectId}`
+      break
+    } 
+    case 'ADD-MEMBER': { 
+      url = `./group/${redirectId}`
+      break
+    }
+    case 'REMOVE-MEMBER': {
+      url = `./group/${redirectId}`
+      break
+    }
+  }
+  return url
 }
 
 const NotificationListItem: React.FC<{ activity: V1GroupActivity, group: V1Group }> = (props) => {
-  let event = 'Error on event loading.'
+  const navigate = useNavigate()
+  let event
+  let redirectId
 
   switch(props.activity.type) { 
     case 'ADD-NOTE': { 
       event = getAddNoteEvent(props.activity?.event)
+      redirectId = getNoteIdInEvent(props.activity?.event)
       break
     } 
     case 'ADD-MEMBER': { 
       event = getUpdateOnMemberEvent(props.activity?.event)
+      redirectId = getGroupIdInEvent(props.activity?.event)
       break
     }
     case 'REMOVE-MEMBER': { 
       event = getUpdateOnMemberEvent(props.activity?.event)
+      redirectId = getGroupIdInEvent(props.activity?.event)
       break
     }
   }
@@ -122,9 +167,13 @@ const NotificationListItem: React.FC<{ activity: V1GroupActivity, group: V1Group
   const dateFormat = getDateFormat(props.activity?.createdAt)
 
   return (
-    <div className='rounded-md border border-gray-100 bg-gray-50 bg-gradient-to-br p-4'>
+    <div 
+      className='cursor-pointer rounded-md border border-gray-100 bg-gray-50 bg-gradient-to-br p-4 hover:bg-gray-100 hover:shadow-inner'
+      onClick={() => navigate(getRoute(props.activity.type, props.group.id, redirectId))}
+    >
       <div className='flex items-center'>
-        {/*<div className='group mr-4 h-16 w-16 rounded-md bg-gradient-radial from-teal-300 to-green-200'>
+        {/* Future profile pic
+        <div className='group mr-4 h-16 w-16 rounded-md bg-gradient-radial from-teal-300 to-green-200'>
           <div className='hidden h-full w-full cursor-pointer items-center justify-center rounded-md bg-[rgba(255,255,255,0.2)] group-hover:flex'>
             <ArrowPathIcon className='hidden h-6 w-6 stroke-2 text-gray-500 group-hover:block' />
           </div>
