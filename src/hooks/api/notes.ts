@@ -121,7 +121,7 @@ export const useUpdateNoteInCurrentGroup = (options?: MutationHookOptions<Update
   const currentGroupId = groupContext.groupId as string
 
   return useMutation(async (req: UpdateNoteInCurrentGroup) => {
-    return (await openapiClient.notesAPIUpdateNote(currentGroupId, req.noteId, req.body, undefined, await axiosRequestOptionsWithAuthorization(authContext))).data
+    return (await openapiClient.notesAPIUpdateNote(currentGroupId, req.noteId, req.body, await axiosRequestOptionsWithAuthorization(authContext))).data
   },
   {
     ...options,

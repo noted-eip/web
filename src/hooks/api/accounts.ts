@@ -54,7 +54,7 @@ export const useUpdateMyAccount = (options?: MutationHookOptions<UpdateMyAccount
   const currentAccountId = authContext.accountId as string
 
   return useMutation(async (req: UpdateMyAccountRequest) => {
-    return (await openapiClient.accountsAPIUpdateAccount(currentAccountId, req.body, undefined, await axiosRequestOptionsWithAuthorization(authContext))).data
+    return (await openapiClient.accountsAPIUpdateAccount(currentAccountId, req.body, await axiosRequestOptionsWithAuthorization(authContext))).data
   },
   {
     ...options,

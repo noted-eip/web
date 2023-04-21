@@ -1,3 +1,4 @@
+import { GoogleOAuthProvider } from '@react-oauth/google'
 import React from 'react'
 import { QueryClientProvider } from 'react-query'
 import { BrowserRouter } from 'react-router-dom'
@@ -26,23 +27,25 @@ const App: React.FC = () => {
   }, [])
 
   return (
-    <BrowserRouter>
-      <DevelopmentContext.Provider
-        value={TOGGLE_DEV_FEATURES ? { accounts, setAccounts } : undefined}
-      >
-        <QueryClientProvider client={apiQueryClient}>
-          {!hasLoaded ? null : token !== null ? (
-            <AuthContext.Provider value={authContext}>
-              <AuthenticatedRouter />
-            </AuthContext.Provider>
-          ) : (
-            <NoAuthContext.Provider value={noAuthContext}>
-              <UnauthenticatedRouter />
-            </NoAuthContext.Provider>
-          )}
-        </QueryClientProvider>
-      </DevelopmentContext.Provider>
-    </BrowserRouter>
+    <GoogleOAuthProvider clientId='993773231288-d55u37mlmnkrj1fh6fs2gf52hg0d8llk.apps.googleusercontent.com'>
+      <BrowserRouter>
+        <DevelopmentContext.Provider
+          value={TOGGLE_DEV_FEATURES ? { accounts, setAccounts } : undefined}
+        >
+          <QueryClientProvider client={apiQueryClient}>
+            {!hasLoaded ? null : token !== null ? (
+              <AuthContext.Provider value={authContext}>
+                <AuthenticatedRouter />
+              </AuthContext.Provider>
+            ) : (
+              <NoAuthContext.Provider value={noAuthContext}>
+                <UnauthenticatedRouter />
+              </NoAuthContext.Provider>
+            )}
+          </QueryClientProvider>
+        </DevelopmentContext.Provider>
+      </BrowserRouter>
+    </GoogleOAuthProvider>
   )
 }
 
