@@ -1,6 +1,7 @@
 import React from 'react'
-import notedLogo from '../../../assets/logo/noted_logo.png'
 import { Link } from 'react-router-dom'
+
+import notedLogo from '../../../assets/logo/noted_logo.png'
 
 const HeaderLanding: React.FC = () => {
   return (

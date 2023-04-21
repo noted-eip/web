@@ -1,3 +1,4 @@
+import { GoogleOAuthProvider } from '@react-oauth/google'
 import React from 'react'
 import { QueryClientProvider } from 'react-query'
 import { BrowserRouter } from 'react-router-dom'
@@ -10,8 +11,6 @@ import { LS_DEVELOPMENT_DATA_KEY } from './lib/constants'
 import { TOGGLE_DEV_FEATURES } from './lib/env'
 import AuthenticatedRouter from './views/AuthenticatedRouter'
 import UnauthenticatedRouter from './views/UnauthenticatedRouter'
-
-import { GoogleOAuthProvider } from '@react-oauth/google'
 
 const App: React.FC = () => {
   const [token, setToken] = React.useState<null | string>(null)

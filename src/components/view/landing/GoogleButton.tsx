@@ -1,5 +1,5 @@
-import React from 'react'
 import { useGoogleLogin } from '@react-oauth/google'
+import React from 'react'
 
 const GoogleButton: React.FC = () => {
   const login = useGoogleLogin({

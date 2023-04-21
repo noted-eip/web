@@ -1,4 +1,5 @@
 import React from 'react'
+
 import noteLogo from '../../../assets/icon/note.svg'
 import shareLogo from '../../../assets/icon/share.svg'
 // import notedHome from '../../../assets/noted_front_page'

@@ -2,11 +2,11 @@ import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 
 import NotFoundView from './notfound/NotFoundView'
+import ResetPasswordEmail from './reset-password/ResetPasswordEmail'
+import ResetPasswordPassword from './reset-password/ResetPasswordPassword'
 import SigninView from './signin/SigninView'
 import SignupView from './signup/SignupView'
 import WelcomeView from './welcome/WelcomeView'
-import ResetPasswordEmail from './reset-password/ResetPasswordEmail'
-import ResetPasswordPassword from './reset-password/ResetPasswordPassword'
 
 // Describes routes that are available to unauthenticated users.
 const UnauthenticatedRouter: React.FC = () => {

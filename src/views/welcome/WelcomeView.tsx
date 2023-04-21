@@ -1,9 +1,10 @@
 import React from 'react'
-import HeaderLanding from '../../components/view/landing/HeaderLanding'
-import DescriptionLanding from '../../components/view/landing/DescriptionLanding'
-import TimelineLanding from '../../components/view/landing/TimelineLanding'
-import TeamLanding from '../../components/view/landing/TeamLanding'
+
 import ContactLanding from '../../components/view/landing/ContactLanding'
+import DescriptionLanding from '../../components/view/landing/DescriptionLanding'
+import HeaderLanding from '../../components/view/landing/HeaderLanding'
+import TeamLanding from '../../components/view/landing/TeamLanding'
+import TimelineLanding from '../../components/view/landing/TimelineLanding'
 
 const WelcomeView: React.FC = () => {
   return (
