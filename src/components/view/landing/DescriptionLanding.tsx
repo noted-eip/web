@@ -1,6 +1,7 @@
 import React from 'react'
 import noteLogo from '../../../assets/icon/note.svg'
 import shareLogo from '../../../assets/icon/share.svg'
+// import notedHome from '../../../assets/noted_front_page'
 
 const DescriptionLanding: React.FC = () => {
   return (
@@ -19,11 +20,13 @@ const DescriptionLanding: React.FC = () => {
           </div>
           <div className='md:7/12 lg:w-1/2'>
             <h2 className='text-3xl font-bold text-gray-900 dark:text-white md:text-4xl'>
-            Noted c kwa
+            Noted
             </h2>
             <p className='my-8 text-gray-600 dark:text-gray-300'>
-            Nobis minus voluptatibus pariatur dignissimos libero quaerat iure expedita at?
-            Asperiores nemo possimus nesciunt dicta veniam aspernatur quam mollitia. <br /> <br /> Vitae error, quaerat officia delectus voluptatibus explicabo quo pariatur impedit, at reprehenderit aliquam a ipsum quas voluptatem. Quo pariatur asperiores eum amet.
+            Noted is an ergonomic workspace destined to university students.
+            It is a web application where they can share their notes and organize them. <br /> <br />
+            Noted’s strength is its unique editing mode which includes recommendations based on notes published by students.
+            It will allow students to improve their notes by facilitating collaboration. 
             </p>
             <div className='space-y-4 divide-y divide-gray-100 dark:divide-gray-800'>
               <div className='mt-8 flex gap-4 md:items-center'>
@@ -31,8 +34,8 @@ const DescriptionLanding: React.FC = () => {
                   <img src={noteLogo} alt='note logo' height='16.5px' width='20.5px' className='m-auto h-6 w-6 text-indigo-500 dark:text-indigo-400' />
                 </div>
                 <div className='w-5/6'>
-                  <h4 className='text-lg font-semibold text-gray-700 dark:text-indigo-300'>Prend des notes</h4>
-                  <p className='text-gray-500 dark:text-gray-400'>Asperiores nemo possimus nesciunt quam mollitia.</p>
+                  <h4 className='text-lg font-semibold text-gray-700 dark:text-indigo-300'>Prendre des notes</h4>
+                  <p className='text-gray-500 dark:text-gray-400'>{'Noted propose un mode d\'éditon de note plus de la recommendations'}.</p>
                 </div> 
               </div> 
               <div className='flex gap-4 pt-4 md:items-center'>
