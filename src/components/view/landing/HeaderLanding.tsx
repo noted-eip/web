@@ -47,6 +47,11 @@ const HeaderLanding: React.FC = () => {
                       <span>Team</span>
                     </a>
                   </li>
+                  <li>
+                    <a href='#contact' className='block transition hover:text-black md:px-4'>
+                      <span>Contact</span>
+                    </a>
+                  </li>
                 </ul>
               </div>
 

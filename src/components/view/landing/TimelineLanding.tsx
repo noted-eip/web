@@ -19,7 +19,7 @@ const TimelineLanding: React.FC = () => {
                 <h5
                   className='text-xl font-semibold text-gray-700 transition dark:text-white'
                 >
-              Moonshot
+              Fast Forward
                 </h5>
                 <p className='text-gray-600 dark:text-gray-300'>
               Neque Dolor, fugiat non cum doloribus aperiam voluptates nostrum.
@@ -39,7 +39,7 @@ const TimelineLanding: React.FC = () => {
                 <h5
                   className='text-xl font-semibold text-gray-700 transition dark:text-white'
                 >
-              Premier Sprint
+              Sprint Managment and processes
                 </h5>
                 <p className='text-gray-600 dark:text-gray-300'>
               Neque Dolor, fugiat non cum doloribus aperiam voluptates nostrum.
@@ -59,10 +59,10 @@ const TimelineLanding: React.FC = () => {
                 <h5
                   className='text-xl font-semibold text-gray-700 transition dark:text-white'
                 >
-              Deuxième sprint
+              Sprint Beta
                 </h5>
                 <p className='text-gray-600 dark:text-gray-300'>
-              Neque Dolor, fugiat non cum doloribus aperiam voluptates nostrum.
+              LA C LA BETA
                 </p>
               </div>
               <a href='#' className='flex items-center justify-between'>
