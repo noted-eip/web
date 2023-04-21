@@ -9,6 +9,7 @@ import { authenticate } from '../../hooks/api/authenticate'
 import { decodeToken } from '../../lib/api'
 import { validateEmail } from '../../lib/validators'
 import { AuthenticateResponse } from '../../types/api/accounts'
+import GoogleButton from '../../components/view/landing/GoogleButton'
 
 const SigninView: React.FC = () => {
   const navigate = useNavigate()
@@ -71,6 +72,7 @@ const SigninView: React.FC = () => {
         >
           Submit
         </button>
+        <GoogleButton />
         <Link to='/reset_password_email' className='text-sm text-blue-500 underline'> Reset password </Link>
       </form>
     </div>
