@@ -172,7 +172,7 @@ const NotificationListItem: React.FC<{ activity: V1GroupActivity, group: V1Group
       onClick={() => navigate(getRoute(props.activity.type, props.group.id, redirectId))}
     >
       <div className='flex items-center'>
-        {/* Future profile pic
+        {/* Future profile pic || emoji add note / quit group / join group
         <div className='group mr-4 h-16 w-16 rounded-md bg-gradient-radial from-teal-300 to-green-200'>
           <div className='hidden h-full w-full cursor-pointer items-center justify-center rounded-md bg-[rgba(255,255,255,0.2)] group-hover:flex'>
             <ArrowPathIcon className='hidden h-6 w-6 stroke-2 text-gray-500 group-hover:block' />
