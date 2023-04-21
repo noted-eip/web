@@ -1,4 +1,5 @@
 import React from 'react'
+
 import PanelSkeleton from '../components/view/PanelSkeleton'
 
 const GroupChatPanel: React.FC = () => {

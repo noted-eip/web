@@ -1,15 +1,16 @@
 import {
   ArrowRightIcon,
   ArrowRightOnRectangleIcon,
-  XMarkIcon,
+  XMarkIcon
 } from '@heroicons/react/24/outline'
 import { Cog6ToothIcon, Square2StackIcon, UserIcon } from '@heroicons/react/24/solid'
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
+
 import { useAuthContext } from '../../contexts/auth'
 import {
   removeAccountFromDevelopmentContext,
-  useDevelopmentContext,
+  useDevelopmentContext
 } from '../../contexts/dev'
 import { useGetAccount } from '../../hooks/api/accounts'
 import { useListInvites } from '../../hooks/api/invites'
@@ -19,7 +20,7 @@ import { TOGGLE_DEV_FEATURES } from '../../lib/env'
 
 const DevAccountItem: React.FC<{ account: { id: string; token: string } }> = (props) => {
   const authContext = useAuthContext()
-  const getAccountQ = useGetAccount({ account_id: props.account.id })
+  const getAccountQ = useGetAccount({accountId: props.account.id})
   const setAccounts = useDevelopmentContext()?.setAccounts
 
   if (!setAccounts) return null
@@ -37,10 +38,10 @@ const DevAccountItem: React.FC<{ account: { id: string; token: string } }> = (pr
     >
       <div>
         <span className='float-right hidden text-gray-700 group-hover:underline xl:block'>
-          {getAccountQ.data?.data.account.name.slice(0, 9)}
+          {getAccountQ.data?.account.name.slice(0, 9)}
         </span>
         <span className='float-right text-gray-700 xl:hidden'>
-          {getAccountQ.data?.data.account.name[0]}
+          {getAccountQ.data?.account.name[0]}
         </span>
         <XMarkIcon
           className='float-right mr-1 h-4 w-3 stroke-2 text-gray-600 hover:stroke-[3px] hover:text-red-600'
@@ -57,8 +58,8 @@ const DevAccountItem: React.FC<{ account: { id: string; token: string } }> = (pr
 export const Sidebar: React.FC = () => {
   const authContext = useAuthContext()
   const currentPath = useLocation().pathname
-  const listInvitesQ = useListInvites({ recipient_account_id: authContext.userID })
-  const getAccountQ = useGetAccount({ account_id: authContext.userID })
+  const listInvitesQ = useListInvites({ recipientAccountId: authContext.accountId })
+  const getAccountQ = useGetAccount({accountId: authContext.accountId})
   const accountsMap = useDevelopmentContext()?.accounts
   const [accounts, setAccounts] = React.useState<{ token: string; id: string }[]>()
 
@@ -77,8 +78,8 @@ export const Sidebar: React.FC = () => {
       icon: UserIcon,
       title: 'Profile',
       numNotifications:
-        listInvitesQ.isSuccess && listInvitesQ.data.data.invites
-          ? listInvitesQ.data.data.invites.length
+        listInvitesQ.isSuccess && listInvitesQ.data.invites
+          ? listInvitesQ.data.invites.length
           : 0,
     },
     { path: '/settings', icon: Cog6ToothIcon, title: 'Settings', numNotifications: 0 },
@@ -97,7 +98,7 @@ export const Sidebar: React.FC = () => {
               <div className='mr-2 hidden h-7 w-7 rounded-md bg-gradient-radial from-teal-300 to-green-200 xl:block' />
               {getAccountQ.isSuccess ? (
                 <span className='hidden text-xs font-medium text-gray-700 xl:block'>
-                  {getAccountQ.data.data.account.name}
+                  {getAccountQ.data.account.name}
                 </span>
               ) : getAccountQ.isError ? (
                 <div className='skeleton-error h-4 w-24' />
@@ -144,7 +145,7 @@ export const Sidebar: React.FC = () => {
           {TOGGLE_DEV_FEATURES && (
             <div className='mt-4 grid grid-cols-1 gap-2'>
               {accounts?.map((el, idx) => {
-                if (el.id === authContext.userID) return null
+                if (el.id === authContext.accountId) return null
                 return <DevAccountItem key={`account-key-${el.id}-${idx}`} account={el} />
               })}
             </div>

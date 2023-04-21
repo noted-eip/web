@@ -1,22 +1,19 @@
-import React from 'react'
 import {
-  UserPlusIcon,
-  ArrowRightIcon,
-  PlusIcon,
-  XMarkIcon,
-  CheckIcon,
+  ArrowRightIcon, CheckIcon, PlusIcon, UserPlusIcon, XMarkIcon
 } from '@heroicons/react/24/solid'
+import React from 'react'
+
 import { useAuthContext } from '../../contexts/auth'
 import { useGroupContext } from '../../contexts/group'
-import { useListGroups, useCreateGroup } from '../../hooks/api/groups'
+import { useCreateGroup, useListGroups } from '../../hooks/api/groups'
 
 const GroupViewEmptyState: React.FC = () => {
   const groupContext = useGroupContext()
   const authContext = useAuthContext()
-  const listGroupsQ = useListGroups({ account_id: authContext.userID })
+  const listGroupsQ = useListGroups({ accountId: authContext.accountId })
   const createGroupQ = useCreateGroup({
     onSuccess: (data) => {
-      groupContext.changeGroup(data.data.group.id)
+      groupContext.changeGroup(data.group.id)
     },
   })
 
@@ -27,7 +24,7 @@ const GroupViewEmptyState: React.FC = () => {
       <p className='text-sm text-gray-500'>Create or join a group to start writing!</p>
       <div>
         {listGroupsQ.isSuccess &&
-          listGroupsQ.data.data.groups?.map((el, idx) => (
+          listGroupsQ.data.groups?.map((el, idx) => (
             <div
               key={`group-view-no-group-list-${el.id}-${idx}`}
               className='mt-2 flex w-80 cursor-pointer items-center justify-between rounded border border-gray-200 p-2 first:mt-4'
@@ -43,10 +40,7 @@ const GroupViewEmptyState: React.FC = () => {
       </div>
       <button
         onClick={() => {
-          createGroupQ.mutate({
-            name: 'My Group',
-            description: 'Created on ' + new Date().toDateString(),
-          })
+          createGroupQ.mutate({body: {name: 'My Group', description: 'Created on ' + new Date().toDateString()}})
         }}
         className='mt-4 flex  items-center rounded-full bg-blue-600 p-2 px-4 text-sm text-white hover:bg-blue-700'
       >

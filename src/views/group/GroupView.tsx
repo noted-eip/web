@@ -1,5 +1,6 @@
 import React from 'react'
 import { Outlet, useNavigate, useParams } from 'react-router-dom'
+
 import ViewSkeleton from '../../components/view/ViewSkeleton'
 import { useGroupContext } from '../../contexts/group'
 import GroupViewEmptyState from './GroupViewEmptyState'
@@ -13,10 +14,10 @@ const GroupView: React.FC = () => {
   // Synchronises the current group from the local storage
   // and the current group context.
   React.useEffect(() => {
-    if (groupContext.groupID && !routerParams.groupId) {
-      navigate(`/group/${groupContext.groupID}`)
+    if (groupContext.groupId && !routerParams.groupId) {
+      navigate(`/group/${groupContext.groupId}`)
     }
-    if (routerParams.groupId && routerParams.groupId !== groupContext.groupID) {
+    if (routerParams.groupId && routerParams.groupId !== groupContext.groupId) {
       groupContext.changeGroup(routerParams.groupId)
     }
     setIsLoading(false)
@@ -28,7 +29,7 @@ const GroupView: React.FC = () => {
 
   return (
     <ViewSkeleton title='Home' panels={['group-chat', 'group-activity']}>
-      {groupContext.groupID ? (
+      {groupContext.groupId ? (
         <div className='mx-lg mb-lg w-full xl:mx-xl xl:mb-xl'>
           <Outlet />
         </div>

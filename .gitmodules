@@ -1,0 +1,3 @@
+[submodule "protorepo"]
+	path = src/protorepo
+	url = https://github.com/noted-eip/protorepo.git

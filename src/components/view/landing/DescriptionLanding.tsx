@@ -40,7 +40,7 @@ const DescriptionLanding: React.FC = () => {
               </div> 
               <div className='flex gap-4 pt-4 md:items-center'>
                 <div className='flex h-12 w-12 gap-4 rounded-full bg-teal-100 dark:bg-teal-900/20'>
-                  <img src={shareLogo} alt='share logo' height='16.5px' width='20.5px' className='m-auto h-6 w-6 text-teal-600 dark:text-teal-400' />
+                  <img src={shareLogo} alt='share aogo' height='16.5px' width='20.5px' className='m-auto h-6 w-6 text-teal-600 dark:text-teal-400' />
                 </div>
                 <div className='w-5/6'>
                   <h4 className='text-lg font-semibold text-gray-700 dark:text-teal-300'>Partage tes notes</h4>

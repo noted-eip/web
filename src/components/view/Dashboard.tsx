@@ -1,5 +1,6 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
+
 import { PanelContext, TPanelKey } from '../../contexts/panel'
 import { Panel } from './Panel'
 import { Sidebar } from './Sidebar'
