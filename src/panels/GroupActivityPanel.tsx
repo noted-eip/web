@@ -178,7 +178,7 @@ const ActivityListItem: React.FC<{ activity: V1GroupActivity, group: V1Group }> 
   )
 }
 
-const ActivityListCurrentGroup: React.FC = () => {
+const ActivitiesListCurrentGroup: React.FC = () => {
   const groupResponse = useGetCurrentGroup()
   const group = groupResponse.data?.group
 
@@ -214,7 +214,7 @@ const ActivityListCurrentGroup: React.FC = () => {
 const GroupActivityPanel: React.FC = () => {
   return (
     <PanelSkeleton>
-      <ActivityListCurrentGroup />
+      <ActivitiesListCurrentGroup />
     </PanelSkeleton>
   )
 }
