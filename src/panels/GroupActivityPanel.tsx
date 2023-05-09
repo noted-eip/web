@@ -183,7 +183,10 @@ const ActivityListCurrentGroup: React.FC = () => {
   const group = groupResponse.data?.group
 
   if (group == undefined) {
-    return (<div><p>Your current group haven&apost been found</p></div>)
+    return (
+      <div className='my-4 text-center text-sm text-gray-400'>
+        <p>{'Your current group haven\'t been found'}</p>
+      </div>)
   }
 
   const listActivitiesQ = useListActivities({ groupId: group.id as string, limit: 20 })
