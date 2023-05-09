@@ -194,7 +194,7 @@ const ActivityListCurrentGroup: React.FC = () => {
         {listActivitiesQ.isSuccess ? (
           !listActivitiesQ.data?.activities?.length ? (
             <div className='my-4 text-center text-sm text-gray-400'>
-            You have no activities in group {group.name} of id {group.id}
+            You have no activities in group {group.name}
             </div>
           ) : (
             listActivitiesQ.data?.activities?.map((activity, idx) => (
