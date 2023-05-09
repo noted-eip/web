@@ -1,12 +1,11 @@
 import React from 'react'
-//import { useAuthContext } from '../contexts/auth'
 import { useNavigate } from 'react-router-dom'
 
 import PanelSkeleton from '../components/view/PanelSkeleton'
 import { useGetAccount } from '../hooks/api/accounts'
 import { useListActivities } from '../hooks/api/activities'
-import { /*useListGroups, */ useGetCurrentGroup,useGetGroup } from '../hooks/api/groups'
-import { useGetNoteInCurrentGroup/*, useGetCurrentGroup*/ } from '../hooks/api/notes'
+import { useGetCurrentGroup,useGetGroup } from '../hooks/api/groups'
+import { useGetNoteInCurrentGroup } from '../hooks/api/notes'
 import { V1Group, V1GroupActivity } from '../protorepo/openapi/typescript-axios'
 
 function getNoteIdInEvent(event: string) {
@@ -65,16 +64,6 @@ function getAddNoteEvent(event: string) {
     }
   }
   return (username + firstPart + noteTitle + secondPart + folder)
-  /*
-    <div>
-      <div className='flex items-center'>
-        <p className='font-medium'>{username}</p>
-        {firstPart}
-        <p className='font-bold hover:underline'>{noteTitle}</p>
-        {secondPart + folder}
-      </div>
-    </div>
-    */
 }
 
 function getUpdateOnMemberEvent(event: string) {
@@ -172,12 +161,6 @@ const NotificationListItem: React.FC<{ activity: V1GroupActivity, group: V1Group
       onClick={() => navigate(getRoute(props.activity.type, props.group.id, redirectId))}
     >
       <div className='flex items-center'>
-        {/* Future profile pic || emoji add note / quit group / join group
-        <div className='group mr-4 h-16 w-16 rounded-md bg-gradient-radial from-teal-300 to-green-200'>
-          <div className='hidden h-full w-full cursor-pointer items-center justify-center rounded-md bg-[rgba(255,255,255,0.2)] group-hover:flex'>
-            <ArrowPathIcon className='hidden h-6 w-6 stroke-2 text-gray-500 group-hover:block' />
-          </div>
-        </div>*/}
         <div className='flex flex-col'>
           <React.Fragment>
             <p className='font-normal'>{ event }</p>
