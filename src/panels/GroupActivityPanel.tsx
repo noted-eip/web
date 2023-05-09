@@ -211,50 +211,6 @@ const NotificationListCurrentGroup: React.FC = () => {
   )
 }
 
-/*
-const NotificationListGroups: React.FC = () => {
-  const authContext = useAuthContext()
-  const listGroups = useListGroups({ accountId: authContext.accountId})
-  const groups = listGroups.data?.groups
-  //console.log('Groups : ', groups)
-
-  if (groups == undefined) {
-    return (<div><p>You are in any groups</p></div>)
-  }
-
-  const frontArrayOfElem = groups.map((group, idx) => {
-    
-    const listActivitiesQ = useListActivities({ groupId: group?.id as string, limit: 20 })
-
-    return (
-      <div className='overflow-y-scroll' key={`group-activity-list-${group.id}-${idx}`}>
-        {listActivitiesQ.isSuccess ? (
-          !listActivitiesQ.data?.activities?.length ? (
-            <div className='my-4 text-center text-sm text-gray-400'>
-              You have no activities in group {group.name} of id {group.id}
-            </div>
-          ) : (
-            listActivitiesQ.data?.activities?.map((activity, idx) => (
-              <NotificationListItem key={`activity-list-${activity.id}-${idx}`} activity={activity} group={group} />
-            ))
-          )
-        ) : (
-          <div className='my-4 text-center text-sm text-gray-400'>
-            Loading your activities...
-          </div>
-        )}
-      </div>
-    )
-  })
-
-  return (
-    <div>
-      {frontArrayOfElem}
-    </div>
-  )
-}
-*/
-
 const GroupActivityPanel: React.FC = () => {
   return (
     <PanelSkeleton>
