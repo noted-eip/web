@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import PanelSkeleton from '../components/view/PanelSkeleton'
 import { useGetAccount } from '../hooks/api/accounts'
 import { useListActivities } from '../hooks/api/activities'
-import { useGetCurrentGroup,useGetGroup } from '../hooks/api/groups'
+import { useGetCurrentGroup, useGetGroup } from '../hooks/api/groups'
 import { useGetNoteInCurrentGroup } from '../hooks/api/notes'
 import { V1Group, V1GroupActivity } from '../protorepo/openapi/typescript-axios'
 
