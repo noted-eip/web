@@ -130,7 +130,7 @@ function getRoute(activityType: string, currentGroupId: string, redirectId: stri
   return url
 }
 
-const NotificationListItem: React.FC<{ activity: V1GroupActivity, group: V1Group }> = (props) => {
+const ActivityListItem: React.FC<{ activity: V1GroupActivity, group: V1Group }> = (props) => {
   const navigate = useNavigate()
   let event
   let redirectId
@@ -178,7 +178,7 @@ const NotificationListItem: React.FC<{ activity: V1GroupActivity, group: V1Group
   )
 }
 
-const NotificationListCurrentGroup: React.FC = () => {
+const ActivityListCurrentGroup: React.FC = () => {
   const groupResponse = useGetCurrentGroup()
   const group = groupResponse.data?.group
 
@@ -198,7 +198,7 @@ const NotificationListCurrentGroup: React.FC = () => {
             </div>
           ) : (
             listActivitiesQ.data?.activities?.map((activity, idx) => (
-              <NotificationListItem key={`activity-list-${activity.id}-${idx}`} activity={activity} group={group} />
+              <ActivityListItem key={`activity-list-${activity.id}-${idx}`} activity={activity} group={group} />
             ))
           )
         ) : (
@@ -214,7 +214,7 @@ const NotificationListCurrentGroup: React.FC = () => {
 const GroupActivityPanel: React.FC = () => {
   return (
     <PanelSkeleton>
-      <NotificationListCurrentGroup />
+      <ActivityListCurrentGroup />
     </PanelSkeleton>
   )
 }
