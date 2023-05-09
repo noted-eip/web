@@ -28,7 +28,7 @@ export const useUpdateMemberInCurrentGroup = (options?: MutationHookOptions<Upda
   const currentGroupId = groupContext.groupId as string
 
   return useMutation(async (req: UpdateGroupMemberInCurrentGroupRequest) => {
-    return (await openapiClient.groupsAPIUpdateMember(groupContext.groupId as string, req.accountId, req.body, undefined, await axiosRequestOptionsWithAuthorization(auth))).data
+    return (await openapiClient.groupsAPIUpdateMember(groupContext.groupId as string, req.accountId, req.body, await axiosRequestOptionsWithAuthorization(auth))).data
   },
   {
     ...options,
