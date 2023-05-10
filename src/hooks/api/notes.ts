@@ -5,7 +5,7 @@ import { useGroupContext } from '../../contexts/group'
 import { apiQueryClient, openapiClient } from '../../lib/api'
 import { NotesAPICreateNoteRequest, V1CreateNoteResponse, V1GetNoteResponse, V1ListNotesResponse, V1Note, V1UpdateNoteResponse } from '../../protorepo/openapi/typescript-axios'
 import { newNoteCacheKey, newNotesCacheKey } from './cache'
-import { axiosRequestOptionsWithAuthorization,MutationHookOptions, QueryHookOptions } from './helpers'
+import { axiosRequestOptionsWithAuthorization, MutationHookOptions, QueryHookOptions } from './helpers'
 
 // TODO: Side Effects
 export type CreateNoteRequest = { body: NotesAPICreateNoteRequest };
@@ -42,6 +42,20 @@ export const useListNotesInCurrentGroup = (req: ListNotesInCurrentGroupRequest, 
     ...options,
   })
 }
+
+/*
+export const useGetCurrentNote = (options?: QueryHookOptions<GetGroupRequest, V1GetGroupResponse>) => {
+  const groupContext = useGroupContext()
+  return useGetGroup({groupId: groupContext.groupId as string}, {
+    ...options,
+    // If no access to the group, switch group.
+    onError: (error) => {
+      groupContext.changeGroup(null)
+      if (options?.onError) options.onError(error)
+    }
+  })
+}
+*/
 
 export type GetNoteInCurrentGroupRequest = { noteId: string }
 export const useGetNoteInCurrentGroup = (req: GetNoteInCurrentGroupRequest, options?: QueryHookOptions<GetNoteInCurrentGroupRequest, V1GetNoteResponse>) => {
