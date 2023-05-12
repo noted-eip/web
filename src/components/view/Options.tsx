@@ -9,7 +9,8 @@ import { API_BASE } from '../../lib/env'
 
 
 interface Props {
-  id: string | null;
+  noteId: string  | null;
+  groupId: string | null;
 }
 
 interface ItemProps {
@@ -18,14 +19,14 @@ interface ItemProps {
   format: string;
 }
 
-const NotesOptions = ( { id } : Props ) => {
+const NotesOptions = ( { noteId, groupId } : Props ) => {
   const [selectedOption, setSelectedOption] = React.useState('')
   const [hasExported, setHasExported] = React.useState(false)
-  const url = `${API_BASE}/notes/${id}/export`
+  const url = `${API_BASE}/groups/${encodeURIComponent(groupId ?? '')}/note/${encodeURIComponent(noteId ?? '')}/export`
   const auth : TAuthContext = useAuthContext()
 
-  const handleErrors = (id: string | null , selectedOption: string | null) => {
-    if (!id) {
+  const handleErrors = (ids: (string | null)[], selectedOption: string | null) => {
+    if (ids.some(id => !id)) {
       throw new Error('ID is not defined')
     }
   
@@ -33,13 +34,12 @@ const NotesOptions = ( { id } : Props ) => {
       throw new Error('No format selected')
     }
   }
-  
 
   const handleExport = async () => {
     try {
-      // print url 
-      console.log('URL : ',   url)
-      handleErrors(id, selectedOption)
+      const ids = [noteId, groupId]
+      handleErrors(ids, selectedOption)
+      console.log('groupId : ', groupId)
       const response = await axios.get(url, {
         params: {
           format: selectedOption,
@@ -52,20 +52,25 @@ const NotesOptions = ( { id } : Props ) => {
 
       const extension = selectedOption === 'md' ? 'md' : 'pdf'
       const filename = `${uuidv4()}.${extension}`
-      const urlDownload = window.URL.createObjectURL(new Blob([response.data]))
+      const mime = selectedOption === 'md' ? 'text/plain' : 'application/pdf'
 
-      const link = document.createElement('a')
-      link.href = urlDownload
-      link.setAttribute('download', filename)
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
+      downloadFile(response.data, filename, mime)
 
       setHasExported(true)
       setSelectedOption('')
     } catch (error) {
       console.error(error)
     }
+  }
+
+  const downloadFile = (data: BlobPart, filename: string, mime: string) => {
+    const blob = new Blob([data], { type: mime })
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = filename
+    link.click()
+    window.URL.revokeObjectURL(url)
   }
 
   const handleOptionSelect = (option: string) => {

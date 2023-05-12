@@ -10,6 +10,7 @@ import {
   useGetCurrentGroup,
   useListGroups,
 } from '../../hooks/api/groups'
+import {useGroupIdFromUrl, useNoteIdFromUrl} from '../../hooks/url'
 import LoaderIcon from '../icons/LoaderIcon'
 import NotesOptions from './Options'
 
@@ -72,7 +73,10 @@ const GroupSelectDropdown: React.FC = () => {
           </Menu.Button>
           {window.location.pathname.includes('/note/') &&
             window.location.pathname.split('/')[4] &&
-              <NotesOptions id={window.location.pathname.split('/')[4]} />
+              <NotesOptions 
+                noteId={useNoteIdFromUrl()}
+                groupId={useGroupIdFromUrl()}
+              />
           }
         </div>
         <Transition
