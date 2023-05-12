@@ -2,8 +2,11 @@ import { Menu } from '@headlessui/react'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import axios from 'axios'
 import React from 'react'
+import { v4 as uuidv4 } from 'uuid'
 
+import { TAuthContext, useAuthContext } from '../../contexts/auth'
 import { API_BASE } from '../../lib/env'
+
 
 interface Props {
   id: string | null;
@@ -15,23 +18,51 @@ interface ItemProps {
   format: string;
 }
 
-const NotesOptions = ({ id }: Props) => {
+const NotesOptions = ( { id } : Props ) => {
   const [selectedOption, setSelectedOption] = React.useState('')
   const [hasExported, setHasExported] = React.useState(false)
   const url = `${API_BASE}/notes/${id}/export`
+  const auth : TAuthContext = useAuthContext()
+
+  const handleErrors = (id: string | null , selectedOption: string | null) => {
+    if (!id) {
+      throw new Error('ID is not defined')
+    }
+  
+    if (!selectedOption) {
+      throw new Error('No format selected')
+    }
+  }
+  
 
   const handleExport = async () => {
     try {
+      // print url 
+      console.log('URL : ',   url)
+      handleErrors(id, selectedOption)
       const response = await axios.get(url, {
         params: {
           format: selectedOption,
         },
+        headers: {
+          'Authorization': `Bearer ${await auth.token()}`
+        },
+        responseType: 'blob',
       })
+
+      const extension = selectedOption === 'md' ? 'md' : 'pdf'
+      const filename = `${uuidv4()}.${extension}`
+      const urlDownload = window.URL.createObjectURL(new Blob([response.data]))
+
+      const link = document.createElement('a')
+      link.href = urlDownload
+      link.setAttribute('download', filename)
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+
       setHasExported(true)
       setSelectedOption('')
-      console.log(response)
-      // handle export note here
-      
     } catch (error) {
       console.error(error)
     }
@@ -40,6 +71,7 @@ const NotesOptions = ({ id }: Props) => {
   const handleOptionSelect = (option: string) => {
     setSelectedOption(option)
   }
+
 
   const Item = ({ active, label, format }: ItemProps) => {
     return (
