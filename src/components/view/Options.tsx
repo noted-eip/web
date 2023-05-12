@@ -22,7 +22,7 @@ interface ItemProps {
 const NotesOptions = ( { noteId, groupId } : Props ) => {
   const [selectedOption, setSelectedOption] = React.useState('')
   const [hasExported, setHasExported] = React.useState(false)
-  const url = `${API_BASE}/groups/${encodeURIComponent(groupId ?? '')}/note/${encodeURIComponent(noteId ?? '')}/export`
+  const url = `${API_BASE}/groups/${encodeURIComponent(groupId ?? '')}/notes/${encodeURIComponent(noteId ?? '')}/export`
   const auth : TAuthContext = useAuthContext()
 
   const handleErrors = (ids: (string | null)[], selectedOption: string | null) => {
