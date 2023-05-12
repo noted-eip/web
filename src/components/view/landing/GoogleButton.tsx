@@ -3,7 +3,10 @@ import React from 'react'
 
 const GoogleButton: React.FC = () => {
   const login = useGoogleLogin({
-    onSuccess: tokenResponse => console.log(tokenResponse),
+    onSuccess: (tokenResponse) => {
+      console.log(tokenResponse)
+      
+    },
   })
     
   /*
@@ -30,7 +33,7 @@ const GoogleButton: React.FC = () => {
   //   const onGoogleFailure = () => {
   // throw new Error("not implemented");
   //   }
-      
+
   return (
     <button className='flex items-center justify-center rounded border border-gray-500 bg-white px-3 py-2 text-sm font-medium text-gray-800 dark:border-gray-500 dark:bg-gray-400'
       onClick={() => login()}>

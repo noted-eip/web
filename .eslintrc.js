@@ -26,8 +26,6 @@ module.exports = {
     'jsx-quotes': ['error', 'prefer-single'],
     quotes: ['error', 'single'],
     semi: ['error', 'never'],
-    '@typescript-eslint/no-unused-vars': 'error',
-    'unused-imports/no-unused-imports': 'error',
     'simple-import-sort/imports': 'error',
     'simple-import-sort/exports': 'error'
   },
