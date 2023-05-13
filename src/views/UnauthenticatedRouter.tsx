@@ -28,7 +28,7 @@ const UnauthenticatedRouter: React.FC = () => {
     }
   }
   const changeResetToken = (val) => {
-    setAccountId(val)
+    setResetToken(val)
     if (val === null) {
       window.localStorage.removeItem(LS_RESET_TOKEN_KEY)
     } else {
