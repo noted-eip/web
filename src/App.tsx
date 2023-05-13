@@ -8,7 +8,7 @@ import { DevelopmentContext, TAccountsMap } from './contexts/dev'
 import { NoAuthContext, NoAuthContextManager } from './contexts/noauth'
 import { apiQueryClient } from './lib/api'
 import { LS_DEVELOPMENT_DATA_KEY } from './lib/constants'
-import { TOGGLE_DEV_FEATURES } from './lib/env'
+import { GOOGLE_CLIENT_ID, TOGGLE_DEV_FEATURES } from './lib/env'
 import AuthenticatedRouter from './views/AuthenticatedRouter'
 import UnauthenticatedRouter from './views/UnauthenticatedRouter'
 
@@ -27,7 +27,7 @@ const App: React.FC = () => {
   }, [])
 
   return (
-    <GoogleOAuthProvider clientId='871625340195-vht41gp0596qmoflvsm3pd5umefpcgk7.apps.googleusercontent.com'>
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <BrowserRouter>
         <DevelopmentContext.Provider
           value={TOGGLE_DEV_FEATURES ? { accounts, setAccounts } : undefined}
