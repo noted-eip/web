@@ -1,3 +1,4 @@
+import React from 'react'
 import { useMutation, useQuery } from 'react-query'
 
 import { useAuthContext } from '../../contexts/auth'
@@ -5,6 +6,23 @@ import { apiQueryClient, openapiClient } from '../../lib/api'
 import { V1Account, V1AuthenticateGoogleRequest, V1AuthenticateGoogleResponse, V1AuthenticateRequest, V1AuthenticateResponse, V1CreateAccountRequest, V1CreateAccountResponse, V1GetAccountResponse, V1UpdateAccountResponse } from '../../protorepo/openapi/typescript-axios'
 import { newAccountCacheKey } from './cache'
 import { axiosRequestOptionsWithAuthorization,MutationHookOptions, QueryHookOptions } from './helpers'
+
+type TAccountIDContext = {
+  account_id: string | null
+  changeAccountId: React.Dispatch<string | null>
+  reset_token: string | null
+  changeResetToken: React.Dispatch<string | null>
+}
+
+export const AccountIdContext = React.createContext<TAccountIDContext | undefined>(undefined)
+
+export const useAccountIdContext = () => {
+  const context = React.useContext(AccountIdContext)
+  if (context === undefined) {
+    throw new Error('ResetPassword used outside of provider')
+  }
+  return context
+}
 
 export type GetAccountRequest = {accountId: string};
 export const useGetAccount = (req: GetAccountRequest, options?: QueryHookOptions<GetAccountRequest, V1GetAccountResponse>) => {
