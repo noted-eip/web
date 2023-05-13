@@ -48,11 +48,10 @@ const SigninView: React.FC = () => {
   })
   const googleLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => {
-      console.log('access token: ', tokenResponse.access_token)
+      console.log('access token: ', tokenResponse)
       authenticateGoogleMutation.mutate({body: {code: tokenResponse.access_token}})
     },
   })
-  
 
   // const authenticateMutation = useMutation(authenticate, {
   //   onSuccess: (data: AxiosResponse<AuthenticateResponse, unknown>) => {
@@ -107,7 +106,7 @@ const SigninView: React.FC = () => {
         >
           Submit
         </button>
-        <div className='flex items-center justify-center rounded border border-gray-500 bg-white px-3 py-2 text-sm font-medium text-gray-800 dark:border-gray-500 dark:bg-gray-400'
+        <div style={{cursor: 'pointer'}} className='flex items-center justify-center rounded border border-gray-500 bg-white px-3 py-2 text-sm font-medium text-gray-800 dark:border-gray-500 dark:bg-gray-400'
           onClick={() => googleLogin()}>
           <p className='mr-2 dark:text-gray-400'>Sign in with Google</p>
           <svg

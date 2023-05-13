@@ -5,7 +5,6 @@ const GoogleButton: React.FC = () => {
   const login = useGoogleLogin({
     onSuccess: (tokenResponse) => {
       console.log(tokenResponse)
-      
     },
   })
     

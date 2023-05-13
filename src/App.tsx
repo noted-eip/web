@@ -27,7 +27,7 @@ const App: React.FC = () => {
   }, [])
 
   return (
-    <GoogleOAuthProvider clientId='993773231288-d55u37mlmnkrj1fh6fs2gf52hg0d8llk.apps.googleusercontent.com'>
+    <GoogleOAuthProvider clientId='871625340195-vht41gp0596qmoflvsm3pd5umefpcgk7.apps.googleusercontent.com'>
       <BrowserRouter>
         <DevelopmentContext.Provider
           value={TOGGLE_DEV_FEATURES ? { accounts, setAccounts } : undefined}
