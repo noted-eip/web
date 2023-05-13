@@ -48,25 +48,9 @@ const SigninView: React.FC = () => {
   })
   const googleLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => {
-      console.log('access token: ', tokenResponse)
-      authenticateGoogleMutation.mutate({body: {code: tokenResponse.access_token}})
+      authenticateGoogleMutation.mutate({body: {clientAccessToken: tokenResponse.access_token}})
     },
   })
-
-  // const authenticateMutation = useMutation(authenticate, {
-  //   onSuccess: (data: AxiosResponse<AuthenticateResponse, unknown>) => {
-  //     const tokenData = decodeToken(data.token)
-  //     if (developmentContext !== undefined) {
-  //       addAccountToDevelopmentContext(
-  //         tokenData.uid,
-  //         data.token,
-  //         developmentContext.setAccounts
-  //       )
-  //     }
-  //     auth.signin(data.token)
-  //     navigate('/')
-  //   },
-  // })
 
   const formIsValid = () => {
     return emailValid
