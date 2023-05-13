@@ -2,7 +2,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import OldInput from '../../components/form/OldInput'
-import { useAccountIdContext } from '../../hooks/api/accounts'
+import { useResetPasswordContext } from '../../hooks/api/accounts'
 import { useUpdateAccountPassword } from '../../hooks/api/password'
 import { V1UpdateAccountPasswordResponse } from '../../protorepo/openapi/typescript-axios'
 
@@ -11,7 +11,7 @@ const ResetPasswordPassword: React.FC = () => {
   const navigate = useNavigate()
   const [password, setPassword] = React.useState('')
   const [confirmPassword, setConfirmPassword] = React.useState('')
-  const accountIdContext = useAccountIdContext()
+  const resetPasswordContext = useResetPasswordContext()
   // const [emailValid, setEmailValid] = React.useState(false)
   const updateAccountMutation = useUpdateAccountPassword({
     onSuccess: (data: V1UpdateAccountPasswordResponse) => {
@@ -36,11 +36,11 @@ const ResetPasswordPassword: React.FC = () => {
               e.preventDefault()
               if (password !== confirmPassword)
                 return
-              if (accountIdContext.account_id === null)
-                throw new Error('No data in accountIdContext')
-              if (accountIdContext.reset_token === null)
-                throw new Error('No data in accountIdContext')
-              updateAccountMutation.mutate({account_id: accountIdContext.account_id as string, body: {password, token: accountIdContext.reset_token as string}})
+              if (resetPasswordContext.account_id === null)
+                throw new Error('No data in resetPasswordContext')
+              if (resetPasswordContext.reset_token === null)
+                throw new Error('No data in resetPasswordContext')
+              updateAccountMutation.mutate({account_id: resetPasswordContext.account_id as string, body: {password, token: resetPasswordContext.reset_token as string}})
             }}
           >
             <OldInput

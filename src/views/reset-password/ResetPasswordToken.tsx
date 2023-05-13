@@ -2,21 +2,21 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import OldInput from '../../components/form/OldInput'
-import { useAccountIdContext } from '../../hooks/api/accounts'
+import { useResetPasswordContext } from '../../hooks/api/accounts'
 import { useForgetAccountPasswordValidateToken } from '../../hooks/api/password'
 import { V1ForgetAccountPasswordValidateTokenResponse } from '../../protorepo/openapi/typescript-axios'
 
 
 const ResetPasswordEmail: React.FC = () => {
   const navigate = useNavigate()
-  const accountIdContext = useAccountIdContext()
+  const resetPasswordContext = useResetPasswordContext()
   const [token, setToken] = React.useState('')
   const forgetAccountPasswordValidateTokenMutation = useForgetAccountPasswordValidateToken({
     onSuccess: (data: V1ForgetAccountPasswordValidateTokenResponse) => {
       console.log('token send !')
       console.log(data)
       // Must check if the token is validate or not
-      accountIdContext.changeResetToken(data.resetToken)
+      resetPasswordContext.changeResetToken(data.resetToken)
       navigate('/reset_password_password') 
     },
   })
@@ -26,9 +26,9 @@ const ResetPasswordEmail: React.FC = () => {
       className='grid grid-cols-1 gap-2'
       onSubmit={(e) => {
         e.preventDefault()
-        if (accountIdContext.account_id === null)
-          throw new Error('No data in accountIdContext')
-        forgetAccountPasswordValidateTokenMutation.mutate({body: {accountId: accountIdContext.account_id as string, token}})
+        if (resetPasswordContext.account_id === null)
+          throw new Error('No data in resetPasswordContext')
+        forgetAccountPasswordValidateTokenMutation.mutate({body: {accountId: resetPasswordContext.account_id as string, token}})
       }}
     >
       <section className='bg-gray-50 dark:bg-gray-900'>

@@ -14,10 +14,10 @@ type TAccountIDContext = {
   changeResetToken: React.Dispatch<string | null>
 }
 
-export const AccountIdContext = React.createContext<TAccountIDContext | undefined>(undefined)
+export const ResetPasswordContext = React.createContext<TAccountIDContext | undefined>(undefined)
 
-export const useAccountIdContext = () => {
-  const context = React.useContext(AccountIdContext)
+export const useResetPasswordContext = () => {
+  const context = React.useContext(ResetPasswordContext)
   if (context === undefined) {
     throw new Error('ResetPassword used outside of provider')
   }
