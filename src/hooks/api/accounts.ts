@@ -7,14 +7,16 @@ import { V1Account, V1AuthenticateGoogleRequest, V1AuthenticateGoogleResponse, V
 import { newAccountCacheKey } from './cache'
 import { axiosRequestOptionsWithAuthorization,MutationHookOptions, QueryHookOptions } from './helpers'
 
-type TAccountIDContext = {
+type TResetPasswordContext = {
   account_id: string | null
   changeAccountId: React.Dispatch<string | null>
   reset_token: string | null
   changeResetToken: React.Dispatch<string | null>
+  auth_token: string | null
+  changeAuthToken: React.Dispatch<string | null>
 }
 
-export const ResetPasswordContext = React.createContext<TAccountIDContext | undefined>(undefined)
+export const ResetPasswordContext = React.createContext<TResetPasswordContext | undefined>(undefined)
 
 export const useResetPasswordContext = () => {
   const context = React.useContext(ResetPasswordContext)

@@ -13,10 +13,10 @@ const ResetPasswordEmail: React.FC = () => {
   const [token, setToken] = React.useState('')
   const forgetAccountPasswordValidateTokenMutation = useForgetAccountPasswordValidateToken({
     onSuccess: (data: V1ForgetAccountPasswordValidateTokenResponse) => {
-      console.log('token send !')
       console.log(data)
       // Must check if the token is validate or not
       resetPasswordContext.changeResetToken(data.resetToken)
+      resetPasswordContext.changeAuthToken(data.authToken)
       navigate('/reset_password_password') 
     },
   })

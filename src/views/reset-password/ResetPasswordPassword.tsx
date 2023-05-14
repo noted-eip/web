@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import OldInput from '../../components/form/OldInput'
 import { useResetPasswordContext } from '../../hooks/api/accounts'
 import { useUpdateAccountPassword } from '../../hooks/api/password'
+import { validatePassword } from '../../lib/validators'
 import { V1UpdateAccountPasswordResponse } from '../../protorepo/openapi/typescript-axios'
 
 
@@ -11,16 +12,17 @@ const ResetPasswordPassword: React.FC = () => {
   const navigate = useNavigate()
   const [password, setPassword] = React.useState('')
   const [confirmPassword, setConfirmPassword] = React.useState('')
+  const [passwordValid, setPasswordValid] = React.useState(false)
   const resetPasswordContext = useResetPasswordContext()
   // const [emailValid, setEmailValid] = React.useState(false)
   const updateAccountMutation = useUpdateAccountPassword({
     onSuccess: (data: V1UpdateAccountPasswordResponse) => {
       console.log(data)
-      navigate('/') 
+      // navigate('/') 
     },
   })
   const formIsValid = () => {
-    return password !== confirmPassword && confirmPassword !== ''
+    return password === confirmPassword && confirmPassword !== '' && passwordValid
   }
 
 
@@ -40,16 +42,21 @@ const ResetPasswordPassword: React.FC = () => {
                 throw new Error('No data in resetPasswordContext')
               if (resetPasswordContext.reset_token === null)
                 throw new Error('No data in resetPasswordContext')
-              updateAccountMutation.mutate({account_id: resetPasswordContext.account_id as string, body: {password, token: resetPasswordContext.reset_token as string}})
+              console.log(resetPasswordContext)
+              updateAccountMutation.mutate({account_id: resetPasswordContext.account_id as string, body: {password, token: resetPasswordContext.reset_token as string}, header: resetPasswordContext.auth_token as string})
             }}
           >
             <OldInput
               label='Password'
               type='password'
+              tooltip='6 characters, letters numbers and symbols'
               value={password}
               onChange={(e) => {
-                setPassword(e.target.value)
+                const val = e.target.value as string
+                setPassword(val)
+                setPasswordValid(validatePassword(val) === undefined)
               }}
+              isInvalidBlur={!passwordValid}
             />
             <OldInput
               label='Confirm Password'
@@ -58,11 +65,11 @@ const ResetPasswordPassword: React.FC = () => {
               onChange={(e) => {
                 setConfirmPassword(e.target.value)
               }}
-              isInvalid={formIsValid()}
+              isInvalid={!formIsValid()}
               errorMessage={'Not the same password'}
             />
             <button type='submit' className='mt-2 w-full rounded-lg bg-blue-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:bg-gray-600 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
-              disabled={formIsValid() || updateAccountMutation.isLoading}
+              disabled={!formIsValid() || updateAccountMutation.isLoading}
             >
               Reset password
             </button>

@@ -2,7 +2,7 @@ import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 
 import { ResetPasswordContext } from '../hooks/api/accounts'
-import { LS_ACCOUNT_ID_KEY, LS_RESET_TOKEN_KEY } from '../lib/constants'
+import { LS_ACCOUNT_ID_KEY, LS_RESET_AUTH_TOKEN_KEY, LS_RESET_TOKEN_KEY } from '../lib/constants'
 import NotFoundView from './notfound/NotFoundView'
 import ResetPasswordEmail from './reset-password/ResetPasswordEmail'
 import ResetPasswordPassword from './reset-password/ResetPasswordPassword'
@@ -18,6 +18,9 @@ const UnauthenticatedRouter: React.FC = () => {
   )
   const [resetToken, setResetToken] = React.useState<string | null>(
     window.localStorage.getItem(LS_RESET_TOKEN_KEY)
+  )
+  const [authToken, setAuthToken] = React.useState<string | null>(
+    window.localStorage.getItem(LS_RESET_AUTH_TOKEN_KEY)
   )
   const changeAccountId = (val) => {
     setAccountId(val)
@@ -35,9 +38,19 @@ const UnauthenticatedRouter: React.FC = () => {
       window.localStorage.setItem(LS_RESET_TOKEN_KEY, val)
     }
   }
+  const changeAuthToken = (val) => {
+    setAuthToken(val)
+    if (val === null) {
+      window.localStorage.removeItem(LS_RESET_AUTH_TOKEN_KEY)
+    } else {
+      window.localStorage.setItem(LS_RESET_AUTH_TOKEN_KEY, val)
+    }
+  }
 
   return (
-    <ResetPasswordContext.Provider value={{account_id: accountId, changeAccountId: changeAccountId, reset_token: resetToken, changeResetToken: changeResetToken}}>
+    <ResetPasswordContext.Provider 
+      value={{account_id: accountId, changeAccountId: changeAccountId, reset_token: resetToken, changeResetToken: changeResetToken, auth_token: authToken, changeAuthToken: changeAuthToken}}
+    >
       <Routes>
         <Route path='/' element={<WelcomeView />}></Route>
         <Route path='/signin' element={<SigninView />}></Route>

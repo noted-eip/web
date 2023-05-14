@@ -1,4 +1,5 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import OldInput from '../../components/form/OldInput'
 import { useResetPasswordContext } from '../../hooks/api/accounts'
@@ -8,6 +9,7 @@ import { V1ForgetAccountPasswordResponse } from '../../protorepo/openapi/typescr
 
 
 const ResetPasswordEmail: React.FC = () => {
+  const navigate = useNavigate()
   const [email, setEmail] = React.useState('')
   const [emailValid, setEmailValid] = React.useState(false)
   const resetPasswordContext = useResetPasswordContext()
@@ -15,9 +17,8 @@ const ResetPasswordEmail: React.FC = () => {
 
   const forgetAccountPasswordMutation = useForgetAccountPassword({
     onSuccess: (data: V1ForgetAccountPasswordResponse) => {
-      console.log('token send !')
-      console.log(data)
       resetPasswordContext.changeAccountId(data.accountId)
+      navigate('/reset_password_token')
     },
   })
   const formIsValid = () => {

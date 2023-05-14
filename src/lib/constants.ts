@@ -15,5 +15,9 @@ export const LS_ACCOUNT_ID_KEY = 'account_id'
 export const LS_RESET_TOKEN_KEY = 'reset_token'
 
 // The key whithin the browser's local storage which contains the
+// current token of reset password.
+export const LS_RESET_AUTH_TOKEN_KEY = 'auth_token'
+
+// The key whithin the browser's local storage which contains the
 // development data.
 export const LS_DEVELOPMENT_DATA_KEY = 'dev'

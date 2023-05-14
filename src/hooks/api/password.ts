@@ -18,9 +18,11 @@ export const useForgetAccountPasswordValidateToken = (options?: MutationHookOpti
   }, options)
 }
 
-export type TAccountsAPIUpdateAccountPasswordRequest = {account_id: string, body: AccountsAPIUpdateAccountPasswordRequest}
+export type TAccountsAPIUpdateAccountPasswordRequest = {account_id: string, body: AccountsAPIUpdateAccountPasswordRequest, header: string}
 export const useUpdateAccountPassword = (options?: MutationHookOptions<TAccountsAPIUpdateAccountPasswordRequest, V1UpdateAccountPasswordResponse>) => {
   return useMutation(async (req: TAccountsAPIUpdateAccountPasswordRequest) => {
-    return (await openapiClient.accountsAPIUpdateAccountPassword(req.account_id, req.body, {})).data
+    return (await openapiClient.accountsAPIUpdateAccountPassword(req.account_id, req.body, {headers: {
+      'Authorization': `Bearer ${req.header}`
+    }})).data
   }, options)
 }
