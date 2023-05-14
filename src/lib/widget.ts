@@ -23,17 +23,13 @@ export async function getWikipediaImage(imgName: string) {
     )
     if (data != null &&  data['query']['pages']['-1'] !== undefined && data['query']['pages']['-1']['imageinfo'] !== undefined) {
       imgUrl = data['query']['pages']['-1']['imageinfo'][0]['url']
-      //console.log('DATA = ', imgUrl)
     }
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      //console.log('error message: ', error.message)
       return error.message
     } else {
-      //console.log('unexpected error: ', error)
       return 'An unexpected error occurred'
     }
   }
-  //console.log('DATA = ', imgUrl)
   return imgUrl
 }
