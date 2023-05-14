@@ -87,7 +87,7 @@ export const Sidebar: React.FC = () => {
 
   return (
     <div className='hidden h-screen flex-col border-r border-gray-300 md:flex'>
-      <div className='m-lg mt-xl flex h-full flex-col justify-between xl:m-xl'>
+      <div className='m-lg mt-xl flex h-full flex-col sjustify-between xl:m-xl'>
         <div>
           {/* Logo */}
           <div className='h-[36px] w-[36px] rounded-md border border-gray-300 bg-gray-200' />
