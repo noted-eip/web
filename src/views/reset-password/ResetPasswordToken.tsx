@@ -63,6 +63,11 @@ const ResetPasswordEmail: React.FC = () => {
         >
               Send token
         </button>
+        {/* <p className='mt-2 text-sm text-gray-500'>
+          {'if you didn\'t receive the code!'} <span style={{cursor: 'pointer'}} className='font-bold text-black' onClick={() => {
+          }}
+          >Resend</span>
+        </p> */}
       </ContainerMd>
     </form>
       
