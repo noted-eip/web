@@ -8,9 +8,10 @@ import { TAuthContext, useAuthContext } from '../../contexts/auth'
 import { API_BASE } from '../../lib/env'
 
 
+
 interface Props {
-  noteId: string  | null;
-  groupId: string | null;
+  noteId: string ;
+  groupId: string ;
 }
 
 interface ItemProps {
@@ -22,7 +23,7 @@ interface ItemProps {
 const NotesOptions = ( { noteId, groupId } : Props ) => {
   const [selectedOption, setSelectedOption] = React.useState('')
   const [hasExported, setHasExported] = React.useState(false)
-  const url = `${API_BASE}/groups/${encodeURIComponent(groupId ?? '')}/notes/${encodeURIComponent(noteId ?? '')}/export`
+  const url = `${API_BASE}/groups/${encodeURIComponent(groupId)}/notes/${encodeURIComponent(noteId)}/export`
   const auth : TAuthContext = useAuthContext()
 
   const handleErrors = (ids: (string | null)[], selectedOption: string | null) => {
@@ -53,6 +54,9 @@ const NotesOptions = ( { noteId, groupId } : Props ) => {
       const extension = selectedOption === 'md' ? 'md' : 'pdf'
       const filename = `${uuidv4()}.${extension}`
       const mime = selectedOption === 'md' ? 'text/plain' : 'application/pdf'
+      console.log('response.data : ', response.data)
+
+      console.log('json file ', response)
 
       downloadFile(response.data, filename, mime)
 
@@ -63,16 +67,40 @@ const NotesOptions = ( { noteId, groupId } : Props ) => {
     }
   }
 
-  const downloadFile = (data: BlobPart, filename: string, mime: string) => {
-    const blob = new Blob([data], { type: mime })
-    const url = window.URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = filename
-    link.click()
-    window.URL.revokeObjectURL(url)
-  }
 
+
+  const downloadFile = async (data, filename, mime) => {
+    if (mime === 'text/plain') {
+      const text = await data.text()
+      const json = JSON.parse(text)
+      const fileContent = json.File
+      
+      const blob = new Blob([fileContent], { type: mime })
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = filename
+      link.click()
+      
+    } else if (mime === 'application/pdf') {
+      console.log('data : ', data)
+      const text = await data.text()
+      const json = JSON.parse(text)
+      const fileContent = json.File
+
+      const blob = new Blob([fileContent], { type: mime })
+      console.log('blob: ', blob)
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      
+      link.href = url
+      link.download = filename
+      link.click()
+      window.URL.revokeObjectURL(url)
+    } else {
+      console.error('Unsupported file type')
+    }
+  }
   const handleOptionSelect = (option: string) => {
     setSelectedOption(option)
   }
