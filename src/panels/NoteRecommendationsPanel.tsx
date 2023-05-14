@@ -1,8 +1,9 @@
 import React from 'react'
 
 import PanelSkeleton from '../components/view/PanelSkeleton'
-import { useGenerateWidgets } from '../hooks/api/recommendations'
+import { useGenerateWidgets, useGetWikipediaImage } from '../hooks/api/recommendations'
 import { useNoteIdFromUrl } from '../hooks/url'
+import { getWikipediaImageNameFromUrl } from '../lib/widget'
 import { V1Widget } from '../protorepo/openapi/typescript-axios'
 
 const WidgetListItem: React.FC<{ widget: V1Widget }> = (props) => {
@@ -12,18 +13,15 @@ const WidgetListItem: React.FC<{ widget: V1Widget }> = (props) => {
   let summary = ''
   let imageUrl = ''
 
-  if (props.widget?.definitionWidget != undefined) {
-    console.log('->is definition widget')
-  } else if (props.widget?.imageWidget != undefined) {
-    console.log('->is image widget')
-  } else if (props.widget?.websiteWidget != undefined) {
-    console.log('->is website widget')
+  if (props.widget?.websiteWidget != undefined) {
     keyword = props.widget.websiteWidget.keyword
     type = props.widget.websiteWidget.type
     urlRedirect = props.widget.websiteWidget.url
     summary = props.widget.websiteWidget?.summary as string
     imageUrl = props.widget.websiteWidget?.imageUrl as string
   }
+
+  const imageQ = useGetWikipediaImage({ imageUrl: getWikipediaImageNameFromUrl(imageUrl) })
 
   return (
     <div className='cursor-pointer rounded-md border border-blue-100 bg-gray-50 bg-gradient-to-br p-4 hover:bg-gray-100 hover:shadow-inner'>
@@ -39,7 +37,7 @@ const WidgetListItem: React.FC<{ widget: V1Widget }> = (props) => {
             <p className='font-normal'>{ summary != '' && summary != undefined ? summary : ''}</p>
           </React.Fragment>
           <React.Fragment>
-            <img src={ imageUrl != '' && imageUrl != undefined ? imageUrl : ''}/>
+            {imageQ.isSuccess ? (<img src={imageQ.data}/>) : (<p/>)}
           </React.Fragment>
         </div>
       </a>
@@ -65,7 +63,7 @@ const WidgetListCurrentGroup: React.FC = () => {
         {listWidgetsQ.isSuccess ? (
           !listWidgetsQ.data?.widgets.length ? (
             <div className='my-4 text-center text-sm text-gray-400'>
-            You have no widgets in note of id {noteId}
+            You have no widgets for this note
             </div>
           ) : (
             listWidgetsQ.data?.widgets?.map((widget, idx) => (
