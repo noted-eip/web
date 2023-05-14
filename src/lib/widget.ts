@@ -13,7 +13,6 @@ export function getWikipediaImageNameFromUrl(imageUrl: string) {
   return imgName
 }
   
-
 export async function getWikipediaImage(imgName: string) {
   let imgUrl ='' 
   console.log('start get')
