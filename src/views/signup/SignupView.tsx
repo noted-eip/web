@@ -1,6 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import ContainerMd from '../../components/container/ContainerMd'
 import OldInput from '../../components/form/OldInput'
 import { addAccountToDevelopmentContext, useDevelopmentContext } from '../../contexts/dev'
 import { useNoAuthContext } from '../../contexts/noauth'
@@ -46,56 +47,61 @@ const SignupView: React.FC = () => {
   return (
     <div className='flex h-screen w-screen items-center justify-center'>
       <form
-        className='grid grid-cols-1 gap-2'
+        className='grid basis-1/2 grid-cols-1 gap-2'
         onSubmit={(e) => {
           e.preventDefault()
           createAccountMutation.mutate({body: {name, email, password}}, )
         }}
       >
-        <OldInput
-          label='Name'
-          value={name}
-          onChange={(e) => {
-            const val = e.target.value as string
-            setName(val)
-            setNameValid(validateName(val) === undefined)
-          }}
-          isInvalidBlur={!nameValid}
-          errorMessage='Invalid name'
-        />
-        <OldInput
-          label='Email'
-          value={email}
-          onChange={(e) => {
-            const val = e.target.value as string
-            setEmail(val)
-            setEmailValid(validateEmail(val) === undefined)
-          }}
-          isInvalidBlur={!emailValid}
-          errorMessage='Invalid email address'
-        />
-        <OldInput
-          label='Password'
-          type='password'
-          tooltip='6 characters, letters numbers and symbols'
-          value={password}
-          onChange={(e) => {
-            const val = e.target.value as string
-            setPassword(val)
-            setPasswordValid(validatePassword(val) === undefined)
-          }}
-          isInvalidBlur={!passwordValid}
-        />
-        <button
-          className='mt-4 rounded bg-blue-600 py-2 text-white disabled:bg-gray-600'
-          disabled={
-            !formIsValid() ||
+        <ContainerMd>
+          <h2 className='mb-4 text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl'>
+              Create an account
+          </h2>
+          <OldInput
+            label='Name'
+            value={name}
+            onChange={(e) => {
+              const val = e.target.value as string
+              setName(val)
+              setNameValid(validateName(val) === undefined)
+            }}
+            isInvalidBlur={!nameValid}
+            errorMessage='Invalid name'
+          />
+          <OldInput
+            label='Email'
+            value={email}
+            onChange={(e) => {
+              const val = e.target.value as string
+              setEmail(val)
+              setEmailValid(validateEmail(val) === undefined)
+            }}
+            isInvalidBlur={!emailValid}
+            errorMessage='Invalid email address'
+          />
+          <OldInput
+            label='Password'
+            type='password'
+            tooltip='6 characters, letters numbers and symbols'
+            value={password}
+            onChange={(e) => {
+              const val = e.target.value as string
+              setPassword(val)
+              setPasswordValid(validatePassword(val) === undefined)
+            }}
+            isInvalidBlur={!passwordValid}
+          />
+          <button
+            className='my-2 w-full rounded-lg bg-blue-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:bg-gray-600 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
+            disabled={
+              !formIsValid() ||
             authenticateMutation.isLoading ||
             createAccountMutation.isLoading
-          }
-        >
+            }
+          >
           Submit
-        </button>
+          </button>
+        </ContainerMd>
       </form>
     </div>
   )
