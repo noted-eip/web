@@ -1,4 +1,3 @@
-// import { AuthenticateResponse } from '../../types/api/accounts'
 import { useGoogleLogin } from '@react-oauth/google'
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
@@ -49,7 +48,6 @@ const SigninView: React.FC = () => {
   })
   const googleLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => {
-      console.log('access token: ', tokenResponse)
       authenticateGoogleMutation.mutate({body: {clientAccessToken: tokenResponse.access_token}})
     },
   })
