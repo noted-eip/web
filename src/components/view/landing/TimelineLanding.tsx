@@ -8,16 +8,16 @@ type TTimeline = {
 const TimelineLanding: React.FC = () => {
   const timelineArr: TTimeline[] = [
     {
-      title: 'Fast Forward',  desc: 'Neque Dolor, fugiat non cum doloribus aperiam voluptates nostrum.'
+      title: 'Test & Learn',  desc: 'During this sprint we try different technologies and libraries for the backend and for web, mobile and destock frontend.'
     },
     {
-      title: 'Managment and processes',  desc: 'Neque Dolor, fugiat non cum doloribus aperiam voluptates nostrum.'
+      title: 'Managment and processes',  desc: 'During this sprint we choose which technologies and libraries will be used and which platform will be supported. Then we begin to create the main feature of Noted'
     },
     {
-      title: 'Beta',  desc: 'Neque Dolor, fugiat non cum doloribus aperiam voluptates nostrum.'
+      title: 'Fast Forward',  desc: 'During this sprint we improved and finalies .'
     },
     {
-      title: 'Next Sprint',  desc: 'Neque Dolor, fugiat non cum doloribus aperiam voluptates nostrum.'
+      title: 'Beta & Growth Hacking',  desc: 'During this sprint.'
     }
   ]
   
@@ -36,7 +36,7 @@ const TimelineLanding: React.FC = () => {
           {timelineArr.map((el) => {
             return (
               <div className='group relative bg-white transition hover:z-[1] hover:shadow-2xl hover:shadow-gray-600/10 dark:bg-gray-800' key={el.title}>
-                <div className='relative space-y-8 p-8 py-12'>
+                <div className='relative space-y-8 p-8'>
                   <div className='space-y-2'>
                     <h5
                       className='text-xl font-semibold text-gray-700 transition dark:text-white'
