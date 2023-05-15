@@ -1,4 +1,3 @@
-// import { AuthenticateResponse } from '../../types/api/accounts'
 import { useGoogleLogin } from '@react-oauth/google'
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
