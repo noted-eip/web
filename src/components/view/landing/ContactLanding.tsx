@@ -1,18 +1,6 @@
 import React from 'react'
 
 const ContactLanding: React.FC = () => {
-  // <div id='contact'>
-  //   <div className='mx-auto max-w-7xl px-6 md:px-12 xl:px-6'>
-  //     <div className='md:w-2/3 lg:w-1/2'>
-  //       <h2 className='my-8 text-2xl font-bold text-gray-700 dark:text-white md:text-4xl'>
-  //     Contact
-  //       </h2>
-  //       <p className='text-gray-600 dark:text-gray-300'>email: Lorem ipsum dolor sit</p>
-  //     </div>
-  //   </div>
-  // </div>
-
-
   return (
     <div id='contact'>
       <div className='mx-auto max-w-7xl px-6 md:px-12 xl:px-6'>
@@ -22,82 +10,24 @@ const ContactLanding: React.FC = () => {
               <h2 className='mb-12 px-6 text-3xl font-bold'>Contact</h2>
             </div>
           </div>
-
           <div className='flex flex-wrap'>
-            <div className='mb-12 w-full shrink-0 grow-0 basis-auto px-3 lg:mb-0 lg:w-5/12 lg:px-6'>
+            {/* <div className='mb-12 w-full shrink-0 grow-0 basis-auto px-3 lg:mb-0 lg:w-5/12 lg:px-6'>
               <form>
                 <div className=' mb-6'>
-                  <input type='text' className=' m-0
-          block
-          w-full
-          rounded
-          border
-          border-solid
-          border-gray-300
-          bg-white bg-clip-padding
-          px-3 py-1.5 text-base
-          font-normal
-          text-gray-700
-          transition
-          ease-in-out
-          focus:border-black focus:bg-white focus:text-gray-700 focus:outline-none' id='exampleInput7'
-                  placeholder='Name' />
+                  <input type='text' className='m-0 block w-full rounded border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-1.5 text-base font-normal text-gray-700 transition ease-in-out focus:border-black focus:bg-white focus:text-gray-700 focus:outline-none'
+                    placeholder='Name' />
                 </div>
                 <div className=' mb-6'>
-                  <input type='email' className=' m-0
-          block
-          w-full
-          rounded
-          border
-          border-solid
-          border-gray-300
-          bg-white bg-clip-padding
-          px-3 py-1.5 text-base
-          font-normal
-          text-gray-700
-          transition
-          ease-in-out
-          focus:border-black focus:bg-white focus:text-gray-700 focus:outline-none' id='exampleInput8'
-                  placeholder='Email address' />
+                  <input type='email' className='m-0 block w-full rounded border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-1.5 text-base font-normal text-gray-700 transition ease-in-out focus:border-black focus:bg-white focus:text-gray-700 focus:outline-none'
+                    placeholder='Email address' />
                 </div>
                 <div className=' mb-6'>
-                  <textarea className='
-          m-0
-          block
-          w-full
-          rounded
-          border
-          border-solid
-          border-gray-300
-          bg-white bg-clip-padding
-          px-3 py-1.5 text-base
-          font-normal
-          text-gray-700
-          transition
-          ease-in-out
-          focus:border-black focus:bg-white focus:text-gray-700 focus:outline-none
-        ' id='exampleFormControlTextarea13' rows={3} placeholder='Message'></textarea>
+                  <textarea className='m-0 block w-full rounded border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-1.5 text-base font-normal text-gray-700 transition ease-in-out focus:border-black focus:bg-white focus:text-gray-700 focus:outline-none'
+                    rows={3} placeholder='Message'></textarea>
                 </div>
-                <button type='submit' className='
-        w-full
-        rounded
-        bg-black
-        px-6
-        py-2.5
-        text-xs
-        font-medium
-        uppercase
-        leading-tight
-        text-white
-        shadow-md
-        transition duration-150
-        ease-in-out hover:bg-black hover:shadow-lg focus:bg-black
-        focus:shadow-lg focus:outline-none
-        focus:ring-0
-        active:bg-black
-        active:shadow-lg'>Send</button>
+                <button type='submit' className='w-full rounded bg-black px-6 py-2.5 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-black hover:shadow-lg focus:bg-black focus:shadow-lg focus:outline-none focus:ring-0 active:bg-black active:shadow-lg'>Send</button>
               </form>
-            </div>
+            </div> */}
             <div className='w-full shrink-0 grow-0 basis-auto lg:w-7/12'>
               <div className='flex flex-wrap'>
                 <div className='mb-12 w-full shrink-0 grow-0 basis-auto px-3 lg:w-6/12 lg:px-6'>
