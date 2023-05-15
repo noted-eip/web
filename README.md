@@ -42,3 +42,11 @@ If you're running VSCode, you can configure your editor to automatically lint yo
     ],
     ```
 3. (Optional) If you've enabled `editor.formatOnPaste` there's a chance your files might not be linted properly. To fix it, disable this setting for `javascript`, `javascriptreact`, `typescript`, `typescriptreact`.
+
+## Environment
+
+| Env Name                           | Default                     | Description                               |
+|------------------------------------|---------------------|-----------------------------|-------------------------------------------|
+| `REACT_APP_API_BASE`            | `https://noted-rojasdiego.koyeb.app`                      | URL of the Noted API |
+| `REACT_APP_TOGGLE_DEV_FEATURES`            | `0`                      | Either `0` or `1`. Toggles fast account switching and other development utilities |
+

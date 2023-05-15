@@ -1,10 +1,13 @@
 import React from 'react'
-import { LS_AUTH_TOKEN_KEY } from '../lib/constants'
 
-type TAuthContext = {
+import { decodeToken } from '../lib/api'
+import { LS_AUTH_TOKEN_KEY, LS_GROUP_ID_KEY } from '../lib/constants'
+
+export type TAuthContext = {
+  accountId: string
   logout: () => void
   token: () => Promise<string>
-};
+}
 
 export const AuthContext = React.createContext<TAuthContext | undefined>(undefined)
 
@@ -19,10 +22,19 @@ export const useAuthContext = () => {
 }
 
 export class AuthContextManager {
-  constructor(private _token: string | null, private _setToken: React.Dispatch<React.SetStateAction<null | string>>) {}
+  constructor(
+    private _token: string | null,
+    private _setToken: React.Dispatch<React.SetStateAction<null | string>>
+  ) {
+    this.accountId = this._token ? decodeToken(this._token).aid : ''
+  }
+
+  public accountId: string
 
   public logout() {
     localStorage.removeItem(LS_AUTH_TOKEN_KEY)
+    localStorage.removeItem(LS_GROUP_ID_KEY)
+    this.accountId = ''
     this._setToken(null)
   }
 
