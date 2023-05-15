@@ -8,7 +8,39 @@ import gabrielPhoto from '../../../assets/team_photos/Gabi.jpg'
 import kilianPhoto from '../../../assets/team_photos/Kilian.jpg'
 import maximePhoto from '../../../assets/team_photos/maxime.jpg'
 
+type TTeam = {
+  name: string
+  role: string
+  desc: string
+  imgSrc: string
+}
+
 const TeamLanding: React.FC = () => {
+  const teamArr: TTeam[] = [
+    {
+      name: 'Edouard Sengeissen',  role: 'Respo Deadlines and docs', desc: 'Backend and devops developer', imgSrc: edouardPhoto
+    },
+    {
+      name: 'Gabriel Medoukali',  role: 'Respo Deadlines and docs', desc: 'Backend and devops developer', imgSrc: gabrielPhoto
+    },
+    {
+      name: 'Balthazar Roque',  role: 'Respo Front', desc: 'Mobile developer', imgSrc: balthazarPhoto
+    },
+    {
+      name: 'Maxime Dodin',  role: 'Respo Presentation', desc: 'Backend and devops developer', imgSrc: maximePhoto
+    },
+    {
+      name: 'Diego Rojas',  role: 'Dev', desc: 'Fronted, backend and devops developer', imgSrc: diegoPhoto
+    },
+    {
+      name: 'Bachir Benzaoui',  role: 'Dev', desc: 'Backend and devops developer', imgSrc: bachirPhoto
+    },
+    {
+      name: 'Killian Fleury',  role: 'Dev', desc: 'Frontend developer', imgSrc: kilianPhoto
+    }
+  ]
+  
+
   return (
     <div className='text-gray-600 dark:text-gray-300' id='team'>
       <div className='mx-auto max-w-7xl px-6 md:px-12 xl:px-6'>
@@ -18,76 +50,22 @@ const TeamLanding: React.FC = () => {
           </h2>
         </div>
         <div className='grid gap-x-8 gap-y-4 lg:grid-cols-3'>
-          <div className='aspect-auto rounded-3xl border border-gray-400 bg-white p-8 shadow-2xl shadow-gray-600/10 dark:border-gray-700 dark:bg-gray-800 dark:shadow-none'>
-            <div className='flex gap-4'>
-              <img className='h-12 w-12 rounded-full' src={edouardPhoto} alt='user avatar' width='200' height='200' loading='lazy' />
-              <div>
-                <h6 className='text-lg font-medium text-gray-700 dark:text-white'>Edouard Sengeissen</h6>
-                <p className='text-sm text-gray-500 dark:text-gray-300'>Respo Deadlines and docs</p>
-              </div>
-            </div>
-            <p className='mt-8'>Backend and devops developer.</p>
-          </div>
-          <div className='aspect-auto rounded-3xl border border-gray-400 bg-white p-8 shadow-2xl shadow-gray-600/10 dark:border-gray-700 dark:bg-gray-800 dark:shadow-none'>
-            <div className='flex gap-4'>
-              <img className='h-12 w-12 rounded-full' src={gabrielPhoto} alt='user avatar' width='200' height='200' loading='lazy' />
-              <div>
-                <h6 className='text-lg font-medium text-gray-700 dark:text-white'>Gabriel Medoukali</h6>
-                <p className='text-sm text-gray-500 dark:text-gray-300'>Respo Back</p>
-              </div>
-            </div>
-            <p className='mt-8'>Backend and devops developer.</p>
-          </div>
-          <div className='aspect-auto rounded-3xl border border-gray-400 bg-white p-8 shadow-2xl shadow-gray-600/10 dark:border-gray-700 dark:bg-gray-800 dark:shadow-none'>
-            <div className='flex gap-4'>
-              <img className='h-12 w-12 rounded-full' src={balthazarPhoto} alt='user avatar' width='200' height='200' loading='lazy' />
-              <div>
-                <h6 className='text-lg font-medium text-gray-700 dark:text-white'>Balthazar Roque</h6>
-                <p className='text-sm text-gray-500 dark:text-gray-300'>Respo Front</p>
-              </div>
-            </div>
-            <p className='mt-8'>Mobile developer.</p>
-          </div>
-          <div className='aspect-auto rounded-3xl border border-gray-400 bg-white p-8 shadow-2xl shadow-gray-600/10 dark:border-gray-700 dark:bg-gray-800 dark:shadow-none'>
-            <div className='flex gap-4'>
-              <img className='h-12 w-12 rounded-full' src={maximePhoto} alt='user avatar' width='200' height='200' loading='lazy' />
-              <div>
-                <h6 className='text-lg font-medium text-gray-700 dark:text-white'>Maxime Dodin</h6>
-                <p className='text-sm text-gray-500 dark:text-gray-300'>Respo Presentation</p>
-              </div>
-            </div>
-            <p className='mt-8'>Backend and devops developer.</p>
-          </div>
-          <div className='aspect-auto rounded-3xl border border-gray-400 bg-white p-8 shadow-2xl shadow-gray-600/10 dark:border-gray-700 dark:bg-gray-800 dark:shadow-none'>
-            <div className='flex gap-4'>
-              <img className='h-12 w-12 rounded-full' src={diegoPhoto} alt='user avatar' width='200' height='200' loading='lazy' />
-              <div>
-                <h6 className='text-lg font-medium text-gray-700 dark:text-white'>Diego Rojas</h6>
-                <p className='text-sm text-gray-500 dark:text-gray-300'>Dev</p>
-              </div>
-            </div>
-            <p className='mt-8'>Fronted, backend and devops developer.</p>
-          </div>
-          <div className='aspect-auto rounded-3xl border border-gray-400 bg-white p-8 shadow-2xl shadow-gray-600/10 dark:border-gray-700 dark:bg-gray-800 dark:shadow-none'>
-            <div className='flex gap-4'>
-              <img className='h-12 w-12 rounded-full' src={bachirPhoto} alt='user avatar' width='200' height='200' loading='lazy' />
-              <div>
-                <h6 className='text-lg font-medium text-gray-700 dark:text-white'>Bachir Benzaoui</h6>
-                <p className='text-sm text-gray-500 dark:text-gray-300'>Dev</p>
-              </div>
-            </div>
-            <p className='mt-8'>Backend and devops developer.</p>
-          </div>
-          <div className='aspect-auto rounded-3xl border border-gray-400 bg-white p-8 shadow-2xl shadow-gray-600/10 dark:border-gray-700 dark:bg-gray-800 dark:shadow-none'>
-            <div className='flex gap-4'>
-              <img className='h-12 w-12 rounded-full' src={kilianPhoto} alt='user avatar' width='200' height='200' loading='lazy' />
-              <div>
-                <h6 className='text-lg font-medium text-gray-700 dark:text-white'>Killian Fleury</h6>
-                <p className='text-sm text-gray-500 dark:text-gray-300'>Dev</p>
-              </div>
-            </div>
-            <p className='mt-8'>Frontend developer.</p>
-          </div>
+          {
+            teamArr.map((el) => {
+              return (
+                <div className='aspect-auto rounded-3xl border border-gray-400 bg-white p-8 shadow-2xl shadow-gray-600/10 dark:border-gray-700 dark:bg-gray-800 dark:shadow-none' key={el.name}>
+                  <div className='flex gap-4'>
+                    <img className='h-12 w-12 rounded-full' src={el.imgSrc} alt={el.name} width='200' height='200' loading='lazy' />
+                    <div>
+                      <h6 className='text-lg font-medium text-gray-700 dark:text-white'>{el.name}</h6>
+                      <p className='text-sm text-gray-500 dark:text-gray-300'>{el.role}</p>
+                    </div>
+                  </div>
+                  <p className='mt-8'>{el.desc}</p>
+                </div>
+              )
+            })
+          }
         </div>
       </div>
     </div>
