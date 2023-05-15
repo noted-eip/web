@@ -26,7 +26,7 @@ const TeamLanding: React.FC = () => {
                 <p className='text-sm text-gray-500 dark:text-gray-300'>Respo Deadlines and docs</p>
               </div>
             </div>
-            <p className='mt-8'>Developer backend and devops.</p>
+            <p className='mt-8'>Backend and devops developer.</p>
           </div>
           <div className='aspect-auto rounded-3xl border border-gray-400 bg-white p-8 shadow-2xl shadow-gray-600/10 dark:border-gray-700 dark:bg-gray-800 dark:shadow-none'>
             <div className='flex gap-4'>
@@ -36,7 +36,7 @@ const TeamLanding: React.FC = () => {
                 <p className='text-sm text-gray-500 dark:text-gray-300'>Respo Back</p>
               </div>
             </div>
-            <p className='mt-8'>Developer backend and devops.</p>
+            <p className='mt-8'>Backend and devops developer.</p>
           </div>
           <div className='aspect-auto rounded-3xl border border-gray-400 bg-white p-8 shadow-2xl shadow-gray-600/10 dark:border-gray-700 dark:bg-gray-800 dark:shadow-none'>
             <div className='flex gap-4'>
@@ -46,7 +46,7 @@ const TeamLanding: React.FC = () => {
                 <p className='text-sm text-gray-500 dark:text-gray-300'>Respo Front</p>
               </div>
             </div>
-            <p className='mt-8'>Developer mobile.</p>
+            <p className='mt-8'>Mobile developer.</p>
           </div>
           <div className='aspect-auto rounded-3xl border border-gray-400 bg-white p-8 shadow-2xl shadow-gray-600/10 dark:border-gray-700 dark:bg-gray-800 dark:shadow-none'>
             <div className='flex gap-4'>
@@ -56,7 +56,7 @@ const TeamLanding: React.FC = () => {
                 <p className='text-sm text-gray-500 dark:text-gray-300'>Respo Presentation</p>
               </div>
             </div>
-            <p className='mt-8'>Developer backend and devops.</p>
+            <p className='mt-8'>Backend and devops developer.</p>
           </div>
           <div className='aspect-auto rounded-3xl border border-gray-400 bg-white p-8 shadow-2xl shadow-gray-600/10 dark:border-gray-700 dark:bg-gray-800 dark:shadow-none'>
             <div className='flex gap-4'>
@@ -66,7 +66,7 @@ const TeamLanding: React.FC = () => {
                 <p className='text-sm text-gray-500 dark:text-gray-300'>Dev</p>
               </div>
             </div>
-            <p className='mt-8'>Developer fronted, backend and devops.</p>
+            <p className='mt-8'>Fronted, backend and devops developer.</p>
           </div>
           <div className='aspect-auto rounded-3xl border border-gray-400 bg-white p-8 shadow-2xl shadow-gray-600/10 dark:border-gray-700 dark:bg-gray-800 dark:shadow-none'>
             <div className='flex gap-4'>
@@ -76,7 +76,7 @@ const TeamLanding: React.FC = () => {
                 <p className='text-sm text-gray-500 dark:text-gray-300'>Dev</p>
               </div>
             </div>
-            <p className='mt-8'>Developer backend and devops.</p>
+            <p className='mt-8'>Backend and devops developer.</p>
           </div>
           <div className='aspect-auto rounded-3xl border border-gray-400 bg-white p-8 shadow-2xl shadow-gray-600/10 dark:border-gray-700 dark:bg-gray-800 dark:shadow-none'>
             <div className='flex gap-4'>
@@ -86,7 +86,7 @@ const TeamLanding: React.FC = () => {
                 <p className='text-sm text-gray-500 dark:text-gray-300'>Dev</p>
               </div>
             </div>
-            <p className='mt-8'>Developer frontend.</p>
+            <p className='mt-8'>Frontend developer.</p>
           </div>
         </div>
       </div>
