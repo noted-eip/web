@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { AuthContext, AuthContextManager } from './contexts/auth'
 import { DevelopmentContext, TAccountsMap } from './contexts/dev'
 import { NoAuthContext, NoAuthContextManager } from './contexts/noauth'
+import LocaleManager from './i18n/LocaleManager'
 import { apiQueryClient } from './lib/api'
 import { LS_DEVELOPMENT_DATA_KEY } from './lib/constants'
 import { GOOGLE_CLIENT_ID, TOGGLE_DEV_FEATURES } from './lib/env'
@@ -27,25 +28,27 @@ const App: React.FC = () => {
   }, [])
 
   return (
-    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-      <BrowserRouter>
-        <DevelopmentContext.Provider
-          value={TOGGLE_DEV_FEATURES ? { accounts, setAccounts } : undefined}
-        >
-          <QueryClientProvider client={apiQueryClient}>
-            {!hasLoaded ? null : token !== null ? (
-              <AuthContext.Provider value={authContext}>
-                <AuthenticatedRouter />
-              </AuthContext.Provider>
-            ) : (
-              <NoAuthContext.Provider value={noAuthContext}>
-                <UnauthenticatedRouter />
-              </NoAuthContext.Provider>
-            )}
-          </QueryClientProvider>
-        </DevelopmentContext.Provider>
-      </BrowserRouter>
-    </GoogleOAuthProvider>
+    <LocaleManager>
+      <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+        <BrowserRouter>
+          <DevelopmentContext.Provider
+            value={TOGGLE_DEV_FEATURES ? { accounts, setAccounts } : undefined}
+          >
+            <QueryClientProvider client={apiQueryClient}>
+              {!hasLoaded ? null : token !== null ? (
+                <AuthContext.Provider value={authContext}>
+                  <AuthenticatedRouter />
+                </AuthContext.Provider>
+              ) : (
+                <NoAuthContext.Provider value={noAuthContext}>
+                  <UnauthenticatedRouter />
+                </NoAuthContext.Provider>
+              )}
+            </QueryClientProvider>
+          </DevelopmentContext.Provider>
+        </BrowserRouter>
+      </GoogleOAuthProvider>
+    </LocaleManager>
   )
 }
 

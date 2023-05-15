@@ -32,4 +32,4 @@ function loadTranslation(locale: string): Promise<LocaleMessages> {
   })
 }
 
-export {getBrowserLocales, loadTranslation, isASupportedLocale}
+export {getBrowserLocales, isASupportedLocale,loadTranslation}

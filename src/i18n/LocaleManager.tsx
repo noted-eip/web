@@ -1,19 +1,21 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import {IntlProvider} from 'react-intl'
-import {LocaleMessages} from './types'
+
+import { TOGGLE_DEV_FEATURES } from '../lib/env'
+import frTranslation from './lang/fr'
 import {
   getBrowserLocales,
   isASupportedLocale,
   loadTranslation,
 } from './localeUtils'
-import frTranslation from './lang/fr'
+import {LocaleMessages} from './types'
 
 interface ILocaleInformation {
   locale: string;
   messages: LocaleMessages;
 }
 
-const LocaleManager: React.FC<React.ReactNode> = (/*{children}*/) => {
+const LocaleManager: React.FC<any> = ({children}) => {
   const browserLocales = useMemo(getBrowserLocales, [getBrowserLocales])
   const [localeInfo, setLocaleInfo] = useState<ILocaleInformation>({
     locale: 'fr',
@@ -59,47 +61,27 @@ const LocaleManager: React.FC<React.ReactNode> = (/*{children}*/) => {
       <IntlProvider
         messages={localeInfo.messages}
         locale={localeInfo.locale}
-        defaultLocale="en"
+        defaultLocale='en'
       >
-        {/*{children}*/}
-        <button
-          onClick={(): void => {
-            changeLocale('en')
-          }}
-        >
+        {children}
+        {TOGGLE_DEV_FEATURES && <div className='flex h-screen w-screen items-center justify-center'>
+          <button
+            className='my-2 w-full rounded-lg bg-blue-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:bg-gray-600 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
+            onClick={(): void => {
+              changeLocale('en')
+            }}
+          >
           Switch to english
-        </button>
-        <button
-          onClick={(): void => {
-            changeLocale('fr')
-          }}
-        >
+          </button>
+          <button
+            className='my-2 w-full rounded-lg bg-blue-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:bg-gray-600 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
+            onClick={(): void => {
+              changeLocale('fr')
+            }}
+          >
           Switch to french
-        </button>
-        {/* // DEBUG TODO: remove the buttons for testing different locales
-				<Container fluid>
-					<Row className="justify-content-center">
-						<Col xs="auto">
-							<br />
-							<br />
-							<Button
-								onClick={(): void => {
-									changeLocale('en');
-								}}
-							>
-								Switch to english
-							</Button>
-							<Button
-								onClick={(): void => {
-									changeLocale('fr');
-								}}
-							>
-								Switch to french
-							</Button>
-							<br />
-						</Col>
-					</Row>
-				</Container> */}
+          </button>
+        </div>}
       </IntlProvider>
     </>
   )

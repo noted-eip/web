@@ -1,5 +1,5 @@
-import { TranslationKeys } from './lang/keys';
-import { AvailableLang } from './lang/keys';
+import { TranslationKeys } from './lang/keys'
+import { AvailableLang } from './lang/keys'
 
 export type LocaleTranslationKeys = keyof typeof TranslationKeys;
 

@@ -1,15 +1,16 @@
 import React from 'react'
 import {
   FormattedMessage as IntlFormattedMessage,
-  useIntl as useReactIntl,
   IntlFormatters,
+  useIntl as useReactIntl,
 } from 'react-intl'
-import {LocaleTranslationKeys} from './types'
 import {IntlShape} from 'react-intl/src/types'
+
+import {LocaleTranslationKeys} from './types'
 
 export interface FormattedMessageProps
   extends Omit<React.ComponentPropsWithoutRef<typeof IntlFormattedMessage>,
-    'id'> {
+  'id'> {
   id: LocaleTranslationKeys;
 }
 
@@ -21,11 +22,11 @@ type FormatMessageArgs = Parameters<IntlFormatters['formatMessage']>;
 
 export const useOurIntl = (): Omit<IntlShape, 'formatMessage'> & {
   formatMessage: (
-    descriptor: Omit<FormatMessageArgs[0], 'id'> & {
-      id: LocaleTranslationKeys;
-    },
-    values?: FormatMessageArgs[1],
-    options?: FormatMessageArgs[2],
+  descriptor: Omit<FormatMessageArgs[0], 'id'> & {
+    id: LocaleTranslationKeys;
+  },
+  values?: FormatMessageArgs[1],
+  options?: FormatMessageArgs[2],
   ) => string;
 } => {
   const {formatMessage, ...rest} = useReactIntl()
