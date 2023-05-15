@@ -36,7 +36,7 @@ const OldInput: React.FC<InputHTMLAttributes<HTMLInputElement> & OldInputProps> 
   const textStyles = 'dark:text-white'
 
   const container = (
-    <div className='w-[300px]'>
+    <div className='w-full'>
       <div
         className={`${baseContainerStyles} ${shadowStyles} ${backgroundStyles} ${borderStyles} ${
           props.disabled ? 'opacity-50' : ''
@@ -83,7 +83,7 @@ const OldInput: React.FC<InputHTMLAttributes<HTMLInputElement> & OldInputProps> 
   if (label) {
     return (
       <label className='flex flex-col text-sm'>
-        <span className='mb-1 ml-1 text-gray-600 dark:text-gray-400'>{label}</span>
+        <span className='mb-2 block font-medium text-gray-900 dark:text-white'>{label}</span>
         {container}
       </label>
     )

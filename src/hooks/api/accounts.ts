@@ -1,10 +1,32 @@
+import React from 'react'
 import { useMutation, useQuery } from 'react-query'
 
 import { useAuthContext } from '../../contexts/auth'
 import { apiQueryClient, openapiClient } from '../../lib/api'
-import { V1Account, V1AuthenticateRequest, V1AuthenticateResponse, V1CreateAccountRequest, V1CreateAccountResponse, V1GetAccountResponse, V1UpdateAccountResponse } from '../../protorepo/openapi/typescript-axios'
+import { V1Account, V1AuthenticateGoogleRequest, V1AuthenticateGoogleResponse, V1AuthenticateRequest, V1AuthenticateResponse, V1CreateAccountRequest, V1CreateAccountResponse, V1GetAccountResponse, V1UpdateAccountResponse } from '../../protorepo/openapi/typescript-axios'
 import { newAccountCacheKey } from './cache'
 import { axiosRequestOptionsWithAuthorization,MutationHookOptions, QueryHookOptions } from './helpers'
+
+export type AccountResetPassword = {
+  account_id: string | null
+  reset_token: string | null
+  auth_token: string | null
+}
+
+type TResetPasswordContext = {
+  account: AccountResetPassword | null
+  changeResetPassword: React.Dispatch<AccountResetPassword | null>
+}
+
+export const ResetPasswordContext = React.createContext<TResetPasswordContext | undefined>(undefined)
+
+export const useResetPasswordContext = () => {
+  const context = React.useContext(ResetPasswordContext)
+  if (context === undefined) {
+    throw new Error('ResetPassword used outside of provider')
+  }
+  return context
+}
 
 export type GetAccountRequest = {accountId: string};
 export const useGetAccount = (req: GetAccountRequest, options?: QueryHookOptions<GetAccountRequest, V1GetAccountResponse>) => {
@@ -112,5 +134,12 @@ export type AuthenticateRequest =  {body: V1AuthenticateRequest};
 export const useAuthenticate = (options?: MutationHookOptions<AuthenticateRequest, V1AuthenticateResponse>) => {
   return useMutation(async (req: AuthenticateRequest) => {
     return (await openapiClient.accountsAPIAuthenticate(req.body, {})).data
+  }, options)
+}
+
+export type AuthenticateRequestGoogle =  {body: V1AuthenticateGoogleRequest};
+export const useAuthenticateGoogle = (options?: MutationHookOptions<AuthenticateRequestGoogle, V1AuthenticateGoogleResponse>) => {
+  return useMutation(async (req: AuthenticateRequestGoogle) => {
+    return (await openapiClient.accountsAPIAuthenticateGoogle(req.body, {})).data
   }, options)
 }
