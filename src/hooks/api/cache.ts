@@ -56,3 +56,11 @@ export const newNotesCacheKey = (options?: { authorAccountId?: string, groupId?:
 export const newActivitiesCacheKey = (groupId: string) => {
   return ['groups/activities', groupId]
 }
+
+export const newWidgetsCacheKey = (groupId: string, noteId: string) => {
+  return ['groups/note/widgets', groupId, noteId]
+}
+
+export const newWikipediaImageCacheKey = (imageUrl: string) => {
+  return ['groups/note/widgets/wikipedia/img', imageUrl]
+}

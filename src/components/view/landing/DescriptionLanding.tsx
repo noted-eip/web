@@ -1,0 +1,72 @@
+import React from 'react'
+
+import noteLogo from '../../../assets/icon/note.svg'
+import shareLogo from '../../../assets/icon/share.svg'
+import notedHome from '../../../assets/noted_front_page.jpg'
+
+type TDesc = {
+  title: string
+  desc: string
+  imgSrc: string
+  color: string
+}
+
+const DescriptionLanding: React.FC = () => {
+  const descArr: TDesc[] = [
+    {
+      title: 'Take notes',  desc: 'You can create and edit notes with a system of recommendations.', imgSrc: noteLogo, color: 'indigo'
+    },
+    {
+      title: 'Share your notes',  desc: 'You have all the notes of your group.', imgSrc: shareLogo, color: 'teal'
+    }
+  ]
+
+  return (
+    <div className='pt-20' id='description'>
+      <div className='mx-auto max-w-7xl px-6 md:px-12 xl:px-6'>
+        <div className='flex-row-reverse justify-between space-y-6 text-gray-600 md:flex md:gap-6 md:space-y-0 lg:items-center lg:gap-12'>
+          <div className='border border-black md:basis-5/12 lg:w-1/2'>
+            <img
+              src={notedHome}
+              alt='image'
+              loading='lazy'
+              width=''
+              height=''
+              className='w-full'
+            />
+          </div>
+          <div className='md:basis-7/12 lg:w-1/2'>
+            <h2 className='text-3xl font-bold text-gray-900 dark:text-white md:text-4xl'>
+            Noted
+            </h2>
+            <p className='my-8 text-gray-600 dark:text-gray-300'>
+            Noted is an ergonomic workspace destined to university students.
+            It is a web application where they can share their notes and organize them. <br /> <br />
+            Noted’s strength is its unique editing mode which includes recommendations based on notes published by students.
+            It will allow students to improve their notes by facilitating collaboration. 
+            </p>
+            <div className='space-y-4 divide-y divide-gray-100 dark:divide-gray-800'>
+              {descArr.map((el) => {
+                const colorStyleImage = `bg-${el.color}-100 dark:bg-${el.color}-900/20`
+                const colorStyleText = `dark:text-${el.color}-300`
+                return (
+                  <div className='mt-8 flex gap-4 md:items-center' key={el.title}>
+                    <div className={`flex h-12 w-12 gap-4 rounded-full ${colorStyleImage}`}>
+                      <img src={el.imgSrc} alt='note logo' height='16.5px' width='20.5px' className='m-auto h-6 w-6 text-indigo-500 dark:text-indigo-400' />
+                    </div>
+                    <div className='w-5/6'>
+                      <h4 className={`text-lg font-semibold text-gray-700 ${colorStyleText}`}>{el.title}</h4>
+                      <p className='text-gray-500 dark:text-gray-400'>{el.desc}</p>
+                    </div> 
+                  </div> 
+                )
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default DescriptionLanding
