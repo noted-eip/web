@@ -26,20 +26,12 @@ const WidgetListItem: React.FC<{ widget: V1Widget }> = (props) => {
   return (
     <div className='cursor-pointer rounded-md border border-blue-100 bg-gray-50 bg-gradient-to-br p-4 hover:bg-gray-100 hover:shadow-inner'>
       <a href={urlRedirect} target='_blank' rel='noopener noreferrer'>
-        <div className='flex flex-col'>
-          <React.Fragment>
-            <p className='font-bold'>{ keyword }</p>
-          </React.Fragment>
-          <React.Fragment>
-            <p className='text-gray-700'>{ type }</p>
-          </React.Fragment>
-          <React.Fragment>
-            <p className='font-normal'>{ summary != '' && summary != undefined ? summary : ''}</p>
-          </React.Fragment>
-          <React.Fragment>
-            {imageQ.isSuccess ? (<img src={imageQ.data}/>) : (<p/>)}
-          </React.Fragment>
-        </div>
+        { props.widget?.websiteWidget != undefined ? (<div className='flex flex-col'>
+          <p className='font-bold'>{keyword}</p>
+          <p className='text-gray-700'>{ type }</p>
+          <p className='font-normal'>{ summary != '' && summary != undefined ? summary : ''}</p>
+          {imageQ.isSuccess ? (<img src={imageQ.data}/>) : (null)}
+        </div>) : (null) }
       </a>
     </div>
   )

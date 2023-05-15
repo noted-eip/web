@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export function getWikipediaImageNameFromUrl(imageUrl: string) {
+export const getWikipediaImageNameFromUrl = (imageUrl: string) => {
   let imgName = ''
   if (imageUrl != undefined) {
     const subStringFirst = imageUrl.substring(
@@ -13,7 +13,7 @@ export function getWikipediaImageNameFromUrl(imageUrl: string) {
   return imgName
 }
   
-export async function getWikipediaImage(imgName: string) {
+export const getWikipediaImage = async(imgName: string) => {
   let imgUrl ='' 
   console.log('start get')
   try {
