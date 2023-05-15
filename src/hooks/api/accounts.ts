@@ -2,7 +2,7 @@ import { useMutation, useQuery } from 'react-query'
 
 import { useAuthContext } from '../../contexts/auth'
 import { apiQueryClient, openapiClient } from '../../lib/api'
-import { V1Account, V1AuthenticateRequest, V1AuthenticateResponse, V1CreateAccountRequest, V1CreateAccountResponse, V1GetAccountResponse, V1UpdateAccountResponse } from '../../protorepo/openapi/typescript-axios'
+import { V1Account, V1AuthenticateGoogleRequest, V1AuthenticateGoogleResponse, V1AuthenticateRequest, V1AuthenticateResponse, V1CreateAccountRequest, V1CreateAccountResponse, V1GetAccountResponse, V1UpdateAccountResponse } from '../../protorepo/openapi/typescript-axios'
 import { newAccountCacheKey } from './cache'
 import { axiosRequestOptionsWithAuthorization,MutationHookOptions, QueryHookOptions } from './helpers'
 
@@ -112,5 +112,12 @@ export type AuthenticateRequest =  {body: V1AuthenticateRequest};
 export const useAuthenticate = (options?: MutationHookOptions<AuthenticateRequest, V1AuthenticateResponse>) => {
   return useMutation(async (req: AuthenticateRequest) => {
     return (await openapiClient.accountsAPIAuthenticate(req.body, {})).data
+  }, options)
+}
+
+export type AuthenticateRequestGoogle =  {body: V1AuthenticateGoogleRequest};
+export const useAuthenticateGoogle = (options?: MutationHookOptions<AuthenticateRequestGoogle, V1AuthenticateGoogleResponse>) => {
+  return useMutation(async (req: AuthenticateRequestGoogle) => {
+    return (await openapiClient.accountsAPIAuthenticateGoogle(req.body, {})).data
   }, options)
 }
