@@ -54,5 +54,5 @@ export const newNotesCacheKey = (options?: { authorAccountId?: string, groupId?:
 }
 
 export const newActivitiesCacheKey = (groupId: string) => {
-  return ['groups', groupId]
+  return ['groups/activities', groupId]
 }

@@ -2,11 +2,12 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import PanelSkeleton from '../components/view/PanelSkeleton'
+import { useGroupContext } from '../contexts/group'
 import { useGetAccount } from '../hooks/api/accounts'
-import { useListActivities } from '../hooks/api/activities'
-import { useGetCurrentGroup, useGetGroup } from '../hooks/api/groups'
+import { useListActivitiesInCurrentGroup } from '../hooks/api/activities'
+import { useGetGroup } from '../hooks/api/groups'
 import { useGetNoteInCurrentGroup } from '../hooks/api/notes'
-import { V1Group, V1GroupActivity } from '../protorepo/openapi/typescript-axios'
+import { V1GroupActivity } from '../protorepo/openapi/typescript-axios'
 
 function getNoteIdInEvent(event: string) {
   let noteId = ''
@@ -130,7 +131,8 @@ function getRoute(activityType: string, currentGroupId: string, redirectId: stri
   return url
 }
 
-const ActivityListItem: React.FC<{ activity: V1GroupActivity, group: V1Group }> = (props) => {
+const ActivityListItem: React.FC<{ activity: V1GroupActivity }> = (props) => {
+  const groupContext = useGroupContext()
   const navigate = useNavigate()
   let event
   let redirectId
@@ -158,7 +160,7 @@ const ActivityListItem: React.FC<{ activity: V1GroupActivity, group: V1Group }> 
   return (
     <div 
       className='cursor-pointer rounded-md border border-gray-100 bg-gray-50 bg-gradient-to-br p-4 hover:bg-gray-100 hover:shadow-inner'
-      onClick={() => navigate(getRoute(props.activity.type, props.group.id, redirectId))}
+      onClick={() => navigate(getRoute(props.activity.type, groupContext.groupId as string, redirectId))}
     >
       <div className='flex items-center'>
         <div className='flex flex-col'>
@@ -179,17 +181,7 @@ const ActivityListItem: React.FC<{ activity: V1GroupActivity, group: V1Group }> 
 }
 
 const ActivityListCurrentGroup: React.FC = () => {
-  const groupResponse = useGetCurrentGroup()
-  const group = groupResponse.data?.group
-
-  if (group == undefined) {
-    return (
-      <div className='my-4 text-center text-sm text-gray-400'>
-        <p>{'Your current group haven\'t been found'}</p>
-      </div>)
-  }
-
-  const listActivitiesQ = useListActivities({ groupId: group.id as string, limit: 20 })
+  const listActivitiesQ = useListActivitiesInCurrentGroup({ limit: 100 })
 
   return (
     <div className='overflow-y-scroll'>
@@ -197,11 +189,11 @@ const ActivityListCurrentGroup: React.FC = () => {
         {listActivitiesQ.isSuccess ? (
           !listActivitiesQ.data?.activities?.length ? (
             <div className='my-4 text-center text-sm text-gray-400'>
-            You have no activities in group {group.name}
+              No recent activity
             </div>
           ) : (
             listActivitiesQ.data?.activities?.map((activity, idx) => (
-              <ActivityListItem key={`activity-list-${activity.id}-${idx}`} activity={activity} group={group} />
+              <ActivityListItem key={`activity-list-${activity.id}-${idx}`} activity={activity} />
             ))
           )
         ) : (
