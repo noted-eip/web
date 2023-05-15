@@ -183,7 +183,7 @@ const NotificationListCurrentGroup: React.FC = () => {
   const group = groupResponse.data?.group
 
   if (group == undefined) {
-    return (<div><p>Your current group haven&apost been found</p></div>)
+    return (<div><p>Your current group have not been found</p></div>)
   }
 
   const listActivitiesQ = useListActivities({ groupId: group.id as string, limit: 20 })
@@ -194,7 +194,7 @@ const NotificationListCurrentGroup: React.FC = () => {
         {listActivitiesQ.isSuccess ? (
           !listActivitiesQ.data?.activities?.length ? (
             <div className='my-4 text-center text-sm text-gray-400'>
-            You have no activities in group {group.name} of id {group.id}
+            You have no activities this group
             </div>
           ) : (
             listActivitiesQ.data?.activities?.map((activity, idx) => (

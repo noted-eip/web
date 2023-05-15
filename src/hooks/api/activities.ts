@@ -10,6 +10,7 @@ export type ListActivitiesRequest = {groupId: string, limit?: number, offset?: n
 export const useListActivities = (req: ListActivitiesRequest, options?: QueryHookOptions<ListActivitiesRequest, V1ListActivitiesResponse> ) => {
   const authContext = useAuthContext()
   //const queryKey = newActivitiesCacheKey( req.groupId )
+  
   return useQuery({
     //queryKey: queryKey,
     queryFn: async () => {
