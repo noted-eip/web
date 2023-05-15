@@ -14,10 +14,10 @@ const TimelineLanding: React.FC = () => {
       title: 'Managment and processes',  desc: 'During this sprint we choose which technologies and libraries will be used and which platform will be supported. Then we begin to create the main feature of Noted'
     },
     {
-      title: 'Fast Forward',  desc: 'During this sprint we improved and finalies .'
+      title: 'Fast Forward',  desc: 'During this sprint we improved and finalize the features from the last sprint and begin the next core features.'
     },
     {
-      title: 'Beta & Growth Hacking',  desc: 'During this sprint.'
+      title: 'Beta & Growth Hacking',  desc: 'During this sprint we implemented the most important features of our application for the notes edition and recommendation. Noted have his first beta usable !'
     }
   ]
   
