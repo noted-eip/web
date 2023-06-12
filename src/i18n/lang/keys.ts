@@ -22,31 +22,109 @@ export enum AvailableLang {
  */
 
 export enum TranslationKeys {
+  /*    GENERIC   */
+  'GENERIC.name',
+  'GENERIC.home',
+  'GENERIC.profile',
+  'GENERIC.role',
+  'GENERIC.actions',
+
   /*		AUTHENTICATION		*/
+  /*  Auth  */
+  'AUTH.login',
+  'AUTH.register',
+  'AUTH.email',
+  'AUTH.pwd',
 
-  /* Title */
-  'AUTH.connection.Login',
+  /* Signing */
+  'SIGNIN.title',
+  'SIGNIN.signinGoogle',
+  'SIGNIN.resetPwd',
 
-  /* Button */
-  'AUTH.connectionWithGoogle.Login',
-  'AUTH.connectionWithFacebook.Login',
-  'AUTH.registerWithGoogle.Register',
-  'AUTH.registerWithFacebook.Register',
-  'AUTH.getConnect.Generic',
-  'AUTH.createAccount.Register',
+  /*  Signup  */
+  'SIGNUP.title',
+  'SIGNUP.signupGoogle',
 
-  /* Label */
-  'AUTH.email.Generic',
-  'AUTH.password.Generic',
-  'AUTH.firstName.Register',
-  'AUTH.lastName.Register',
-  'AUTH.rewritePassword.Register',
+  /*    RESETPASSWORD   */
 
-  /* Link */
-  'AUTH.forgetPassword.Login',
-  'AUTH.alreadyGotAccount.Register',
+  /* ResetPassword Email  */
+  'RESETPWD.Email.title',
+  'RESETPWD.Email.desc1',
+  'RESETPWD.Email.desc2',
+  'RESETPWD.Email.form',
+  'RESETPWD.Email.button',
 
-  /* Modal */
-  'AUTH.sendYouEmail.ModalTitle',
-  'AUTH.clickOnLink.ModalBody',
+  /* ResetPassword Token  */
+  'RESETPWD.Token.title',
+  'RESETPWD.Token.desc',
+  'RESETPWD.Token.form',
+  'RESETPWD.Token.button',
+
+  /*  ResetPassword Password  */
+  'RESETPWD.Pwd.title',
+  'RESETPWD.Pwd.desc',
+  'RESETPWD.Pwd.form',
+
+  /*    LANDING    */
+  /* Description */
+  'DESCRIPTION',
+  'DESCRIPTION.descP1',
+  'DESCRIPTION.descP2',
+  'DESCRIPTION.title1',
+  'DESCRIPTION.title1.desc',
+  'DESCRIPTION.title2',
+  'DESCRIPTION.title2.desc',
+
+  /* Timeline */
+  'TIMELINE',
+  'TIMELINE.desc1',
+  'TIMELINE.desc2',
+  'TIMELINE.desc3',
+  'TIMELINE.desc4',
+
+  /* Team */
+  'TEAM',
+  'TEAM.roleRespDeadDocs',
+  'TEAM.roleRespFront',
+  'TEAM.roleRespBack',
+  'TEAM.roleRespPres',
+  'TEAM.roleDev',
+  'TEAM.descBackDevops',
+  'TEAM.descMobile',
+  'TEAM.descFront',
+
+  /* Contact */
+  'CONTACT',
+  'CONTACT.title',
+
+  /*    DASHBOARD   */
+  'DASHBOARD.selectGroup',
+
+  /*    GROUP   */
+  'GROUP.Empty.title1',
+  'GROUP.Empty.desc1',
+  'GROUP.Empty.title2',
+  'GROUP.Empty.desc2',
+  'GROUP.createGroup',
+  'GROUP.creatingGroup',
+
+  'GROUP.settings',
+  'GROUP.upgrade',
+  'GROUP.search',
+
+  /*    NOTE    */
+  'NOTE.newNote',
+  'NOTE.untitledNote',
+
+  /*    PROFILE    */
+  'PROFILE.invite.deny',
+  'PROFILE.invite.accept',
+  'PROFILE.invite.desc',
+  'PROFILE.delete.title1',
+  'PROFILE.delete.title2',
+  'PROFILE.delete.desc',
+  'PROFILE.delete.button',
+
+  /*    ACTIVITY    */
+  'ACTIVITY',
 }

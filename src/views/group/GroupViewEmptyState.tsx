@@ -6,8 +6,10 @@ import React from 'react'
 import { useAuthContext } from '../../contexts/auth'
 import { useGroupContext } from '../../contexts/group'
 import { useCreateGroup, useListGroups } from '../../hooks/api/groups'
+import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
 
 const GroupViewEmptyState: React.FC = () => {
+  const { formatMessage } = useOurIntl()
   const groupContext = useGroupContext()
   const authContext = useAuthContext()
   const listGroupsQ = useListGroups({ accountId: authContext.accountId })
@@ -20,8 +22,12 @@ const GroupViewEmptyState: React.FC = () => {
   return (
     <div className='flex h-full w-full flex-col items-center pt-12'>
       <UserPlusIcon className='h-12 w-12 stroke-1 text-gray-400' />
-      <p className='mt-4 font-medium text-gray-700'>No Group</p>
-      <p className='text-sm text-gray-500'>Create or join a group to start writing!</p>
+      <p className='mt-4 font-medium text-gray-700'>
+        <FormatMessage id='GROUP.Empty.title1' />
+      </p>
+      <p className='text-sm text-gray-500'>
+        <FormatMessage id='GROUP.Empty.desc1' />
+      </p>
       <div>
         {listGroupsQ.isSuccess &&
           listGroupsQ.data.groups?.map((el, idx) => (
@@ -45,14 +51,16 @@ const GroupViewEmptyState: React.FC = () => {
         className='mt-4 flex  items-center rounded-full bg-blue-600 p-2 px-4 text-sm text-white hover:bg-blue-700'
       >
         <PlusIcon className='mr-1 h-4 w-4 stroke-2' />
-        {createGroupQ.isLoading ? 'Creating...' : 'Create group'}
+        {createGroupQ.isLoading ? formatMessage({ id: 'GROUP.creatingGroup' }) : formatMessage({ id: 'GROUP.createGroup' })}
       </button>
       {createGroupQ.isError && (
         <p className='mt-2 text-xs text-red-600'>Oops! There was an error</p>
       )}
-      <p className='mt-6 font-medium text-gray-700'>Invites</p>
+      <p className='mt-6 font-medium text-gray-700'>
+        <FormatMessage id='GROUP.Empty.title2' />
+      </p>
       <div className='mt-2 mb-4 text-sm text-gray-500'>
-        Invites to groups will show up here.
+        <FormatMessage id='GROUP.Empty.desc2' />
       </div>
       <div className='grid w-80 gap-2'>
         <div className='flex w-full items-center justify-between rounded border border-gray-300 p-2 opacity-70'>

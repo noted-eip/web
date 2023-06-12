@@ -6,6 +6,7 @@ import React from 'react'
 import { useAuthContext } from '../../contexts/auth'
 import { useGroupContext } from '../../contexts/group'
 import { useCreateGroup, useGetCurrentGroup, useListGroups } from '../../hooks/api/groups'
+import { FormatMessage } from '../../i18n/TextComponent'
 import LoaderIcon from '../icons/LoaderIcon'
 
 const GroupSelectDropdownItem: React.FC<
@@ -51,7 +52,9 @@ const GroupSelectDropdown: React.FC = () => {
                   </React.Fragment>
                     :
                     <React.Fragment>
-                      <div className='ml-3 mr-1 text-gray-700'>Select a Group</div>
+                      <div className='ml-3 mr-1 text-gray-700'>
+                        <FormatMessage id='DASHBOARD.selectGroup' />
+                      </div>
                     </React.Fragment>
                 }
               </React.Fragment>
@@ -104,7 +107,7 @@ const GroupSelectDropdown: React.FC = () => {
               ) : (
                 <React.Fragment>
                   <PlusIcon className='mr-3 h-6 w-6 text-gray-400' />
-                  Create a group
+                  <FormatMessage id='GROUP.createGroup' />
                 </React.Fragment>
               )}
             </div>

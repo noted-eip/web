@@ -63,8 +63,7 @@ const LocaleManager: React.FC<any> = ({children}) => {
         locale={localeInfo.locale}
         defaultLocale='en'
       >
-        {children}
-        {TOGGLE_DEV_FEATURES && <div className='flex h-screen w-screen items-center justify-center'>
+        {TOGGLE_DEV_FEATURES && <div className='flex items-center justify-center'>
           <button
             className='my-2 w-full rounded-lg bg-blue-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:bg-gray-600 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
             onClick={(): void => {
@@ -82,6 +81,7 @@ const LocaleManager: React.FC<any> = ({children}) => {
           Switch to french
           </button>
         </div>}
+        {children}
       </IntlProvider>
     </>
   )
