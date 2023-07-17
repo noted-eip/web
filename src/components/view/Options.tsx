@@ -1,23 +1,23 @@
 import { Menu } from '@headlessui/react'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import axios from 'axios'
-import jsPDF from 'jspdf'
 import React from 'react'
-import { v4 as uuidv4 } from 'uuid'
 
 import { TAuthContext, useAuthContext } from '../../contexts/auth'
 import { API_BASE } from '../../lib/env'
 
 interface Props {
-  noteId: string ;
-  groupId: string ;
+  noteId: string 
+  groupId: string 
 }
 
 interface ItemProps {
-  active: boolean;
-  label: string;
-  format: string;
+  active: boolean
+  label: string
+  format: string
 }
+
+const extensions = ['md', 'pdf']
 
 const NotesOptions = ( { noteId, groupId } : Props ) => {
   const [selectedOption, setSelectedOption] = React.useState('')
@@ -30,61 +30,41 @@ const NotesOptions = ( { noteId, groupId } : Props ) => {
       throw new Error('ID is not defined')
     }
   
-    if (!selectedOption) {
-      throw new Error('No format selected')
+    if (!selectedOption || !extensions.some(ext => selectedOption == ext)) {
+      throw new Error('Invalid export format')
     }
   }
   const handleExport = async () => {  
     try {
       const ids = [noteId, groupId]
       const token = await auth.token()
+      
       handleErrors(ids, selectedOption)
-      console.log('groupId : ', groupId)
 
-      const response = await axios.get(url + '?format=md', {
+      const response = await axios.get(url, {
         headers: {
           'Authorization': `Bearer ${token}`
         },
         responseType: 'blob',
-      })
-      const extension = selectedOption === 'md' ? 'md' : 'pdf'
-      const filename = `${uuidv4()}.${extension}`
-      const mime = selectedOption === 'md' ? 'text/plain' : 'application/pdf'
-      if (mime === 'application/pdf') {
-        const doc = new jsPDF()
-        const text = await response.data.text()
-        const json = JSON.parse(text)
-        const fileContent = json.File
-
-        const fileName = 'file1234.pdf'
-        const nbrOfPages = Math.ceil(fileContent.length / 1000)
-        doc.text(fileContent.substring(0, 1000), 10, 10)
-        for (let i = 1; i < nbrOfPages; i++) {
-          doc.addPage()
-          doc.text(
-            fileContent.substring(i * 1000, (i + 1) * 1000),
-            10,
-            10,
-            {
-              align:  'left'
-            }
-          )
+        params : {
+          format: selectedOption
         }
-        doc.save(fileName)
-     
-      } else  if (mime === 'text/plain') {
-        const text = await response.data.text()
-        const json = JSON.parse(text)
-        const fileContent = json.File
-          
-        const blob = new Blob([fileContent], { type: mime })
-        const url = window.URL.createObjectURL(blob)
-        const link = document.createElement('a')
-        link.href = url
-        link.download = filename
-        link.click()
-      }
-      // downloadFile(response.data, filename, mime)
+      })
+
+      // 😳 https://stackoverflow.com/questions/50694881/how-to-download-file-in-react-js
+      // create file link in browser's memory
+      const href = URL.createObjectURL(response.data)
+
+      // create "a" HTML element with href to file & click
+      const link = document.createElement('a')
+      link.href = href
+      link.setAttribute('download', `note.${selectedOption}`) //or any other extension
+      document.body.appendChild(link)
+      link.click()
+
+      // clean up "a" element & remove ObjectURL
+      document.body.removeChild(link)
+      URL.revokeObjectURL(href)
 
       setHasExported(true)
       setSelectedOption('')
@@ -93,40 +73,6 @@ const NotesOptions = ( { noteId, groupId } : Props ) => {
     }
   }
 
-
-
-  // const downloadFile = async (data, filename, mime) => {
-  //   if (mime === 'text/plain') {
-  //     const text = await data.text()
-  //     const json = JSON.parse(text)
-  //     const fileContent = json.File
-      
-  //     const blob = new Blob([fileContent], { type: mime })
-  //     const url = window.URL.createObjectURL(blob)
-  //     const link = document.createElement('a')
-  //     link.href = url
-  //     link.download = filename
-  //     link.click()
-
-  //   } else if (mime === 'application/pdf') {
-      
-  //     const text = await data.text()
-  //     const json = JSON.parse(text)
-  //     const fileContent = json.File
-
-  //     console.log('fileContent: ', fileContent)
-  //     const file = new Blob([fileContent], { type: 'application/pdf' })
-  //     const a = document.createElement('a')
-  //     a.href = URL.createObjectURL(file)
-  //     a.download = 'test.pdf'
-  //     a.click()
-      
-
-
-  //   } else {
-  //     console.error('Unsupported file type')
-  //   }
-  // }
   const handleOptionSelect = (option: string) => {
     setSelectedOption(option)
   }
