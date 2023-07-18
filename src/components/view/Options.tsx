@@ -21,7 +21,6 @@ const extensions = ['md', 'pdf']
 
 const NotesOptions = ( { noteId, groupId } : Props ) => {
   const [selectedOption, setSelectedOption] = React.useState('')
-  const [hasExported, setHasExported] = React.useState(false)
   const url = `${API_BASE}/groups/${encodeURIComponent(groupId)}/notes/${encodeURIComponent(noteId)}/export`
   const auth : TAuthContext = useAuthContext()
 
@@ -66,8 +65,8 @@ const NotesOptions = ( { noteId, groupId } : Props ) => {
       document.body.removeChild(link)
       URL.revokeObjectURL(href)
 
-      setHasExported(true)
       setSelectedOption('')
+      
     } catch (error) {
       console.error(error)
     }
@@ -117,7 +116,6 @@ const NotesOptions = ( { noteId, groupId } : Props ) => {
 
             <Menu.Items
               className='absolute right-0 z-10 mt-2 w-48 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'
-              static={hasExported}
             >
               <div className='p-1'>
                 <Menu.Item>
