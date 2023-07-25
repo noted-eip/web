@@ -4,9 +4,11 @@ import { useNavigate } from 'react-router-dom'
 
 import ContainerMd from '../../components/container/ContainerMd'
 import OldInput from '../../components/form/OldInput'
+import Modals from '../../components/modals/Modal'
 import { addAccountToDevelopmentContext, useDevelopmentContext } from '../../contexts/dev'
 import { useNoAuthContext } from '../../contexts/noauth'
 import { useAuthenticate, useAuthenticateGoogle, useCreateAccount } from '../../hooks/api/accounts'
+import { useModal } from '../../hooks/modals'
 import { decodeToken } from '../../lib/api'
 import { validateEmail, validateName, validatePassword } from '../../lib/validators'
 import { V1AuthenticateGoogleResponse, V1AuthenticateResponse } from '../../protorepo/openapi/typescript-axios'
@@ -14,12 +16,16 @@ import { V1AuthenticateGoogleResponse, V1AuthenticateResponse } from '../../prot
 const SignupView: React.FC = () => {
   const navigate = useNavigate()
   const auth = useNoAuthContext()
+  const {isShown, toggle} = useModal()
   const [name, setName] = React.useState('')
   const [nameValid, setNameValid] = React.useState(false)
   const [password, setPassword] = React.useState('')
   const [passwordValid, setPasswordValid] = React.useState(false)
+  // const [cguAccept] = React.useState(false)
   const [email, setEmail] = React.useState('')
   const [emailValid, setEmailValid] = React.useState(false)
+  const [cguIsChecked, setCguIsChecked] = React.useState(false)
+
   const developmentContext = useDevelopmentContext()
   const authenticateMutation = useAuthenticate({
     onSuccess: (data: V1AuthenticateResponse) => {
@@ -61,7 +67,7 @@ const SignupView: React.FC = () => {
   })
 
   const formIsValid = () => {
-    return nameValid && passwordValid && emailValid
+    return nameValid && passwordValid && emailValid && cguIsChecked
   }
 
   return (
@@ -111,6 +117,12 @@ const SignupView: React.FC = () => {
             }}
             isInvalidBlur={!passwordValid}
           />
+          <div className='flex items-center my-2'>
+            <input type='checkbox' onChange={() => setCguIsChecked((prev) => !prev)}  className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'/>
+            <label className='ml-4 text-sm font-medium text-gray-900 dark:text-gray-300'>I agree with the <button onClick={toggle} type='button' className='text-blue-600 dark:text-blue-500 hover:underline'>terms and conditions</button>.</label>
+          </div>
+          <Modals headerText='Terms of Service' isShown={isShown} hide={toggle}/>
+
           <button
             className='my-2 w-full rounded-lg bg-blue-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:bg-gray-600 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
             disabled={
