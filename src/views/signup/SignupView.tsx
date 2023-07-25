@@ -1,4 +1,5 @@
 import { useGoogleLogin } from '@react-oauth/google'
+import { getAnalytics, logEvent } from 'firebase/analytics'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -12,6 +13,7 @@ import { validateEmail, validateName, validatePassword } from '../../lib/validat
 import { V1AuthenticateGoogleResponse, V1AuthenticateResponse } from '../../protorepo/openapi/typescript-axios'
 
 const SignupView: React.FC = () => {
+  const analytics = getAnalytics()
   const navigate = useNavigate()
   const auth = useNoAuthContext()
   const [name, setName] = React.useState('')
@@ -32,6 +34,9 @@ const SignupView: React.FC = () => {
         )
       }
       auth.signin(data.token)
+      logEvent(analytics, 'sign_up', {
+        method: 'mail'
+      })
       navigate('/')
     },
   })
@@ -51,6 +56,9 @@ const SignupView: React.FC = () => {
         )
       }
       auth.signin(data.token)
+      logEvent(analytics, 'sign_up', {
+        method: 'google'
+      })
       navigate('/')
     },
   })

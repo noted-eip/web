@@ -1,4 +1,5 @@
 import { GoogleOAuthProvider } from '@react-oauth/google'
+import { initializeApp } from 'firebase/app'
 import React from 'react'
 import { QueryClientProvider } from 'react-query'
 import { BrowserRouter } from 'react-router-dom'
@@ -20,7 +21,17 @@ const App: React.FC = () => {
   )
   const noAuthContext = new NoAuthContextManager(setToken)
   const authContext = new AuthContextManager(token, setToken)
+  const firebaseConfig = {
+    apiKey: 'AIzaSyBAYMc_6XiZYQyHsCkwRXVXd7UofXF6YiQ',
+    authDomain: 'noted-354512.firebaseapp.com',
+    projectId: 'noted-354512',
+    storageBucket: 'noted-354512.appspot.com',
+    messagingSenderId: '871625340195',
+    appId: '1:871625340195:web:aa69f8236ad0da4e2fc896',
+    measurementId: 'G-XFC30W00DZ'
+  }
 
+  const app = initializeApp(firebaseConfig)
   React.useEffect(() => {
     noAuthContext.attemptSigninFromLocalStorage()
     setHasLoaded(true)

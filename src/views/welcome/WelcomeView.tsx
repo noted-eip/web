@@ -1,3 +1,4 @@
+import { getAnalytics, logEvent } from 'firebase/analytics'
 import React from 'react'
 
 import ContactLanding from '../../components/view/landing/ContactLanding'
@@ -7,6 +8,9 @@ import TeamLanding from '../../components/view/landing/TeamLanding'
 import TimelineLanding from '../../components/view/landing/TimelineLanding'
 
 const WelcomeView: React.FC = () => {
+  const analytics = getAnalytics()
+  
+  logEvent(analytics, 'bite')
   return (
     <div className='bg-white dark:bg-gray-900'>
       <HeaderLanding />
