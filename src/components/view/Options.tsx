@@ -1,3 +1,8 @@
+// ! This should be reformatted ASAP
+// ! But can't right now
+// ! @Killian your shit now
+
+
 import { Menu } from '@headlessui/react'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import axios from 'axios'
@@ -22,7 +27,6 @@ const extensions = ['md', 'pdf']
 const NotesOptions = ( { noteId, groupId } : Props ) => {
   const [selectedOption, setSelectedOption] = React.useState('')
   const url = `${API_BASE}/groups/${encodeURIComponent(groupId)}/notes/${encodeURIComponent(noteId)}/export`
-  const auth : TAuthContext = useAuthContext()
 
   const handleErrors = (ids: (string | null)[], selectedOption: string | null) => {
     if (ids.some(id => !id)) {
@@ -36,6 +40,7 @@ const NotesOptions = ( { noteId, groupId } : Props ) => {
   const handleExport = async () => {  
     try {
       const ids = [noteId, groupId]
+      const auth : TAuthContext = useAuthContext()
       const token = await auth.token()
       
       handleErrors(ids, selectedOption)
