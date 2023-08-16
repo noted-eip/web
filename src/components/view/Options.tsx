@@ -112,8 +112,7 @@ const NotesOptions = ( { noteId, groupId } : Props ) => {
   return (
     <div className='relative inline-block cursor-pointer text-left'>
       <Menu>
-        {/* eslint-disable-next-line @typescript-eslint/no-unused-vars */}
-        {({ open }) => (
+        {() => (
           <>
             <Menu.Button className='inline-flex w-full justify-center rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75'>
               <MoreHorizIcon className='h-5 w-5' aria-hidden='true' />
