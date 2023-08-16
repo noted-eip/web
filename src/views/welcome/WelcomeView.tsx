@@ -10,7 +10,7 @@ import TimelineLanding from '../../components/view/landing/TimelineLanding'
 const WelcomeView: React.FC = () => {
   const analytics = getAnalytics()
   
-  logEvent(analytics, 'bite')
+  logEvent(analytics, 'testWelcomeView')
   return (
     <div className='bg-white dark:bg-gray-900'>
       <HeaderLanding />
