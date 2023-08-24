@@ -1,5 +1,5 @@
 import { ArrowPathIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { ExclamationTriangleIcon, InboxIcon, PencilIcon } from '@heroicons/react/24/solid'
+import { CodeBracketIcon, ExclamationTriangleIcon, InboxIcon, PencilIcon } from '@heroicons/react/24/solid'
 import React from 'react'
 
 import LoaderIcon from '../../components/icons/LoaderIcon'
@@ -216,13 +216,51 @@ const ProfileViewDangerZoneSection: React.FC = () => {
   )
 }
 
+const ProfileViewBetaSection: React.FC = () => {
+  // const deleteAccountQ = useDeleteMyAccount()
+
+  return (
+    <div className='relative mt-4 w-full rounded-md border border-gray-100 bg-gray-50'>
+      {/* Header */}
+      <span className='absolute right-auto top-0 left-3 -translate-y-1/2 -translate-x-1/2 -rotate-12 rounded-full bg-red-400 p-0.5 px-2 text-center text-xs font-medium leading-none text-white outline outline-red-100 dark:bg-blue-900 dark:text-blue-200'>
+        BETA
+      </span>
+      <div className='flex items-center justify-between border-b border-[#efefef] p-5'>
+        <div className='flex items-center'>
+          <CodeBracketIcon className='mr-2 h-5 w-5 text-gray-600' />
+          <p className='text-base font-medium text-gray-600'>Extra features</p>
+        </div>
+      </div>
+
+      <div className='grid grid-cols-[40%_60%] p-5'>
+        <div className='relative'>
+          <p className='mb-2 text-sm font-medium text-gray-800'>iOS application</p>
+          <p className='text-xs text-gray-600'>You will receive an invite to install the application on your phone. With it you can browse your groups, notes, invitations, members and recommendations but cannot modify your notes (yet 😉).</p>
+        </div>
+        <div className='flex items-center justify-end'>
+          <button
+            className='rounded-md border border-gray-300 bg-white p-2 px-3 text-sm text-gray-600 transition-all duration-100 hover:border-gray-600 hover:bg-gray-600 hover:text-white'
+            // onClick={() => {deleteAccountQ.mutate(undefined)}} // TODO Implement
+          >
+            Access iOS beta
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+
 const ProfileView: React.FC = () => {
   return (
     <ViewSkeleton title='Profile' panels={['group-chat', 'group-activity']}>
       <div className='mx-lg mb-lg w-full xl:mx-xl xl:mb-xl'>
         <ProfileViewAccountSection />
+        <hr className='m-5 rounded border-2'></hr>
         <ProfileViewPendingInvitesSection />
         <ProfileViewDangerZoneSection />
+        <hr className='m-5 rounded border-2'></hr>
+        <ProfileViewBetaSection />
       </div>
     </ViewSkeleton>
   )
