@@ -21,6 +21,8 @@ const App: React.FC = () => {
   const noAuthContext = new NoAuthContextManager(setToken)
   const authContext = new AuthContextManager(token, setToken)
 
+  console.log('TOKEN = ' + token)
+
   React.useEffect(() => {
     noAuthContext.attemptSigninFromLocalStorage()
     setHasLoaded(true)

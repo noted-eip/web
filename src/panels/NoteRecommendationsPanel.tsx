@@ -2,7 +2,7 @@ import React from 'react'
 
 import PanelSkeleton from '../components/view/PanelSkeleton'
 import { useGenerateWidgets, useGetWikipediaImage } from '../hooks/api/recommendations'
-import { useNoteIdFromUrl } from '../hooks/url'
+import { useNoteIdFromUrl} from '../hooks/url'
 import { getWikipediaImageNameFromUrl } from '../lib/widget'
 import { V1Widget } from '../protorepo/openapi/typescript-axios'
 
@@ -38,8 +38,16 @@ const WidgetListItem: React.FC<{ widget: V1Widget }> = (props) => {
 }
 
 const WidgetListCurrentGroup: React.FC = () => {
+  //const [, setTime] = useState(new Date())
+  //useEffect(() => {
+  //  const interval = setInterval(() => {
+  //    setTime(new Date())
+  //  }, 5000)
+  //  //console.log('The current time is: ' + time.toLocaleTimeString())
+  //  return () => clearInterval(interval)
+  //}, [])
   const noteId = useNoteIdFromUrl()
-
+  
   if (noteId == null) {
     return (
       <div className='my-4 text-center text-sm text-gray-400'>
@@ -48,6 +56,7 @@ const WidgetListCurrentGroup: React.FC = () => {
   }
 
   const listWidgetsQ = useGenerateWidgets({ noteId: noteId })
+  console.log(listWidgetsQ?.data?.widgets.length)
 
   return(
     <div className='overflow-y-scroll'>
@@ -55,7 +64,7 @@ const WidgetListCurrentGroup: React.FC = () => {
         {listWidgetsQ.isSuccess ? (
           !listWidgetsQ.data?.widgets.length ? (
             <div className='my-4 text-center text-sm text-gray-400'>
-            You have no widgets for this note
+              You have no widgets for this note
             </div>
           ) : (
             listWidgetsQ.data?.widgets?.map((widget, idx) => (
@@ -64,7 +73,7 @@ const WidgetListCurrentGroup: React.FC = () => {
           )
         ) : (
           <div className='my-4 text-center text-sm text-gray-400'>
-          Loading your widgets...
+            Loading your widgets...
           </div>
         )}
       </div>

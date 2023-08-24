@@ -1,6 +1,13 @@
 import { useLocation } from 'react-router-dom'
 
-export const useNoteIdFromUrl = () => {
+const useNoteIdFromUrl = () => {
   const location = useLocation()
   return location.pathname.split('/')[4]
 }
+
+const useGroupIdFromUrl = () => {
+  const location = useLocation()
+  return location.pathname.split('/')[2]
+}
+
+export {useGroupIdFromUrl, useNoteIdFromUrl}

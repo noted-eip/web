@@ -2,6 +2,7 @@ import React from 'react'
 
 import { usePanelContext } from '../../contexts/panel'
 import { panelMetadata } from '../../lib/panels'
+import RecommendationFilters from '../../views/recommendation/Filters'
 
 const PanelHeader: React.FC = () => {
   const { activePanel, setActivePanel, panels } = usePanelContext()
@@ -32,6 +33,7 @@ const PanelHeader: React.FC = () => {
           </div>
         )
       })}
+      <RecommendationFilters/>
     </div>
   )
 }

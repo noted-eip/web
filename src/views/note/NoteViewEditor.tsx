@@ -47,7 +47,8 @@ const NoteViewEditor: React.FC<{ note: V1Note }> = props => {
 
   const updateNoteBlocks = () => {
     const latestState = slateElementsToNoteBlocks(editorState.current)
-
+    
+    // @note: No changes on lastest blocks and actuals
     if (blockArraysAreEqual(latestState, props.note.blocks || [])) return
 
     updateNoteMutation.mutate({
@@ -56,17 +57,24 @@ const NoteViewEditor: React.FC<{ note: V1Note }> = props => {
     })
   }
 
-  const debouncedUpdateNoteBlocks = React.useMemo(() => debounce(updateNoteBlocks, 3000), [])
+  const debouncedUpdateNoteBlocks = React.useMemo(() => debounce(updateNoteBlocks, 5), [])
 
-  return <Slate
-    onChange={handleEditorChange}
-    editor={editor}
-    value={initialEditorState}>
-    <Editable
-      readOnly={authContext.accountId !== props.note.authorAccountId}
-      className='m-lg min-h-[256px] px-1 xl:mx-xl'
-      renderElement={renderElement} />
-  </Slate>
+  return (
+    <div 
+      className='cursor-pointer rounded-md bg-transparent bg-gradient-to-br p-4 hover:border-gray-100 hover:bg-gray-100 hover:shadow-inner'>
+      
+      <Slate
+        onChange={handleEditorChange}
+        editor={editor}
+        value={initialEditorState}>
+        <Editable
+          readOnly={authContext.accountId !== props.note.authorAccountId}
+          className='m-lg min-h-[256px] px-1 xl:mx-xl'
+          renderElement={renderElement} />
+      </Slate>
+    
+    </div>
+  )
 }
 
 export default NoteViewEditor
