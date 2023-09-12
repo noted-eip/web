@@ -3,8 +3,8 @@ import { useMutation, useQuery } from 'react-query'
 
 import { useAuthContext } from '../../contexts/auth'
 import { apiQueryClient, openapiClient } from '../../lib/api'
-import { V1Account, V1AuthenticateGoogleRequest, V1AuthenticateGoogleResponse, V1AuthenticateRequest, V1AuthenticateResponse, V1CreateAccountRequest, V1CreateAccountResponse, V1GetAccountResponse, V1UpdateAccountResponse } from '../../protorepo/openapi/typescript-axios'
-import { newAccountCacheKey } from './cache'
+import { V1Account, V1AuthenticateGoogleRequest, V1AuthenticateGoogleResponse, V1AuthenticateRequest, V1AuthenticateResponse, V1CreateAccountRequest, V1CreateAccountResponse, V1GetAccountResponse, V1RegisterUserToMobileBetaRequest, V1UpdateAccountResponse } from '../../protorepo/openapi/typescript-axios'
+import { newAccountCacheKey, newRegisterToMobileBetaCacheKey } from './cache'
 import { axiosRequestOptionsWithAuthorization,MutationHookOptions, QueryHookOptions } from './helpers'
 
 export type AccountResetPassword = {
@@ -40,6 +40,16 @@ export const useGetAccount = (req: GetAccountRequest, options?: QueryHookOptions
     },
     ...options,
   })
+}
+
+export type RegisterToMobileBetaRequest = undefined;
+export const useRegisterToMobileBeta = (options?: MutationHookOptions<RegisterToMobileBetaRequest, object>) => {
+  const authContext = useAuthContext()
+  const currentAccountId = authContext.accountId as string
+
+  return useMutation(async () => {
+    return (await openapiClient.accountsAPIRegisterToMobileBeta(currentAccountId, await axiosRequestOptionsWithAuthorization(authContext))).data
+  }, options)
 }
 
 export type SearchAccountRequest = {email: string};

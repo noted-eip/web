@@ -5,7 +5,7 @@ import React from 'react'
 import LoaderIcon from '../../components/icons/LoaderIcon'
 import ViewSkeleton from '../../components/view/ViewSkeleton'
 import { useAuthContext } from '../../contexts/auth'
-import { useDeleteMyAccount, useGetAccount, useUpdateMyAccount } from '../../hooks/api/accounts'
+import { useDeleteMyAccount, useGetAccount, useRegisterToMobileBeta, useUpdateMyAccount } from '../../hooks/api/accounts'
 import { useGetGroup } from '../../hooks/api/groups'
 import { useAcceptInvite, useDenyInvite, useListInvites } from '../../hooks/api/invites'
 import useClickOutside from '../../hooks/click'
@@ -127,7 +127,7 @@ const ProfileViewAccountSection: React.FC = () => {
     }
   }, [getAccountQ])
 
-  const onChangeName = (e) => {
+  const onChangeName = (e:any) => {
     e.preventDefault()
     updateAccountQ.mutate({body: {name: newName} as V1Account})
     setEditName(false)
@@ -217,7 +217,9 @@ const ProfileViewDangerZoneSection: React.FC = () => {
 }
 
 const ProfileViewBetaSection: React.FC = () => {
-  // const deleteAccountQ = useDeleteMyAccount()
+  const authContext = useAuthContext()
+  const getAccountQ = useGetAccount({accountId: authContext.accountId})
+  const registerToMobileBetaQ = useRegisterToMobileBeta()
 
   return (
     <div className='relative mt-4 w-full rounded-md border border-gray-100 bg-gray-50'>
@@ -238,12 +240,16 @@ const ProfileViewBetaSection: React.FC = () => {
           <p className='text-xs text-gray-600'>You will receive an invite to install the application on your phone. With it you can browse your groups, notes, invitations, members and recommendations but cannot modify your notes (yet 😉).</p>
         </div>
         <div className='flex items-center justify-end'>
-          <button
+          {getAccountQ.isSuccess ? (getAccountQ.data?.account.isInMobileBeta === false ?( <button
             className='rounded-md border border-gray-300 bg-white p-2 px-3 text-sm text-gray-600 transition-all duration-100 hover:border-gray-600 hover:bg-gray-600 hover:text-white'
-            // onClick={() => {deleteAccountQ.mutate(undefined)}} // TODO Implement
+            onClick={() => {registerToMobileBetaQ.mutate(undefined)}}
           >
-            Access iOS beta
-          </button>
+              Access beta
+          </button>) : 'Already joined') :             
+            (<React.Fragment>
+              <div className='skeleton h-8 w-24'></div>
+            </React.Fragment>)
+          }
         </div>
       </div>
     </div>
