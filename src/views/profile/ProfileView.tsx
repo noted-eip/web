@@ -1,6 +1,6 @@
 import { ArrowPathIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { CodeBracketIcon, ExclamationTriangleIcon, InboxIcon, PencilIcon } from '@heroicons/react/24/solid'
-import React from 'react'
+import React, { useState } from 'react'
 
 import LoaderIcon from '../../components/icons/LoaderIcon'
 import ViewSkeleton from '../../components/view/ViewSkeleton'
@@ -127,6 +127,7 @@ const ProfileViewAccountSection: React.FC = () => {
     }
   }, [getAccountQ])
 
+  // >:(
   const onChangeName = (e:any) => {
     e.preventDefault()
     updateAccountQ.mutate({body: {name: newName} as V1Account})
@@ -219,6 +220,7 @@ const ProfileViewDangerZoneSection: React.FC = () => {
 const ProfileViewBetaSection: React.FC = () => {
   const authContext = useAuthContext()
   const getAccountQ = useGetAccount({accountId: authContext.accountId})
+  const [sent, setSent] = useState(false)
   const registerToMobileBetaQ = useRegisterToMobileBeta()
 
   return (
@@ -236,16 +238,20 @@ const ProfileViewBetaSection: React.FC = () => {
 
       <div className='grid grid-cols-[40%_60%] p-5'>
         <div className='relative'>
-          <p className='mb-2 text-sm font-medium text-gray-800'>iOS application</p>
+          <p className='mb-2 text-sm font-medium text-gray-800'>Mobile application</p>
           <p className='text-xs text-gray-600'>You will receive an invite to install the application on your phone. With it you can browse your groups, notes, invitations, members and recommendations but cannot modify your notes (yet 😉).</p>
+          <p className='text-xxs text-gray-500'>Your account&apos;s email should be linked to a Google account in order to be invited!</p>
         </div>
         <div className='flex items-center justify-end'>
-          {getAccountQ.isSuccess ? (getAccountQ.data?.account.isInMobileBeta === false ?( <button
+          {getAccountQ.isSuccess ? (getAccountQ.data?.account.isInMobileBeta === false ? (<button
             className='rounded-md border border-gray-300 bg-white p-2 px-3 text-sm text-gray-600 transition-all duration-100 hover:border-gray-600 hover:bg-gray-600 hover:text-white'
-            onClick={() => {registerToMobileBetaQ.mutate(undefined)}}
+            onClick={() => {
+              registerToMobileBetaQ.mutate(undefined)
+              setSent(true)
+            }}
           >
               Access beta
-          </button>) : 'Already joined') :             
+          </button>) : (sent ? 'Sent!' : 'Already joined')) :             
             (<React.Fragment>
               <div className='skeleton h-8 w-24'></div>
             </React.Fragment>)
