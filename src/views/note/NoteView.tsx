@@ -1,3 +1,4 @@
+import { getAnalytics, logEvent } from 'firebase/analytics'
 import React from 'react'
 
 import ViewSkeleton from '../../components/view/ViewSkeleton'
@@ -21,9 +22,13 @@ function editorLoadingSkeleton(): React.ReactElement<unknown, string> | null {
 }
 
 const NoteView: React.FC = () => {
+  const analytics = getAnalytics()
   const noteId = useNoteIdFromUrl()
   const noteQuery = useGetNoteInCurrentGroup({ noteId })
 
+  logEvent(analytics, 'page_view', {
+    page_title: 'note_page'
+  })
   return <ViewSkeleton titleElement={<NoteViewHeader />} panels={['group-chat', 'group-activity', 'note-recommendations']}>
     <div className='w-full'>
       <NoteViewMetadataHeader />
