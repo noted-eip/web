@@ -1,5 +1,6 @@
 import { RadioGroup } from '@headlessui/react'
 import { FolderIcon, SparklesIcon, UserIcon } from '@heroicons/react/24/solid'
+import { getAnalytics, logEvent } from 'firebase/analytics'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -8,6 +9,7 @@ import { useGroupContext } from '../../contexts/group'
 const GroupViewMenu: React.FC<React.PropsWithChildren & { activeTab: string }> = (
   props
 ) => {
+  const analytics = getAnalytics()
   const navigate = useNavigate()
   const groupContext = useGroupContext()
   const options = [
@@ -28,6 +30,9 @@ const GroupViewMenu: React.FC<React.PropsWithChildren & { activeTab: string }> =
     },
   ]
 
+  logEvent(analytics, 'page_view', {
+    page_title: 'group_home_page'
+  })
   return (
     <div className='flex items-center justify-between'>
       {props.children}

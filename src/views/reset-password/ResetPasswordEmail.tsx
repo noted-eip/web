@@ -1,3 +1,4 @@
+import { getAnalytics, logEvent } from 'firebase/analytics'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -6,7 +7,7 @@ import OldInput from '../../components/form/OldInput'
 import { useResetPasswordContext } from '../../hooks/api/accounts'
 import { useForgetAccountPassword } from '../../hooks/api/password'
 import { validateEmail } from '../../lib/validators'
-import { V1ForgetAccountPasswordResponse } from '../../protorepo/openapi/typescript-axios'
+import { V1ForgetAccountPasswordResponse }   from '../../protorepo/openapi/typescript-axios'
 
 
 const ResetPasswordEmail: React.FC = () => {
@@ -20,10 +21,16 @@ const ResetPasswordEmail: React.FC = () => {
       navigate('/reset_password_token')
     },
   })
+  
   const formIsValid = () => {
     return emailValid
   }
 
+  const analytics = getAnalytics()
+  
+  logEvent(analytics, 'page_view', {
+    page_title: 'resetPasswordEmail'
+  })
   return (
     <div className='flex h-screen w-screen items-center justify-center'>
       <form

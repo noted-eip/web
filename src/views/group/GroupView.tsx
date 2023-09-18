@@ -1,4 +1,3 @@
-import { getAnalytics, logEvent } from 'firebase/analytics'
 import React from 'react'
 import { Outlet, useNavigate, useParams } from 'react-router-dom'
 
@@ -7,7 +6,6 @@ import { useGroupContext } from '../../contexts/group'
 import GroupViewEmptyState from './GroupViewEmptyState'
 
 const GroupView: React.FC = () => {
-  const analytics = getAnalytics()
   const groupContext = useGroupContext()
   const navigate = useNavigate()
   const routerParams = useParams()
@@ -29,9 +27,6 @@ const GroupView: React.FC = () => {
     return <div></div>
   }
 
-  logEvent(analytics, 'page_view', {
-    page_title: 'group_home'
-  })
   return (
     <ViewSkeleton title='Home' panels={['group-chat', 'group-activity']}>
       {groupContext.groupId ? (

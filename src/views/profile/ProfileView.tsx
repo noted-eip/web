@@ -1,5 +1,6 @@
 import { ArrowPathIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { ExclamationTriangleIcon, InboxIcon, PencilIcon } from '@heroicons/react/24/solid'
+import { getAnalytics, logEvent } from 'firebase/analytics'
 import React from 'react'
 
 import LoaderIcon from '../../components/icons/LoaderIcon'
@@ -16,6 +17,11 @@ const InviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
   const denyInviteQ = useDenyInvite()
   const acceptInviteQ = useAcceptInvite()
 
+  const analytics = getAnalytics()
+  
+  logEvent(analytics, 'page_view', {
+    page_title: 'profile'
+  })
   return (
     <div className='my-2 grid h-12 grid-cols-3'>
       <div className='flex items-center'>
