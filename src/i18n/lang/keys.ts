@@ -127,4 +127,11 @@ export enum TranslationKeys {
 
   /*    ACTIVITY    */
   'ACTIVITY',
+
+  /*    SETTINGS    */
+  'SETTINGS',
+  'SETTINGS.langage.title',
+  'SETTINGS.langage.options',
+  'SETTINGS.langage.french',
+  'SETTINGS.langage.english',
 }

@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import {IntlProvider} from 'react-intl'
 
+import { LangageContext } from '../contexts/langage'
 import { TOGGLE_DEV_FEATURES } from '../lib/env'
 import frTranslation from './lang/fr'
 import {
@@ -16,6 +17,7 @@ interface ILocaleInformation {
 }
 
 const LocaleManager: React.FC<any> = ({children}) => {
+  const context = React.useContext(LangageContext)
   const browserLocales = useMemo(getBrowserLocales, [getBrowserLocales])
   const [localeInfo, setLocaleInfo] = useState<ILocaleInformation>({
     locale: 'fr',
@@ -39,6 +41,13 @@ const LocaleManager: React.FC<any> = ({children}) => {
     },
     [setLocaleInfo],
   )
+
+  useEffect((): void => {
+    if (context?.langage === 'fr') {
+      changeLocale('fr')
+    } else if (context?.langage === 'en') {
+      changeLocale('en')
+    }}, [context?.langage])
 
   useEffect((): void => {
     for (let i = 0; i < browserLocales.length; i++) {

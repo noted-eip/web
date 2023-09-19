@@ -106,6 +106,13 @@ const enTranslation: LocaleTypedMessages = {
 
   /*    ACTIVITY    */
   'ACTIVITY': 'Activity',
+
+  /*    SETTINGS    */
+  'SETTINGS': 'Settings',
+  'SETTINGS.langage.title': 'Langage',
+  'SETTINGS.langage.options': 'Options',
+  'SETTINGS.langage.french': 'French',
+  'SETTINGS.langage.english': 'English',
 }
 
 export default enTranslation

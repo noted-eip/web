@@ -106,6 +106,13 @@ const frTranslation: LocaleTypedMessages = {
 
   /*    ACTIVITY    */
   'ACTIVITY': 'Activity',
+
+  /*    SETTINGS    */
+  'SETTINGS': 'Paramètres',
+  'SETTINGS.langage.title': 'Langue',
+  'SETTINGS.langage.options': 'Options',
+  'SETTINGS.langage.french': 'Français',
+  'SETTINGS.langage.english': 'Anglais',
 }
 
 export default frTranslation

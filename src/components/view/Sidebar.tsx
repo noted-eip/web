@@ -3,7 +3,7 @@ import {
   ArrowRightOnRectangleIcon,
   XMarkIcon
 } from '@heroicons/react/24/outline'
-import { Square2StackIcon, UserIcon } from '@heroicons/react/24/solid'
+import { Cog6ToothIcon,Square2StackIcon, UserIcon } from '@heroicons/react/24/solid'
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
@@ -84,12 +84,12 @@ export const Sidebar: React.FC = () => {
           ? listInvitesQ.data.invites.length
           : 0,
     },
-    // { path: '/settings', icon: Cog6ToothIcon, title: 'Settings', numNotifications: 0 },
+    { path: '/settings', icon: Cog6ToothIcon, title: formatMessage({ id: 'SETTINGS' }), numNotifications: 0 },
   ]
 
   return (
     <div className='hidden h-screen flex-col border-r border-gray-300 md:flex'>
-      <div className='sjustify-between m-lg mt-xl flex h-full flex-col xl:m-xl'>
+      <div className='m-lg mt-xl flex h-full flex-col justify-between xl:m-xl'>
         <div>
           {/* Logo */}
           <div className='h-[36px] w-[36px] rounded-md border border-gray-300 bg-gray-200' />
