@@ -119,6 +119,18 @@ const SignupView: React.FC = () => {
             }}
             isInvalidBlur={!passwordValid}
           />
+          <div className='relative my-5 mx-10'>
+            <p className='text-sm italic text-gray-500'>
+              Once registered, you can ask an early access to our mobile&apos;s
+              app through your account&apos;s settings !
+            </p>
+            <p className='text-xs italic text-gray-400'>
+              Only works for emails linked to a Google account.
+            </p>
+            <span className='absolute right-auto top-0 -left-2 -translate-y-1/2 -translate-x-1/2 -rotate-12 rounded-full bg-red-400 p-0.5 px-2 text-center text-xs font-medium leading-none text-white outline outline-red-100 dark:bg-blue-900 dark:text-blue-200'>
+              BETA
+            </span>
+          </div>
           <button
             className='my-2 w-full rounded-lg bg-blue-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:bg-gray-600 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
             disabled={

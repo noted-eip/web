@@ -19,8 +19,8 @@
     "@types/react": "^18.0.14",
     "@types/react-dom": "^18.0.5",
     "axios": "^0.27.2",
-    "jspdf": "^2.5.1",
     "firebase": "^10.1.0",
+    "jspdf": "^2.5.1",
     "jwt-decode": "^3.1.2",
     "lodash.debounce": "^4.0.8",
     "moment": "^2.29.4",
@@ -76,6 +76,8 @@
     "eslint-plugin-tailwindcss": "^3.8.3",
     "eslint-plugin-unused-imports": "^2.0.0",
     "postcss": "^8.4.14",
+    "prettier": "^3.0.2",
+    "prettier-plugin-tailwindcss": "^0.5.3",
     "tailwindcss": "^3.1.4"
   }
 }
