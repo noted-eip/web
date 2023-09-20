@@ -3,7 +3,7 @@ import { Route, Routes, useNavigate } from 'react-router-dom'
 
 import Dashboard from '../components/view/Dashboard'
 import { GroupContext } from '../contexts/group'
-import { LS_GROUP_ID_KEY } from '../lib/constants'
+import {LS_GROUP_ID_KEY } from '../lib/constants'
 import GroupView from './group/GroupView'
 import GroupViewNotesTab from './group/GroupViewNotesTab'
 import GroupViewSettingsTab from './group/GroupViewSettingsTab'
