@@ -1,15 +1,16 @@
 import { ArrowPathIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { ExclamationTriangleIcon, InboxIcon, PencilIcon } from '@heroicons/react/24/solid'
+import { CodeBracketIcon, ExclamationTriangleIcon, InboxIcon, PencilIcon } from '@heroicons/react/24/solid'
 import { getAnalytics, logEvent } from 'firebase/analytics'
-import React from 'react'
+import React, { useState } from 'react'
 
 import LoaderIcon from '../../components/icons/LoaderIcon'
 import ViewSkeleton from '../../components/view/ViewSkeleton'
 import { useAuthContext } from '../../contexts/auth'
-import { useDeleteMyAccount, useGetAccount, useUpdateMyAccount } from '../../hooks/api/accounts'
+import { useDeleteMyAccount, useGetAccount, useRegisterToMobileBeta, useUpdateMyAccount } from '../../hooks/api/accounts'
 import { useGetGroup } from '../../hooks/api/groups'
 import { useAcceptInvite, useDenyInvite, useListInvites } from '../../hooks/api/invites'
 import useClickOutside from '../../hooks/click'
+import { FormatMessage } from '../../i18n/TextComponent'
 import { TOGGLE_DEV_FEATURES } from '../../lib/env'
 import { V1Account, V1GroupInvite } from '../../protorepo/openapi/typescript-axios'
 
@@ -52,7 +53,7 @@ const InviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
               className='group flex cursor-pointer items-center rounded-full bg-red-100 p-1 px-3 text-xs font-medium text-red-700 hover:bg-red-200 disabled:bg-gray-100 disabled:text-gray-700'
               onClick={() => denyInviteQ.mutate({ groupId: props.invite?.groupId as string, inviteId: props.invite.id })}
             >
-              Deny
+              <FormatMessage id='PROFILE.invite.deny' />
               {
                 denyInviteQ.isLoading ?
                   <LoaderIcon className='ml-1 h-3 w-3' />
@@ -66,7 +67,7 @@ const InviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
               className='group ml-2 flex cursor-pointer items-center rounded-full bg-green-100 p-1 px-3 text-xs font-medium text-green-700 hover:bg-green-200 disabled:bg-gray-100 disabled:text-gray-700'
               onClick={() => acceptInviteQ.mutate({ groupId: props.invite.groupId as string, inviteId: props.invite.id })}
             >
-              Accept
+              <FormatMessage id='PROFILE.invite.accept' />
               {
                 acceptInviteQ.isLoading ?
                   <LoaderIcon className='ml-1 h-3 w-3' />
@@ -91,7 +92,9 @@ const ProfileViewPendingInvitesSection: React.FC = () => {
       <div className='flex items-center justify-between border-b border-[#efefef] p-5'>
         <div className='flex items-center'>
           <InboxIcon className='mr-2 h-5 w-5 text-gray-600' />
-          <p className='text-base font-medium text-gray-600'>Invites</p>
+          <p className='text-base font-medium text-gray-600'>
+            <FormatMessage id='GROUP.Empty.title2' />
+          </p>
         </div>
       </div>
 
@@ -100,7 +103,7 @@ const ProfileViewPendingInvitesSection: React.FC = () => {
         {listInvitesQ.isSuccess ? (
           !listInvitesQ.data.invites?.length ? (
             <div className='my-4 text-center text-sm text-gray-400'>
-              You haven&rsquo;t been invited to any group
+              <FormatMessage id='PROFILE.invite.desc' />
             </div>
           ) : (
             listInvitesQ.data.invites?.map((el, idx) => (
@@ -136,7 +139,8 @@ const ProfileViewAccountSection: React.FC = () => {
     }
   }, [getAccountQ])
 
-  const onChangeName = (e) => {
+  // >:(
+  const onChangeName = (e:any) => {
     e.preventDefault()
     updateAccountQ.mutate({body: {name: newName} as V1Account})
     setEditName(false)
@@ -203,21 +207,27 @@ const ProfileViewDangerZoneSection: React.FC = () => {
       <div className='flex items-center justify-between border-b border-[#efefef] p-5'>
         <div className='flex items-center'>
           <ExclamationTriangleIcon className='mr-2 h-5 w-5 text-red-700' />
-          <p className='text-base font-medium text-red-700'>Danger Zone</p>
+          <p className='text-base font-medium text-red-700'>
+            <FormatMessage id='PROFILE.delete.title1' />
+          </p>
         </div>
       </div>
 
       <div className='grid grid-cols-[40%_60%] p-5'>
         <div>
-          <p className='mb-2 text-sm font-medium text-gray-800'>Delete my account</p>
-          <p className='text-xs text-gray-600'>This has the effect of permanently deleting all of your personal data including your notes.</p>
+          <p className='mb-2 text-sm font-medium text-gray-800'>
+            <FormatMessage id='PROFILE.delete.title2' />
+          </p>
+          <p className='text-xs text-gray-600'>
+            <FormatMessage id='PROFILE.delete.desc' />
+          </p>
         </div>
         <div className='flex items-center justify-end'>
           <button
             className='rounded-md border border-gray-300 bg-white p-2 px-3 text-sm text-red-600 transition-all duration-100 hover:border-red-600 hover:bg-red-600 hover:text-white'
             onClick={() => {deleteAccountQ.mutate(undefined)}}
           >
-            Delete Account
+            <FormatMessage id='PROFILE.delete.button' />
           </button>
         </div>
       </div>
@@ -225,13 +235,62 @@ const ProfileViewDangerZoneSection: React.FC = () => {
   )
 }
 
+const ProfileViewBetaSection: React.FC = () => {
+  const authContext = useAuthContext()
+  const getAccountQ = useGetAccount({accountId: authContext.accountId})
+  const [sent, setSent] = useState(false)
+  const registerToMobileBetaQ = useRegisterToMobileBeta()
+
+  return (
+    <div className='relative mt-4 w-full rounded-md border border-gray-100 bg-gray-50'>
+      {/* Header */}
+      <span className='absolute right-auto top-0 left-3 -translate-y-1/2 -translate-x-1/2 -rotate-12 rounded-full bg-red-400 p-0.5 px-2 text-center text-xs font-medium leading-none text-white outline outline-red-100 dark:bg-blue-900 dark:text-blue-200'>
+        BETA
+      </span>
+      <div className='flex items-center justify-between border-b border-[#efefef] p-5'>
+        <div className='flex items-center'>
+          <CodeBracketIcon className='mr-2 h-5 w-5 text-gray-600' />
+          <p className='text-base font-medium text-gray-600'>Extra features</p>
+        </div>
+      </div>
+
+      <div className='grid grid-cols-[40%_60%] p-5'>
+        <div className='relative'>
+          <p className='mb-2 text-sm font-medium text-gray-800'>Mobile application</p>
+          <p className='text-xs text-gray-600'>You will receive an invite to install the application on your phone. With it you can browse your groups, notes, invitations, members and recommendations but cannot modify your notes (yet 😉).</p>
+          <p className='text-xxs text-gray-500'>Your account&apos;s email should be linked to a Google account in order to be invited!</p>
+        </div>
+        <div className='flex items-center justify-end'>
+          {getAccountQ.isSuccess ? (getAccountQ.data?.account.isInMobileBeta === false ? (<button
+            className='rounded-md border border-gray-300 bg-white p-2 px-3 text-sm text-gray-600 transition-all duration-100 hover:border-gray-600 hover:bg-gray-600 hover:text-white'
+            onClick={() => {
+              registerToMobileBetaQ.mutate(undefined)
+              setSent(true)
+            }}
+          >
+              Access beta
+          </button>) : (sent ? 'Sent!' : 'Already joined')) :             
+            (<React.Fragment>
+              <div className='skeleton h-8 w-24'></div>
+            </React.Fragment>)
+          }
+        </div>
+      </div>
+    </div>
+  )
+}
+
+
 const ProfileView: React.FC = () => {
   return (
     <ViewSkeleton title='Profile' panels={['group-chat', 'group-activity']}>
       <div className='mx-lg mb-lg w-full xl:mx-xl xl:mb-xl'>
         <ProfileViewAccountSection />
+        <hr className='m-5 rounded border-2'></hr>
         <ProfileViewPendingInvitesSection />
         <ProfileViewDangerZoneSection />
+        <hr className='m-5 rounded border-2'></hr>
+        <ProfileViewBetaSection />
       </div>
     </ViewSkeleton>
   )
