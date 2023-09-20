@@ -31,7 +31,7 @@ const App: React.FC = () => {
     measurementId: 'G-XFC30W00DZ'
   }
 
-  const app = initializeApp(firebaseConfig)
+  initializeApp(firebaseConfig)
   React.useEffect(() => {
     noAuthContext.attemptSigninFromLocalStorage()
     setHasLoaded(true)

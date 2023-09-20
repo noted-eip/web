@@ -4,4 +4,4 @@ export const API_BASE: string =
 export const GOOGLE_CLIENT_ID: string =
   process.env.REACT_GOOGLE_CLIENT_ID || '871625340195-kf7c2u88u9aivgdru776a36hgel0kjja.apps.googleusercontent.com'
   
-export const TOGGLE_DEV_FEATURES = !!process.env.REACT_APP_TOGGLE_DEV_FEATURES || false
+export const TOGGLE_DEV_FEATURES = true//!!process.env.REACT_APP_TOGGLE_DEV_FEATURES || false

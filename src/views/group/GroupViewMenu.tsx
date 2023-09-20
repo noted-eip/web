@@ -5,6 +5,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { useGroupContext } from '../../contexts/group'
+import { TOGGLE_DEV_FEATURES } from '../../lib/env'
 
 const GroupViewMenu: React.FC<React.PropsWithChildren & { activeTab: string }> = (
   props
@@ -30,9 +31,11 @@ const GroupViewMenu: React.FC<React.PropsWithChildren & { activeTab: string }> =
     },
   ]
 
-  logEvent(analytics, 'page_view', {
-    page_title: 'group_home_page'
-  })
+  if (!TOGGLE_DEV_FEATURES) {
+    logEvent(analytics, 'page_view', {
+      page_title: 'group_home_page'
+    })
+  }
   return (
     <div className='flex items-center justify-between'>
       {props.children}

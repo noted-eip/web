@@ -1,14 +1,17 @@
 import { useGoogleLogin } from '@react-oauth/google'
 import { getAnalytics, logEvent } from 'firebase/analytics'
 import React from 'react'
+import { toast } from 'react-hot-toast'
 import { Link, useNavigate } from 'react-router-dom'
 
 import ContainerMd from '../../components/container/ContainerMd'
 import OldInput from '../../components/form/OldInput'
+import Notification from '../../components/notification/Notification'
 import { addAccountToDevelopmentContext, useDevelopmentContext } from '../../contexts/dev'
 import { useNoAuthContext } from '../../contexts/noauth'
 import { useAuthenticate, useAuthenticateGoogle } from '../../hooks/api/accounts'
 import { decodeToken } from '../../lib/api'
+import { TOGGLE_DEV_FEATURES } from '../../lib/env'
 import { validateEmail } from '../../lib/validators'
 import { V1AuthenticateGoogleResponse, V1AuthenticateResponse } from '../../protorepo/openapi/typescript-axios'
 
@@ -31,11 +34,16 @@ const SigninView: React.FC = () => {
         )
       }
       auth.signin(data.token)
-      logEvent(analytics, 'login', {
-        method: 'mail'
-      })
+      if (!TOGGLE_DEV_FEATURES) {
+        logEvent(analytics, 'login', {
+          method: 'mail'
+        })
+      }
       navigate('/')
     },
+    onError: (e) => {
+      toast.error(e.response?.data.error as string)
+    }
   })
   const authenticateGoogleMutation = useAuthenticateGoogle({
     onSuccess: (data: V1AuthenticateGoogleResponse) => {
@@ -48,11 +56,16 @@ const SigninView: React.FC = () => {
         )
       }
       auth.signin(data.token)
-      logEvent(analytics, 'login', {
-        method: 'google'
-      })
+      if (!TOGGLE_DEV_FEATURES) {
+        logEvent(analytics, 'login', {
+          method: 'google'
+        })
+      }      
       navigate('/')
     },
+    onError: (e) => {
+      console.log('google error')
+    }
   })
   const googleLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => {
@@ -135,6 +148,7 @@ const SigninView: React.FC = () => {
           <Link to='/reset_password_email' className='mt-2 text-sm text-blue-500 underline'> Reset password </Link>
         </ContainerMd>
       </form>
+      <Notification />
     </div>
   )
 }

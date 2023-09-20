@@ -1,8 +1,10 @@
 import React from 'react'
+import { toast } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 
 import ContainerMd from '../../components/container/ContainerMd'
 import OldInput from '../../components/form/OldInput'
+import Notification from '../../components/notification/Notification'
 import { useResetPasswordContext } from '../../hooks/api/accounts'
 import { useUpdateAccountPassword } from '../../hooks/api/password'
 import { validatePassword } from '../../lib/validators'
@@ -21,6 +23,9 @@ const ResetPasswordPassword: React.FC = () => {
       resetPasswordContext.changeResetPassword(null)
       navigate('/') 
     },
+    onError: (e) => {
+      toast.error(e.response?.data.error as string)
+    }
   })
   const formIsValid = () => {
     return password === confirmPassword && passwordValid
@@ -74,6 +79,7 @@ const ResetPasswordPassword: React.FC = () => {
           </button>
         </ContainerMd>
       </form>
+      <Notification />
     </div>
   )
 }
