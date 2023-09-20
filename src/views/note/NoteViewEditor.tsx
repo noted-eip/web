@@ -4,7 +4,9 @@ import { withHistory } from 'slate-history'
 import { Editable, RenderElementProps, Slate, withReact } from 'slate-react'
 
 import { useAuthContext } from '../../contexts/auth'
+import { useBlockContext } from '../../contexts/block'
 import { useInsertBlockInCurrentGroup,useUpdateBlockInCurrentGroup } from '../../hooks/api/notes'
+import { LS_BLOCK_ID_KEY } from '../../lib/constants'
 import { noteBlocksToSlateElements, slateElementsToNoteBlock, withShortcuts } from '../../lib/editor'
 import { NotesAPIInsertBlockRequest,V1Block, V1Note } from '../../protorepo/openapi/typescript-axios'
 
@@ -30,8 +32,9 @@ const EditorElement: React.FC<RenderElementProps> = props => {
   }
 }
 
-const BlockEditorItem: React.FC<{ note: V1Note, blockIndex?: number }> = props => {
+const BlockEditorItem: React.FC<{ note: V1Note, block: V1Block, blockIndex?: number }> = props => {
   const authContext = useAuthContext()
+  const blockContext = useBlockContext()
   const initialEditorState = noteBlocksToSlateElements(
     props.note?.blocks === undefined || props.blockIndex === undefined ?
       [{ type: 'TYPE_PARAGRAPH', paragraph: '' } as V1Block] :
@@ -41,19 +44,7 @@ const BlockEditorItem: React.FC<{ note: V1Note, blockIndex?: number }> = props =
   const editor = React.useMemo(() => withShortcuts(withReact(withHistory(createEditor()))), [])
   const insertBlockMutation = useInsertBlockInCurrentGroup()
   const updateBlockMutation = useUpdateBlockInCurrentGroup()
-
-  const handleEditorChange = (value: Descendant[]) => {
-    if (editor.operations.some(op => 'set_selection' !== op.type)) {
-      editorState.current = value
-      
-      if (value.length == -1) {
-        insertBlock()
-      } else {
-        updateBlock()
-      }
-    }
-  }
-
+  
   const insertBlock = () => {
     console.log('>USE INSERT BLOCK<')
     const latestState = slateElementsToNoteBlock(editorState.current)
@@ -82,10 +73,29 @@ const BlockEditorItem: React.FC<{ note: V1Note, blockIndex?: number }> = props =
   //const debouncedFunction = React.useCallback(debounce(props.shouldUseInsertBlock ? insertBlock : updateBlock, 5), [props.shouldUseInsertBlock])
   //const debouncedFunction = React.useMemo(() => debounce(props.hasBlocks ? updateBlock : insertBlock, 5), [])
 
+  const handleEditorChange = (value: Descendant[]) => {
+    if (editor.operations.some(op => 'set_selection' !== op.type)) {
+      editorState.current = value
+      
+      if (value.length == -1) {
+        insertBlock()
+      } else {
+        updateBlock()
+      }
+    }
+  }
+
+  const handleHover = () => {
+    blockContext.changeBlock(props.block.id)
+    console.log(`Hover on block (CONTEXT) : [${window.localStorage.getItem(LS_BLOCK_ID_KEY)}]`)
+  }
+
   return (
     <div 
-      className='rounded-md bg-transparent bg-gradient-to-br p-4 hover:border-gray-100 hover:bg-gray-100 hover:shadow-inner'>
+      className='rounded-md bg-transparent bg-gradient-to-br p-4 hover:border-gray-100 hover:bg-gray-100 hover:shadow-inner'
+      onMouseEnter={handleHover}>
       <Slate
+      //ternaire ici avec 2 handle different pour insert & update
         onChange={handleEditorChange}
         editor={editor}
         value={initialEditorState}>
@@ -98,15 +108,14 @@ const BlockEditorItem: React.FC<{ note: V1Note, blockIndex?: number }> = props =
 }
 
 const NoteViewEditor: React.FC<{ note: V1Note }> = props => {
-
-  console.log('Blocks in note = ', props.note.blocks?.length)
-
+  //console.log('Blocks in note = ', props.note.blocks?.length)
   return (
     <div>
       {
         props.note.blocks?.map((block, index) => (
           <BlockEditorItem key={`block-item-${index}`}
             note={props.note}
+            block={block}
             blockIndex={index}
           />
         ))

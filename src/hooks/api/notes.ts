@@ -140,16 +140,6 @@ export const useInsertBlockInCurrentGroup = ( options?: MutationHookOptions<Inse
   {
     ...options,
   })
-  /*
-  {
-    onSuccess: () => {
-      console.log('sucess on insertBlock')
-    },
-    onError: (error) => {
-      console.log(`sucess on insertBlock : ${error}`)
-    }
-  }
-  */
 }
 
 export type UpdateBlockInCurrentGroup = { noteId: string, blockId: string, body: V1Block};

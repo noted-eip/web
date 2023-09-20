@@ -21,3 +21,10 @@ export const LS_RESET_AUTH_TOKEN_KEY = 'auth_token'
 // The key whithin the browser's local storage which contains the
 // development data.
 export const LS_DEVELOPMENT_DATA_KEY = 'dev'
+
+// 'block'
+export const LS_RECO_MODE = 'note'
+
+// The key whithin the browser's local storage which contains the
+// current block's ID.
+export const LS_BLOCK_ID_KEY = 'block_id'

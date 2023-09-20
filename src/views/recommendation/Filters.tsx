@@ -2,6 +2,9 @@ import { Menu } from '@headlessui/react'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import React from 'react'
 
+import { useRecoModeContext } from '../../contexts/recommendation'
+import { LS_RECO_MODE } from '../../lib/constants'
+
 interface ItemProps {
   active: boolean
   label: string
@@ -9,16 +12,18 @@ interface ItemProps {
 }
 
 const RecommendationFilters = () => {
-  const [selectedOption, setSelectedOption] = React.useState('')
+  const recoModeContext = useRecoModeContext()
+  const [selectedOption, setSelectedOption] = React.useState(recoModeContext.recoMode == null ? 'note' : recoModeContext.recoMode)
  
   const handleOptionSelect = (option: string) => {
     setSelectedOption(option)
   }
 
-  const handleExport = () => {
-    console.log('apply')
+  const handleChangeRecoMode = () => {
+    console.log(`apply => ${selectedOption}`)
+    recoModeContext.changeRecoMode(selectedOption)
+    console.log(`context constant => ${window.localStorage.getItem(LS_RECO_MODE)}`)
   }
-
 
   const Item = ({ active, label, format }: ItemProps) => {
     return (
@@ -84,7 +89,7 @@ const RecommendationFilters = () => {
                       className={`${
                         active && 'bg-indigo-500'
                       } flex w-full items-center rounded-md bg-indigo-600 p-2 text-sm text-white`}
-                      onClick={handleExport}
+                      onClick={handleChangeRecoMode}
                     >
                       <span className='mr-2'>
                         Apply
