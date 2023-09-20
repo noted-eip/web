@@ -63,7 +63,7 @@ const SigninView: React.FC = () => {
       }      
       navigate('/')
     },
-    onError: (e) => {
+    onError: () => {
       console.log('google error')
     }
   })

@@ -1,0 +1,21 @@
+
+
+- GetNote -> display la notes par blocks (composant block)
+
+- Save ces composants dans une map / array ? OU au moins l'BlockID + Index
+
+- Composant Block on Hover -> Display la recommandation qui correspond aux mots dans le block
+
+
+
+- Fetch GenerateWidgets every 900s pour faire croire qu'on filtre la reco par blocks
+
+
+
+
+// On peut update les Keyword tout les 900s
+// Et fetch les widgets toutes les 900s
+
+// Mais on ne peux pas savoir a quels blocks appartient les widgets
+// Chercher les keywords dans la string du block et garder ceux qui match
+// Ou faire un GetBlockWidgets
