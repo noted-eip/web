@@ -6,9 +6,10 @@ import { Editable, RenderElementProps, Slate, withReact } from 'slate-react'
 import { useAuthContext } from '../../contexts/auth'
 import { useBlockContext } from '../../contexts/block'
 import { useInsertBlockInCurrentGroup,useUpdateBlockInCurrentGroup } from '../../hooks/api/notes'
-import { LS_BLOCK_ID_KEY } from '../../lib/constants'
 import { noteBlocksToSlateElements, slateElementsToNoteBlock, withShortcuts } from '../../lib/editor'
+import { blocksAreEqual } from '../../lib/editor'
 import { NotesAPIInsertBlockRequest,V1Block, V1Note } from '../../protorepo/openapi/typescript-axios'
+
 
 
 const EditorElement: React.FC<RenderElementProps> = props => {
@@ -61,8 +62,8 @@ const BlockEditorItem: React.FC<{ note: V1Note, block: V1Block, blockIndex?: num
     console.log('>USE UPDATE BLOCK<')
     const latestState = slateElementsToNoteBlock(editorState.current)
     // @note: No changes on lastest blocks and actuals
-    //const palceholderBlock: V1Block = {id: '', type: 'TYPE_PARAGRAPH'}
-    //if (blocksAreEqual(props.note.blocks === undefined ? palceholderBlock : props.note?.blocks[props.blockIndex === undefined ? 0 : props.blockIndex], latestState)) return
+    const palceholderBlock: V1Block = {id: '', type: 'TYPE_PARAGRAPH'}
+    if (blocksAreEqual(props.note.blocks === undefined ? palceholderBlock : props.note?.blocks[props.blockIndex === undefined ? 0 : props.blockIndex], latestState)) return
     updateBlockMutation.mutate({
       noteId:  props.note.id,
       blockId: props.note?.blocks == undefined ? '' : props.note.blocks[props.blockIndex == undefined ? 0 : props.blockIndex].id,
@@ -70,7 +71,6 @@ const BlockEditorItem: React.FC<{ note: V1Note, block: V1Block, blockIndex?: num
     })
   }
 
-  //const debouncedFunction = React.useCallback(debounce(props.shouldUseInsertBlock ? insertBlock : updateBlock, 5), [props.shouldUseInsertBlock])
   //const debouncedFunction = React.useMemo(() => debounce(props.hasBlocks ? updateBlock : insertBlock, 5), [])
 
   const handleEditorChange = (value: Descendant[]) => {
@@ -87,7 +87,6 @@ const BlockEditorItem: React.FC<{ note: V1Note, block: V1Block, blockIndex?: num
 
   const handleHover = () => {
     blockContext.changeBlock(props.block.id)
-    console.log(`Hover on block (CONTEXT) : [${window.localStorage.getItem(LS_BLOCK_ID_KEY)}]`)
   }
 
   return (
@@ -108,7 +107,6 @@ const BlockEditorItem: React.FC<{ note: V1Note, block: V1Block, blockIndex?: num
 }
 
 const NoteViewEditor: React.FC<{ note: V1Note }> = props => {
-  //console.log('Blocks in note = ', props.note.blocks?.length)
   return (
     <div>
       {

@@ -3,7 +3,6 @@ import MoreVertIcon from '@mui/icons-material/MoreVert'
 import React from 'react'
 
 import { useRecoModeContext } from '../../contexts/recommendation'
-import { LS_RECO_MODE } from '../../lib/constants'
 
 interface ItemProps {
   active: boolean
@@ -20,9 +19,7 @@ const RecommendationFilters = () => {
   }
 
   const handleChangeRecoMode = () => {
-    console.log(`apply => ${selectedOption}`)
     recoModeContext.changeRecoMode(selectedOption)
-    console.log(`context constant => ${window.localStorage.getItem(LS_RECO_MODE)}`)
   }
 
   const Item = ({ active, label, format }: ItemProps) => {
@@ -62,9 +59,7 @@ const RecommendationFilters = () => {
               <MoreVertIcon className='h-2 w-2' aria-hidden='false' fontSize='small'/>
             </Menu.Button>
 
-            <Menu.Items
-              className='absolute right-0 z-10 mt-2 w-48 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'
-            >
+            <Menu.Items className='absolute right-0 z-10 mt-2 w-48 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black focus:outline-none'>
               <div className='p-1'>
                 <Menu.Item>
                   {({ active }) => (

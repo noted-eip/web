@@ -1,7 +1,7 @@
 import { BaseEditor, Descendant, Editor, Element as SlateElement, Point, Range, Transforms } from 'slate'
 import { ReactEditor } from 'slate-react'
 
-import { V1Block, V1Widget } from '../protorepo/openapi/typescript-axios'
+import { V1Block } from '../protorepo/openapi/typescript-axios'
 
 export type NoteTitleElement = { type: 'TYPE_NOTE_TITLE'; children: SlateText[] }
 export type ParagraphElement = { type: 'TYPE_PARAGRAPH'; children: SlateText[] }
@@ -194,8 +194,6 @@ export const slateElementsToNoteBlock = (elements: Descendant[]): V1Block => {
   for (let i = 0; i < elements.length; i++) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const element = elements[i] as any
-    //console.log('ELEMMENT IN FOR')
-    //console.log(element.children[0].text)
 
     if (element.type) {
       switch (element.type) {
@@ -266,44 +264,6 @@ export const slateElementsToNoteBlocks = (elements: Descendant[]): V1Block[] => 
   }
 
   return blocks
-}
-
-export const findArrayWidgetsFromString = ( widgetsSrc: V1Widget[] | undefined, data: string ): V1Widget[] => {
-  const widgetsRes: V1Widget[] = []
-  const lenght: number = widgetsSrc?.length !== undefined ? widgetsSrc?.length : 0
-
-  for (let i = 0; i < lenght; i++) {
-    if (widgetsSrc !== undefined) {
-      const currentWidget = widgetsSrc[i]
-      const keyword = currentWidget.websiteWidget?.keyword !== undefined ? currentWidget.websiteWidget?.keyword : ''
-      if (data.includes(keyword)) {
-        widgetsRes.push(widgetsSrc[i])
-      }
-    }
-  }
-
-  return widgetsRes
-}
-
-export const blockToString = ( block: V1Block ): string => {
-  switch (block.type) {
-    case 'TYPE_HEADING_1':
-      return block.heading === undefined ? '' : block.heading
-    case 'TYPE_HEADING_2':
-      return block.heading === undefined ? '' : block.heading
-    case 'TYPE_HEADING_3':
-      return block.heading === undefined ? '' : block.heading
-    case 'TYPE_PARAGRAPH':
-      return block.paragraph === undefined ? '' : block.paragraph
-    case 'TYPE_BULLET_POINT':
-      return block.bulletPoint === undefined ? '' : block.bulletPoint
-    case 'TYPE_NUMBER_POINT':
-      return block.numberPoint === undefined ? '' : block.numberPoint
-    case 'TYPE_MATH':
-      return block.math === undefined ? '' : block.math
-    default:
-  }
-  return ''
 }
 
 export const blocksAreEqual = (a: V1Block, b: V1Block): boolean => {

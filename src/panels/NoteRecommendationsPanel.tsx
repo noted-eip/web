@@ -6,7 +6,7 @@ import {useRecoModeContext} from '../contexts/recommendation'
 import { useGetNoteInCurrentGroup } from '../hooks/api/notes'
 import { useGenerateWidgets, useGetWikipediaImage } from '../hooks/api/recommendations'
 import { useNoteIdFromUrl} from '../hooks/url'
-import { blockToString, findArrayWidgetsFromString } from '../lib/editor'
+import { blockToString, findArrayWidgetsFromString } from '../lib/panels'
 import { getWikipediaImageNameFromUrl } from '../lib/widget'
 import { V1Widget } from '../protorepo/openapi/typescript-axios'
 
@@ -45,7 +45,6 @@ const WidgetListCurrentGroup: React.FC = () => {
   const noteId = useNoteIdFromUrl()
   const blockContext = useBlockContext()
   const recoModeContext = useRecoModeContext()
-  console.log(`blockContext ID = ${blockContext.blockId}`)
 
   if (noteId == null) {
     return (
@@ -55,8 +54,6 @@ const WidgetListCurrentGroup: React.FC = () => {
   }
 
   const listWidgetsQ = useGenerateWidgets({ noteId: noteId })
-  console.log(listWidgetsQ?.data?.widgets.length)
-  
   let blockWidgetsArray : V1Widget[] = []
 
   if (blockContext.blockId !== null || recoModeContext.recoMode == 'block') {
@@ -91,10 +88,13 @@ const WidgetListCurrentGroup: React.FC = () => {
               <div className='my-4 text-center text-sm text-gray-400'>
               Loading your widgets...
               </div>
-            ) : 
-            blockWidgetsArray.map((widget, idx) => (
-              <WidgetListItem key={`widget-list-${idx}`} widget={widget} />
-            ))
+            ) : blockWidgetsArray.length >= 1 ?
+              blockWidgetsArray.map((widget, idx) => (
+                <WidgetListItem key={`widget-list-${idx}`} widget={widget} />
+              )) :
+              <div className='my-4 text-center text-sm text-gray-400'>
+                You have no widgets for this block
+              </div>
 
         }
         
