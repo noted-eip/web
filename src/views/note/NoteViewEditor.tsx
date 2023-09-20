@@ -47,7 +47,6 @@ const BlockEditorItem: React.FC<{ note: V1Note, block: V1Block, blockIndex?: num
   const updateBlockMutation = useUpdateBlockInCurrentGroup()
   
   const insertBlock = () => {
-    console.log('>USE INSERT BLOCK<')
     const latestState = slateElementsToNoteBlock(editorState.current)
     insertBlockMutation.mutate({
       noteId: props.note.id,
@@ -59,7 +58,6 @@ const BlockEditorItem: React.FC<{ note: V1Note, block: V1Block, blockIndex?: num
   }
 
   const updateBlock = () => {
-    console.log('>USE UPDATE BLOCK<')
     const latestState = slateElementsToNoteBlock(editorState.current)
     // @note: No changes on lastest blocks and actuals
     const palceholderBlock: V1Block = {id: '', type: 'TYPE_PARAGRAPH'}
