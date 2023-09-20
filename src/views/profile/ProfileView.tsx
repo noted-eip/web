@@ -280,6 +280,38 @@ const ProfileViewBetaSection: React.FC = () => {
   )
 }
 
+function hrefFunction() {
+  window.open('https://docs.google.com/forms/d/e/1FAIpQLSdkkpJ6Y_sXB74Hpr1kXHVn2nQF37ktCVX7vtdUTUnJhfWsZw/viewform?usp=pp_url&entry.368849087=Compr%C3%A9hensible&entry.708712048=Bien&entry.1430431403=Bien&entry.402690215=Tr%C3%A8s+utile&entry.1070466955=Oui', '_blank')
+}
+
+const ProfileViewFeedbackSection: React.FC = () => {
+  return (
+    <div className='relative mt-4 w-full rounded-md border border-gray-100 bg-gray-50'>
+      {/* Header */}
+      <div className='flex items-center justify-between border-b border-[#efefef] p-5'>
+        <div className='flex items-center'>
+          <CodeBracketIcon className='mr-2 h-5 w-5 text-gray-600' />
+          <p className='text-base font-medium text-gray-600'>Send feedback</p>
+        </div>
+      </div>
+
+      <div className='grid grid-cols-[40%_60%] p-5'>
+        <div className='relative'>
+          <p className='text-xs text-gray-600'>What do think about us, rate our application if you feel like</p>
+        </div>
+        <div className='flex items-center justify-end'>
+          <button
+            className='rounded-md border border-gray-300 bg-white p-2 px-3 text-sm text-gray-600 transition-all duration-100 hover:border-gray-600 hover:bg-gray-600 hover:text-white'
+            onClick={() => {hrefFunction()}}
+          >
+              Rate us
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 
 const ProfileView: React.FC = () => {
   return (
@@ -291,6 +323,9 @@ const ProfileView: React.FC = () => {
         <ProfileViewDangerZoneSection />
         <hr className='m-5 rounded border-2'></hr>
         <ProfileViewBetaSection />
+        <hr className='m-5 rounded border-2'></hr>
+        <ProfileViewFeedbackSection />
+        <hr className='m-5 rounded border-2'></hr>
       </div>
     </ViewSkeleton>
   )
