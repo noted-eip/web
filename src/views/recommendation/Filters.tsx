@@ -59,7 +59,10 @@ const RecommendationFilters = () => {
               <MoreVertIcon className='h-2 w-2' aria-hidden='false' fontSize='small'/>
             </Menu.Button>
 
-            <Menu.Items className='absolute right-0 z-10 mt-2 w-48 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black focus:outline-none'>
+            <Menu.Items
+              // eslint-disable-next-line tailwindcss/migration-from-tailwind-2
+              className='absolute right-0 z-10 mt-2 w-48 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'
+            >
               <div className='p-1'>
                 <Menu.Item>
                   {({ active }) => (
