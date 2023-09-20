@@ -188,6 +188,46 @@ export const noteBlocksToSlateElements = (blocks: V1Block[]): Descendant[] => {
   return slateElements
 }
 
+export const slateElementsToNoteBlock = (elements: Descendant[]): V1Block => {
+  const block: V1Block = {id: '', type: 'TYPE_PARAGRAPH'}
+
+  for (let i = 0; i < elements.length; i++) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const element = elements[i] as any
+
+    if (element.type) {
+      switch (element.type) {
+        case 'TYPE_HEADING_1':
+          block.type = 'TYPE_HEADING_1'
+          block.heading = block.heading == undefined ? '' + element.children[0].text : block.heading + '\n' + element.children[0].text
+          continue
+        case 'TYPE_HEADING_2':
+          block.type = 'TYPE_HEADING_2'
+          block.heading = block.heading == undefined ? '' + element.children[0].text : block.heading + '\n' + element.children[0].text
+          continue
+        case 'TYPE_HEADING_3':
+          block.type = 'TYPE_HEADING_3'
+          block.heading = block.heading == undefined ? '' + element.children[0].text : block.heading + '\n' + element.children[0].text
+          continue
+        case 'TYPE_PARAGRAPH':
+          block.type = 'TYPE_PARAGRAPH'
+          block.paragraph = block.paragraph == undefined ? '' + element.children[0].text : block.paragraph + '\n' + element.children[0].text
+          continue
+        case 'TYPE_BULLET_LIST':
+          block.type = 'TYPE_BULLET_POINT'
+          block.bulletPoint = block.bulletPoint == undefined ? '' + element.children[0].text : block.bulletPoint + '\n' + element.children[0].text
+          continue
+        case 'TYPE_NUMBER_POINT':
+          block.type = 'TYPE_NUMBER_POINT'
+          block.numberPoint = block.numberPoint == undefined ? '' + element.children[0].text : block.numberPoint + '\n' + element.children[0].text
+          continue
+      }
+    }
+  }
+
+  return block
+}
+
 export const slateElementsToNoteBlocks = (elements: Descendant[]): V1Block[] => {
   const blocks: V1Block[] = []
 
@@ -225,6 +265,59 @@ export const slateElementsToNoteBlocks = (elements: Descendant[]): V1Block[] => 
 
   return blocks
 }
+
+export const blocksAreEqual = (a: V1Block, b: V1Block): boolean => {
+  switch (a.type) {
+    case 'TYPE_HEADING_1':
+      if (a.heading !== b.heading) {
+        return false
+      }
+      break
+    case 'TYPE_HEADING_2':
+      if (a.heading !== b.heading) {
+        return false
+      }
+      break
+    case 'TYPE_HEADING_3':
+      if (a.heading !== b.heading) {
+        return false
+      }
+      break
+    case 'TYPE_PARAGRAPH':
+      if (a.paragraph !== b.paragraph) {
+        return false
+      }
+      break
+    case 'TYPE_BULLET_POINT':
+      if (a.bulletPoint !== b.bulletPoint) {
+        return false
+      }
+      break
+    case 'TYPE_NUMBER_POINT':
+      if (a.numberPoint !== b.numberPoint) {
+        return false
+      }
+      break
+    case 'TYPE_CODE':
+      if (a.code?.lang !== b.code?.lang || a.code?.snippet !== b.code?.snippet) {
+        return false
+      }
+      break
+    case 'TYPE_IMAGE':
+      if (a.image?.url !== b.image?.url || a.image?.caption !== b.image?.caption) {
+        return false
+      }
+      break
+    case 'TYPE_MATH':
+      if (a.math !== b.math) {
+        return false
+      }
+      break
+    default:
+  }
+  return true
+}
+
 
 export const blockArraysAreEqual = (a: V1Block[], b: V1Block[]): boolean => {
   if (a.length !== b.length) {
