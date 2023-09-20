@@ -28,10 +28,10 @@ const App: React.FC = () => {
     storageBucket: 'noted-354512.appspot.com',
     messagingSenderId: '871625340195',
     appId: '1:871625340195:web:aa69f8236ad0da4e2fc896',
-    measurementId: 'G-XFC30W00DZ'
+    measurementId: 'G-XFC30W0DZ'
   }
 
-  const app = initializeApp(firebaseConfig)
+  initializeApp(firebaseConfig)
   React.useEffect(() => {
     noAuthContext.attemptSigninFromLocalStorage()
     setHasLoaded(true)
