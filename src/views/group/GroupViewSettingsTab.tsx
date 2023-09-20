@@ -17,6 +17,7 @@ import { useGetCurrentGroup, useGetGroup, useUpdateCurrentGroup } from '../../ho
 import { useRevokeInviteInCurrentGroup, useSendInviteInCurrentGroup } from '../../hooks/api/invites'
 import { useRemoveMemberInCurrentGroup, useUpdateMemberInCurrentGroup } from '../../hooks/api/members'
 import useClickOutside from '../../hooks/click'
+import { useOurIntl } from '../../i18n/TextComponent'
 import { V1GroupInvite, V1GroupMember } from '../../protorepo/openapi/typescript-axios'
 import GroupViewMenu from './GroupViewMenu'
 
@@ -217,6 +218,7 @@ const GroupMemberListItem: React.FC<{ member: V1GroupMember }> = (props) => {
 }
 
 const GroupViewSettingsTabMembersSection: React.FC = () => {
+  const { formatMessage } = useOurIntl()
   const groupQ = useGetCurrentGroup()
   const [accountEmailSearch, setAccountEmailSearch] = React.useState<string>('')
   const searchAccountQ = useSearchAccount({email: accountEmailSearch}, {enabled: false, retry: false})
@@ -295,16 +297,16 @@ const GroupViewSettingsTabMembersSection: React.FC = () => {
       <div className='grid w-full grid-cols-1'>
         <div className='grid h-8 grid-cols-[30%_40%_20%_10%] border-b border-gray-200 px-5'>
           <span className='text-sm font-medium leading-8 text-gray-500'>
-            NAME
+            {formatMessage({ id: 'GENERIC.name' }).toUpperCase()}
           </span>
           <span className='text-sm font-medium leading-8 text-gray-500'>
-            EMAIL
+            {formatMessage({ id: 'AUTH.email' }).toUpperCase()}
           </span>
           <span className='text-sm font-medium leading-8 text-gray-500'>
-            ROLE
+            {formatMessage({ id: 'GENERIC.role' }).toUpperCase()}
           </span>
           <span className='text-end text-sm font-medium leading-8 text-gray-500'>
-            ACTIONS
+            {formatMessage({ id: 'GENERIC.actions' }).toUpperCase()}
           </span>
         </div>
         {groupQ.isSuccess ? (

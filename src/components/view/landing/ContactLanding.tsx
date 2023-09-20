@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { FormatMessage } from '../../../i18n/TextComponent'
+
 const ContactLanding: React.FC = () => {
   return (
     <div id='contact'>
@@ -7,7 +9,9 @@ const ContactLanding: React.FC = () => {
         <section className='mb-32 text-gray-800'>
           <div className='flex justify-center'>
             <div className='text-center md:max-w-xl lg:max-w-3xl'>
-              <h2 className='mb-12 px-6 text-3xl font-bold'>Contact</h2>
+              <h2 className='mb-12 px-6 text-3xl font-bold'>
+                <FormatMessage id='CONTACT' />
+              </h2>
             </div>
           </div>
           <div className='flex flex-wrap'>
@@ -43,7 +47,9 @@ const ContactLanding: React.FC = () => {
                       </div>
                     </div>
                     <div className='ml-6 grow'>
-                      <p className='mb-1 font-bold'>Chef Noted</p>
+                      <p className='mb-1 font-bold'>
+                        <FormatMessage id='CONTACT.title' />
+                      </p>
                       <p className='text-gray-500'>maxime.dodin@epitech.eu</p>
                     </div>
                   </div>
