@@ -5,8 +5,14 @@ import React from 'react'
 
 import { useAuthContext } from '../../contexts/auth'
 import { useGroupContext } from '../../contexts/group'
-import { useCreateGroup, useGetCurrentGroup, useListGroups } from '../../hooks/api/groups'
+import {
+  useCreateGroup,
+  useGetCurrentGroup,
+  useListGroups,
+} from '../../hooks/api/groups'
+import {useGroupIdFromUrl, useNoteIdFromUrl} from '../../hooks/url'
 import LoaderIcon from '../icons/LoaderIcon'
+import NotesOptions from './Options'
 
 const GroupSelectDropdownItem: React.FC<
 React.PropsWithChildren & { onClick?: undefined | (() => void) }
@@ -25,6 +31,7 @@ React.PropsWithChildren & { onClick?: undefined | (() => void) }
   )
 }
 
+
 const GroupSelectDropdown: React.FC = () => {
   const auth = useAuthContext()
   const groupContext = useGroupContext()
@@ -35,32 +42,43 @@ const GroupSelectDropdown: React.FC = () => {
   return (
     <div>
       <Menu as='div' className='relative'>
-        <Menu.Button as='button' className='flex items-center !outline-none'>
-          <div className='flex cursor-pointer rounded border border-gray-300 text-sm'>
-            <div className='flex h-[34px] items-center font-medium text-gray-800'>
-              <React.Fragment>
-                {getGroupQ.isSuccess ?
-                  <React.Fragment>
-                    <div className='mx-2 h-4 w-4 rounded bg-gradient-to-br from-orange-400 to-pink-400' />
-                    {getGroupQ.data?.group.name}
-                  </React.Fragment>
-                  :
-                  getGroupQ.isFetching ? <React.Fragment>
-                    <div className='mx-2 h-4 w-4 rounded bg-gradient-to-br from-orange-400 to-pink-400' />
-                    <div className='skeleton h-4 w-24'></div>
-                  </React.Fragment>
-                    :
+        <div className='flex space-x-4'>
+          <Menu.Button as='button' className='flex items-center !outline-none'>
+            <div className='flex cursor-pointer rounded border border-gray-300 text-sm'>
+              <div className='flex h-[34px] items-center font-medium text-gray-800'>
+                <React.Fragment>
+                  {getGroupQ.isSuccess ? (
                     <React.Fragment>
-                      <div className='ml-3 mr-1 text-gray-700'>Select a Group</div>
+                      <div className='mx-2 h-4 w-4 rounded bg-gradient-to-br from-orange-400 to-pink-400' />
+                      {getGroupQ.data?.group.name}
                     </React.Fragment>
-                }
-              </React.Fragment>
+                  ) : getGroupQ.isFetching ? (
+                    <React.Fragment>
+                      <div className='mx-2 h-4 w-4 rounded bg-gradient-to-br from-orange-400 to-pink-400' />
+                      <div className='skeleton h-4 w-24'></div>
+                    </React.Fragment>
+                  ) : (
+                    <React.Fragment>
+                      <div className='ml-3 mr-1 text-gray-700'>
+                        Select a Group
+                      </div>
+                    </React.Fragment>
+                  )}
+                </React.Fragment>
+              </div>
+              <div className='ml-2 flex items-center justify-center border-l border-gray-300 px-1'>
+                <ChevronDownIcon className='h-4 w-4 stroke-[10px] text-gray-500' />
+              </div>
             </div>
-            <div className='ml-2 flex items-center justify-center border-l border-gray-300 px-1'>
-              <ChevronDownIcon className='h-4 w-4 stroke-[10px] text-gray-500' />
-            </div>
-          </div>
-        </Menu.Button>
+          </Menu.Button>
+          {window.location.pathname.includes('/note/') &&
+            window.location.pathname.split('/')[4] &&
+              <NotesOptions 
+                noteId={useNoteIdFromUrl()}
+                groupId={useGroupIdFromUrl()}
+              />
+          }
+        </div>
         <Transition
           as={React.Fragment}
           enter='transition ease-out duration-100'
@@ -73,17 +91,19 @@ const GroupSelectDropdown: React.FC = () => {
           <Menu.Items className='absolute right-0 mt-1 w-72 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none'>
             {listGroupsQ.isSuccess ? (
               listGroupsQ.data.groups &&
-              listGroupsQ.data.groups.filter((el) => el.id !== groupContext.groupId).map((el, idx) => (
-                <GroupSelectDropdownItem
-                  key={`group-select-dropdown-group-${el.id}-${idx}`}
-                  onClick={() => {
-                    groupContext.changeGroup(el.id)
-                  }}
-                >
-                  <div className='mr-3 h-6 w-6 rounded bg-gradient-to-br from-orange-400 to-pink-400' />
-                  {el.name}
-                </GroupSelectDropdownItem>
-              ))
+              listGroupsQ.data.groups
+                .filter((el) => el.id !== groupContext.groupId)
+                .map((el, idx) => (
+                  <GroupSelectDropdownItem
+                    key={`group-select-dropdown-group-${el.id}-${idx}`}
+                    onClick={() => {
+                      groupContext.changeGroup(el.id)
+                    }}
+                  >
+                    <div className='mr-3 h-6 w-6 rounded bg-gradient-to-br from-orange-400 to-pink-400' />
+                    {el.name}
+                  </GroupSelectDropdownItem>
+                ))
             ) : (
               <GroupSelectDropdownItem>
                 <div className='mr-3 h-6 w-6 animate-pulse rounded bg-gradient-to-br from-gray-100 to-gray-200' />
@@ -93,7 +113,12 @@ const GroupSelectDropdown: React.FC = () => {
             <div
               className='flex cursor-pointer items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-100'
               onClick={() => {
-                createGroupQ.mutate({body: {name: 'My Group', description: 'Created on ' + new Date().toDateString()}})
+                createGroupQ.mutate({
+                  body: {
+                    name: 'My Group',
+                    description: 'Created on ' + new Date().toDateString(),
+                  },
+                })
               }}
             >
               {createGroupQ.isLoading ? (

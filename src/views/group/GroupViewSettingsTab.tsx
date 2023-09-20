@@ -234,7 +234,7 @@ const GroupViewSettingsTabMembersSection: React.FC = () => {
     setAccountEmailSearch('')
   }
 
-  return (
+  return ( groupQ.data?.group.workspaceAccountId ? null :
     <div className='mt-4 overflow-hidden rounded-md border border-gray-100 bg-gray-50'>
       {/* Header */}
       <div className='flex items-center justify-between border-b border-gray-200 p-5'>
@@ -374,7 +374,7 @@ const PendingInviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
 const GroupViewSettingsTabPendingInvitesSection: React.FC = () => {
   const groupQ = useGetCurrentGroup()
 
-  return (
+  return ( groupQ.data?.group.workspaceAccountId ? null :
     <div className='mt-4 overflow-hidden rounded-md border border-gray-100 bg-gray-50'>
       {/* Header */}
       <div className='flex items-center justify-between border-b border-gray-200 p-5'>
