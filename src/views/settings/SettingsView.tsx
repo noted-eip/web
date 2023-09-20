@@ -1,18 +1,26 @@
 import { Menu, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/24/solid'
-import { Fragment } from 'react'
+import { getAnalytics, logEvent } from 'firebase/analytics'
 import React from 'react'
+import { Fragment } from 'react'
 
 import ViewSkeleton from '../../components/view/ViewSkeleton'
 import { LangageContext } from '../../contexts/langage'
 import { FormatMessage } from '../../i18n/TextComponent'
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
+import { TOGGLE_DEV_FEATURES } from '../../lib/env'
 
 const SettingsView: React.FC = () => {
   const context = React.useContext(LangageContext)
+  const analytics = getAnalytics()
+  
+  if (!TOGGLE_DEV_FEATURES) {
+    logEvent(analytics, 'page_view', {
+      page_title: 'settings'
+    })
+  }
+  function classNames(...classes) {
+    return classes.filter(Boolean).join(' ')
+  }
 
   return (
     <ViewSkeleton title='Settings' panels={['group-chat', 'group-activity']}>

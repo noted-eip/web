@@ -1,14 +1,17 @@
 import {
   ArrowRightIcon, CheckIcon, PlusIcon, UserPlusIcon, XMarkIcon
 } from '@heroicons/react/24/solid'
+import { getAnalytics, logEvent } from 'firebase/analytics'
 import React from 'react'
 
 import { useAuthContext } from '../../contexts/auth'
 import { useGroupContext } from '../../contexts/group'
 import { useCreateGroup, useListGroups } from '../../hooks/api/groups'
 import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
+import { TOGGLE_DEV_FEATURES } from '../../lib/env'
 
 const GroupViewEmptyState: React.FC = () => {
+  const analytics = getAnalytics()
   const { formatMessage } = useOurIntl()
   const groupContext = useGroupContext()
   const authContext = useAuthContext()
@@ -19,6 +22,11 @@ const GroupViewEmptyState: React.FC = () => {
     },
   })
 
+  if (!TOGGLE_DEV_FEATURES) {
+    logEvent(analytics, 'page_view', {
+      page_title: 'group_empty_state_page'
+    })
+  }
   return (
     <div className='flex h-full w-full flex-col items-center pt-12'>
       <UserPlusIcon className='h-12 w-12 stroke-1 text-gray-400' />

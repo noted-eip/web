@@ -1,13 +1,14 @@
 import React from 'react'
+import { toast } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 
 import ContainerMd from '../../components/container/ContainerMd'
 import OldInput from '../../components/form/OldInput'
+import Notification from '../../components/notification/Notification'
 import { useResetPasswordContext } from '../../hooks/api/accounts'
 import { useForgetAccountPasswordValidateToken } from '../../hooks/api/password'
 import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
 import { V1ForgetAccountPasswordValidateTokenResponse } from '../../protorepo/openapi/typescript-axios'
-
 
 const ResetPasswordEmail: React.FC = () => {
   const { formatMessage } = useOurIntl()
@@ -21,8 +22,9 @@ const ResetPasswordEmail: React.FC = () => {
       resetPasswordContext.changeResetPassword({account_id: data.account.id, reset_token: data.resetToken, auth_token: data.authToken})
       navigate('/reset_password_password') 
     },
-    onError: () => {
+    onError: (e) => {
       setIsTokenValid(false)
+      toast.error(e.response?.data.error as string)
     },
   })
   const formIsValid = () => {
@@ -68,6 +70,7 @@ const ResetPasswordEmail: React.FC = () => {
           </button>
         </ContainerMd>
       </form>
+      <Notification />
     </div>
   )
 }

@@ -1,5 +1,6 @@
 import { ArrowPathIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { CodeBracketIcon, ExclamationTriangleIcon, InboxIcon, PencilIcon } from '@heroicons/react/24/solid'
+import { getAnalytics, logEvent } from 'firebase/analytics'
 import React, { useState } from 'react'
 
 import LoaderIcon from '../../components/icons/LoaderIcon'
@@ -10,6 +11,7 @@ import { useGetGroup } from '../../hooks/api/groups'
 import { useAcceptInvite, useDenyInvite, useListInvites } from '../../hooks/api/invites'
 import useClickOutside from '../../hooks/click'
 import { FormatMessage } from '../../i18n/TextComponent'
+import { TOGGLE_DEV_FEATURES } from '../../lib/env'
 import { V1Account, V1GroupInvite } from '../../protorepo/openapi/typescript-axios'
 
 const InviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
@@ -17,6 +19,13 @@ const InviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
   const denyInviteQ = useDenyInvite()
   const acceptInviteQ = useAcceptInvite()
 
+  const analytics = getAnalytics()
+  
+  if (!TOGGLE_DEV_FEATURES) {
+    logEvent(analytics, 'page_view', {
+      page_title: 'profile'
+    })
+  }
   return (
     <div className='my-2 grid h-12 grid-cols-3'>
       <div className='flex items-center'>

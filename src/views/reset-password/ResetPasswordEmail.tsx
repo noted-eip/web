@@ -1,13 +1,17 @@
+import { getAnalytics, logEvent } from 'firebase/analytics'
 import React from 'react'
+import { toast } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 
 import ContainerMd from '../../components/container/ContainerMd'
 import OldInput from '../../components/form/OldInput'
+import Notification from '../../components/notification/Notification'
 import { useResetPasswordContext } from '../../hooks/api/accounts'
 import { useForgetAccountPassword } from '../../hooks/api/password'
 import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
+import { TOGGLE_DEV_FEATURES } from '../../lib/env'
 import { validateEmail } from '../../lib/validators'
-import { V1ForgetAccountPasswordResponse } from '../../protorepo/openapi/typescript-axios'
+import { V1ForgetAccountPasswordResponse }   from '../../protorepo/openapi/typescript-axios'
 
 
 const ResetPasswordEmail: React.FC = () => {
@@ -21,11 +25,22 @@ const ResetPasswordEmail: React.FC = () => {
       resetPasswordContext.changeResetPassword({account_id: data.accountId, reset_token: null, auth_token: null})
       navigate('/reset_password_token')
     },
+    onError: (e) => {
+      toast.error(e.response?.data.error as string)
+    }
   })
+  
   const formIsValid = () => {
     return emailValid
   }
 
+  const analytics = getAnalytics()
+  
+  if (!TOGGLE_DEV_FEATURES) {
+    logEvent(analytics, 'page_view', {
+      page_title: 'resetPasswordEmail'
+    })
+  }
   return (
     <div className='flex h-screen w-screen items-center justify-center'>
       <form
@@ -65,6 +80,7 @@ const ResetPasswordEmail: React.FC = () => {
           </button>
         </ContainerMd>
       </form>
+      <Notification />
     </div>
   )
 }

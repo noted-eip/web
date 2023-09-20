@@ -1,15 +1,18 @@
 import { useGoogleLogin } from '@react-oauth/google'
 import { getAnalytics, logEvent } from 'firebase/analytics'
 import React from 'react'
+import { toast } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 
 import ContainerMd from '../../components/container/ContainerMd'
 import OldInput from '../../components/form/OldInput'
+import Notification from '../../components/notification/Notification'
 import { addAccountToDevelopmentContext, useDevelopmentContext } from '../../contexts/dev'
 import { useNoAuthContext } from '../../contexts/noauth'
 import { useAuthenticate, useAuthenticateGoogle, useCreateAccount } from '../../hooks/api/accounts'
 import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
 import { decodeToken } from '../../lib/api'
+import { TOGGLE_DEV_FEATURES } from '../../lib/env'
 import { validateEmail, validateName, validatePassword } from '../../lib/validators'
 import { V1AuthenticateGoogleResponse, V1AuthenticateResponse } from '../../protorepo/openapi/typescript-axios'
 
@@ -36,11 +39,16 @@ const SignupView: React.FC = () => {
         )
       }
       auth.signin(data.token)
-      logEvent(analytics, 'sign_up', {
-        method: 'mail'
-      })
+      if (!TOGGLE_DEV_FEATURES) {
+        logEvent(analytics, 'sign_up', {
+          method: 'mail'
+        })
+      }
       navigate('/')
     },
+    onError: (e) => {
+      toast.error(e.response?.data.error as string)
+    }
   })
   const createAccountMutation = useCreateAccount({
     onSuccess: () => {
@@ -58,9 +66,11 @@ const SignupView: React.FC = () => {
         )
       }
       auth.signin(data.token)
-      logEvent(analytics, 'sign_up', {
-        method: 'google'
-      })
+      if (!TOGGLE_DEV_FEATURES) {
+        logEvent(analytics, 'sign_up', {
+          method: 'google'
+        })
+      }
       navigate('/')
     },
   })
@@ -177,6 +187,7 @@ const SignupView: React.FC = () => {
           </div>
         </ContainerMd>
       </form>
+      <Notification />
     </div>
   )
 }
