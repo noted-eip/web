@@ -1,4 +1,5 @@
 import { useGoogleLogin } from '@react-oauth/google'
+import { getAnalytics, logEvent } from 'firebase/analytics'
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
@@ -14,6 +15,7 @@ import { V1AuthenticateGoogleResponse, V1AuthenticateResponse } from '../../prot
 
 const SigninView: React.FC = () => {
   const { formatMessage } = useOurIntl()
+  const analytics = getAnalytics()
   const navigate = useNavigate()
   const auth = useNoAuthContext()
   const [password, setPassword] = React.useState('')
@@ -31,6 +33,9 @@ const SigninView: React.FC = () => {
         )
       }
       auth.signin(data.token)
+      logEvent(analytics, 'login', {
+        method: 'mail'
+      })
       navigate('/')
     },
   })
@@ -45,6 +50,9 @@ const SigninView: React.FC = () => {
         )
       }
       auth.signin(data.token)
+      logEvent(analytics, 'login', {
+        method: 'google'
+      })
       navigate('/')
     },
   })

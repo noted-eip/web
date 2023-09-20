@@ -3,7 +3,7 @@ import { useMutation, useQuery } from 'react-query'
 import { useAuthContext } from '../../contexts/auth'
 import { useGroupContext } from '../../contexts/group'
 import { apiQueryClient, openapiClient } from '../../lib/api'
-import { NotesAPICreateNoteRequest, V1CreateNoteResponse, V1GetNoteResponse, V1ListNotesResponse, V1Note, V1UpdateNoteResponse } from '../../protorepo/openapi/typescript-axios'
+import { NotesAPICreateNoteRequest, V1CreateNoteResponse, V1GetNoteResponse, V1ListNotesResponse, V1Note, V1UpdateNoteResponse} from '../../protorepo/openapi/typescript-axios'
 import { newNoteCacheKey, newNotesCacheKey } from './cache'
 import { axiosRequestOptionsWithAuthorization, MutationHookOptions, QueryHookOptions } from './helpers'
 

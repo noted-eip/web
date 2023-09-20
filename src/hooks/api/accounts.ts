@@ -42,6 +42,16 @@ export const useGetAccount = (req: GetAccountRequest, options?: QueryHookOptions
   })
 }
 
+export type RegisterToMobileBetaRequest = undefined;
+export const useRegisterToMobileBeta = (options?: MutationHookOptions<RegisterToMobileBetaRequest, object>) => {
+  const authContext = useAuthContext()
+  const currentAccountId = authContext.accountId as string
+
+  return useMutation(async () => {
+    return (await openapiClient.accountsAPIRegisterUserToMobileBeta({accountId: currentAccountId}, await axiosRequestOptionsWithAuthorization(authContext))).data
+  }, options)
+}
+
 export type SearchAccountRequest = {email: string};
 export const useSearchAccount = (req: SearchAccountRequest, options?: QueryHookOptions<SearchAccountRequest, V1GetAccountResponse>) => {
   const auth = useAuthContext()
