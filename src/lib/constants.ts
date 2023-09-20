@@ -28,3 +28,6 @@ export const LS_RECO_MODE = 'note'
 // The key whithin the browser's local storage which contains the
 // current block's ID.
 export const LS_BLOCK_ID_KEY = 'block_id'
+
+// Language
+export const LS_LANGAGE = 'fr'

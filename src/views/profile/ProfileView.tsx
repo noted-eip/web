@@ -1,5 +1,6 @@
 import { ArrowPathIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { CodeBracketIcon, ExclamationTriangleIcon, InboxIcon, PencilIcon } from '@heroicons/react/24/solid'
+import { getAnalytics, logEvent } from 'firebase/analytics'
 import React, { useState } from 'react'
 
 import LoaderIcon from '../../components/icons/LoaderIcon'
@@ -9,6 +10,8 @@ import { useDeleteMyAccount, useGetAccount, useRegisterToMobileBeta, useUpdateMy
 import { useGetGroup } from '../../hooks/api/groups'
 import { useAcceptInvite, useDenyInvite, useListInvites } from '../../hooks/api/invites'
 import useClickOutside from '../../hooks/click'
+import { FormatMessage } from '../../i18n/TextComponent'
+import { TOGGLE_DEV_FEATURES } from '../../lib/env'
 import { V1Account, V1GroupInvite } from '../../protorepo/openapi/typescript-axios'
 
 const InviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
@@ -16,6 +19,13 @@ const InviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
   const denyInviteQ = useDenyInvite()
   const acceptInviteQ = useAcceptInvite()
 
+  const analytics = getAnalytics()
+  
+  if (!TOGGLE_DEV_FEATURES) {
+    logEvent(analytics, 'page_view', {
+      page_title: 'profile'
+    })
+  }
   return (
     <div className='my-2 grid h-12 grid-cols-3'>
       <div className='flex items-center'>
@@ -43,7 +53,7 @@ const InviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
               className='group flex cursor-pointer items-center rounded-full bg-red-100 p-1 px-3 text-xs font-medium text-red-700 hover:bg-red-200 disabled:bg-gray-100 disabled:text-gray-700'
               onClick={() => denyInviteQ.mutate({ groupId: props.invite?.groupId as string, inviteId: props.invite.id })}
             >
-              Deny
+              <FormatMessage id='PROFILE.invite.deny' />
               {
                 denyInviteQ.isLoading ?
                   <LoaderIcon className='ml-1 h-3 w-3' />
@@ -57,7 +67,7 @@ const InviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
               className='group ml-2 flex cursor-pointer items-center rounded-full bg-green-100 p-1 px-3 text-xs font-medium text-green-700 hover:bg-green-200 disabled:bg-gray-100 disabled:text-gray-700'
               onClick={() => acceptInviteQ.mutate({ groupId: props.invite.groupId as string, inviteId: props.invite.id })}
             >
-              Accept
+              <FormatMessage id='PROFILE.invite.accept' />
               {
                 acceptInviteQ.isLoading ?
                   <LoaderIcon className='ml-1 h-3 w-3' />
@@ -82,7 +92,9 @@ const ProfileViewPendingInvitesSection: React.FC = () => {
       <div className='flex items-center justify-between border-b border-[#efefef] p-5'>
         <div className='flex items-center'>
           <InboxIcon className='mr-2 h-5 w-5 text-gray-600' />
-          <p className='text-base font-medium text-gray-600'>Invites</p>
+          <p className='text-base font-medium text-gray-600'>
+            <FormatMessage id='GROUP.Empty.title2' />
+          </p>
         </div>
       </div>
 
@@ -91,7 +103,7 @@ const ProfileViewPendingInvitesSection: React.FC = () => {
         {listInvitesQ.isSuccess ? (
           !listInvitesQ.data.invites?.length ? (
             <div className='my-4 text-center text-sm text-gray-400'>
-              You haven&rsquo;t been invited to any group
+              <FormatMessage id='PROFILE.invite.desc' />
             </div>
           ) : (
             listInvitesQ.data.invites?.map((el, idx) => (
@@ -195,21 +207,27 @@ const ProfileViewDangerZoneSection: React.FC = () => {
       <div className='flex items-center justify-between border-b border-[#efefef] p-5'>
         <div className='flex items-center'>
           <ExclamationTriangleIcon className='mr-2 h-5 w-5 text-red-700' />
-          <p className='text-base font-medium text-red-700'>Danger Zone</p>
+          <p className='text-base font-medium text-red-700'>
+            <FormatMessage id='PROFILE.delete.title1' />
+          </p>
         </div>
       </div>
 
       <div className='grid grid-cols-[40%_60%] p-5'>
         <div>
-          <p className='mb-2 text-sm font-medium text-gray-800'>Delete my account</p>
-          <p className='text-xs text-gray-600'>This has the effect of permanently deleting all of your personal data including your notes.</p>
+          <p className='mb-2 text-sm font-medium text-gray-800'>
+            <FormatMessage id='PROFILE.delete.title2' />
+          </p>
+          <p className='text-xs text-gray-600'>
+            <FormatMessage id='PROFILE.delete.desc' />
+          </p>
         </div>
         <div className='flex items-center justify-end'>
           <button
             className='rounded-md border border-gray-300 bg-white p-2 px-3 text-sm text-red-600 transition-all duration-100 hover:border-red-600 hover:bg-red-600 hover:text-white'
             onClick={() => {deleteAccountQ.mutate(undefined)}}
           >
-            Delete Account
+            <FormatMessage id='PROFILE.delete.button' />
           </button>
         </div>
       </div>

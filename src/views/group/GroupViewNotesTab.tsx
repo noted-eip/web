@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { useGetAccount } from '../../hooks/api/accounts'
 import { useGetCurrentGroup } from '../../hooks/api/groups'
 import { useCreateNoteInCurrentGroup, useDeleteNoteInCurrentGroup, useListNotesInCurrentGroup } from '../../hooks/api/notes'
+import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
 import { V1Note } from '../../protorepo/openapi/typescript-axios'
 import GroupViewMenu from './GroupViewMenu'
 
@@ -100,6 +101,7 @@ const NotesListGridItem: React.FC<{ note: V1Note }> = (props) => {
 }
 
 const GroupViewNotesTab: React.FC = () => {
+  const { formatMessage } = useOurIntl()
   const navigate = useNavigate()
   const listNotesQ = useListNotesInCurrentGroup({})
   const getGroupQ = useGetCurrentGroup()
@@ -135,16 +137,16 @@ const GroupViewNotesTab: React.FC = () => {
       <div className='flex grid-rows-[auto_auto]'>
         <input
           className='w-full rounded-md border border-gray-200 p-2 text-sm placeholder:text-gray-400'
-          placeholder={`Search ${getGroupQ.data?.group.name || ''}`}
+          placeholder={`${formatMessage({ id: 'GROUP.search' })} ${getGroupQ.data?.group.name || ''}`}
           type='text'
         />
         <button
           className='ml-4 flex shrink-0 items-center rounded-md bg-blue-50 p-2 px-3 text-sm  text-blue-500 transition-all'
           onClick={() => {
-            createNoteQ.mutate({body: {title: 'Untitled Note'}})
+            createNoteQ.mutate({body: {title: formatMessage({ id: 'NOTE.untitledNote' })}})
           }}
         >
-          New note
+          <FormatMessage id='NOTE.newNote' />
           {
             createNoteQ.isLoading ? <ArrowPathIcon className='ml-1 h-4 w-4 animate-spin text-blue-500' /> : <PlusIcon className='ml-1 h-4 w-4 stroke-2 text-blue-500' />
           }

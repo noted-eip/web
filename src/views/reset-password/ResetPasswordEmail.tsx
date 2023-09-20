@@ -1,15 +1,21 @@
+import { getAnalytics, logEvent } from 'firebase/analytics'
 import React from 'react'
+import { toast } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 
 import ContainerMd from '../../components/container/ContainerMd'
 import OldInput from '../../components/form/OldInput'
+import Notification from '../../components/notification/Notification'
 import { useResetPasswordContext } from '../../hooks/api/accounts'
 import { useForgetAccountPassword } from '../../hooks/api/password'
+import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
+import { TOGGLE_DEV_FEATURES } from '../../lib/env'
 import { validateEmail } from '../../lib/validators'
-import { V1ForgetAccountPasswordResponse } from '../../protorepo/openapi/typescript-axios'
+import { V1ForgetAccountPasswordResponse }   from '../../protorepo/openapi/typescript-axios'
 
 
 const ResetPasswordEmail: React.FC = () => {
+  const { formatMessage } = useOurIntl()
   const navigate = useNavigate()
   const resetPasswordContext = useResetPasswordContext()
   const [email, setEmail] = React.useState('')
@@ -19,11 +25,22 @@ const ResetPasswordEmail: React.FC = () => {
       resetPasswordContext.changeResetPassword({account_id: data.accountId, reset_token: null, auth_token: null})
       navigate('/reset_password_token')
     },
+    onError: (e) => {
+      toast.error(e.response?.data.error as string)
+    }
   })
+  
   const formIsValid = () => {
     return emailValid
   }
 
+  const analytics = getAnalytics()
+  
+  if (!TOGGLE_DEV_FEATURES) {
+    logEvent(analytics, 'page_view', {
+      page_title: 'resetPasswordEmail'
+    })
+  }
   return (
     <div className='flex h-screen w-screen items-center justify-center'>
       <form
@@ -35,18 +52,18 @@ const ResetPasswordEmail: React.FC = () => {
       >
         <ContainerMd>
           <h2 className='mb-4 text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl'>
-              Forgot password?
+            <FormatMessage id='RESETPWD.Email.title' />
           </h2>
           <p 
             className='mb-2 text-lg leading-tight tracking-tight text-gray-900'>
-              Enter the email address associated with your account
+            <FormatMessage id='RESETPWD.Email.desc1' />
           </p>
           <p 
             className='mb-4 text-sm leading-tight tracking-tight text-gray-500'>
-              We will email you a verification code to check your authenticity
+            <FormatMessage id='RESETPWD.Email.desc2' />
           </p>
           <OldInput
-            label='Your email'
+            label={formatMessage({ id: 'RESETPWD.Email.form' })}
             value={email}
             onChange={(e) => {
               const val = e.target.value as string
@@ -59,10 +76,11 @@ const ResetPasswordEmail: React.FC = () => {
           <button className='mt-2 w-full rounded-lg bg-blue-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:bg-gray-600 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
             disabled={!formIsValid() || forgetAccountPasswordMutation.isLoading}
           >
-              Send Email
+            <FormatMessage id='RESETPWD.Email.button' />
           </button>
         </ContainerMd>
       </form>
+      <Notification />
     </div>
   )
 }

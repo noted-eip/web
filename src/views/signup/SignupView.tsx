@@ -1,18 +1,23 @@
 import { useGoogleLogin } from '@react-oauth/google'
 import { getAnalytics, logEvent } from 'firebase/analytics'
 import React from 'react'
+import { toast } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 
 import ContainerMd from '../../components/container/ContainerMd'
 import OldInput from '../../components/form/OldInput'
+import Notification from '../../components/notification/Notification'
 import { addAccountToDevelopmentContext, useDevelopmentContext } from '../../contexts/dev'
 import { useNoAuthContext } from '../../contexts/noauth'
 import { useAuthenticate, useAuthenticateGoogle, useCreateAccount } from '../../hooks/api/accounts'
+import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
 import { decodeToken } from '../../lib/api'
+import { TOGGLE_DEV_FEATURES } from '../../lib/env'
 import { validateEmail, validateName, validatePassword } from '../../lib/validators'
 import { V1AuthenticateGoogleResponse, V1AuthenticateResponse } from '../../protorepo/openapi/typescript-axios'
 
 const SignupView: React.FC = () => {
+  const { formatMessage } = useOurIntl()
   const analytics = getAnalytics()
   const navigate = useNavigate()
   const auth = useNoAuthContext()
@@ -34,11 +39,16 @@ const SignupView: React.FC = () => {
         )
       }
       auth.signin(data.token)
-      logEvent(analytics, 'sign_up', {
-        method: 'mail'
-      })
+      if (!TOGGLE_DEV_FEATURES) {
+        logEvent(analytics, 'sign_up', {
+          method: 'mail'
+        })
+      }
       navigate('/')
     },
+    onError: (e) => {
+      toast.error(e.response?.data.error as string)
+    }
   })
   const createAccountMutation = useCreateAccount({
     onSuccess: () => {
@@ -56,9 +66,11 @@ const SignupView: React.FC = () => {
         )
       }
       auth.signin(data.token)
-      logEvent(analytics, 'sign_up', {
-        method: 'google'
-      })
+      if (!TOGGLE_DEV_FEATURES) {
+        logEvent(analytics, 'sign_up', {
+          method: 'google'
+        })
+      }
       navigate('/')
     },
   })
@@ -83,10 +95,10 @@ const SignupView: React.FC = () => {
       >
         <ContainerMd>
           <h2 className='mb-4 text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl'>
-              Create an account
+            <FormatMessage id='SIGNUP.title' />
           </h2>
           <OldInput
-            label='Name'
+            label={formatMessage({ id: 'GENERIC.name' })}
             value={name}
             onChange={(e) => {
               const val = e.target.value as string
@@ -97,7 +109,7 @@ const SignupView: React.FC = () => {
             errorMessage='Invalid name'
           />
           <OldInput
-            label='Email'
+            label={formatMessage({ id: 'AUTH.email' })}
             value={email}
             onChange={(e) => {
               const val = e.target.value as string
@@ -108,7 +120,7 @@ const SignupView: React.FC = () => {
             errorMessage='Invalid email address'
           />
           <OldInput
-            label='Password'
+            label={formatMessage({ id: 'AUTH.pwd' })}
             type='password'
             tooltip='6 characters, letters numbers and symbols'
             value={password}
@@ -139,11 +151,13 @@ const SignupView: React.FC = () => {
             createAccountMutation.isLoading
             }
           >
-          Submit
+            <FormatMessage id='AUTH.register' />
           </button>
           <div style={{cursor: 'pointer'}} className='flex items-center justify-center rounded border border-gray-500 bg-white px-3 py-2 text-sm font-medium text-gray-800 dark:border-gray-500 dark:bg-gray-400'
             onClick={() => googleLogin()}>
-            <p className='mr-2 dark:text-gray-400'>Sign up with Google</p>
+            <p className='mr-2 dark:text-gray-400'>
+              <FormatMessage id='SIGNUP.signupGoogle' />
+            </p>
             <svg
               className='h-5 w-5'
               xmlns='http://www.w3.org/2000/svg'
@@ -173,6 +187,7 @@ const SignupView: React.FC = () => {
           </div>
         </ContainerMd>
       </form>
+      <Notification />
     </div>
   )
 }
