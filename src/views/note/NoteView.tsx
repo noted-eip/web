@@ -4,6 +4,7 @@ import React from 'react'
 import ViewSkeleton from '../../components/view/ViewSkeleton'
 import { useGetNoteInCurrentGroup } from '../../hooks/api/notes'
 import { useNoteIdFromUrl } from '../../hooks/url'
+import { TOGGLE_DEV_FEATURES } from '../../lib/env'
 import NoteViewMetadataHeader from './NoteMetadataHeader'
 import NoteViewEditor from './NoteViewEditor'
 import NoteViewHeader from './NoteViewHeader'
@@ -26,9 +27,11 @@ const NoteView: React.FC = () => {
   const noteId = useNoteIdFromUrl()
   const noteQuery = useGetNoteInCurrentGroup({ noteId })
 
-  logEvent(analytics, 'page_view', {
-    page_title: 'note_page'
-  })
+  if (!TOGGLE_DEV_FEATURES) {
+    logEvent(analytics, 'page_view', {
+      page_title: 'note_page'
+    })
+  }
   return <ViewSkeleton titleElement={<NoteViewHeader />} panels={['group-chat', 'group-activity', 'note-recommendations']}>
     <div className='w-full'>
       <NoteViewMetadataHeader />
