@@ -209,7 +209,7 @@ const ActivityListCurrentGroup: React.FC = () => {
 const GroupActivityPanel: React.FC = () => {
   return (
     <PanelSkeleton>
-      <ActivityListCurrentGroup />
+      <ActivityListCurrentGroup/>
     </PanelSkeleton>
   )
 }
