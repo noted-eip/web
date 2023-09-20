@@ -50,9 +50,6 @@ const GroupSelectDropdown: React.FC = () => {
                 <React.Fragment>
                   {getGroupQ.isSuccess ? (
                     <React.Fragment>
-                      <div className='ml-3 mr-1 text-gray-700'>
-                        <FormatMessage id='DASHBOARD.selectGroup' />
-                      </div>
                       <div className='mx-2 h-4 w-4 rounded bg-gradient-to-br from-orange-400 to-pink-400' />
                       {getGroupQ.data?.group.name}
                     </React.Fragment>
@@ -64,7 +61,7 @@ const GroupSelectDropdown: React.FC = () => {
                   ) : (
                     <React.Fragment>
                       <div className='ml-3 mr-1 text-gray-700'>
-                        Select a Group
+                        <FormatMessage id='DASHBOARD.selectGroup' />
                       </div>
                     </React.Fragment>
                   )}
