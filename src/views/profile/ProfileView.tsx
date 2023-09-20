@@ -315,7 +315,7 @@ const ProfileViewFeedbackSection: React.FC = () => {
 
 const ProfileView: React.FC = () => {
   return (
-    <ViewSkeleton title='Profile' panels={['group-chat', 'group-activity']}>
+    <ViewSkeleton title='Profile' panels={['group-activity']}>
       <div className='mx-lg mb-lg w-full xl:mx-xl xl:mb-xl'>
         <ProfileViewAccountSection />
         <hr className='m-5 rounded border-2'></hr>

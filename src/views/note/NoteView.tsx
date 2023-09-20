@@ -32,7 +32,7 @@ const NoteView: React.FC = () => {
       page_title: 'note_page'
     })
   }
-  return <ViewSkeleton titleElement={<NoteViewHeader />} panels={['group-chat', 'group-activity', 'note-recommendations']}>
+  return <ViewSkeleton titleElement={<NoteViewHeader />} panels={['group-activity', 'note-recommendations']}>
     <div className='w-full'>
       <NoteViewMetadataHeader />
       {
