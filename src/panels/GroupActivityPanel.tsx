@@ -1,3 +1,4 @@
+import {ArrowRightOnRectangleIcon,DocumentPlusIcon } from '@heroicons/react/24/outline'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -136,21 +137,25 @@ const ActivityListItem: React.FC<{ activity: V1GroupActivity }> = (props) => {
   const navigate = useNavigate()
   let event
   let redirectId
+  let icon
 
   switch(props.activity.type) { 
-    case 'ADD-NOTE': { 
+    case 'ADD-NOTE': {
       event = getAddNoteEvent(props.activity?.event)
       redirectId = getNoteIdInEvent(props.activity?.event)
+      icon = <DocumentPlusIcon className='mr-3 h-6 w-6 text-green-400' />
       break
     } 
     case 'ADD-MEMBER': { 
       event = getUpdateOnMemberEvent(props.activity?.event)
       redirectId = getGroupIdInEvent(props.activity?.event)
+      icon = <ArrowRightOnRectangleIcon className='mr-3 h-6 w-6 text-green-400' />
       break
     }
     case 'REMOVE-MEMBER': { 
       event = getUpdateOnMemberEvent(props.activity?.event)
       redirectId = getGroupIdInEvent(props.activity?.event)
+      icon = <ArrowRightOnRectangleIcon className='mr-3 h-6 w-6 text-red-400' />
       break
     }
   }
@@ -163,17 +168,12 @@ const ActivityListItem: React.FC<{ activity: V1GroupActivity }> = (props) => {
       onClick={() => navigate(getRoute(props.activity.type, groupContext.groupId as string, redirectId))}
     >
       <div className='flex items-center'>
+        <div className='grid grid-flow-col gap-1 p-1'>
+          {icon}
+        </div>
         <div className='flex flex-col'>
-          <React.Fragment>
-            <p className='font-normal'>{ event }</p>
-          </React.Fragment>
-          <div className='flex flex-col'>
-            <React.Fragment>
-              <div>
-                <p className='text-gray-700'>{ dateFormat }</p>
-              </div>
-            </React.Fragment>
-          </div>
+          <p className='font-normal'>{ event }</p>
+          <p className='text-gray-700'>{ dateFormat }</p>
         </div>
       </div>
     </div>
