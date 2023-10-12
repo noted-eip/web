@@ -65,9 +65,6 @@ const SigninView: React.FC = () => {
       }      
       navigate('/')
     },
-    onError: () => {
-      console.log('google error')
-    }
   })
   const googleLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => {

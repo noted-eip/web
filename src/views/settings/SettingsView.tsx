@@ -23,7 +23,7 @@ const SettingsView: React.FC = () => {
   }
 
   return (
-    <ViewSkeleton title='Settings' panels={['group-chat', 'group-activity']}>
+    <ViewSkeleton title='Settings' panels={['group-activity']}>
       <div className='mx-lg mb-lg w-full xl:mx-xl xl:mb-xl'>
         <div className='mt-4 w-full rounded-md border border-gray-100 bg-gray-50'>
           {/* Header */}
