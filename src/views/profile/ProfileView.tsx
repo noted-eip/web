@@ -4,6 +4,7 @@ import { getAnalytics, logEvent } from 'firebase/analytics'
 import React, { useState } from 'react'
 
 import LoaderIcon from '../../components/icons/LoaderIcon'
+import ConfirmationPanel from '../../components/pop-up/confirmation-panel'
 import ViewSkeleton from '../../components/view/ViewSkeleton'
 import { useAuthContext } from '../../contexts/auth'
 import { useDeleteMyAccount, useGetAccount, useRegisterToMobileBeta, useUpdateMyAccount } from '../../hooks/api/accounts'
@@ -123,10 +124,10 @@ const ProfileViewPendingInvitesSection: React.FC = () => {
 
 const ProfileViewAccountSection: React.FC = () => {
   const authContext = useAuthContext()
+  const getAccountQ = useGetAccount({accountId: authContext.accountId})
   const [editName, setEditName] = React.useState(false)
   const [newName, setNewName] = React.useState<string | undefined>(undefined)
   const updateAccountQ = useUpdateMyAccount()
-  const getAccountQ = useGetAccount({accountId: authContext.accountId})
   const newNameInputRef = React.createRef<HTMLInputElement>()
 
   useClickOutside(newNameInputRef, () => {
@@ -200,35 +201,47 @@ const ProfileViewAccountSection: React.FC = () => {
 
 const ProfileViewDangerZoneSection: React.FC = () => {
   const deleteAccountQ = useDeleteMyAccount()
+  const [open, setOpen] = React.useState(false)
+
+  const handleOpen = () => {
+    setOpen(true)
+  }
+
+  const onValidate = () => {
+    deleteAccountQ.mutate(undefined)
+  }
 
   return (
-    <div className='mt-4 w-full rounded-md border border-gray-100 bg-gray-50'>
-      {/* Header */}
-      <div className='flex items-center justify-between border-b border-[#efefef] p-5'>
-        <div className='flex items-center'>
-          <ExclamationTriangleIcon className='mr-2 h-5 w-5 text-red-700' />
-          <p className='text-base font-medium text-red-700'>
-            <FormatMessage id='PROFILE.delete.title1' />
-          </p>
+    <div>
+      {open ? <ConfirmationPanel onValidate={onValidate} title='PROFILE.delete.title2' content='PROFILE.delete.desc'/> : null}
+      <div className='mt-4 w-full rounded-md border border-gray-100 bg-gray-50'>
+        {/* Header */}
+        <div className='flex items-center justify-between border-b border-[#efefef] p-5'>
+          <div className='flex items-center'>
+            <ExclamationTriangleIcon className='mr-2 h-5 w-5 text-red-700' />
+            <p className='text-base font-medium text-red-700'>
+              <FormatMessage id='PROFILE.delete.title1' />
+            </p>
+          </div>
         </div>
-      </div>
 
-      <div className='grid grid-cols-[40%_60%] p-5'>
-        <div>
-          <p className='mb-2 text-sm font-medium text-gray-800'>
-            <FormatMessage id='PROFILE.delete.title2' />
-          </p>
-          <p className='text-xs text-gray-600'>
-            <FormatMessage id='PROFILE.delete.desc' />
-          </p>
-        </div>
-        <div className='flex items-center justify-end'>
-          <button
-            className='rounded-md border border-gray-300 bg-white p-2 px-3 text-sm text-red-600 transition-all duration-100 hover:border-red-600 hover:bg-red-600 hover:text-white'
-            onClick={() => {deleteAccountQ.mutate(undefined)}}
-          >
-            <FormatMessage id='PROFILE.delete.button' />
-          </button>
+        <div className='grid grid-cols-[40%_60%] p-5'>
+          <div>
+            <p className='mb-2 text-sm font-medium text-gray-800'>
+              <FormatMessage id='PROFILE.delete.title2' />
+            </p>
+            <p className='text-xs text-gray-600'>
+              <FormatMessage id='PROFILE.delete.desc' />
+            </p>
+          </div>
+          <div className='flex items-center justify-end'>
+            <button
+              className='rounded-md border border-gray-300 bg-white p-2 px-3 text-sm text-red-600 transition-all duration-100 hover:border-red-600 hover:bg-red-600 hover:text-white'
+              onClick={handleOpen}
+            >
+              <FormatMessage id='PROFILE.delete.button' />
+            </button>
+          </div>
         </div>
       </div>
     </div>
