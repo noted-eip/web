@@ -123,3 +123,5 @@ const NoteViewEditor: React.FC<{ note: V1Note }> = props => {
 }
 
 export default NoteViewEditor
+
+//https://stackoverflow.com/questions/69353903/how-to-color-specific-keywords-in-slate-js
