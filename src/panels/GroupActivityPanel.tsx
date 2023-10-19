@@ -132,12 +132,28 @@ function getRoute(activityType: string, currentGroupId: string, redirectId: stri
   return url
 }
 
-const ActivityListItem: React.FC<{ activity: V1GroupActivity }> = (props) => {
+let nbSameActivity = 0
+let indexFirstSameActivity = -1
+let lastActivity = ''
+
+const ActivityListItem: React.FC<{ activity: V1GroupActivity, nextActivity?: V1GroupActivity, indexActivity: number, nbActivities: number }> = (props) => {
   const groupContext = useGroupContext()
   const navigate = useNavigate()
   let event
   let redirectId
   let icon
+
+  if (props.indexActivity == 0) {
+    //console.log('------------------RESET--------------------')
+    nbSameActivity = 0
+    indexFirstSameActivity = -1
+    lastActivity = ''
+  }
+
+  if (lastActivity != props.activity.type) {
+    indexFirstSameActivity = -1
+  }
+
 
   switch(props.activity.type) { 
     case 'ADD-NOTE': {
@@ -160,20 +176,44 @@ const ActivityListItem: React.FC<{ activity: V1GroupActivity }> = (props) => {
     }
   }
 
+  if (props.nextActivity != undefined) {
+    if (props.nextActivity.type == props.activity.type) {
+      if (indexFirstSameActivity == -1) {
+        indexFirstSameActivity = props.indexActivity
+      }
+      lastActivity = props.activity.type
+      return null
+    }
+  }
+
   const dateFormat = getDateFormat(props.activity?.createdAt)
 
+  if (indexFirstSameActivity == -1) {
+    nbSameActivity = 0
+  } else {
+    nbSameActivity = (props.indexActivity + 1) - indexFirstSameActivity
+  }
+
   return (
-    <div 
-      className='cursor-pointer rounded-md border border-gray-100 bg-gray-50 bg-gradient-to-br p-4 hover:bg-gray-100 hover:shadow-inner'
-      onClick={() => navigate(getRoute(props.activity.type, groupContext.groupId as string, redirectId))}
-    >
-      <div className='flex items-center'>
-        <div className='grid grid-flow-col gap-1 p-1'>
-          {icon}
-        </div>
-        <div className='flex flex-col'>
-          <p className='font-normal'>{ event }</p>
-          <p className='text-gray-700'>{ dateFormat }</p>
+    <div className='group cursor-pointer'>
+      {nbSameActivity == 0 ?
+        <p></p> :
+        <span className='absolute right-0 m-1.5 h-4 w-4 -translate-x-6 rounded-full bg-blue-200 p-0.5 text-center text-xs font-medium leading-none text-white group-hover:bg-blue-400'>
+          {nbSameActivity}
+        </span>
+      }
+      <div 
+        className='rounded-md border border-gray-100 bg-gray-50 bg-gradient-to-br p-4 group-hover:bg-gray-100 group-hover:shadow-inner'
+        onClick={() => navigate(getRoute(props.activity.type, groupContext.groupId as string, redirectId))}
+      >
+        <div className='flex items-center'>
+          <div className='grid grid-flow-col gap-1 p-1'>
+            {icon}
+          </div>
+          <div className='flex flex-col'>
+            <p className='font-normal'>{ event }</p>
+            <p className='text-gray-700'>{ dateFormat }</p>
+          </div>
         </div>
       </div>
     </div>
@@ -193,7 +233,7 @@ const ActivityListCurrentGroup: React.FC = () => {
             </div>
           ) : (
             listActivitiesQ.data?.activities?.map((activity, idx) => (
-              <ActivityListItem key={`activity-list-${activity.id}-${idx}`} activity={activity} />
+              <ActivityListItem key={`activity-list-${activity.id}-${idx}`} activity={activity} nextActivity={listActivitiesQ.data?.activities.at(idx + 1)} indexActivity={idx} nbActivities={listActivitiesQ.data.activities.length} />
             ))
           )
         ) : (
