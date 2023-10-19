@@ -112,9 +112,28 @@ export enum TranslationKeys {
   'GROUP.upgrade',
   'GROUP.search',
 
+  'GROUP.settings.members.title',
+  'GROUP.settings.members.button',
+  'GROUP.settings.members.colTitle1',
+  'GROUP.settings.members.colTitle2',
+  'GROUP.settings.members.colTitle3',
+  'GROUP.settings.members.colTitle4',
+
+  'GROUP.settings.invites.title',
+  'GROUP.settings.invites.colTitle1',
+  'GROUP.settings.invites.colTitle2',
+  'GROUP.settings.invites.colTitle3',
+  'GROUP.settings.invites.colTitle4',
+  'GROUP.settings.invites.desc',
+
   /*    NOTE    */
   'NOTE.newNote',
   'NOTE.untitledNote',
+  'NOTE.timecodeA',
+  'NOTE.timecodeB',
+  'NOTE.duplicate',
+  'NOTE.share',
+  'NOTE.delete',
 
   /*    PROFILE    */
   'PROFILE.invite.deny',
@@ -124,6 +143,16 @@ export enum TranslationKeys {
   'PROFILE.delete.title2',
   'PROFILE.delete.desc',
   'PROFILE.delete.button',
+  'PROFILE.feedback.title',
+  'PROFILE.feedback.desc',
+  'PROFILE.feedback.button',
+  'PROFILE.beta.title',
+  'PROFILE.beta.subTitle',
+  'PROFILE.beta.desc',
+  'PROFILE.beta.subDesc',
+  'PROFILE.beta.button',
+  'PROFILE.beta.buttonResTrue',
+  'PROFILE.beta.buttonResFalse',
 
   /*    ACTIVITY    */
   'ACTIVITY',
