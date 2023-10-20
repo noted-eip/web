@@ -113,6 +113,9 @@ const enTranslation: LocaleTypedMessages = {
   'NOTE.duplicate': 'Duplicate',
   'NOTE.share': 'Share',
   'NOTE.delete': 'Delete',
+  'NOTE.export.button1': 'Export in PDF',
+  'NOTE.export.button2': 'Export in Markdown',
+  'NOTE.export.button3': 'Export',
 
   /*    PROFILE    */
   'PROFILE.invite.deny': 'Deny',
@@ -132,6 +135,13 @@ const enTranslation: LocaleTypedMessages = {
   'PROFILE.beta.button': 'Access beta',
   'PROFILE.beta.buttonResTrue': 'Sent!',
   'PROFILE.beta.buttonResFalse': 'Already joined',
+
+  /*    PANEL   */
+  'PANEL.activity': 'Activity',
+  'PANEL.companion': 'Companion',
+  'PANEL.companion,buton1': 'Filter by block',
+  'PANEL.companion,buton2': 'Filter by entire note',
+  'PANEL.companion,buton3': 'Apply',
 
   /*    ACTIVITY    */
   'ACTIVITY': 'Activity',

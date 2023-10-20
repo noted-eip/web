@@ -134,6 +134,9 @@ export enum TranslationKeys {
   'NOTE.duplicate',
   'NOTE.share',
   'NOTE.delete',
+  'NOTE.export.button1',
+  'NOTE.export.button2',
+  'NOTE.export.button3',
 
   /*    PROFILE    */
   'PROFILE.invite.deny',
@@ -153,6 +156,13 @@ export enum TranslationKeys {
   'PROFILE.beta.button',
   'PROFILE.beta.buttonResTrue',
   'PROFILE.beta.buttonResFalse',
+
+  /*    PANEL   */
+  'PANEL.activity',
+  'PANEL.companion',
+  'PANEL.companion,buton1',
+  'PANEL.companion,buton2',
+  'PANEL.companion,buton3',
 
   /*    ACTIVITY    */
   'ACTIVITY',

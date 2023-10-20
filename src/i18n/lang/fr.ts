@@ -113,7 +113,9 @@ const frTranslation: LocaleTypedMessages = {
   'NOTE.duplicate': 'Dupliquer',
   'NOTE.share': 'Partager',
   'NOTE.delete': 'Supprimer',
-
+  'NOTE.export.button1': 'Exporter en PDF',
+  'NOTE.export.button2': 'Exporter en Markdown',
+  'NOTE.export.button3': 'Exporter',
 
   /*    PROFILE    */
   'PROFILE.invite.deny': 'Refuser',
@@ -134,6 +136,13 @@ const frTranslation: LocaleTypedMessages = {
   'PROFILE.beta.buttonResTrue': 'Envoyé!',
   'PROFILE.beta.buttonResFalse': 'Déjà rejoint',
 
+  /*    PANEL   */
+  'PANEL.activity': 'Activité',
+  'PANEL.companion': 'Compagnion',
+  'PANEL.companion,buton1': 'Filtrer par block',
+  'PANEL.companion,buton2': 'Filtrer avec la note entière',
+  'PANEL.companion,buton3': 'Appliquer',
+  
   /*    ACTIVITY    */
   'ACTIVITY': 'Activity',
 
