@@ -1,6 +1,6 @@
 import React from 'react'
 
-export type TPanelKey = 'group-chat' | 'group-activity' | 'note-recommendations'
+export type TPanelKey = 'group-activity' | 'note-recommendations'
 
 export type TPanelContext = {
   activePanel: TPanelKey

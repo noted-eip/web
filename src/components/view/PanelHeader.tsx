@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { usePanelContext } from '../../contexts/panel'
+import { FormatMessage } from '../../i18n/TextComponent'
 import { panelMetadata } from '../../lib/panels'
 import RecommendationFilters from '../../views/recommendation/Filters'
 
@@ -35,7 +36,9 @@ const PanelHeader: React.FC = () => {
                   activePanel === panelKey && '!text-purple-700'
                 }`}
               />
-              <span className='text-xs'>{md.displayName}</span>
+              <span className='text-xs'>
+                <FormatMessage id={md.displayName == 'PANEL.activity' ? 'PANEL.activity' : 'PANEL.companion'}/>
+              </span>
             </div>
           </div>
         )

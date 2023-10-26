@@ -3,6 +3,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert'
 import React from 'react'
 
 import { useRecoModeContext } from '../../contexts/recommendation'
+import { FormatMessage,useOurIntl } from '../../i18n/TextComponent'
 
 interface ItemProps {
   active: boolean
@@ -11,6 +12,7 @@ interface ItemProps {
 }
 
 const RecommendationFilters = () => {
+  const { formatMessage } = useOurIntl()
   const recoModeContext = useRecoModeContext()
   const [selectedOption, setSelectedOption] = React.useState(recoModeContext.recoMode == null ? 'note' : recoModeContext.recoMode)
  
@@ -68,7 +70,7 @@ const RecommendationFilters = () => {
                   {({ active }) => (
                     <Item 
                       active={active} 
-                      label='Filter by block' 
+                      label={formatMessage({id: 'PANEL.companion,buton1'})}
                       format='block' />
                   )}
                 </Menu.Item>
@@ -76,7 +78,7 @@ const RecommendationFilters = () => {
                   {({ active }) => (
                     <Item
                       active={active}
-                      label='Filter by entire note'
+                      label={formatMessage({id: 'PANEL.companion,buton2'})}
                       format='note'
                     />
                   )}
@@ -90,7 +92,7 @@ const RecommendationFilters = () => {
                       onClick={handleChangeRecoMode}
                     >
                       <span className='mr-2'>
-                        Apply
+                        <FormatMessage id='PANEL.companion,buton3' />
                       </span>
                     </button>
                   )}
