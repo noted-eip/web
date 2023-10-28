@@ -1,23 +1,17 @@
-import { BoltIcon, ChatBubbleLeftIcon, PencilIcon } from '@heroicons/react/24/solid'
+import { BoltIcon, PencilIcon } from '@heroicons/react/24/solid'
 
 import GroupActivityPanel from '../panels/GroupActivityPanel'
-import GroupChatPanel from '../panels/GroupChatPanel'
 import NoteRecommendationsPanel from '../panels/NoteRecommendationsPanel'
 import { V1Block, V1Widget } from '../protorepo/openapi/typescript-axios'
 
 export const panelMetadata = {
-  'group-chat': {
-    displayName: 'Chat',
-    icon: ChatBubbleLeftIcon,
-    component: GroupChatPanel,
-  },
   'group-activity': {
-    displayName: 'Activity',
+    displayName: 'PANEL.activity',
     icon: BoltIcon,
     component: GroupActivityPanel,
   },
   'note-recommendations': {
-    displayName: 'Companion',
+    displayName: 'PANEL.companion',
     icon: PencilIcon,
     component: NoteRecommendationsPanel,
   },

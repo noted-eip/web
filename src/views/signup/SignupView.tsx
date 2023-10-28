@@ -119,6 +119,7 @@ const SignupView: React.FC = () => {
             isInvalidBlur={!emailValid}
             errorMessage='Invalid email address'
           />
+          {/** //TODO: remove the type=passwprd of the input **/}
           <OldInput
             label={formatMessage({ id: 'AUTH.pwd' })}
             tooltip='6 characters, letters numbers and symbols'

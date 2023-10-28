@@ -91,9 +91,31 @@ const enTranslation: LocaleTypedMessages = {
   'GROUP.upgrade': 'Upgrade',
   'GROUP.search': 'Seach',
 
+  'GROUP.settings.members.title': 'Members',
+  'GROUP.settings.members.button': 'Send invite',
+  'GROUP.settings.members.colTitle1': 'NAME',
+  'GROUP.settings.members.colTitle2': 'EMAIL',
+  'GROUP.settings.members.colTitle3': 'ROLE',
+  'GROUP.settings.members.colTitle4': 'ACTIONS',
+
+  'GROUP.settings.invites.title': 'Pending Invites',
+  'GROUP.settings.invites.colTitle1': 'DESTINED TO',
+  'GROUP.settings.invites.colTitle2': 'INVITED BY',
+  'GROUP.settings.invites.colTitle3': 'EXPIRES IN',
+  'GROUP.settings.invites.colTitle4': 'ACTIONS',
+  'GROUP.settings.invites.desc': 'No pending invites for this group',
+
   /*    NOTE    */
   'NOTE.newNote': 'New note',
   'NOTE.untitledNote': 'Untitled note',
+  'NOTE.timecodeA': 'Last edited',
+  'NOTE.timecodeB': 'by',
+  'NOTE.duplicate': 'Duplicate',
+  'NOTE.share': 'Share',
+  'NOTE.delete': 'Delete',
+  'NOTE.export.button1': 'Export in PDF',
+  'NOTE.export.button2': 'Export in Markdown',
+  'NOTE.export.button3': 'Export',
 
   /*    PROFILE    */
   'PROFILE.invite.deny': 'Deny',
@@ -103,6 +125,23 @@ const enTranslation: LocaleTypedMessages = {
   'PROFILE.delete.title2': 'Delete my account',
   'PROFILE.delete.desc': 'This has the effect of permanently deleting all of your personal data including your notes.',
   'PROFILE.delete.button': 'Delete Account',
+  'PROFILE.feedback.title': 'Send feedback',
+  'PROFILE.feedback.desc': 'We are interested in your opinion! Fill in a quick form to help us improve our application. Maybe you will see one of your ideas in our next updates!',
+  'PROFILE.feedback.button': 'Access Form',
+  'PROFILE.beta.title': 'Extra features',
+  'PROFILE.beta.subTitle': 'Mobile application',
+  'PROFILE.beta.desc': 'You will receive an invite to install the application on your phone. With it you can browse your groups, notes, invitations, members and recommendations but cannot modify your notes (yet 😉).',
+  'PROFILE.beta.subDesc': 'Your account\'s email should be linked to a Google account in order to be invited!',
+  'PROFILE.beta.button': 'Access beta',
+  'PROFILE.beta.buttonResTrue': 'Sent!',
+  'PROFILE.beta.buttonResFalse': 'Already joined',
+
+  /*    PANEL   */
+  'PANEL.activity': 'Activity',
+  'PANEL.companion': 'Companion',
+  'PANEL.companion,buton1': 'Filter by block',
+  'PANEL.companion,buton2': 'Filter by entire note',
+  'PANEL.companion,buton3': 'Apply',
 
   /*    ACTIVITY    */
   'ACTIVITY': 'Activity',

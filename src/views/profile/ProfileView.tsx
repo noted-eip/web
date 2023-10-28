@@ -1,5 +1,5 @@
 import { Menu, Transition } from '@headlessui/react'
-import { ArrowPathIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { ArrowPathIcon, ChatBubbleOvalLeftEllipsisIcon,CheckIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, CodeBracketIcon, ExclamationTriangleIcon, InboxIcon, PencilIcon } from '@heroicons/react/24/solid'
 import { getAnalytics, logEvent } from 'firebase/analytics'
 import React, { Fragment, useState } from 'react'
@@ -12,7 +12,7 @@ import { useDeleteMyAccount, useGetAccount, useRegisterToMobileBeta, useUpdateMy
 import { useGetGroup } from '../../hooks/api/groups'
 import { useAcceptInvite, useDenyInvite, useListInvites } from '../../hooks/api/invites'
 import useClickOutside from '../../hooks/click'
-import { FormatMessage } from '../../i18n/TextComponent'
+import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
 import { TOGGLE_DEV_FEATURES } from '../../lib/env'
 import { V1Account, V1GroupInvite } from '../../protorepo/openapi/typescript-axios'
 const InviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
@@ -236,7 +236,40 @@ const ProfileViewDangerZoneSection: React.FC = () => {
   )
 }
 
+const ProfileViewFeedbackSection: React.FC = () => {
+  return (
+    <div className='relative mt-4 w-full rounded-md border border-gray-100 bg-gray-50'>
+      {/* Header */}
+      <div className='flex items-center justify-between border-b border-[#efefef] p-5'>
+        <div className='flex items-center'>
+          <ChatBubbleOvalLeftEllipsisIcon className='mr-2 h-5 w-5 text-gray-600' />
+          <p className='text-base font-medium text-gray-600'>
+            <FormatMessage id='PROFILE.feedback.title' />
+          </p>
+        </div>
+      </div>
+
+      <div className='grid grid-cols-[40%_60%] p-5'>
+        <div className='relative'>
+          <p className='text-xs text-gray-600'>
+            <FormatMessage id='PROFILE.feedback.desc' />
+          </p>
+        </div>
+        <div className='flex items-center justify-end'>
+          <button
+            className='rounded-md border border-gray-300 bg-white p-2 px-3 text-sm text-gray-600 transition-all duration-100 hover:border-gray-600 hover:bg-gray-600 hover:text-white'
+            onClick={() => {hrefFunction()}}
+          >
+            <FormatMessage id='PROFILE.feedback.button' />
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 const ProfileViewBetaSection: React.FC = () => {
+  const { formatMessage } = useOurIntl()
   const authContext = useAuthContext()
   const getAccountQ = useGetAccount({accountId: authContext.accountId})
   const [sent, setSent] = useState(false)
@@ -251,15 +284,23 @@ const ProfileViewBetaSection: React.FC = () => {
       <div className='flex items-center justify-between border-b border-[#efefef] p-5'>
         <div className='flex items-center'>
           <CodeBracketIcon className='mr-2 h-5 w-5 text-gray-600' />
-          <p className='text-base font-medium text-gray-600'>Extra features</p>
+          <p className='text-base font-medium text-gray-600'>
+            <FormatMessage id='PROFILE.beta.title' />
+          </p>
         </div>
       </div>
 
       <div className='grid grid-cols-[40%_60%] p-5'>
         <div className='relative'>
-          <p className='mb-2 text-sm font-medium text-gray-800'>Mobile application</p>
-          <p className='text-xs text-gray-600'>You will receive an invite to install the application on your phone. With it you can browse your groups, notes, invitations, members and recommendations but cannot modify your notes (yet 😉).</p>
-          <p className='text-xxs text-gray-500'>Your account&apos;s email should be linked to a Google account in order to be invited!</p>
+          <p className='mb-2 text-sm font-medium text-gray-800'>
+            <FormatMessage id='PROFILE.beta.subTitle' />
+          </p>
+          <p className='text-xs text-gray-600'>
+            <FormatMessage id='PROFILE.beta.desc' />
+          </p>
+          <p className='text-xxs text-gray-500'>
+            <FormatMessage id='PROFILE.beta.subDesc' />
+          </p>
         </div>
         <div className='flex items-center justify-end'>
           {getAccountQ.isSuccess ? (getAccountQ.data?.account.isInMobileBeta === false ? (<button
@@ -269,8 +310,8 @@ const ProfileViewBetaSection: React.FC = () => {
               setSent(true)
             }}
           >
-              Access beta
-          </button>) : (sent ? 'Sent!' : 'Already joined')) :             
+            <FormatMessage id='PROFILE.beta.button' />
+          </button>) : (sent ? formatMessage({id: 'PROFILE.beta.buttonResTrue'}) : formatMessage({id: 'PROFILE.beta.buttonResFalse'}))) :             
             (<React.Fragment>
               <div className='skeleton h-8 w-24'></div>
             </React.Fragment>)
@@ -283,34 +324,6 @@ const ProfileViewBetaSection: React.FC = () => {
 
 function hrefFunction() {
   window.open('https://docs.google.com/forms/d/e/1FAIpQLSdkkpJ6Y_sXB74Hpr1kXHVn2nQF37ktCVX7vtdUTUnJhfWsZw/viewform?usp=pp_url&entry.368849087=Compr%C3%A9hensible&entry.708712048=Bien&entry.1430431403=Bien&entry.402690215=Tr%C3%A8s+utile&entry.1070466955=Oui', '_blank')
-}
-
-const ProfileViewFeedbackSection: React.FC = () => {
-  return (
-    <div className='relative mt-4 w-full rounded-md border border-gray-100 bg-gray-50'>
-      {/* Header */}
-      <div className='flex items-center justify-between border-b border-[#efefef] p-5'>
-        <div className='flex items-center'>
-          <CodeBracketIcon className='mr-2 h-5 w-5 text-gray-600' />
-          <p className='text-base font-medium text-gray-600'>Send feedback</p>
-        </div>
-      </div>
-
-      <div className='grid grid-cols-[40%_60%] p-5'>
-        <div className='relative'>
-          <p className='text-xs text-gray-600'>What do think about us, rate our application if you feel like</p>
-        </div>
-        <div className='flex items-center justify-end'>
-          <button
-            className='rounded-md border border-gray-300 bg-white p-2 px-3 text-sm text-gray-600 transition-all duration-100 hover:border-gray-600 hover:bg-gray-600 hover:text-white'
-            onClick={() => {hrefFunction()}}
-          >
-              Rate us
-          </button>
-        </div>
-      </div>
-    </div>
-  )
 }
 
 const ProfileChangeLangage: React.FC = () => {
@@ -395,17 +408,19 @@ const ProfileChangeLangage: React.FC = () => {
 
 
 const ProfileView: React.FC = () => {
+  const { formatMessage } = useOurIntl()
+
   return (
-    <ViewSkeleton title='Profile' panels={['group-activity']}>
+    <ViewSkeleton title={formatMessage({id: 'GENERIC.profile'})} panels={['group-activity']}>
       <div className='mx-lg mb-lg w-full xl:mx-xl xl:mb-xl'>
         <ProfileViewAccountSection />
         <hr className='m-5 rounded border-2'></hr>
         <ProfileViewPendingInvitesSection />
         <ProfileViewDangerZoneSection />
         <hr className='m-5 rounded border-2'></hr>
-        <ProfileViewBetaSection />
-        <hr className='m-5 rounded border-2'></hr>
         <ProfileViewFeedbackSection />
+        <hr className='m-5 rounded border-2'></hr>
+        <ProfileViewBetaSection />
         <hr className='m-5 rounded border-2'></hr>
         <ProfileChangeLangage />
       </div>
