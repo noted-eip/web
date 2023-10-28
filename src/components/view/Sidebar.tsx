@@ -3,7 +3,7 @@ import {
   ArrowRightOnRectangleIcon,
   XMarkIcon
 } from '@heroicons/react/24/outline'
-import { Cog6ToothIcon,Square2StackIcon, UserIcon } from '@heroicons/react/24/solid'
+import {Square2StackIcon, UserIcon } from '@heroicons/react/24/solid'
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
@@ -83,8 +83,7 @@ export const Sidebar: React.FC = () => {
         listInvitesQ.isSuccess && listInvitesQ.data.invites
           ? listInvitesQ.data.invites.length
           : 0,
-    },
-    { path: '/settings', icon: Cog6ToothIcon, title: formatMessage({ id: 'SETTINGS' }), numNotifications: 0 },
+    }
   ]
 
   return (
