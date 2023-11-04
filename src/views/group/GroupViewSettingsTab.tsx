@@ -10,6 +10,7 @@ import React from 'react'
 import { useDebounce } from 'usehooks-ts'
 
 import LoaderIcon from '../../components/icons/LoaderIcon'
+import ConfirmationPanel from '../../components/pop-up/confirmation-panel'
 import { useAuthContext } from '../../contexts/auth'
 import { useGroupContext } from '../../contexts/group'
 import { useGetAccount, useSearchAccount } from '../../hooks/api/accounts'
@@ -148,72 +149,78 @@ export const GroupViewSettingsTabEditGroup: React.FC = () => {
 }
 
 const GroupMemberListItem: React.FC<{ member: V1GroupMember }> = (props) => {
+  const { member } = props
   const authContext = useAuthContext()
-  const account = useGetAccount({accountId: props.member.accountId})
+  const account = useGetAccount({accountId: member.accountId})
   const removeMemberQ = useRemoveMemberInCurrentGroup()
   const updateGroupMemberQ = useUpdateMemberInCurrentGroup()
   const groupQ = useGetCurrentGroup()
 
+  const [open, setOpen] = React.useState<boolean>(false)
+  
   return (
-    <div className='group grid h-16 cursor-default grid-cols-[30%_40%_20%_10%] px-5 hover:bg-gray-100'>
-      <div className='flex items-center'>
-        <div className='h-9 w-9 rounded-md bg-gradient-radial from-teal-300 to-green-200' />
-        <div className='pl-3 text-sm font-medium text-gray-800'>
+    <>
+      { open == true &&
+      <ConfirmationPanel onValidate={removeMemberQ.mutate({ accountId: member.accountId })} title='CONFIRMATION.title.group' />
+      }
+      <div className='group grid h-16 cursor-default grid-cols-[30%_40%_20%_10%] px-5 hover:bg-gray-100'>
+        <div className='flex items-center'>
+          <div className='h-9 w-9 rounded-md bg-gradient-radial from-teal-300 to-green-200' />
+          <div className='pl-3 text-sm font-medium text-gray-800'>
+            {account.isSuccess ? (
+              account.data.account.name
+            ) : (
+              <div className='skeleton h-4 w-16' />
+            )}
+          </div>
+        </div>
+        <div className='flex items-center'>
           {account.isSuccess ? (
-            account.data.account.name
+            <p className='text-sm text-gray-500'>
+              {account.data.account.email}
+            </p>
           ) : (
-            <div className='skeleton h-4 w-16' />
+            <div className='skeleton h-4 w-48' />
           )}
         </div>
-      </div>
-      <div className='flex items-center'>
-        {account.isSuccess ? (
-          <p className='text-sm text-gray-500'>
-            {account.data.account.email}
-          </p>
-        ) : (
-          <div className='skeleton h-4 w-48' />
-        )}
-      </div>
-      {/* Admin Badge */}
-      <div className='flex items-center'>
-        {props.member.isAdmin ? (
-          <div className='float-right rounded-full bg-purple-200 p-1 px-2 text-xs font-medium text-purple-600'>
+        {/* Admin Badge */}
+        <div className='flex items-center'>
+          {props.member.isAdmin ? (
+            <div className='float-right rounded-full bg-purple-200 p-1 px-2 text-xs font-medium text-purple-600'>
             Admin
-          </div>
+            </div>
           // Dirty way of checking that the current user is an admin.
-        ) : groupQ.data?.group.members?.find((acc) => {return acc.accountId === authContext.accountId && acc.isAdmin}) && (
-          <div
-            className='invisible float-right cursor-pointer rounded-full border-2 border-dashed border-gray-400 bg-gray-200 p-[2px] px-[6px] text-xs font-medium text-gray-600 opacity-75 hover:opacity-100 group-hover:visible'
-            onClick={() =>
-              updateGroupMemberQ.mutate({
-                accountId: props.member.accountId,
-                body: {
-                  isAdmin: true,
-                } as V1GroupMember,
-              })
-            }
-          >
+          ) : groupQ.data?.group.members?.find((acc) => {return acc.accountId === authContext.accountId && acc.isAdmin}) && (
+            <div
+              className='invisible float-right cursor-pointer rounded-full border-2 border-dashed border-gray-400 bg-gray-200 p-[2px] px-[6px] text-xs font-medium text-gray-600 opacity-75 hover:opacity-100 group-hover:visible'
+              onClick={() =>
+                updateGroupMemberQ.mutate({
+                  accountId: props.member.accountId,
+                  body: {
+                    isAdmin: true,
+                  } as V1GroupMember,
+                })
+              }
+            >
             Admin
-          </div>
-        )}
-      </div>
-      {/* Remove Group Member */}
-      <div className='flex items-center justify-end'>
-        {props.member.accountId !== authContext.accountId &&
+            </div>
+          )}
+        </div>
+        {/* Remove Group Member */}
+        <div className='flex items-center justify-end'>
+          {props.member.accountId !== authContext.accountId &&
         props.member.isAdmin ? null : 
-          <div className='cursor-pointer opacity-75 group-hover:opacity-100'>
-            {
-              removeMemberQ.isLoading ?
-                <LoaderIcon className='h-9 w-9 p-2' />
-                :
-                <TrashIcon className='h-9 w-9 rounded-md stroke-2 p-2 text-gray-400 hover:bg-gray-200' onClick={() => {
-                  removeMemberQ.mutate({ accountId: props.member.accountId })
-                }} />
-            }
-          </div>}
+            <div className='cursor-pointer opacity-75 group-hover:opacity-100'>
+              {
+                removeMemberQ.isLoading ?
+                  <LoaderIcon className='h-9 w-9 p-2' />
+                  :
+                  <TrashIcon className='h-9 w-9 rounded-md stroke-2 p-2 text-gray-400 hover:bg-gray-200' onClick={() => {setOpen(true)}}/>
+              }
+            </div>}
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 
@@ -310,12 +317,12 @@ const GroupViewSettingsTabMembersSection: React.FC = () => {
           </span>
         </div>
         {groupQ.isSuccess ? (
-          groupQ.data.group.members?.map((el, idx) => (
+          groupQ.data.group.members?.map((el, idx) =>
             <GroupMemberListItem
               key={`group-member-list-${el.accountId}-${idx}`}
               member={el}
             />
-          ))
+          )
         ) : (
           <div className='px-5'>
             <div className='skeleton my-5 h-6 w-full' />
