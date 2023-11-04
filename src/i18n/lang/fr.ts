@@ -113,6 +113,14 @@ const frTranslation: LocaleTypedMessages = {
   'SETTINGS.langage.options': 'Options',
   'SETTINGS.langage.french': 'Français',
   'SETTINGS.langage.english': 'Anglais',
+
+  /*    CONFIRMATION    */
+  'CONFIRMATION.form.desc0': 'Veuilliez entrer',
+  'CONFIRMATION.form.desc1': 'je comprends',
+  'CONFIRMATION.form.desc3': 'pour confirmer',
+  'CONFIRMATION.button': 'Je comprends les conséquences, ',
+  'CONFIRMATION.title.note': 'Supprimer ma note',
+  'CONFIRMATION.title.group': 'Supprimer un membre',
 }
 
 export default frTranslation

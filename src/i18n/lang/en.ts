@@ -113,6 +113,14 @@ const enTranslation: LocaleTypedMessages = {
   'SETTINGS.langage.options': 'Options',
   'SETTINGS.langage.french': 'French',
   'SETTINGS.langage.english': 'English',
+  
+  /*    CONFIRMATION    */
+  'CONFIRMATION.form.desc0': 'Please type',
+  'CONFIRMATION.form.desc1': 'I understand',
+  'CONFIRMATION.form.desc3': 'to confirm.',
+  'CONFIRMATION.button': 'I understand the consequences',
+  'CONFIRMATION.title.note': 'Delete my note',
+  'CONFIRMATION.title.group': 'Delete my group',
 }
 
 export default enTranslation
