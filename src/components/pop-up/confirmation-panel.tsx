@@ -1,10 +1,10 @@
+import { TextField } from '@mui/material'
 import Dialog from '@mui/material/Dialog'
-import TextField from '@mui/material/TextField'
 import * as React from 'react'
 
 import { FormatMessage } from '../../i18n/TextComponent'
 
-const ConfirmationPanel: React.FC<{onValidate: any, title: any, content: any}> = (props) => {
+const ConfirmationPanel: React.FC<{onValidate: any, title: any, content?: any}> = (props) => {
   const {
     onValidate,
     title,
@@ -21,6 +21,7 @@ const ConfirmationPanel: React.FC<{onValidate: any, title: any, content: any}> =
     }
   }
   const handleClose = () => {
+    console.log('je ferme la modal')
     setOpen(false)
   }
 
@@ -29,14 +30,16 @@ const ConfirmationPanel: React.FC<{onValidate: any, title: any, content: any}> =
     <div>
       <Dialog open={open} onClose={handleClose}>
         <div className='py-4'>
-          <div className='p-4 font-semibold'>
+          <div className='border-b-2 p-4 text-lg font-semibold'>
             <FormatMessage id={title} />
           </div>
-          <div className='border-white-500 border-y-2 bg-orange-200 p-4 font-medium'>
+          {content && <div className='border-b-2 bg-orange-200 p-4 font-medium'>
             <FormatMessage id={content}/>
-          </div>
-          <div className='border-white-500 flex p-4 pb-2 font-medium'>
-            Please type <div className='px-1 font-bold'> je comprends </div> to confirm.
+          </div>}
+          <div className='flex border-white p-4 pb-2 font-medium'>
+            <FormatMessage id={'CONFIRMATION.form.desc0'}/>
+            <div className='px-1 font-bold'> <FormatMessage id={'CONFIRMATION.form.desc1'}/> </div>
+            <FormatMessage id={'CONFIRMATION.form.desc3'}/>
           </div>
           <div className='border-b-2 px-2'>
             <TextField
@@ -48,16 +51,16 @@ const ConfirmationPanel: React.FC<{onValidate: any, title: any, content: any}> =
               onChange={(e) => {
                 handleType(e.target.value)
               }}
-        
             />
-          </div>
+          </div> 
+          {/* : null} */}
           <div className='flex place-content-center p-2'>
             {enable ? 
-              <button onClick={onValidate} className='bg-red rounded border border-red-500 py-2 px-4 font-semibold text-red-700 hover:border-transparent hover:bg-red-400 hover:text-white'>
-                Je comprend les conséquences, <FormatMessage id={title} />
+              <button onClick={onValidate} className='rounded border border-red-500 bg-red-100 py-2 px-4 font-semibold text-red-700 hover:border-transparent hover:bg-red-300 hover:text-white'>
+                <FormatMessage id={'CONFIRMATION.button'} /> <FormatMessage id={title} />
               </button>
               : <button disabled className='rounded border border-red-100 bg-transparent py-2 px-4 font-semibold text-red-300'>
-                Je comprend les conséquences, <FormatMessage id={title} />
+                <FormatMessage id={'CONFIRMATION.button'} /> <FormatMessage id={title} />
               </button>    
             }
 
