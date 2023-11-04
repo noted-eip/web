@@ -89,7 +89,7 @@ const BlockEditorItem: React.FC<{ note: V1Note, block: V1Block, blockIndex?: num
 
   return (
     <div 
-      className='rounded-md bg-transparent bg-gradient-to-br p-4 hover:border-gray-100 hover:bg-gray-100 hover:shadow-inner'
+      className='rounded-md bg-transparent bg-gradient-to-br p-4' //hover:border-gray-100 hover:bg-gray-100 hover:shadow-inner
       onMouseEnter={handleHover}>
       <Slate
       //ternaire ici avec 2 handle different pour insert & update

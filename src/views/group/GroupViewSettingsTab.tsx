@@ -18,7 +18,7 @@ import { useGetCurrentGroup, useGetGroup, useUpdateCurrentGroup } from '../../ho
 import { useRevokeInviteInCurrentGroup, useSendInviteInCurrentGroup } from '../../hooks/api/invites'
 import { useRemoveMemberInCurrentGroup, useUpdateMemberInCurrentGroup } from '../../hooks/api/members'
 import useClickOutside from '../../hooks/click'
-import { useOurIntl } from '../../i18n/TextComponent'
+import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
 import { V1GroupInvite, V1GroupMember } from '../../protorepo/openapi/typescript-axios'
 import GroupViewMenu from './GroupViewMenu'
 
@@ -389,7 +389,9 @@ const GroupViewSettingsTabPendingInvitesSection: React.FC = () => {
       <div className='flex items-center justify-between border-b border-gray-200 p-5'>
         <div className='flex items-center'>
           <EnvelopeIcon className='mx-2 h-5 w-5 text-gray-600' />
-          <p className='text-base font-medium text-gray-600'>Pending Invites</p>
+          <p className='text-base font-medium text-gray-600'>
+            <FormatMessage id='GROUP.settings.invites.title' />
+          </p>
         </div>
       </div>
 
@@ -397,16 +399,16 @@ const GroupViewSettingsTabPendingInvitesSection: React.FC = () => {
       <div className='grid w-full grid-cols-1'>
         <div className='grid h-8 grid-cols-[35%_35%_20%_10%] border-b border-gray-200 px-5'>
           <span className='text-sm font-medium leading-8 text-gray-500'>
-            DESTINED TO
+            <FormatMessage id='GROUP.settings.invites.colTitle1' />
           </span>
           <span className='text-sm font-medium leading-8 text-gray-500'>
-            INVITED BY
+            <FormatMessage id='GROUP.settings.invites.colTitle2' />
           </span>
           <span className='text-sm font-medium leading-8 text-gray-500'>
-            EXPIRES IN
+            <FormatMessage id='GROUP.settings.invites.colTitle3' />
           </span>
           <span className='text-end text-sm font-medium leading-8 text-gray-500'>
-            ACTIONS
+            <FormatMessage id='GROUP.settings.invites.colTitle4' />
           </span>
         </div>
         {groupQ.isSuccess ? (
@@ -419,7 +421,7 @@ const GroupViewSettingsTabPendingInvitesSection: React.FC = () => {
             ))
           ) : (
             <div className='flex justify-center p-4 text-sm text-gray-400'>
-              No pending invites for this group
+              <FormatMessage id='GROUP.settings.invites.desc' />
             </div>
           )
         ) : (
