@@ -44,7 +44,6 @@ const SignupView: React.FC = () => {
           method: 'mail'
         })
       }
-      console.log('aled')
     },
     onError: (e) => {
       toast.error(e.response?.data.error as string)
@@ -53,7 +52,6 @@ const SignupView: React.FC = () => {
   const createAccountMutation = useCreateAccount({
     onSuccess: (data: V1CreateAccountResponse) => {
       navigate('/validate_account', {state: {email: data.account.email, password: password}})
-      // authenticateMutation.mutate({body: {email, password}})
     },
   })
   const authenticateGoogleMutation = useAuthenticateGoogle({
