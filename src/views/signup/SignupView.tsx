@@ -14,7 +14,7 @@ import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
 import { decodeToken } from '../../lib/api'
 import { TOGGLE_DEV_FEATURES } from '../../lib/env'
 import { validateEmail, validateName, validatePassword } from '../../lib/validators'
-import { V1AuthenticateGoogleResponse, V1AuthenticateResponse } from '../../protorepo/openapi/typescript-axios'
+import { V1AuthenticateGoogleResponse, V1AuthenticateResponse, V1CreateAccountResponse } from '../../protorepo/openapi/typescript-axios'
 
 const SignupView: React.FC = () => {
   const { formatMessage } = useOurIntl()
@@ -44,15 +44,16 @@ const SignupView: React.FC = () => {
           method: 'mail'
         })
       }
-      navigate('/')
+      console.log('aled')
     },
     onError: (e) => {
       toast.error(e.response?.data.error as string)
     }
   })
   const createAccountMutation = useCreateAccount({
-    onSuccess: () => {
-      authenticateMutation.mutate({body: {email, password}})
+    onSuccess: (data: V1CreateAccountResponse) => {
+      navigate('/validate_account', {state: {id: data.account.id, email: data.account.email, password: password}})
+      // authenticateMutation.mutate({body: {email, password}})
     },
   })
   const authenticateGoogleMutation = useAuthenticateGoogle({

@@ -9,6 +9,7 @@ import ResetPasswordPassword from './reset-password/ResetPasswordPassword'
 import ResetPasswordToken from './reset-password/ResetPasswordToken'
 import SigninView from './signin/SigninView'
 import SignupView from './signup/SignupView'
+import ValidateAccountView from './validate-account/validateAccountVIew'
 import WelcomeView from './welcome/WelcomeView'
 
 // Describes routes that are available to unauthenticated users.
@@ -32,7 +33,7 @@ const UnauthenticatedRouter: React.FC = () => {
   }
 
   return (
-    <ResetPasswordContext.Provider 
+    <ResetPasswordContext.Provider
       value={{account: account, changeResetPassword: changeResetPassword}}
     >
       <Routes>
@@ -42,6 +43,7 @@ const UnauthenticatedRouter: React.FC = () => {
         <Route path='/reset_password_email' element={<ResetPasswordEmail />}></Route>
         <Route path='/reset_password_token' element={<ResetPasswordToken />}></Route>
         <Route path='/reset_password_password' element={<ResetPasswordPassword />}></Route>
+        <Route path='/validate_account' element={<ValidateAccountView />}></Route>
         <Route path='*' element={<NotFoundView />}></Route>
       </Routes>
     </ResetPasswordContext.Provider>
