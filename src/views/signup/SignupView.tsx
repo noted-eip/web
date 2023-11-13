@@ -52,7 +52,7 @@ const SignupView: React.FC = () => {
   })
   const createAccountMutation = useCreateAccount({
     onSuccess: (data: V1CreateAccountResponse) => {
-      navigate('/validate_account', {state: {id: data.account.id, email: data.account.email, password: password}})
+      navigate('/validate_account', {state: {email: data.account.email, password: password}})
       // authenticateMutation.mutate({body: {email, password}})
     },
   })

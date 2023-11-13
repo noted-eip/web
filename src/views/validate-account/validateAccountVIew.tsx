@@ -5,9 +5,9 @@ import { useLocation, useNavigate } from 'react-router-dom'
 
 import ContainerMd from '../../components/container/ContainerMd'
 import OldInput from '../../components/form/OldInput'
-import { addAccountToDevelopmentContext,useDevelopmentContext } from '../../contexts/dev'
+import { addAccountToDevelopmentContext, useDevelopmentContext } from '../../contexts/dev'
 import { useNoAuthContext } from '../../contexts/noauth'
-import { useAuthenticate, useValidateAccount,ValidateAccountRequest } from '../../hooks/api/accounts'
+import { useAuthenticate, useSendValidationToken, useValidateAccount, ValidateAccountRequest } from '../../hooks/api/accounts'
 import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
 import { decodeToken } from '../../lib/api'
 import { TOGGLE_DEV_FEATURES } from '../../lib/env'
@@ -23,6 +23,8 @@ const ValidateAccountView: React.FC = () => {
   const { email, password } = location.state as { email: string, password: string }
 
   const developmentContext = useDevelopmentContext()
+
+  const sendValidationEmailMutation = useSendValidationToken()
 
   const authenticateMutation = useAuthenticate({
     onSuccess: (data: V1AuthenticateResponse) => {
@@ -49,7 +51,7 @@ const ValidateAccountView: React.FC = () => {
 
   const validateAccountMutation = useValidateAccount({
     onSuccess: () => {
-      authenticateMutation.mutate({body: {email, password}})
+      authenticateMutation.mutate({ body: { email, password } })
     }
   })
 
@@ -74,12 +76,25 @@ const ValidateAccountView: React.FC = () => {
           isInvalidBlur={!codeValid}
           errorMessage='Invalid code'
         />
+        <div className='my-4 mx-2 flex flex-row'>
+          <label className='mr-1 text-sm leading-tight tracking-tight text-gray-900 dark:text-white'>
+            <FormatMessage id='VALIDATION.resend' />
+          </label>
+          <label className='cursor-pointer text-sm  font-semibold leading-tight tracking-tight text-gray-900 underline dark:text-white'
+            onClick={() => {
+              sendValidationEmailMutation.mutate({ body: ({ email: email, password: password }) } as ValidateAccountRequest)
+            }}
+          >
+            <FormatMessage id='VALIDATION.resend_link' />
+
+          </label>
+        </div>
         <button
           className='my-2 mt-4 w-full rounded-lg bg-blue-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:bg-gray-600 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
           disabled={
             !codeValid
           }
-          onClick={() => validateAccountMutation.mutate({body: ({email: email, password: password, validationToken: code})} as ValidateAccountRequest)}
+          onClick={() => validateAccountMutation.mutate({ body: ({ email: email, password: password, validationToken: code }) } as ValidateAccountRequest)}
         ><FormatMessage id='VALIDATION.button' /></button>
 
       </ContainerMd>

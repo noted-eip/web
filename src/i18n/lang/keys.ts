@@ -179,4 +179,6 @@ export enum TranslationKeys {
   'VALIDATION.content',
   'VALIDATION.placeholder',
   'VALIDATION.button',
+  'VALIDATION.resend',
+  'VALIDATION.resend_link',
 }

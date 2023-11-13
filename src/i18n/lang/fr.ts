@@ -158,6 +158,8 @@ const frTranslation: LocaleTypedMessages = {
   'VALIDATION.content': 'Vous avez reçus un code d\'activation à l\'adresse suivante :',
   'VALIDATION.placeholder': '0000',
   'VALIDATION.button': 'Valider',
+  'VALIDATION.resend': 'Je n\'ai pas reçus le code',
+  'VALIDATION.resend_link': 'l\'envoyer à nouveau',
 }
 
 export default frTranslation
