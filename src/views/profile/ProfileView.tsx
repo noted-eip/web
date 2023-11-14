@@ -299,15 +299,16 @@ const ProfileViewBetaSection: React.FC = () => {
           </p>
         </div>
         <div className='flex items-center justify-end'>
-          {getAccountQ.isSuccess ? (getAccountQ.data?.account.isInMobileBeta === false ? (<button
-            className='rounded-md border border-gray-300 bg-white p-2 px-3 text-sm text-gray-600 transition-all duration-100 hover:border-gray-600 hover:bg-gray-600 hover:text-white'
-            onClick={() => {
-              registerToMobileBetaQ.mutate(undefined)
-              setSent(true)
-            }}
-          >
-            <FormatMessage id='PROFILE.beta.button' />
-          </button>) : (sent ? formatMessage({id: 'PROFILE.beta.buttonResTrue'}) : formatMessage({id: 'PROFILE.beta.buttonResFalse'}))) :             
+          {getAccountQ.isSuccess ? (getAccountQ.data?.account.isInMobileBeta === false ? (
+            <Button variant='outlined'
+              onClick={() => {
+                registerToMobileBetaQ.mutate(undefined)
+                setSent(true)
+              }}
+            >
+              <FormatMessage id='PROFILE.beta.button' />
+            </Button>
+          ) : (sent ? formatMessage({id: 'PROFILE.beta.buttonResTrue'}) : formatMessage({id: 'PROFILE.beta.buttonResFalse'}))) :             
             (<React.Fragment>
               <div className='skeleton h-8 w-24'></div>
             </React.Fragment>)
@@ -318,9 +319,10 @@ const ProfileViewBetaSection: React.FC = () => {
   )
 }
 
-function hrefFunction() {
-  window.open('https://docs.google.com/forms/d/e/1FAIpQLSdkkpJ6Y_sXB74Hpr1kXHVn2nQF37ktCVX7vtdUTUnJhfWsZw/viewform?usp=pp_url&entry.368849087=Compr%C3%A9hensible&entry.708712048=Bien&entry.1430431403=Bien&entry.402690215=Tr%C3%A8s+utile&entry.1070466955=Oui', '_blank')
-}
+// TODO: ca branle quoi la
+// function hrefFunction() {
+//   window.open('https://docs.google.com/forms/d/e/1FAIpQLSdkkpJ6Y_sXB74Hpr1kXHVn2nQF37ktCVX7vtdUTUnJhfWsZw/viewform?usp=pp_url&entry.368849087=Compr%C3%A9hensible&entry.708712048=Bien&entry.1430431403=Bien&entry.402690215=Tr%C3%A8s+utile&entry.1070466955=Oui', '_blank')
+// }
 
 const ProfileView: React.FC = () => {
   const { formatMessage } = useOurIntl()
