@@ -68,8 +68,8 @@ const SigninView: React.FC = () => {
   })
   const googleLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => {
-      authenticateGoogleMutation.mutate({body: {clientAccessToken: tokenResponse.access_token}})
-    },
+      //authenticateGoogleMutation.mutate({body: {clientAccessToken: tokenResponse.access_token}})
+    }
   })
 
   const formIsValid = () => {
