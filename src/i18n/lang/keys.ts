@@ -164,7 +164,7 @@ export enum TranslationKeys {
   'PANEL.companion,buton2',
   'PANEL.companion,buton3',
 
-  /*    ACTIVITY    */
+  /*    ACTIVITY   */
   'ACTIVITY',
 
   /*    SETTINGS    */

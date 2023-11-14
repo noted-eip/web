@@ -1,3 +1,4 @@
+import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import { initializeApp } from 'firebase/app'
 import React from 'react'
@@ -35,7 +36,22 @@ const App: React.FC = () => {
     appId: '1:871625340195:web:aa69f8236ad0da4e2fc896',
     measurementId: 'G-XFC30W0DZ'
   }
+  const theme = createTheme({
+    components: {
+      MuiButton: {
+        variants: [
+          {
+            props: { variant: 'outlined' },
+            style: {
+              textTransform: 'none',
+            },
+          },
+        ],
+      },
+    },
+  })
 
+  
   initializeApp(firebaseConfig)
   React.useEffect(() => {
     noAuthContext.attemptSigninFromLocalStorage()
@@ -52,29 +68,31 @@ const App: React.FC = () => {
   }
 
   return (
-    <LangageContext.Provider value={{langage: currentLangage, changeLangage}}>
-      <LocaleManager>
-        <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-          <BrowserRouter>
-            <DevelopmentContext.Provider
-              value={TOGGLE_DEV_FEATURES ? { accounts, setAccounts } : undefined}
-            >
-              <QueryClientProvider client={apiQueryClient}>
-                {!hasLoaded ? null : token !== null ? (
-                  <AuthContext.Provider value={authContext}>
-                    <AuthenticatedRouter />
-                  </AuthContext.Provider>
-                ) : (
-                  <NoAuthContext.Provider value={noAuthContext}>
-                    <UnauthenticatedRouter />
-                  </NoAuthContext.Provider>
-                )}
-              </QueryClientProvider>
-            </DevelopmentContext.Provider>
-          </BrowserRouter>
-        </GoogleOAuthProvider>
-      </LocaleManager>
-    </LangageContext.Provider>
+    <ThemeProvider theme={theme}>
+      <LangageContext.Provider value={{langage: currentLangage, changeLangage}}>
+        <LocaleManager>
+          <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+            <BrowserRouter>
+              <DevelopmentContext.Provider
+                value={TOGGLE_DEV_FEATURES ? { accounts, setAccounts } : undefined}
+              >
+                <QueryClientProvider client={apiQueryClient}>
+                  {!hasLoaded ? null : token !== null ? (
+                    <AuthContext.Provider value={authContext}>
+                      <AuthenticatedRouter />
+                    </AuthContext.Provider>
+                  ) : (
+                    <NoAuthContext.Provider value={noAuthContext}>
+                      <UnauthenticatedRouter />
+                    </NoAuthContext.Provider>
+                  )}
+                </QueryClientProvider>
+              </DevelopmentContext.Provider>
+            </BrowserRouter>
+          </GoogleOAuthProvider>
+        </LocaleManager>
+      </LangageContext.Provider>
+    </ThemeProvider>
   )
 }
 

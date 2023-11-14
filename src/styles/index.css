@@ -13,7 +13,7 @@ html {
   scroll-behavior: smooth;
 }
 
-@tailwind base;
+  @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -38,6 +38,10 @@ html {
   h5 {
     @apply text-xs text-gray-400;
   }
+}
+
+.Button {
+  text-transform: lowercase;
 }
 
 .skeleton {

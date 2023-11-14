@@ -226,12 +226,9 @@ const ProfileViewDangerZoneSection: React.FC = () => {
           </p>
         </div>
         <div className='flex items-center justify-end'>
-          <button
-            className='rounded-md border border-gray-300 bg-white p-2 px-3 text-sm text-red-600 transition-all duration-100 hover:border-red-600 hover:bg-red-600 hover:text-white'
-            onClick={() => {deleteAccountQ.mutate(undefined)}}
-          >
+          <Button variant='outlined' color='error' onClick={() => {deleteAccountQ.mutate(undefined)}}>
             <FormatMessage id='PROFILE.delete.button' />
-          </button>
+          </Button>
         </div>
       </div>
     </div>
@@ -251,7 +248,7 @@ const ProfileViewFeedbackSection: React.FC = () => {
         </div>
       </div>
 
-      <div className='grid grid-cols-[40%_60%] p-5'>
+      <div className='grid grid-cols-[40%_60%] p-5' >
         <div className='relative'>
           <p className='text-xs text-gray-600'>
             <FormatMessage id='PROFILE.feedback.desc' />
@@ -260,12 +257,6 @@ const ProfileViewFeedbackSection: React.FC = () => {
         <div className='flex items-center justify-end'>
           <Button variant='outlined'>
             <FormatMessage id='PROFILE.feedback.button' />
-            {/* <button
-            className='rounded-md border border-gray-300 bg-white p-2 px-3 text-sm text-gray-600 transition-all duration-100 hover:border-gray-600 hover:bg-gray-600 hover:text-white'
-            onClick={() => {hrefFunction()}}
-          >
-            <FormatMessage id='PROFILE.feedback.button' />
-          </button> */}
           </Button>
         </div>
       </div>
