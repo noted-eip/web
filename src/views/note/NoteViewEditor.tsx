@@ -5,9 +5,9 @@ import { Editable, RenderElementProps, Slate, withReact } from 'slate-react'
 
 import { useAuthContext } from '../../contexts/auth'
 import { useBlockContext } from '../../contexts/block'
-import { useInsertBlockInCurrentGroup,useUpdateBlockInCurrentGroup } from '../../hooks/api/notes'
+import {useInsertBlockInCurrentGroup,useUpdateBlockInCurrentGroup } from '../../hooks/api/notes'
 import { noteBlocksToSlateElements, slateElementsToNoteBlock, withShortcuts } from '../../lib/editor'
-import { NotesAPIInsertBlockRequest,V1Block, V1Note } from '../../protorepo/openapi/typescript-axios'
+import {NotesAPIInsertBlockRequest, V1Block, V1Note } from '../../protorepo/openapi/typescript-axios'
 
 
 
@@ -44,23 +44,6 @@ const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex?: nu
   const editor = React.useMemo(() => withShortcuts(withReact(withHistory(createEditor()))), [])
   const insertBlockMutation = useInsertBlockInCurrentGroup()
   const updateBlockMutation = useUpdateBlockInCurrentGroup()
-  
-  const insertBlock = (value: Descendant[]) => {
-    if (editor.operations.some(op => 'set_selection' !== op.type)) {
-      
-      editorState.current = value
-      const latestState = slateElementsToNoteBlock(value)
-
-      console.log('INSERT BLOCK')
-      insertBlockMutation.mutate({
-        noteId: props.note.id,
-        body: {
-          index: 0,
-          block: latestState as V1Block
-        } as NotesAPIInsertBlockRequest
-      })
-    }
-  }
 
   const updateBlock = (value: Descendant[]) => {
     if (editor.operations.some(op => 'set_selection' !== op.type)) {
@@ -68,11 +51,9 @@ const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex?: nu
       console.log('UPDATE BLOCK')
       editorState.current = value
       const latestState = slateElementsToNoteBlock(value)
-
       // @note: No changes on lastest blocks and actuals
       //const palceholderBlock: V1Block = {id: '', type: 'TYPE_PARAGRAPH'}
       //if (blocksAreEqual(props.note.blocks === undefined ? palceholderBlock : props.note?.blocks[props.blockIndex === undefined ? 0 : props.blockIndex], latestState)) return
-    
       updateBlockMutation.mutate({
         noteId:  props.note.id,
         blockId: props.note?.blocks == undefined ? '' : props.note.blocks[props.blockIndex == undefined ? 0 : props.blockIndex].id,
@@ -83,17 +64,56 @@ const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex?: nu
 
   //const debouncedFunction = React.useMemo(() => debounce(props.hasBlocks ? updateBlock : insertBlock, 5), [])
 
-  /*const handleEditorChange = (value: Descendant[]) => {
+  const insertBlock = (value: Descendant[]) => {
+    if (editor.operations.some(op => 'set_selection' !== op.type)) {
+      
+      editorState.current = value
+      const latestState = slateElementsToNoteBlock(value)
+
+      console.log('INSERT BLOCK')
+      insertBlockMutation.mutate({
+        noteId: props.note.id,
+        body: {
+          // mettre un index
+          index: 1000,
+          block: latestState as V1Block
+        } as NotesAPIInsertBlockRequest
+      })
+    }
+  }
+
+  const handleEditorChange = (value: Descendant[]) => {
     if (editor.operations.some(op => 'set_selection' !== op.type)) {
       editorState.current = value
       
-      if (value.length == -1) {
-        insertBlock()
-      } else {
-        updateBlock()
-      }
+      console.log(value)
+      
+      // LOGIC
+      //let lastValue = 'not-empty'
+
+      for (let i = 0; i < value.length; i++) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const element = value[i] as any
+        const blockContent = element.children[0].text
+
+        console.log('- INDEX - ' + i)
+        //console.log('->' + lastValue)
+        console.log('->' + blockContent)
+
+        if (/*lastValue == '' &&*/ blockContent == '') {
+          const arr = []
+
+          insertBlock(arr as Descendant[])
+          value.pop()
+          return
+        }
+        //lastValue = blockContent == undefined ? '' : blockContent
+      } 
+      // !LOGIC
+
+      updateBlock(value)
     }
-  }*/
+  }
 
   const handleHover = () => {
     if (props.block != undefined) {
@@ -103,11 +123,13 @@ const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex?: nu
 
   return (
     <div 
-      className='rounded-md bg-transparent bg-gradient-to-br p-4 hover:border-gray-100 hover:bg-gray-100 hover:shadow-inner'
+      //className='rounded-md bg-transparent bg-gradient-to-br p-4' // none hover
+      //className='rounded-md bg-transparent bg-gradient-to-br p-4 hover:border-gray-100 hover:bg-gray-100 hover:shadow-inner' // block on hover
+      className='rounded-md border-gray-100 bg-gray-100 bg-gradient-to-br p-4 shadow-inner' // just blocks
       onMouseEnter={handleHover}>
       <Slate
-      //ternaire ici avec 2 handle different pour insert & update
-        onChange={props.block == undefined ? insertBlock : updateBlock}
+        // onChange={props.block == undefined ? insertBlock : updateBlock}
+        onChange={handleEditorChange}
         editor={editor}
         value={initialEditorState}>
         <Editable
@@ -122,7 +144,8 @@ const NoteViewEditor: React.FC<{ note: V1Note }> = props => {
 
   console.log('GET NOTE')
   console.log(props.note.blocks?.length)
-  console.log(props.note.blocks)
+  console.log('!GET NOTE')
+  //console.log(props.note.blocks)
 
   return (
     <div>
