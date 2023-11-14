@@ -36,17 +36,14 @@ function getGroupIdInEvent(event: string) {
 }
 
 function getAddNoteEvent(event: string) {
-  let username = 'Someone'
-  let noteTitle = 'a note'
+  let username = ''
+  let noteTitle = ''
   const folder = ''
- 
-  let everything = ''
-  let firstPart = ''
-  let secondPart = ''
+  let firstPart
+  let secondPart
   
   if (event != undefined) {
-    
-    everything = event
+    let everything = event
     everything = everything.substring(everything.indexOf('>') + 1, everything.length)
     firstPart = everything.substring(0, everything.indexOf('<'))
     everything = everything.substring(everything.indexOf('>') + 1, everything.length)
@@ -54,30 +51,56 @@ function getAddNoteEvent(event: string) {
 
     const userId = event.substring(event.indexOf('<userID:') + 8, event.indexOf('>'))
     const getUserResponse = useGetAccount({ accountId: userId })
-    if (getUserResponse.data?.account.name != undefined) {
+    if (getUserResponse.data?.account.name != undefined)
       username = getUserResponse.data?.account.name
-    }
 
     const noteId = getNoteIdInEvent(event)
     const getNoteReponse = useGetNoteInCurrentGroup({ noteId: noteId })
-    if (getNoteReponse.data?.note.title != undefined) {
+    if (getNoteReponse.data?.note.title != undefined)
       noteTitle = getNoteReponse.data?.note.title
-    }
   }
+
   return (username + firstPart + noteTitle + secondPart + folder)
+
+  /*let username = ''
+  let noteTitle = ''
+  const folder = ''
+  
+  if (event == undefined || event == '')
+    return ''
+  
+  let everything = event
+  everything = everything.substring(everything.indexOf('>') + 1, everything.length)
+  const firstPart = everything.substring(0, everything.indexOf('<'))
+  everything = everything.substring(everything.indexOf('>') + 1, everything.length)
+  const secondPart = everything.substring(0, everything.indexOf('<'))
+
+  const userId = event.substring(event.indexOf('<userID:') + 8, event.indexOf('>'))
+  const getUserResponse = useGetAccount({ accountId: userId })
+  if (getUserResponse.data?.account.name != undefined && getUserResponse.status == 'success')
+    username = getUserResponse.data?.account.name
+  else
+    return ''
+
+  const noteId = getNoteIdInEvent(event)
+  const getNoteReponse = useGetNoteInCurrentGroup({ noteId: noteId })
+  if (getNoteReponse.data?.note.title != undefined && getNoteReponse.status == 'success')
+    noteTitle = getNoteReponse.data?.note.title
+  else
+    return ''
+
+  return (username + firstPart + noteTitle + secondPart + folder)*/
 }
 
 function getUpdateOnMemberEvent(event: string) {
-  let username = 'Mr.Smith'
-  let groupName = 'a mysterious group'
- 
-  let everything = ''
+  let username = ''
+  let groupName = ''
   let firstPart = ''
   let secondPart = ''
-  
+ 
   if (event != undefined) {
     
-    everything = event
+    let everything = event
     everything = everything.substring(everything.indexOf('>') + 1, everything.length)
     firstPart = everything.substring(0, everything.indexOf('<'))
     everything = everything.substring(everything.indexOf('>') + 1, everything.length)
@@ -85,17 +108,45 @@ function getUpdateOnMemberEvent(event: string) {
 
     const userId = event.substring(event.indexOf('<userID:') + 8, event.indexOf('>'))
     const getUserResponse = useGetAccount({ accountId: userId })
-    if (getUserResponse.data?.account.name != undefined) {
+    if (getUserResponse.data?.account.name != undefined)
       username = getUserResponse.data?.account.name
-    }
 
     const groupId = getGroupIdInEvent(event)
     const getGroupReponse = useGetGroup({ groupId: groupId })
-    if (getGroupReponse.data?.group.name != undefined) {
+    if (getGroupReponse.data?.group.name != undefined)
       groupName = getGroupReponse.data?.group.name
-    }
   }
+
   return (username + firstPart + groupName + secondPart)
+  /*
+  let username = ''
+  let groupName = ''
+ 
+  if (event == undefined)
+    return ''
+    
+  let everything = event
+  everything = everything.substring(everything.indexOf('>') + 1, everything.length)
+  const firstPart = everything.substring(0, everything.indexOf('<'))
+  everything = everything.substring(everything.indexOf('>') + 1, everything.length)
+  const secondPart = everything.substring(0, everything.indexOf('<'))
+
+  const userId = event.substring(event.indexOf('<userID:') + 8, event.indexOf('>'))
+  const getUserResponse = useGetAccount({ accountId: userId })
+  if (getUserResponse.data?.account.name != undefined && getUserResponse.status == 'success')
+    username = getUserResponse.data?.account.name
+  else
+    return ''
+
+  const groupId = getGroupIdInEvent(event)
+  const getGroupReponse = useGetGroup({ groupId: groupId })
+  if (getGroupReponse.data?.group.name != undefined && getGroupReponse.status == 'success')
+    groupName = getGroupReponse.data?.group.name
+  else
+    return ''
+
+  return (username + firstPart + groupName + secondPart)
+  */
 }
 
 function getDateFormat(unformatedDate: string) {
@@ -140,16 +191,22 @@ const ActivityListItem: React.FC<{ activity: V1GroupActivity }> = (props) => {
   switch(props.activity.type) { 
     case 'ADD-NOTE': { 
       event = getAddNoteEvent(props.activity?.event)
+      //if (event == '')
+      //  return <div></div>
       redirectId = getNoteIdInEvent(props.activity?.event)
       break
     } 
     case 'ADD-MEMBER': { 
       event = getUpdateOnMemberEvent(props.activity?.event)
+      //if (event == '')
+      //  return <div></div>
       redirectId = getGroupIdInEvent(props.activity?.event)
       break
     }
     case 'REMOVE-MEMBER': { 
       event = getUpdateOnMemberEvent(props.activity?.event)
+      //if (event == '')
+      //  return <div></div>
       redirectId = getGroupIdInEvent(props.activity?.event)
       break
     }
@@ -192,6 +249,7 @@ const ActivityListCurrentGroup: React.FC = () => {
               No recent activity
             </div>
           ) : (
+          /*listActivitiesQ.data?.activities?.slice().reverse().map((activity, idx) => (*/
             listActivitiesQ.data?.activities?.map((activity, idx) => (
               <ActivityListItem key={`activity-list-${activity.id}-${idx}`} activity={activity} />
             ))
