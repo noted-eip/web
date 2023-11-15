@@ -9,7 +9,7 @@ import ResetPasswordPassword from './reset-password/ResetPasswordPassword'
 import ResetPasswordToken from './reset-password/ResetPasswordToken'
 import SigninView from './signin/SigninView'
 import SignupView from './signup/SignupView'
-import ValidateAccountView from './validate-account/validateAccountVIew'
+import ValidateAccountView from './validate-account/ValidateAccountView'
 import WelcomeView from './welcome/WelcomeView'
 
 // Describes routes that are available to unauthenticated users.

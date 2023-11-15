@@ -52,6 +52,9 @@ const ValidateAccountView: React.FC = () => {
   const validateAccountMutation = useValidateAccount({
     onSuccess: () => {
       authenticateMutation.mutate({ body: { email, password } })
+    },
+    onError: (e) => {
+      toast.error(e.response?.data.error as string)
     }
   })
 
