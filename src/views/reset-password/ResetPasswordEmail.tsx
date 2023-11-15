@@ -1,3 +1,5 @@
+import Button from '@mui/material/Button'
+import Stack from '@mui/material/Stack'
 import { getAnalytics, logEvent } from 'firebase/analytics'
 import React from 'react'
 import { toast } from 'react-hot-toast'
@@ -44,40 +46,45 @@ const ResetPasswordEmail: React.FC = () => {
   return (
     <div className='flex h-screen w-screen items-center justify-center'>
       <form
-        className='grid basis-1/2 grid-cols-1 gap-2'
         onSubmit={(e) => {
           e.preventDefault()
           forgetAccountPasswordMutation.mutate({body: {email}})
         }}
       >
         <ContainerMd>
-          <h2 className='mb-4 text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl'>
-            <FormatMessage id='RESETPWD.Email.title' />
-          </h2>
-          <p 
-            className='mb-2 text-lg leading-tight tracking-tight text-gray-900'>
-            <FormatMessage id='RESETPWD.Email.desc1' />
-          </p>
-          <p 
-            className='mb-4 text-sm leading-tight tracking-tight text-gray-500'>
-            <FormatMessage id='RESETPWD.Email.desc2' />
-          </p>
-          <OldInput
-            label={formatMessage({ id: 'RESETPWD.Email.form' })}
-            value={email}
-            onChange={(e) => {
-              const val = e.target.value as string
-              setEmail(val)
-              setEmailValid(validateEmail(val) === undefined)
-            }}
-            isInvalidBlur={!emailValid}
-            errorMessage='Invalid email address'
-          />
-          <button className='mt-2 w-full rounded-lg bg-blue-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:bg-gray-600 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
-            disabled={!formIsValid() || forgetAccountPasswordMutation.isLoading}
-          >
-            <FormatMessage id='RESETPWD.Email.button' />
-          </button>
+          <Stack direction='column' spacing={2}>
+            <h2 className='text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl'>
+              <FormatMessage id='RESETPWD.Email.title' />
+            </h2>
+            <div>
+              <p 
+                className='text-lg leading-tight tracking-tight text-gray-900'>
+                <FormatMessage id='RESETPWD.Email.desc1' />
+              </p>
+              <p 
+                className='text-sm leading-tight tracking-tight text-gray-500'>
+                <FormatMessage id='RESETPWD.Email.desc2' />
+              </p>
+            </div>
+            <OldInput
+              label={formatMessage({ id: 'RESETPWD.Email.form' })}
+              value={email}
+              onChange={(e) => {
+                const val = e.target.value as string
+                setEmail(val)
+                setEmailValid(validateEmail(val) === undefined)
+              }}
+              isInvalidBlur={!emailValid}
+              errorMessage='Invalid email address'
+            />
+            <Button
+              variant='contained'
+              className='w-full'
+              disabled={!formIsValid() || forgetAccountPasswordMutation.isLoading}
+            >
+              <FormatMessage id='RESETPWD.Email.button' />
+            </Button>
+          </Stack>
         </ContainerMd>
       </form>
       <Notification />

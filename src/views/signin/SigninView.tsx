@@ -88,10 +88,10 @@ const SigninView: React.FC = () => {
         }}
       >
         <ContainerMd>
-          <h2 className='mb-4 text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl'>
-            <FormatMessage id='SIGNIN.title' />
-          </h2>
           <Stack direction='column' spacing={2}>
+            <h2 className='mb-4 text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl'>
+              <FormatMessage id='SIGNIN.title' />
+            </h2>
             <OldInput
               label={formatMessage({ id: 'AUTH.email' })}
               value={email}

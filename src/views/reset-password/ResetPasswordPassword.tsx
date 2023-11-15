@@ -1,3 +1,5 @@
+import Button from '@mui/material/Button'
+import Stack from '@mui/material/Stack'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
@@ -35,50 +37,53 @@ const ResetPasswordPassword: React.FC = () => {
 
   return (
     <div className='flex h-screen w-screen items-center justify-center'>
-      <form className='grid basis-1/2 grid-cols-1 gap-2'
+      <form
         onSubmit={(e) => {
           e.preventDefault()
           updateAccountMutation.mutate({account_id: resetPasswordContext.account?.account_id as string, body: {password, token: resetPasswordContext.account?.reset_token as string}, header: resetPasswordContext.account?.auth_token as string})
         }}
       >
         <ContainerMd>
-          <h2 className='mb-1 text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl'>
-            <FormatMessage id='RESETPWD.Pwd.title' />
-          </h2>
-          {!isResetPasswordValid ? <div className='mb-4 leading-tight tracking-tight dark:text-white'>
-            <span className='text-red-500'>Account Error</span>
-          </div> : null}
-          <p 
-            className='mb-4 text-lg leading-tight tracking-tight text-gray-900'>
-            <FormatMessage id='RESETPWD.Pwd.desc' />
-          </p>
-          <OldInput
-            label={formatMessage({ id: 'AUTH.pwd' })}
-            type='password'
-            tooltip='6 characters, letters numbers and symbols'
-            value={password}
-            onChange={(e) => {
-              const val = e.target.value as string
-              setPassword(val)
-              setPasswordValid(validatePassword(val) === undefined)
-            }}
-            isInvalidBlur={!passwordValid}
-          />
-          <OldInput
-            label={formatMessage({ id: 'RESETPWD.Pwd.form' })}
-            type='password'
-            value={confirmPassword}
-            onChange={(e) => {
-              setConfirmPassword(e.target.value)
-            }}
-            isInvalid={password !== confirmPassword && confirmPassword.length !== 0}
-            errorMessage={'Not the same password'}
-          />
-          <button type='submit' className='mt-2 w-full rounded-lg bg-blue-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:bg-gray-600 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
-            disabled={!formIsValid() || updateAccountMutation.isLoading || !isResetPasswordValid}
-          >
-            <FormatMessage id='SIGNIN.resetPwd' />
-          </button>
+          <Stack direction='column' spacing={2}>
+            <h2 className='text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl'>
+              <FormatMessage id='RESETPWD.Pwd.title' />
+            </h2>
+            {!isResetPasswordValid && 
+            <div className='leading-tight tracking-tight dark:text-white'>
+              <span className='text-red-500'>Account Error</span>
+            </div>}
+            <p 
+              className='text-lg leading-tight tracking-tight text-gray-900'>
+              <FormatMessage id='RESETPWD.Pwd.desc' />
+            </p>
+            <OldInput
+              label={formatMessage({ id: 'AUTH.pwd' })}
+              tooltip='6 characters, letters numbers and symbols'
+              value={password}
+              onChange={(e) => {
+                const val = e.target.value as string
+                setPassword(val)
+                setPasswordValid(validatePassword(val) === undefined)
+              }}
+              isInvalidBlur={!passwordValid}
+            />
+            <OldInput
+              label={formatMessage({ id: 'RESETPWD.Pwd.form' })}
+              value={confirmPassword}
+              onChange={(e) => {
+                setConfirmPassword(e.target.value)
+              }}
+              isInvalid={password !== confirmPassword && confirmPassword.length !== 0}
+              errorMessage={'Not the same password'}
+            />
+            <Button
+              variant='contained'
+              className='w-full'
+              disabled={!formIsValid() || updateAccountMutation.isLoading || !isResetPasswordValid}
+            >
+              <FormatMessage id='SIGNIN.resetPwd' />
+            </Button>
+          </Stack>
         </ContainerMd>
       </form>
       <Notification />
