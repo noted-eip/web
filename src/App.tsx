@@ -46,6 +46,12 @@ const App: React.FC = () => {
               textTransform: 'none',
             },
           },
+          {
+            props: { variant: 'contained' },
+            style: {
+              textTransform: 'none',
+            },
+          },
         ],
       },
     },
