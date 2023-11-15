@@ -156,6 +156,11 @@ export enum TranslationKeys {
   'PROFILE.beta.button',
   'PROFILE.beta.buttonResTrue',
   'PROFILE.beta.buttonResFalse',
+  'PROFILE.langage.title',
+  'PROFILE.langage.desc',
+  'PROFILE.langage.options',
+  'PROFILE.langage.fr',
+  'PROFILE.langage.en',
 
   /*    PANEL   */
   'PANEL.activity',
@@ -166,11 +171,4 @@ export enum TranslationKeys {
 
   /*    ACTIVITY   */
   'ACTIVITY',
-
-  /*    SETTINGS    */
-  'SETTINGS',
-  'SETTINGS.langage.title',
-  'SETTINGS.langage.options',
-  'SETTINGS.langage.french',
-  'SETTINGS.langage.english',
 }

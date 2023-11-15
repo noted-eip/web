@@ -52,6 +52,7 @@ const GroupViewEmptyState: React.FC = () => {
             </div>
           ))}
       </div>
+      {/* TODO: last button to replace with mui */}
       <button
         onClick={() => {
           createGroupQ.mutate({body: {name: 'My Group', description: 'Created on ' + new Date().toDateString()}})

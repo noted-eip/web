@@ -135,6 +135,11 @@ const frTranslation: LocaleTypedMessages = {
   'PROFILE.beta.button': 'Accéder à la beta',
   'PROFILE.beta.buttonResTrue': 'Envoyé!',
   'PROFILE.beta.buttonResFalse': 'Déjà rejoint',
+  'PROFILE.langage.title': 'Langue',
+  'PROFILE.langage.desc': 'Modifiez la langue utilisée dans l’interface utilisateur.',
+  'PROFILE.langage.options': 'Options',
+  'PROFILE.langage.fr': 'Français',
+  'PROFILE.langage.en': 'Anglais',
 
   /*    PANEL   */
   'PANEL.activity': 'Activité',
@@ -145,13 +150,6 @@ const frTranslation: LocaleTypedMessages = {
   
   /*    ACTIVITY    */
   'ACTIVITY': 'Activity',
-
-  /*    SETTINGS    */
-  'SETTINGS': 'Paramètres',
-  'SETTINGS.langage.title': 'Langue',
-  'SETTINGS.langage.options': 'Options',
-  'SETTINGS.langage.french': 'Français',
-  'SETTINGS.langage.english': 'Anglais',
 }
 
 export default frTranslation

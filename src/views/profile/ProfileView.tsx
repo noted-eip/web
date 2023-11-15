@@ -1,10 +1,14 @@
-import { Menu, Transition } from '@headlessui/react'
-import { ArrowPathIcon, ChatBubbleOvalLeftEllipsisIcon,CheckIcon, ChevronDownIcon } from '@heroicons/react/24/outline'
-import { CodeBracketIcon, ExclamationTriangleIcon, InboxIcon, PencilIcon, XMarkIcon } from '@heroicons/react/24/solid'
+import { ArrowPathIcon, ChatBubbleOvalLeftEllipsisIcon,CheckIcon } from '@heroicons/react/24/outline'
+import {CodeBracketIcon, ExclamationTriangleIcon, InboxIcon, PencilIcon, XMarkIcon } from '@heroicons/react/24/solid'
+import { Dropdown } from '@mui/base/Dropdown'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import Button from '@mui/material/Button'
+import Menu, { MenuProps } from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
 import Stack from '@mui/material/Stack'
+import { alpha,styled } from '@mui/material/styles'
 import { getAnalytics, logEvent } from 'firebase/analytics'
-import React, { Fragment, useState } from 'react'
+import React, { useState } from 'react'
 
 import LoaderIcon from '../../components/icons/LoaderIcon'
 import ViewSkeleton from '../../components/view/ViewSkeleton'
@@ -17,6 +21,83 @@ import useClickOutside from '../../hooks/click'
 import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
 import { TOGGLE_DEV_FEATURES } from '../../lib/env'
 import { V1Account, V1GroupInvite } from '../../protorepo/openapi/typescript-axios'
+
+const ProfileViewAccountSection: React.FC = () => {
+  const authContext = useAuthContext()
+  const [editName, setEditName] = React.useState(false)
+  const [newName, setNewName] = React.useState<string | undefined>(undefined)
+  const updateAccountQ = useUpdateMyAccount()
+  const getAccountQ = useGetAccount({accountId: authContext.accountId})
+  const newNameInputRef = React.createRef<HTMLInputElement>()
+
+  useClickOutside(newNameInputRef, () => {
+    setEditName(false)
+  })
+
+  React.useEffect(() => {
+    if (newName === undefined || !editName) {
+      setNewName(getAccountQ.isSuccess ? getAccountQ.data.account.name : '')
+    }
+  }, [getAccountQ])
+
+  const onChangeName = (e) => {
+    e.preventDefault()
+    updateAccountQ.mutate({body: {name: newName} as V1Account})
+    setEditName(false)
+  }
+
+  return (
+    <div className='rounded-md border border-gray-100 bg-gray-50 bg-gradient-to-br p-4'>
+      <div className='flex items-center'>
+        <div className='group mr-4 h-16 w-16 rounded-md bg-gradient-radial from-teal-300 to-green-200'>
+          <div className='hidden h-full w-full cursor-pointer items-center justify-center rounded-md bg-[rgba(255,255,255,0.2)] group-hover:flex'>
+            <ArrowPathIcon className='hidden h-6 w-6 stroke-2 text-gray-500 group-hover:block' />
+          </div>
+        </div>
+        <div className='flex flex-col'>
+          {getAccountQ.isSuccess ? (
+            <React.Fragment>
+              <div
+                className='group flex h-8 cursor-pointer items-center'
+                onClick={() => {
+                  setEditName(true)
+                }}
+              >
+                {editName ? (
+                  <form onSubmit={onChangeName}>
+                    <input
+                      ref={newNameInputRef}
+                      autoFocus
+                      className='ml-[-5px] w-48 rounded border-gray-200 bg-white px-1 py-0 font-medium'
+                      type='text'
+                      value={newName}
+                      onChange={(e) => setNewName(e.target.value)}
+                    />
+                    <button type='submit' />
+                  </form>
+                ) : (
+                  <React.Fragment>
+                    <p className='font-medium'>{getAccountQ.data?.account.name}</p>
+                    <PencilIcon className='ml-2 hidden h-4 w-4 stroke-2 text-gray-400 group-hover:block' />
+                  </React.Fragment>
+                )}
+              </div>
+              <div>
+                <p className='text-gray-700'>{getAccountQ?.data.account.email}</p>
+              </div>
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              <div className='skeleton h-4 w-48'></div>
+              <div className='skeleton mt-4 h-4 w-64'></div>
+            </React.Fragment>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 const InviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
   const getGroupQ = useGetGroup({ groupId: props.invite.groupId as string })
   const denyInviteQ = useDenyInvite()
@@ -127,77 +208,144 @@ const ProfileViewPendingInvitesSection: React.FC = () => {
   )
 }
 
-const ProfileViewAccountSection: React.FC = () => {
-  const authContext = useAuthContext()
-  const [editName, setEditName] = React.useState(false)
-  const [newName, setNewName] = React.useState<string | undefined>(undefined)
-  const updateAccountQ = useUpdateMyAccount()
-  const getAccountQ = useGetAccount({accountId: authContext.accountId})
-  const newNameInputRef = React.createRef<HTMLInputElement>()
+const StyledMenu = styled((props: MenuProps) => (
+  <Menu
+    elevation={0}
+    anchorOrigin={{
+      vertical: 'bottom',
+      horizontal: 'right',
+    }}
+    transformOrigin={{
+      vertical: 'top',
+      horizontal: 'right',
+    }}
+    {...props}
+  />
+))(({ theme }) => ({
+  '& .MuiPaper-root': {
+    borderRadius: 6,
+    marginTop: theme.spacing(1),
+    minWidth: 180,
+    color:
+      theme.palette.mode === 'light' ? 'rgb(55, 65, 81)' : theme.palette.grey[300],
+    boxShadow:
+      'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
+    '& .MuiMenu-list': {
+      padding: '4px 0',
+    },
+    '& .MuiMenuItem-root': {
+      '& .MuiSvgIcon-root': {
+        fontSize: 18,
+        color: theme.palette.text.secondary,
+        marginRight: theme.spacing(1.5),
+      },
+      '&:active': {
+        backgroundColor: alpha(
+          theme.palette.primary.main,
+          theme.palette.action.selectedOpacity,
+        ),
+      },
+    },
+  },
+}))
 
-  useClickOutside(newNameInputRef, () => {
-    setEditName(false)
-  })
-
-  React.useEffect(() => {
-    if (newName === undefined || !editName) {
-      setNewName(getAccountQ.isSuccess ? getAccountQ.data.account.name : '')
-    }
-  }, [getAccountQ])
-
-  // >:(
-  const onChangeName = (e:any) => {
-    e.preventDefault()
-    updateAccountQ.mutate({body: {name: newName} as V1Account})
-    setEditName(false)
+const ProfileChangeLangage: React.FC = () => {
+  const context = React.useContext(LangageContext)
+  const analytics = getAnalytics()
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const open = Boolean(anchorEl)
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+  const handleClose = () => {
+    
+    setAnchorEl(null)
+  }
+  
+  if (!TOGGLE_DEV_FEATURES) {
+    logEvent(analytics, 'page_view', {
+      page_title: 'settings'
+    })
   }
 
   return (
-    <div className='rounded-md border border-gray-100 bg-gray-50 bg-gradient-to-br p-4'>
-      <div className='flex items-center'>
-        <div className='group mr-4 h-16 w-16 rounded-md bg-gradient-radial from-teal-300 to-green-200'>
-          <div className='hidden h-full w-full cursor-pointer items-center justify-center rounded-md bg-[rgba(255,255,255,0.2)] group-hover:flex'>
-            <ArrowPathIcon className='hidden h-6 w-6 stroke-2 text-gray-500 group-hover:block' />
-          </div>
+    <div className='relative mt-4 w-full rounded-md border border-gray-100 bg-gray-50'>
+      {/* Header */}
+      <div className='flex items-center justify-between border-b border-[#efefef] p-5'>
+        <div className='flex items-center'>
+          <CodeBracketIcon className='mr-2 h-5 w-5 text-gray-600' />
+          <p className='text-base font-medium text-gray-600'>              
+            <FormatMessage id='PROFILE.langage.title' />
+          </p>
         </div>
-        <div className='flex flex-col'>
-          {getAccountQ.isSuccess ? (
-            <React.Fragment>
-              <div
-                className='group flex h-8 cursor-pointer items-center'
-                onClick={() => {
-                  setEditName(true)
-                }}
-              >
-                {editName ? (
-                  <form onSubmit={onChangeName}>
-                    <input
-                      ref={newNameInputRef}
-                      autoFocus
-                      className='ml-[-5px] w-48 rounded border-gray-200 bg-white px-1 py-0 font-medium'
-                      type='text'
-                      value={newName}
-                      onChange={(e) => setNewName(e.target.value)}
-                    />
-                    <button type='submit' />
-                  </form>
-                ) : (
-                  <React.Fragment>
-                    <p className='font-medium'>{getAccountQ.data?.account.name}</p>
-                    <PencilIcon className='ml-2 hidden h-4 w-4 stroke-2 text-gray-400 group-hover:block' />
-                  </React.Fragment>
-                )}
-              </div>
-              <div>
-                <p className='text-gray-700'>{getAccountQ?.data.account.email}</p>
-              </div>
-            </React.Fragment>
-          ) : (
-            <React.Fragment>
-              <div className='skeleton h-4 w-48'></div>
-              <div className='skeleton mt-4 h-4 w-64'></div>
-            </React.Fragment>
-          )}
+      </div>
+      <div className='grid grid-cols-[40%_60%] p-5'>
+        <div className='relative'>
+          <p className='text-xs text-gray-600'>
+            <FormatMessage id='PROFILE.langage.desc' />
+          </p>
+        </div>
+        <div className='flex items-center justify-end'>
+          {/* BALISE */}
+          <Dropdown>
+            <Button
+              id='demo-customized-button'
+              aria-controls={open ? 'demo-customized-menu' : undefined}
+              aria-haspopup='true'
+              aria-expanded={open ? 'true' : undefined}
+              variant='outlined'
+              disableElevation
+              onClick={handleClick}
+              endIcon={<KeyboardArrowDownIcon />}
+            >
+              {context?.langage === 'fr' ? 'Français' : 'English'}
+            </Button>
+            <StyledMenu
+              id='demo-customized-menu'
+              MenuListProps={{
+                'aria-labelledby': 'demo-customized-button',
+              }}
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+            >
+              <MenuItem onClick={() => {
+                context?.changeLangage(context?.langage === 'en' ? 'fr' : 'en')
+                handleClose()}}>
+                {context?.langage === 'en' ? <FormatMessage id='PROFILE.langage.fr' /> : <FormatMessage id='PROFILE.langage.en' /> }
+              </MenuItem>
+            </StyledMenu>
+          </Dropdown>
+          {/* BALISE */}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const ProfileViewFeedbackSection: React.FC = () => {
+  return (
+    <div className='relative mt-4 w-full rounded-md border border-gray-100 bg-gray-50'>
+      {/* Header */}
+      <div className='flex items-center justify-between border-b border-[#efefef] p-5'>
+        <div className='flex items-center'>
+          <ChatBubbleOvalLeftEllipsisIcon className='mr-2 h-5 w-5 text-gray-600' />
+          <p className='text-base font-medium text-gray-600'>
+            <FormatMessage id='PROFILE.feedback.title' />
+          </p>
+        </div>
+      </div>
+
+      <div className='grid grid-cols-[40%_60%] p-5' >
+        <div className='relative'>
+          <p className='text-xs text-gray-600'>
+            <FormatMessage id='PROFILE.feedback.desc' />
+          </p>
+        </div>
+        <div className='flex items-center justify-end'>
+          <Button variant='outlined'>
+            <FormatMessage id='PROFILE.feedback.button' />
+          </Button>
         </div>
       </div>
     </div>
@@ -231,35 +379,6 @@ const ProfileViewDangerZoneSection: React.FC = () => {
         <div className='flex items-center justify-end'>
           <Button variant='outlined' color='error' onClick={() => {deleteAccountQ.mutate(undefined)}}>
             <FormatMessage id='PROFILE.delete.button' />
-          </Button>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-const ProfileViewFeedbackSection: React.FC = () => {
-  return (
-    <div className='relative mt-4 w-full rounded-md border border-gray-100 bg-gray-50'>
-      {/* Header */}
-      <div className='flex items-center justify-between border-b border-[#efefef] p-5'>
-        <div className='flex items-center'>
-          <ChatBubbleOvalLeftEllipsisIcon className='mr-2 h-5 w-5 text-gray-600' />
-          <p className='text-base font-medium text-gray-600'>
-            <FormatMessage id='PROFILE.feedback.title' />
-          </p>
-        </div>
-      </div>
-
-      <div className='grid grid-cols-[40%_60%] p-5' >
-        <div className='relative'>
-          <p className='text-xs text-gray-600'>
-            <FormatMessage id='PROFILE.feedback.desc' />
-          </p>
-        </div>
-        <div className='flex items-center justify-end'>
-          <Button variant='outlined'>
-            <FormatMessage id='PROFILE.feedback.button' />
           </Button>
         </div>
       </div>
@@ -327,87 +446,6 @@ const ProfileViewBetaSection: React.FC = () => {
 //   window.open('https://docs.google.com/forms/d/e/1FAIpQLSdkkpJ6Y_sXB74Hpr1kXHVn2nQF37ktCVX7vtdUTUnJhfWsZw/viewform?usp=pp_url&entry.368849087=Compr%C3%A9hensible&entry.708712048=Bien&entry.1430431403=Bien&entry.402690215=Tr%C3%A8s+utile&entry.1070466955=Oui', '_blank')
 // }
 
-const ProfileChangeLangage: React.FC = () => {
-  const context = React.useContext(LangageContext)
-  const analytics = getAnalytics()
-  
-  if (!TOGGLE_DEV_FEATURES) {
-    logEvent(analytics, 'page_view', {
-      page_title: 'settings'
-    })
-  }
-  function classNames(...classes) {
-    return classes.filter(Boolean).join(' ')
-  }
-
-  return (
-    <div className='relative mt-4 w-full rounded-md border border-gray-100 bg-gray-50'>
-      {/* Header */}
-      <div className='flex items-center justify-between border-b border-[#efefef] p-5'>
-        <div className='flex items-center'>
-          <CodeBracketIcon className='mr-2 h-5 w-5 text-gray-600' />
-          <p className='text-base font-medium text-gray-600'>              
-            <FormatMessage id='SETTINGS.langage.title' />
-          </p>
-        </div>
-      </div>
-      <div className='grid grid-cols-[40%_60%] p-5'>
-        <div className='relative inline-block text-left'>
-          <Menu as='div' className='relative inline-block text-left'>
-            <div>
-              <Menu.Button className='inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50'>
-                <FormatMessage id='SETTINGS.langage.options' />
-                <ChevronDownIcon className='-mr-1 h-5 w-5 text-gray-400' aria-hidden='true' />
-              </Menu.Button>
-            </div>
-            <Transition
-              as={Fragment}
-              enter='transition ease-out duration-100'
-              enterFrom='transform opacity-0 scale-95'
-              enterTo='transform opacity-100 scale-100'
-              leave='transition ease-in duration-75'
-              leaveFrom='transform opacity-100 scale-100'
-              leaveTo='transform opacity-0 scale-95'
-            >
-              <Menu.Items className='absolute left-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black focus:outline-none'>
-                <div className='py-1'>
-                  <Menu.Item>
-                    {({ active }) => (
-                      <a
-                        className={classNames(
-                          active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                          'block px-4 py-2 text-sm'
-                        )}
-                        onClick={() => {context?.changeLangage('fr')}}
-                      >
-                        <FormatMessage id='SETTINGS.langage.french' />
-                      </a>
-                    )}
-                  </Menu.Item>
-                  <Menu.Item>
-                    {({ active }) => (
-                      <a
-                        className={classNames(
-                          active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                          'block px-4 py-2 text-sm'
-                        )}
-                        onClick={() => {context?.changeLangage('en')}}
-                      >
-                        <FormatMessage id='SETTINGS.langage.english' />
-                      </a>
-                    )}
-                  </Menu.Item>
-                </div>
-              </Menu.Items>
-            </Transition>
-          </Menu>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-
 const ProfileView: React.FC = () => {
   const { formatMessage } = useOurIntl()
 
@@ -415,15 +453,11 @@ const ProfileView: React.FC = () => {
     <ViewSkeleton title={formatMessage({id: 'GENERIC.profile'})} panels={['group-activity']}>
       <div className='mx-lg mb-lg w-full xl:mx-xl xl:mb-xl'>
         <ProfileViewAccountSection />
-        <hr className='m-5 rounded border-2'></hr>
         <ProfileViewPendingInvitesSection />
-        <ProfileViewDangerZoneSection />
-        <hr className='m-5 rounded border-2'></hr>
-        <ProfileViewFeedbackSection />
-        <hr className='m-5 rounded border-2'></hr>
-        <ProfileViewBetaSection />
-        <hr className='m-5 rounded border-2'></hr>
         <ProfileChangeLangage />
+        <ProfileViewFeedbackSection />
+        <ProfileViewDangerZoneSection />
+        <ProfileViewBetaSection />
       </div>
     </ViewSkeleton>
   )

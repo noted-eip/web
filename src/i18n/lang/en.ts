@@ -135,6 +135,11 @@ const enTranslation: LocaleTypedMessages = {
   'PROFILE.beta.button': 'Access beta',
   'PROFILE.beta.buttonResTrue': 'Sent!',
   'PROFILE.beta.buttonResFalse': 'Already joined',
+  'PROFILE.langage.title': 'Langage',
+  'PROFILE.langage.desc': 'Change the language used in the user interface.',
+  'PROFILE.langage.options': 'Options',
+  'PROFILE.langage.fr': 'French',
+  'PROFILE.langage.en': 'English',
 
   /*    PANEL   */
   'PANEL.activity': 'Activity',
@@ -145,13 +150,6 @@ const enTranslation: LocaleTypedMessages = {
 
   /*    ACTIVITY    */
   'ACTIVITY': 'Activity',
-
-  /*    SETTINGS    */
-  'SETTINGS': 'Settings',
-  'SETTINGS.langage.title': 'Langage',
-  'SETTINGS.langage.options': 'Options',
-  'SETTINGS.langage.french': 'French',
-  'SETTINGS.langage.english': 'English',
 }
 
 export default enTranslation
