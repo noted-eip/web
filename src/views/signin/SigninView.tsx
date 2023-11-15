@@ -112,7 +112,6 @@ const SigninView: React.FC = () => {
           />
           <OldInput
             label={formatMessage({ id: 'AUTH.pwd' })}
-            type='password'
             value={password}
             onChange={(e) => {
               setPassword(e.target.value)

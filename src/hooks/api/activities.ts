@@ -17,7 +17,7 @@ export const useListActivitiesInCurrentGroup = (req: ListActivitiesInCurrentGrou
   return useQuery({
     queryKey: activitiesCacheKey,
     queryFn: async () => {
-      return (await openapiClient.groupsAPIListActivities(currentGroupId, authContext.accountId, req.limit, req.offset, await axiosRequestOptionsWithAuthorization(authContext))).data
+      return (await openapiClient.groupsAPIListActivities(currentGroupId, undefined, req.limit, req.offset, await axiosRequestOptionsWithAuthorization(authContext))).data
     },
     ...options,
   })

@@ -3,7 +3,7 @@ import {LocaleTypedMessages} from '../types'
 const frTranslation: LocaleTypedMessages = {
   /*    GENERIC   */
   'GENERIC.name': 'Nom',
-  'GENERIC.home': 'Acceuil',
+  'GENERIC.home': 'Accueil',
   'GENERIC.profile': 'Profil',
   'GENERIC.role': 'Rôle',
   'GENERIC.actions': 'Actions',

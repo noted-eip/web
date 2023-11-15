@@ -121,7 +121,6 @@ const SignupView: React.FC = () => {
           {/** //TODO: remove the type=passwprd of the input **/}
           <OldInput
             label={formatMessage({ id: 'AUTH.pwd' })}
-            type='password'
             tooltip='6 characters, letters numbers and symbols'
             value={password}
             onChange={(e) => {
