@@ -10,10 +10,8 @@ import {
   useGetCurrentGroup,
   useListGroups,
 } from '../../hooks/api/groups'
-import {useGroupIdFromUrl, useNoteIdFromUrl} from '../../hooks/url'
 import { FormatMessage } from '../../i18n/TextComponent'
 import LoaderIcon from '../icons/LoaderIcon'
-import NotesOptions from './Options'
 
 const GroupSelectDropdownItem: React.FC<
 React.PropsWithChildren & { onClick?: undefined | (() => void) }
@@ -42,6 +40,7 @@ const GroupSelectDropdown: React.FC = () => {
 
   return (
     <div>
+      {/* TODO: va degager */}
       <Menu as='div' className='relative'>
         <div className='flex space-x-4'>
           <Menu.Button as='button' className='flex items-center !outline-none'>
@@ -72,13 +71,6 @@ const GroupSelectDropdown: React.FC = () => {
               </div>
             </div>
           </Menu.Button>
-          {window.location.pathname.includes('/note/') &&
-            window.location.pathname.split('/')[4] &&
-              <NotesOptions 
-                noteId={useNoteIdFromUrl()}
-                groupId={useGroupIdFromUrl()}
-              />
-          }
         </div>
         <Transition
           as={React.Fragment}

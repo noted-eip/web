@@ -1,16 +1,14 @@
 import { ArrowPathIcon, ChatBubbleOvalLeftEllipsisIcon,CheckIcon } from '@heroicons/react/24/outline'
 import {CodeBracketIcon, ExclamationTriangleIcon, InboxIcon, PencilIcon, XMarkIcon } from '@heroicons/react/24/solid'
-import { Dropdown } from '@mui/base/Dropdown'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import Button from '@mui/material/Button'
-import Menu, { MenuProps } from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Stack from '@mui/material/Stack'
-import { alpha,styled } from '@mui/material/styles'
 import { getAnalytics, logEvent } from 'firebase/analytics'
 import React, { useState } from 'react'
 
 import LoaderIcon from '../../components/icons/LoaderIcon'
+import { StyledMenu } from '../../components/Menu/StyledMenu'
 import ViewSkeleton from '../../components/view/ViewSkeleton'
 import { useAuthContext } from '../../contexts/auth'
 import { LangageContext } from '../../contexts/langage'
@@ -208,47 +206,6 @@ const ProfileViewPendingInvitesSection: React.FC = () => {
   )
 }
 
-const StyledMenu = styled((props: MenuProps) => (
-  <Menu
-    elevation={0}
-    anchorOrigin={{
-      vertical: 'bottom',
-      horizontal: 'right',
-    }}
-    transformOrigin={{
-      vertical: 'top',
-      horizontal: 'right',
-    }}
-    {...props}
-  />
-))(({ theme }) => ({
-  '& .MuiPaper-root': {
-    borderRadius: 6,
-    marginTop: theme.spacing(1),
-    minWidth: 180,
-    color:
-      theme.palette.mode === 'light' ? 'rgb(55, 65, 81)' : theme.palette.grey[300],
-    boxShadow:
-      'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
-    '& .MuiMenu-list': {
-      padding: '4px 0',
-    },
-    '& .MuiMenuItem-root': {
-      '& .MuiSvgIcon-root': {
-        fontSize: 18,
-        color: theme.palette.text.secondary,
-        marginRight: theme.spacing(1.5),
-      },
-      '&:active': {
-        backgroundColor: alpha(
-          theme.palette.primary.main,
-          theme.palette.action.selectedOpacity,
-        ),
-      },
-    },
-  },
-}))
-
 const ProfileChangeLangage: React.FC = () => {
   const context = React.useContext(LangageContext)
   const analytics = getAnalytics()
@@ -258,7 +215,6 @@ const ProfileChangeLangage: React.FC = () => {
     setAnchorEl(event.currentTarget)
   }
   const handleClose = () => {
-    
     setAnchorEl(null)
   }
   
@@ -287,7 +243,7 @@ const ProfileChangeLangage: React.FC = () => {
         </div>
         <div className='flex items-center justify-end'>
           {/* BALISE */}
-          <Dropdown>
+          <div>
             <Button
               id='demo-customized-button'
               aria-controls={open ? 'demo-customized-menu' : undefined}
@@ -315,7 +271,7 @@ const ProfileChangeLangage: React.FC = () => {
                 {context?.langage === 'en' ? <FormatMessage id='PROFILE.langage.fr' /> : <FormatMessage id='PROFILE.langage.en' /> }
               </MenuItem>
             </StyledMenu>
-          </Dropdown>
+          </div>
           {/* BALISE */}
         </div>
       </div>
