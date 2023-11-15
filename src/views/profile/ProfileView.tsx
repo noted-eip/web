@@ -1,6 +1,7 @@
 import { ArrowPathIcon, ChatBubbleOvalLeftEllipsisIcon,CheckIcon } from '@heroicons/react/24/outline'
 import {CodeBracketIcon, ExclamationTriangleIcon, InboxIcon, PencilIcon, XMarkIcon } from '@heroicons/react/24/solid'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import LanguageIcon from '@mui/icons-material/Language'
 import Button from '@mui/material/Button'
 import MenuItem from '@mui/material/MenuItem'
 import Stack from '@mui/material/Stack'
@@ -229,7 +230,7 @@ const ProfileChangeLangage: React.FC = () => {
       {/* Header */}
       <div className='flex items-center justify-between border-b border-[#efefef] p-5'>
         <div className='flex items-center'>
-          <CodeBracketIcon className='mr-2 h-5 w-5 text-gray-600' />
+          <LanguageIcon className='mr-2 h-5 w-5 text-gray-600' />
           <p className='text-base font-medium text-gray-600'>              
             <FormatMessage id='PROFILE.langage.title' />
           </p>
