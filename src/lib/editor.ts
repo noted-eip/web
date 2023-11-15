@@ -228,6 +228,57 @@ export const slateElementsToNoteBlock = (elements: Descendant[]): V1Block => {
   return block
 }
 
+export const noteBlockstoStringArray = (blocks: V1Block[] | undefined): string[] => {
+  const arr: string[] = []
+
+  if (blocks == undefined)
+    return arr
+
+  blocks.forEach((block) => {
+    switch (block.type) {
+      case 'TYPE_HEADING_1':
+        arr.push(block == undefined ? 'undefined' : block.heading == undefined ? 'undefined' : block.heading)
+        break
+      case 'TYPE_HEADING_2':
+        arr.push(block == undefined ? 'undefined' : block.heading == undefined ? 'undefined' : block.heading)
+        break
+      case 'TYPE_HEADING_3':
+        arr.push(block == undefined ? 'undefined' : block.heading == undefined ? 'undefined' : block.heading)
+        break
+      case 'TYPE_PARAGRAPH':
+        arr.push(block == undefined ? 'undefined' : block.paragraph == undefined ? 'undefined' : block.paragraph)
+        break
+      case 'TYPE_BULLET_POINT':
+        arr.push(block == undefined ? 'undefined' : block.bulletPoint == undefined ? 'undefined' : block.bulletPoint)
+        break
+      case 'TYPE_NUMBER_POINT':
+        arr.push(block == undefined ? 'undefined' : block.numberPoint == undefined ? 'undefined' : block.numberPoint)
+        break
+      case 'TYPE_CODE':
+        console.warn('Block with type TYPE_CODE is not supported in the editor, it will be overwritten.')
+        break
+      case 'TYPE_IMAGE':
+        console.warn('Block with type TYPE_IMAGE is not supported in the editor, it will be overwritten.')
+        break
+      case 'TYPE_MATH':
+        console.warn('Block with type TYPE_MATH is not supported in the editor, it will be overwritten.')
+        break
+      default:
+        console.warn(`Block with type ${block.type} is not known, it will be overwritten.`)
+    }
+  })
+
+  return arr
+} 
+
+export const stringToNoteBlock = (content: string): V1Block => {
+  const block: V1Block = {id: '', type: 'TYPE_PARAGRAPH'}
+
+  block.paragraph = content
+
+  return block
+}
+
 export const slateElementsToNoteBlocks = (elements: Descendant[]): V1Block[] => {
   const blocks: V1Block[] = []
 

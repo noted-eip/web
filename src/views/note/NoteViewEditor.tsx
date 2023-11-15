@@ -5,10 +5,9 @@ import { Editable, RenderElementProps, Slate, withReact } from 'slate-react'
 
 import { useAuthContext } from '../../contexts/auth'
 import { useBlockContext } from '../../contexts/block'
-import {useInsertBlockInCurrentGroup,useUpdateBlockInCurrentGroup } from '../../hooks/api/notes'
-import { noteBlocksToSlateElements, slateElementsToNoteBlock, withShortcuts } from '../../lib/editor'
-import {NotesAPIInsertBlockRequest, V1Block, V1Note } from '../../protorepo/openapi/typescript-axios'
-
+import { useDeleteBlockInCurrentGroup, useInsertBlockInCurrentGroup, useUpdateBlockInCurrentGroup } from '../../hooks/api/notes'
+import { noteBlocksToSlateElements,stringToNoteBlock,withShortcuts } from '../../lib/editor'
+import { NotesAPIInsertBlockRequest, V1Block, V1Note } from '../../protorepo/openapi/typescript-axios'
 
 
 const EditorElement: React.FC<RenderElementProps> = props => {
@@ -32,7 +31,7 @@ const EditorElement: React.FC<RenderElementProps> = props => {
   }
 }
 
-const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex?: number }> = props => {
+const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex?: number, localBlocks: V1Block[], localSetBlocks: any }> = props => {
   const authContext = useAuthContext()
   const blockContext = useBlockContext()
   const initialEditorState = noteBlocksToSlateElements(
@@ -42,76 +41,111 @@ const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex?: nu
   const editorState = React.useRef<Descendant[]>(initialEditorState)
   const renderElement = React.useCallback(props => <EditorElement {...props} />, [])
   const editor = React.useMemo(() => withShortcuts(withReact(withHistory(createEditor()))), [])
+  
   const insertBlockMutation = useInsertBlockInCurrentGroup()
   const updateBlockMutation = useUpdateBlockInCurrentGroup()
+  const deleteBlockMutation = useDeleteBlockInCurrentGroup()
 
-  const updateBlock = (value: Descendant[]) => {
-    if (editor.operations.some(op => 'set_selection' !== op.type)) {
-      
-      console.log('UPDATE BLOCK')
-      editorState.current = value
-      const latestState = slateElementsToNoteBlock(value)
-      // @note: No changes on lastest blocks and actuals
-      //const palceholderBlock: V1Block = {id: '', type: 'TYPE_PARAGRAPH'}
-      //if (blocksAreEqual(props.note.blocks === undefined ? palceholderBlock : props.note?.blocks[props.blockIndex === undefined ? 0 : props.blockIndex], latestState)) return
-      updateBlockMutation.mutate({
-        noteId:  props.note.id,
-        blockId: props.note?.blocks == undefined ? '' : props.note.blocks[props.blockIndex == undefined ? 0 : props.blockIndex].id,
-        body: latestState as V1Block
-      })
+  const updateBlockFromSlateValue = (value: Descendant[]) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const lines = value as any
+    editorState.current = value
+
+    updateBlock(props.note.id, props.block == undefined ? '' : props.block.id,  stringToNoteBlock(lines[0].children[0].text))
+
+    if (lines[1] != null || lines[1] != undefined || lines[1].children[0].text.length > 1) {
+      insertBlock(props.note.id, props.blockIndex == undefined ? 1000 : props.blockIndex + 1,  stringToNoteBlock(lines[1].children[0].text))
     }
+
+    editorState.current = {} as Descendant[]
+
+    //concat line[0] & line[1] avec des \n
+    //suprimer line[1] ou juste mettre line[0] dans editorState.current
+    // comme ca on a plus de line[1] & on insert plus
   }
 
-  //const debouncedFunction = React.useMemo(() => debounce(props.hasBlocks ? updateBlock : insertBlock, 5), [])
-
-  const insertBlock = (value: Descendant[]) => {
-    if (editor.operations.some(op => 'set_selection' !== op.type)) {
-      
-      editorState.current = value
-      const latestState = slateElementsToNoteBlock(value)
-
-      console.log('INSERT BLOCK')
-      insertBlockMutation.mutate({
-        noteId: props.note.id,
-        body: {
-          // mettre un index
-          index: 1000,
-          block: latestState as V1Block
-        } as NotesAPIInsertBlockRequest
-      })
-    }
+  const insertBlock = (notedId: string, index: number | undefined, block: V1Block) => {
+    console.log('--INSERT')
+    insertBlockMutation.mutate({
+      noteId: notedId,
+      body: { 
+        index: index, 
+        block: block 
+      } as NotesAPIInsertBlockRequest
+    })
   }
+
+  const updateBlock = (notedId: string, blockId: string | undefined, block: V1Block) => {
+    console.log('--UPDATE')
+    updateBlockMutation.mutate({
+      noteId:  notedId,
+      blockId: blockId == undefined ? '' : blockId,
+      body: block
+    })
+  }
+
+  const deleteBlock = () => {
+    if (props.block == undefined)
+      return
+    console.log('--DELETE')
+    deleteBlockMutation.mutate({
+      noteId: props.note.id,
+      blockId: props.block.id,
+    })
+  }
+
+  //const debouncedFunction = React.useMemo(() => debounce(props.hasBlocks ? updateBlockFromSlateValue : insertBlockFromSlateValue, 5), [])
+
+  /*
+  const handleEnter = () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const lines = editorState.current as any
+    const { selection } = editor
+
+    if (selection == null)
+      return
+
+    const cursorRowPosition = selection.focus.path[0]
+    const cursorColumnPosition = selection.focus.offset.toString()
+
+    let contentBeforeEnter = ''
+    let contentAfterEnter = ''
+
+    for (let i = 0; i < lines.length;++i) {
+      for (let j = 0; j < lines[i].children[0].text.length; ++j) {
+        if (cursorRowPosition <= i && cursorColumnPosition <= j)
+          contentAfterEnter += lines[i].children[0].text[j]
+        else
+          contentBeforeEnter += lines[i].children[0].text[j]
+      }
+    }
+
+    updateBlock(props.note.id, props.block == undefined ? '' : props.block.id,  stringToNoteBlock(contentBeforeEnter))
+    insertBlock(props.note.id, props.blockIndex == undefined ? 1000 : props.blockIndex + 1,  stringToNoteBlock(contentAfterEnter))
+  }
+  */
 
   const handleEditorChange = (value: Descendant[]) => {
+    editorState.current = value
+    console.log(editorState.current)
+    
+    //Gerer plus tard
+    // si Shift & Enter sont pressé, editor.current = "1234\n5678"
+
     if (editor.operations.some(op => 'set_selection' !== op.type)) {
-      editorState.current = value
-      
-      console.log(value)
-      
-      // LOGIC
-      //let lastValue = 'not-empty'
+      updateBlockFromSlateValue(value)
+    }
+  }
 
-      for (let i = 0; i < value.length; i++) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const element = value[i] as any
-        const blockContent = element.children[0].text
+  const handleBackspace = () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const element = editorState.current[0] as any
 
-        console.log('- INDEX - ' + i)
-        //console.log('->' + lastValue)
-        console.log('->' + blockContent)
-
-        if (/*lastValue == '' &&*/ blockContent == '') {
-          const arr = []
-
-          insertBlock(arr as Descendant[])
-          value.pop()
-          return
-        }
-        //lastValue = blockContent == undefined ? '' : blockContent
-      } 
-      // !LOGIC
-
-      updateBlock(value)
+    //console.log(editorState.current)
+    console.log(element.children[0].text.length)
+    if (element.children[0].text.length < 1) {
+      deleteBlock()
+      //return (<div>No block here<div/>)
     }
   }
 
@@ -128,11 +162,15 @@ const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex?: nu
       className='rounded-md border-gray-100 bg-gray-100 bg-gradient-to-br p-4 shadow-inner' // just blocks
       onMouseEnter={handleHover}>
       <Slate
-        // onChange={props.block == undefined ? insertBlock : updateBlock}
+        // onChange={props.block == undefined ? insertBlock : updateBlockFromSlateValue}
         onChange={handleEditorChange}
         editor={editor}
         value={initialEditorState}>
         <Editable
+          onKeyDown= { event => { 
+            if (event.key == 'Backspace') handleBackspace() 
+            //if (event.key == 'Enter') handleEnter() 
+          }}
           readOnly={authContext.accountId !== props.note.authorAccountId}
           renderElement={renderElement} />
       </Slate>
@@ -142,10 +180,10 @@ const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex?: nu
 
 const NoteViewEditor: React.FC<{ note: V1Note }> = props => {
 
-  console.log('GET NOTE')
-  console.log(props.note.blocks?.length)
-  console.log('!GET NOTE')
-  //console.log(props.note.blocks)
+  //const [blocks, setBlocks] = React.useState<string[]>(noteBlockstoStringArray(props.note?.blocks))
+  const [blocks, setBlocks] = React.useState<V1Block[]>( props.note?.blocks ?? [])
+
+  console.log(blocks)
 
   return (
     <div>
@@ -156,6 +194,8 @@ const NoteViewEditor: React.FC<{ note: V1Note }> = props => {
             note={props.note}
             block={undefined}
             blockIndex={undefined}
+            localBlocks={blocks}
+            localSetBlocks={setBlocks}
           />
 
           :
@@ -164,6 +204,8 @@ const NoteViewEditor: React.FC<{ note: V1Note }> = props => {
               note={props.note}
               block={block}
               blockIndex={index}
+              localBlocks={blocks}
+              localSetBlocks={setBlocks}
             />
           ))
       }
