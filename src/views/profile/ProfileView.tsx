@@ -1,6 +1,7 @@
 import { ArrowPathIcon, ChatBubbleOvalLeftEllipsisIcon,CheckIcon } from '@heroicons/react/24/outline'
-import { CodeBracketIcon, ExclamationTriangleIcon, InboxIcon, PencilIcon } from '@heroicons/react/24/solid'
+import { CodeBracketIcon, ExclamationTriangleIcon, InboxIcon, PencilIcon, XMarkIcon } from '@heroicons/react/24/solid'
 import Button from '@mui/material/Button'
+import Stack from '@mui/material/Stack'
 import { getAnalytics, logEvent } from 'firebase/analytics'
 import React, { useState } from 'react'
 
@@ -48,37 +49,38 @@ const InviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
       </div>
       <div className='flex items-center justify-end'>
         {getGroupQ.isSuccess && (
-          <React.Fragment>
-            <Button variant='outlined'>Primary
-              {/* <button
+          <Stack direction='row' spacing={2}>
+            <Button 
+              variant='outlined'
+              color='error'
+              size='small'
               disabled={denyInviteQ.isLoading || acceptInviteQ.isLoading}
-              className='group flex cursor-pointer items-center rounded-full bg-red-100 p-1 px-3 text-xs font-medium text-red-700 hover:bg-red-200 disabled:bg-gray-100 disabled:text-gray-700'
               onClick={() => denyInviteQ.mutate({ groupId: props.invite?.groupId as string, inviteId: props.invite.id })}
-            >
-              <FormatMessage id='PROFILE.invite.deny' />
-              {
+              endIcon={
                 denyInviteQ.isLoading ?
-                  <LoaderIcon className='ml-1 h-3 w-3' />
+                  <LoaderIcon className='h-5 w-5' />
                   :
-                  <XMarkIcon className='ml-1 h-3 w-3 stroke-[3px] text-red-700 transition-all group-hover:scale-[120%] group-disabled:text-gray-700' />
+                  <XMarkIcon className='h-5 w-5 stroke-[3px] text-red-700 transition-all group-hover:scale-[120%] group-disabled:text-gray-700' />
               }
-              
-            </button> */}
-            </Button>
-            <button
-              disabled={denyInviteQ.isLoading || acceptInviteQ.isLoading}
-              className='group ml-2 flex cursor-pointer items-center rounded-full bg-green-100 p-1 px-3 text-xs font-medium text-green-700 hover:bg-green-200 disabled:bg-gray-100 disabled:text-gray-700'
-              onClick={() => acceptInviteQ.mutate({ groupId: props.invite.groupId as string, inviteId: props.invite.id })}
             >
-              <FormatMessage id='PROFILE.invite.accept' />
-              {
+              <FormatMessage id='PROFILE.invite.deny' />              
+            </Button>
+            <Button
+              variant='outlined'
+              color='success'
+              size='small'
+              disabled={denyInviteQ.isLoading || acceptInviteQ.isLoading}
+              onClick={() => acceptInviteQ.mutate({ groupId: props.invite.groupId as string, inviteId: props.invite.id })}
+              endIcon={
                 acceptInviteQ.isLoading ?
-                  <LoaderIcon className='ml-1 h-3 w-3' />
+                  <LoaderIcon className='h-5 w-5' />
                   :
-                  <CheckIcon className='ml-1 h-3 w-3 stroke-[3px] text-green-700 transition-all group-hover:scale-[120%] group-disabled:text-gray-700' />
+                  <CheckIcon className='h-5 w-5 stroke-[3px] text-green-700 transition-all group-hover:scale-[120%] group-disabled:text-gray-700' />
               }
-            </button>
-          </React.Fragment>
+            >
+              <FormatMessage id='PROFILE.invite.accept' />            
+            </Button>
+          </Stack>
         )}
       </div>
     </div>

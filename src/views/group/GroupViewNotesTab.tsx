@@ -140,6 +140,7 @@ const GroupViewNotesTab: React.FC = () => {
           placeholder={`${formatMessage({ id: 'GROUP.search' })} ${getGroupQ.data?.group.name || ''}`}
           type='text'
         />
+        {/* TODO: design of this button ? */}
         <button
           className='ml-4 flex shrink-0 items-center rounded-md bg-blue-50 p-2 px-3 text-sm  text-blue-500 transition-all'
           onClick={() => {

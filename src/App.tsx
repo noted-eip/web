@@ -50,7 +50,6 @@ const App: React.FC = () => {
       },
     },
   })
-
   
   initializeApp(firebaseConfig)
   React.useEffect(() => {

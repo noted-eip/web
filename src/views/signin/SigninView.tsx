@@ -1,3 +1,4 @@
+import Button from '@mui/material/Button'
 import { useGoogleLogin } from '@react-oauth/google'
 import { getAnalytics, logEvent } from 'firebase/analytics'
 import React from 'react'
@@ -108,12 +109,14 @@ const SigninView: React.FC = () => {
               setPassword(e.target.value)
             }}
           />
-          <button
-            className='my-2 w-full rounded-lg bg-blue-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:bg-gray-600 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
+          <Button
+            variant='outlined'
+            className='w-full'
+            // className='my-2 w-full rounded-lg bg-blue-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:bg-gray-600 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
             disabled={!formIsValid() || authenticateMutation.isLoading}
           >
             <FormatMessage id='AUTH.login' />
-          </button>
+          </Button>
           <div style={{cursor: 'pointer'}} className='flex items-center justify-center rounded border border-gray-500 bg-white px-3 py-2 text-sm font-medium text-gray-800 dark:border-gray-500 dark:bg-gray-400'
             onClick={() => googleLogin()}>
             <p className='mr-2 dark:text-gray-400'>
