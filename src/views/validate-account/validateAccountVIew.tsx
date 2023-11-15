@@ -20,6 +20,9 @@ const ValidateAccountView: React.FC = () => {
   const auth = useNoAuthContext()
   const location = useLocation()
 
+  const { formatMessage } = useOurIntl()
+  const [code, setCode] = React.useState('')
+  const [codeValid, setCodeValid] = React.useState(false)
   const { email, password } = location.state as { email: string, password: string }
 
   const developmentContext = useDevelopmentContext()
@@ -57,10 +60,6 @@ const ValidateAccountView: React.FC = () => {
       toast.error(e.response?.data.error as string)
     }
   })
-
-  const { formatMessage } = useOurIntl()
-  const [code, setCode] = React.useState('')
-  const [codeValid, setCodeValid] = React.useState(false)
 
   return (
     <div className='flex h-screen w-screen items-center justify-center'>
