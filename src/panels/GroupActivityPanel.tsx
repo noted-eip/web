@@ -184,24 +184,22 @@ const ActivityListCurrentGroup: React.FC = () => {
   const listActivitiesQ = useListActivitiesInCurrentGroup({ limit: 100 })
 
   return (
-    <div className='overflow-y-scroll'>
-      <div className='space-y-2'>
-        {listActivitiesQ.isSuccess ? (
-          !listActivitiesQ.data?.activities?.length ? (
-            <div className='my-4 text-center text-sm text-gray-400'>
-              No recent activity
-            </div>
-          ) : (
-            listActivitiesQ.data?.activities?.map((activity, idx) => (
-              <ActivityListItem key={`activity-list-${activity.id}-${idx}`} activity={activity} />
-            ))
-          )
-        ) : (
+    <div className='space-y-2'>
+      {listActivitiesQ.isSuccess ? (
+        !listActivitiesQ.data?.activities?.length ? (
           <div className='my-4 text-center text-sm text-gray-400'>
-          Loading your activities...
+              No recent activity
           </div>
-        )}
-      </div>
+        ) : (
+          listActivitiesQ.data?.activities?.map((activity, idx) => (
+            <ActivityListItem key={`activity-list-${activity.id}-${idx}`} activity={activity} />
+          ))
+        )
+      ) : (
+        <div className='my-4 text-center text-sm text-gray-400'>
+          Loading your activities...
+        </div>
+      )}
     </div>
   )
 }

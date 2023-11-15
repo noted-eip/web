@@ -69,7 +69,7 @@ const SigninView: React.FC = () => {
   })
   const googleLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => {
-      //authenticateGoogleMutation.mutate({body: {clientAccessToken: tokenResponse.access_token}})
+      authenticateGoogleMutation.mutate({body: {clientAccessToken: tokenResponse.access_token}})
     }
   })
 
@@ -103,7 +103,6 @@ const SigninView: React.FC = () => {
           />
           <OldInput
             label={formatMessage({ id: 'AUTH.pwd' })}
-            type='password'
             value={password}
             onChange={(e) => {
               setPassword(e.target.value)
