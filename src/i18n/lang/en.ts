@@ -138,6 +138,8 @@ const enTranslation: LocaleTypedMessages = {
 
   /*    PANEL   */
   'PANEL.activity': 'Activity',
+  'PANEL.activity.loading': 'Loading your activities...',
+  'PANEL.activity.none': 'No recent activity',
   'PANEL.companion': 'Companion',
   'PANEL.companion,buton1': 'Filter by block',
   'PANEL.companion,buton2': 'Filter by entire note',
