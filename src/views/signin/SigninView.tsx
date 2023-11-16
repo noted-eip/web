@@ -6,10 +6,9 @@ import React from 'react'
 import { toast } from 'react-hot-toast'
 import { Link, useNavigate } from 'react-router-dom'
 
-import ContainerMd from '../../components/container/ContainerMd'
 import OldInput from '../../components/form/OldInput'
 import GoogleIcon from '../../components/icons/GoogleIcon'
-import Notification from '../../components/notification/Notification'
+import Authentication from '../../components/view/Authentication'
 import { addAccountToDevelopmentContext, useDevelopmentContext } from '../../contexts/dev'
 import { useNoAuthContext } from '../../contexts/noauth'
 import { useAuthenticate, useAuthenticateGoogle } from '../../hooks/api/accounts'
@@ -80,59 +79,49 @@ const SigninView: React.FC = () => {
   }
 
   return (
-    <div className='flex h-screen w-screen items-center justify-center'>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          authenticateMutation.mutate({body: {email, password}})
-        }}
-      >
-        <ContainerMd>
-          <Stack direction='column' spacing={2}>
-            <h2 className='mb-4 text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl'>
-              <FormatMessage id='SIGNIN.title' />
-            </h2>
-            <OldInput
-              label={formatMessage({ id: 'AUTH.email' })}
-              value={email}
-              onChange={(e) => {
-                const val = e.target.value as string
-                setEmail(val)
-                setEmailValid(validateEmail(val) === undefined)
-              }}
-              isInvalidBlur={!emailValid}
-              errorMessage='Invalid email address'
-            />
-            <OldInput
-              label={formatMessage({ id: 'AUTH.pwd' })}
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value)
-              }}
-            />
-            <Button
-              variant='contained'
-              className='w-full'
-              disabled={!formIsValid() || authenticateMutation.isLoading}
-            >
-              <FormatMessage id='AUTH.login' />
-            </Button>
-            <Button 
-              variant='outlined'
-              className='w-full'
-              onClick={() => googleLogin()}
-              endIcon={<GoogleIcon />}
-            >
-              <FormatMessage id='SIGNIN.signinGoogle' />
-            </Button>
-            <Link to='/reset_password_email' className='mt-2 text-sm text-blue-500 underline'>
-              <FormatMessage id='SIGNIN.resetPwd' />
-            </Link>
-          </Stack>
-        </ContainerMd>
-      </form>
-      <Notification />
-    </div>
+    <Authentication>
+      <Stack direction='column' spacing={2}>
+        <h2 className='mb-4 text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl'>
+          <FormatMessage id='SIGNIN.title' />
+        </h2>
+        <OldInput
+          label={formatMessage({ id: 'AUTH.email' })}
+          value={email}
+          onChange={(e) => {
+            const val = e.target.value as string
+            setEmail(val)
+            setEmailValid(validateEmail(val) === undefined)
+          }}
+          isInvalidBlur={!emailValid}
+          errorMessage={formatMessage({ id: 'AUTH.error.email' })}
+        />
+        <OldInput
+          label={formatMessage({ id: 'AUTH.pwd' })}
+          value={password}
+          onChange={(e) => {
+            setPassword(e.target.value)
+          }}
+        />
+        <Button
+          variant='contained'
+          className='w-full'
+          disabled={!formIsValid() || authenticateMutation.isLoading}
+        >
+          <FormatMessage id='AUTH.login' />
+        </Button>
+        <Button 
+          variant='outlined'
+          className='w-full'
+          onClick={() => googleLogin()}
+          endIcon={<GoogleIcon />}
+        >
+          <FormatMessage id='SIGNIN.signinGoogle' />
+        </Button>
+        <Link to='/reset_password_email' className='mt-2 text-sm text-blue-500 underline'>
+          <FormatMessage id='SIGNIN.resetPwd' />
+        </Link>
+      </Stack>
+    </Authentication>
   )
 }
 

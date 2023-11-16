@@ -35,6 +35,9 @@ export enum TranslationKeys {
   'AUTH.register',
   'AUTH.email',
   'AUTH.pwd',
+  'AUTH.error.name',
+  'AUTH.error.email',
+  'AUTH.error.pwd',
 
   /* Signing */
   'SIGNIN.title',

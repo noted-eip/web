@@ -14,6 +14,9 @@ const frTranslation: LocaleTypedMessages = {
   'AUTH.register': 'Inscription',
   'AUTH.email': 'Email',
   'AUTH.pwd': 'Mot de passe',
+  'AUTH.error.name': 'Nom invalide',
+  'AUTH.error.email': 'Adresse email invalide',
+  'AUTH.error.pwd': '6 caractères, lettres, chiffres et symboles',
 
   /* Signing */
   'SIGNIN.title': 'Connectez-vous à votre compte',

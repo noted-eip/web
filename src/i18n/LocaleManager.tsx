@@ -16,6 +16,7 @@ interface ILocaleInformation {
   messages: LocaleMessages;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const LocaleManager: React.FC<any> = ({children}) => {
   const context = React.useContext(LangageContext)
   const browserLocales = useMemo(getBrowserLocales, [getBrowserLocales])

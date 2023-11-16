@@ -14,6 +14,9 @@ const enTranslation: LocaleTypedMessages = {
   'AUTH.register': 'Register',
   'AUTH.email': 'Email',
   'AUTH.pwd': 'Password',
+  'AUTH.error.name': 'Invalid name',
+  'AUTH.error.email': 'Invalid email address',
+  'AUTH.error.pwd': '6 characters, letters numbers and symbols',
 
   /* Signing */
   'SIGNIN.title': 'Signin to your account',

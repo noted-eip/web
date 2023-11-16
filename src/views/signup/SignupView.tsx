@@ -6,10 +6,9 @@ import React from 'react'
 import { toast } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 
-import ContainerMd from '../../components/container/ContainerMd'
 import OldInput from '../../components/form/OldInput'
 import GoogleIcon from '../../components/icons/GoogleIcon'
-import Notification from '../../components/notification/Notification'
+import Authentication from '../../components/view/Authentication'
 import { addAccountToDevelopmentContext, useDevelopmentContext } from '../../contexts/dev'
 import { useNoAuthContext } from '../../contexts/noauth'
 import { useAuthenticate, useAuthenticateGoogle, useCreateAccount } from '../../hooks/api/accounts'
@@ -88,88 +87,78 @@ const SignupView: React.FC = () => {
   }
 
   return (
-    <div className='flex h-screen w-screen items-center justify-center'>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          createAccountMutation.mutate({body: {name, email, password}}, )
-        }}
-      >
-        <ContainerMd>
-          <h2 className='mb-4 text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl'>
-            <FormatMessage id='SIGNUP.title' />
-          </h2>
-          <Stack direction='column' spacing={2}>
-            <OldInput
-              label={formatMessage({ id: 'GENERIC.name' })}
-              value={name}
-              onChange={(e) => {
-                const val = e.target.value as string
-                setName(val)
-                setNameValid(validateName(val) === undefined)
-              }}
-              isInvalidBlur={!nameValid}
-              errorMessage='Invalid name'
-            />
-            <OldInput
-              label={formatMessage({ id: 'AUTH.email' })}
-              value={email}
-              onChange={(e) => {
-                const val = e.target.value as string
-                setEmail(val)
-                setEmailValid(validateEmail(val) === undefined)
-              }}
-              isInvalidBlur={!emailValid}
-              errorMessage='Invalid email address'
-            />
-            <OldInput
-              label={formatMessage({ id: 'AUTH.pwd' })}
-              tooltip='6 characters, letters numbers and symbols'
-              value={password}
-              onChange={(e) => {
-                const val = e.target.value as string
-                setPassword(val)
-                setPasswordValid(validatePassword(val) === undefined)
-              }}
-              isInvalidBlur={!passwordValid}
-            />
+    <Authentication>
+      <Stack direction='column' spacing={2}>
+        <h2 className='mb-4 text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl'>
+          <FormatMessage id='SIGNUP.title' />
+        </h2>
+        <OldInput
+          label={formatMessage({ id: 'GENERIC.name' })}
+          value={name}
+          onChange={(e) => {
+            const val = e.target.value as string
+            setName(val)
+            setNameValid(validateName(val) === undefined)
+          }}
+          isInvalidBlur={!nameValid}
+          errorMessage={formatMessage({ id: 'AUTH.error.name' })}
+        />
+        <OldInput
+          label={formatMessage({ id: 'AUTH.email' })}
+          value={email}
+          onChange={(e) => {
+            const val = e.target.value as string
+            setEmail(val)
+            setEmailValid(validateEmail(val) === undefined)
+          }}
+          isInvalidBlur={!emailValid}
+          errorMessage={formatMessage({ id: 'AUTH.error.email' })}
+        />
+        <OldInput
+          label={formatMessage({ id: 'AUTH.pwd' })}
+          tooltip={formatMessage({ id: 'AUTH.error.pwd' })}
+          value={password}
+          onChange={(e) => {
+            const val = e.target.value as string
+            setPassword(val)
+            setPasswordValid(validatePassword(val) === undefined)
+          }}
+          isInvalidBlur={!passwordValid}
+        />
             
-            <div className='relative my-5 mx-10'>
-              <p className='text-sm italic text-gray-500'>
+        <div className='relative my-5 mx-10'>
+          <p className='text-sm italic text-gray-500'>
               Once registered, you can ask an early access to our mobile&apos;s
               app through your account&apos;s settings !
-              </p>
-              <p className='text-xs italic text-gray-400'>
+          </p>
+          <p className='text-xs italic text-gray-400'>
               Only works for emails linked to a Google account.
-              </p>
-              <span className='absolute right-auto top-0 -left-2 -translate-y-1/2 -translate-x-1/2 -rotate-12 rounded-full bg-red-400 p-0.5 px-2 text-center text-xs font-medium leading-none text-white outline outline-red-100 dark:bg-blue-900 dark:text-blue-200'>
+          </p>
+          <span className='absolute right-auto top-0 -left-2 -translate-y-1/2 -translate-x-1/2 -rotate-12 rounded-full bg-red-400 p-0.5 px-2 text-center text-xs font-medium leading-none text-white outline outline-red-100 dark:bg-blue-900 dark:text-blue-200'>
               BETA
-              </span>
-            </div>
-            <Button
-              variant='contained'
-              className='w-full'
-              disabled={
-                !formIsValid() ||
+          </span>
+        </div>
+        <Button
+          variant='contained'
+          className='w-full'
+          disabled={
+            !formIsValid() ||
                 authenticateMutation.isLoading ||
                 createAccountMutation.isLoading    
-              }
-            >
-              <FormatMessage id='AUTH.register' />
-            </Button>
-            <Button 
-              variant='outlined'
-              className='w-full'
-              onClick={() => googleLogin()}
-              endIcon={<GoogleIcon />}
-            >
-              <FormatMessage id='SIGNUP.signupGoogle' />
-            </Button>
-          </Stack>
-        </ContainerMd>
-      </form>
-      <Notification />
-    </div>
+          }
+        >
+          <FormatMessage id='AUTH.register' />
+        </Button>
+        <Button 
+          variant='outlined'
+          className='w-full'
+          onClick={() => googleLogin()}
+          endIcon={<GoogleIcon />}
+        >
+          <FormatMessage id='SIGNUP.signupGoogle' />
+        </Button>
+      </Stack>
+    </Authentication>        
   )
 }
 
