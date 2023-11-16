@@ -3,13 +3,13 @@ import { Route, Routes } from 'react-router-dom'
 
 import { AccountResetPassword, ResetPasswordContext } from '../hooks/api/accounts'
 import { LS_ACCOUNT_ID_KEY, LS_RESET_AUTH_TOKEN_KEY, LS_RESET_TOKEN_KEY } from '../lib/constants'
+import ValidateAccountView from '../views/validate-account/ValidateAccountVIew'
 import NotFoundView from './notfound/NotFoundView'
 import ResetPasswordEmail from './reset-password/ResetPasswordEmail'
 import ResetPasswordPassword from './reset-password/ResetPasswordPassword'
 import ResetPasswordToken from './reset-password/ResetPasswordToken'
 import SigninView from './signin/SigninView'
 import SignupView from './signup/SignupView'
-import ValidateAccountView from './validate-account/ValidateAccountView'
 import WelcomeView from './welcome/WelcomeView'
 
 // Describes routes that are available to unauthenticated users.
