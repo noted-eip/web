@@ -41,9 +41,7 @@ const singletonSetLocalBlocks = (newBlocks: V1Block[]) => {
   } else {
     localBlocks = newBlocks
   }
-}
-*/
-
+}*/
 
 const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex: number, localBlocks: V1Block[], setLocalBlocks: any }> = props => {
   const authContext = useAuthContext()
@@ -65,6 +63,38 @@ const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex: num
     editorState.current = value
 
     console.log('BLOCK INDEX = ' + props.blockIndex)
+
+    // CHAT GPT
+    /*const setLocalBlocksAsync = async (updateFunction: (prevBlocks: V1Block[]) => Promise<V1Block[]>) => {
+      const newBlocks = await updateFunction(props.localBlocks)
+      props.setLocalBlocks(newBlocks)
+    }
+
+    setLocalBlocksAsync(async (prevLocalBlocks: V1Block[]) => {
+      const newLocalBlocks = [...prevLocalBlocks]
+      newLocalBlocks[props.blockIndex].paragraph = lines[0].children[0].text
+      updateBlock(props.note.id, props.block?.id, stringToNoteBlock(lines[0].children[0].text))
+
+      if (lines[1] != null || lines[1] != undefined) {
+        const newBlockId = await insertBlock(props.note.id, props.blockIndex == undefined ? 1000 : props.blockIndex + 1, stringToNoteBlock(lines[1].children[0].text))
+
+        const newLocalBlock = { id: await newBlockId, type: 'TYPE_PARAGRAPH', paragraph: lines[1].children[0].text } as V1Block
+
+        console.log('local blocks')
+        console.log(newLocalBlocks)
+        newLocalBlocks.push(newLocalBlock)
+        console.log('new local blocks')
+        console.log(newLocalBlocks)
+
+        editor.children = [{ type: 'paragraph', children: [{ text: lines[0].children[0].text }] }]
+
+        return newLocalBlocks
+      }
+
+      return newLocalBlocks
+    })*/
+    // !CHAT GPT
+
     props.localBlocks[props.blockIndex].paragraph = lines[0].children[0].text
     updateBlock(props.note.id, props.block == undefined ? '' : props.block.id,  stringToNoteBlock(lines[0].children[0].text))
     props.setLocalBlocks(props.localBlocks)
@@ -79,22 +109,23 @@ const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex: num
       props.localBlocks.push(newLocalBlock)
       console.log('new local blocks');console.log(props.localBlocks)
       
-      props.setLocalBlocks(props.localBlocks)
-
       editor.children = [
         { type: 'paragraph', children: [{ text: lines[0].children[0].text }] },
       ]
 
-      props.localBlocks.some(async element => {
-        if (element.id == await newBlockId)
-          return
-        props.setLocalBlocks(props.localBlocks)
-        return
-      })
+      props.setLocalBlocks(props.localBlocks)
+      
+      // props.localBlocks.some(async element => {
+      //   if (element.id == await newBlockId)
+      //     return
+      //   props.setLocalBlocks(props.localBlocks)
+      //   return
+      // })
     }
   }
 
   const insertBlock = async (notedId: string, index: number | undefined, block: V1Block) => {
+    console.log('----INSERT')
     const res = await insertBlockMutation.mutateAsync({
       noteId: notedId,
       body: { 
@@ -107,6 +138,7 @@ const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex: num
   }
 
   const updateBlock = (notedId: string, blockId: string | undefined, block: V1Block) => {
+    console.log('----UPDATE')
     updateBlockMutation.mutate({
       noteId:  notedId,
       blockId: blockId == undefined ? '' : blockId,
@@ -115,6 +147,7 @@ const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex: num
   }
 
   const deleteBlock = () => {
+    console.log('----DELETE')
     if (props.block == undefined)
       return
     deleteBlockMutation.mutate({
@@ -202,15 +235,21 @@ const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex: num
 
 const NoteViewEditor: React.FC<{ note: V1Note }> = props => {
 
-  const [localBlocks, setBlocks] = React.useState<V1Block[]>( props.note?.blocks ?? [])
+  const [localBlocks, setLocalBlocks] = React.useState<V1Block[]>( props.note?.blocks ?? [])
 
   //localBlocks = props.note.blocks == undefined ? {} as V1Block[] : props.note.blocks
 
   console.log('IN PARENT - LocalBlocks')
   console.log(localBlocks)
   console.log(localBlocks.length)
-  
 
+  // Utilisez useEffect pour redessiner le composant lorsque localBlocks change
+  /*
+  React.useEffect(() => {
+    setLocalBlocks(props.note?.blocks ?? [])
+  }, [props.note?.blocks])
+  */
+  
   return (
     <div>
       {
@@ -220,7 +259,7 @@ const NoteViewEditor: React.FC<{ note: V1Note }> = props => {
             block={block}
             blockIndex={index}
             localBlocks={localBlocks}
-            setLocalBlocks={setBlocks}
+            setLocalBlocks={setLocalBlocks}
           />
         ))
       }
