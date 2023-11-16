@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom'
 
 import { AccountResetPassword, ResetPasswordContext } from '../hooks/api/accounts'
 import { LS_ACCOUNT_ID_KEY, LS_RESET_AUTH_TOKEN_KEY, LS_RESET_TOKEN_KEY } from '../lib/constants'
+import ValidateAccountView from '../views/validate-account/ValidateAccountVIew'
 import NotFoundView from './notfound/NotFoundView'
 import ResetPasswordEmail from './reset-password/ResetPasswordEmail'
 import ResetPasswordPassword from './reset-password/ResetPasswordPassword'
@@ -32,7 +33,7 @@ const UnauthenticatedRouter: React.FC = () => {
   }
 
   return (
-    <ResetPasswordContext.Provider 
+    <ResetPasswordContext.Provider
       value={{account: account, changeResetPassword: changeResetPassword}}
     >
       <Routes>
@@ -42,6 +43,7 @@ const UnauthenticatedRouter: React.FC = () => {
         <Route path='/reset_password_email' element={<ResetPasswordEmail />}></Route>
         <Route path='/reset_password_token' element={<ResetPasswordToken />}></Route>
         <Route path='/reset_password_password' element={<ResetPasswordPassword />}></Route>
+        <Route path='/validate_account' element={<ValidateAccountView />}></Route>
         <Route path='*' element={<NotFoundView />}></Route>
       </Routes>
     </ResetPasswordContext.Provider>

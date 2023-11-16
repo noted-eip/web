@@ -7,7 +7,7 @@ const frTranslation: LocaleTypedMessages = {
   'GENERIC.profile': 'Profil',
   'GENERIC.role': 'Rôle',
   'GENERIC.actions': 'Actions',
-    
+
   /*		AUTHENTICATION		*/
   /*  Auth  */
   'AUTH.login': 'Connexion',
@@ -142,7 +142,7 @@ const frTranslation: LocaleTypedMessages = {
   'PANEL.companion,buton1': 'Filtrer par block',
   'PANEL.companion,buton2': 'Filtrer avec la note entière',
   'PANEL.companion,buton3': 'Appliquer',
-  
+
   /*    ACTIVITY    */
   'ACTIVITY': 'Activity',
 
@@ -152,6 +152,14 @@ const frTranslation: LocaleTypedMessages = {
   'SETTINGS.langage.options': 'Options',
   'SETTINGS.langage.french': 'Français',
   'SETTINGS.langage.english': 'Anglais',
+
+  /*    VALIDATION    */
+  'VALIDATION.title': 'Veuillez valider votre compte',
+  'VALIDATION.content': 'Vous avez reçus un code d\'activation à l\'adresse suivante :',
+  'VALIDATION.placeholder': '0000',
+  'VALIDATION.button': 'Valider',
+  'VALIDATION.resend': 'Je n\'ai pas reçus le code',
+  'VALIDATION.resend_link': 'l\'envoyer à nouveau',
 }
 
 export default frTranslation

@@ -173,4 +173,12 @@ export enum TranslationKeys {
   'SETTINGS.langage.options',
   'SETTINGS.langage.french',
   'SETTINGS.langage.english',
+
+  /*    VALIDATION    */
+  'VALIDATION.title',
+  'VALIDATION.content',
+  'VALIDATION.placeholder',
+  'VALIDATION.button',
+  'VALIDATION.resend',
+  'VALIDATION.resend_link',
 }

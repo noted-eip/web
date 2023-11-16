@@ -152,6 +152,14 @@ const enTranslation: LocaleTypedMessages = {
   'SETTINGS.langage.options': 'Options',
   'SETTINGS.langage.french': 'French',
   'SETTINGS.langage.english': 'English',
+
+  /*    VALIDATION    */
+  'VALIDATION.title': 'Please validate your account',
+  'VALIDATION.content': 'You received an activation code at the following address:',
+  'VALIDATION.placeholder': '0000',
+  'VALIDATION.button': 'Validate',
+  'VALIDATION.resend': 'I did not receive the code',
+  'VALIDATION.resend_link': 'send again',
 }
 
 export default enTranslation
