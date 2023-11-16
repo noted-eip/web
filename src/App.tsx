@@ -1,3 +1,4 @@
+import { CssBaseline } from '@mui/material'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import { initializeApp } from 'firebase/app'
@@ -37,7 +38,36 @@ const App: React.FC = () => {
     measurementId: 'G-XFC30W0DZ'
   }
   const theme = createTheme({
+    palette: {
+      primary: {
+        main: '#2a777d',
+      },
+      secondary: {
+        main: '#328d94',
+      },
+    },
+    typography: {
+      fontFamily: 'Nunito, sans-serif',
+      h6: {
+        fontSize: 18,
+      },
+  
+    },
     components: {
+      MuiInputBase: {
+        styleOverrides: { 
+          root: {
+            borderRadius: '16px',
+          },
+        },
+      },
+      MuiOutlinedInput: {
+        styleOverrides: {
+          root: {
+            borderRadius: '16px',
+          },
+        },
+      },
       MuiButton: {
         variants: [
           {
@@ -74,6 +104,7 @@ const App: React.FC = () => {
 
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline />
       <LangageContext.Provider value={{langage: currentLangage, changeLangage}}>
         <LocaleManager>
           <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>

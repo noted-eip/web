@@ -1,19 +1,25 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap');
 
 @font-face {
-  font-family: Inter;
-  src: url('../assets/fonts/Inter/Inter-VariableFont_slnt,wght.ttf');
+  font-family: Nunito;
+  src: url('../assets/fonts/Nunito/Nunito-VariableFont_wght.ttf');
+}
+
+@font-face {
+  font-family: Nunito;
+  font-style: italic;
+  src: url('../assets/fonts/Nunito/Nunito-Italic-VariableFont_wght.ttf');
 }
 
 * {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Nunito', sans-serif;
 }
 
 html {
   scroll-behavior: smooth;
 }
 
-  @tailwind base;
+@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -38,10 +44,6 @@ html {
   h5 {
     @apply text-xs text-gray-400;
   }
-}
-
-.Button {
-  text-transform: lowercase;
 }
 
 .skeleton {

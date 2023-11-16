@@ -1,6 +1,8 @@
 import { Box, Grid } from '@mui/material'
+import Lottie from 'lottie-react'
 import React, { ReactNode } from 'react'
 
+import animationData from '../../assets/animations/login.json'
 import notedLogo from '../../assets/logo/noted_logo.png'
 import ContainerMd from '../../components/container/ContainerMd'
 
@@ -13,13 +15,11 @@ const Authentication: React.FC<AuthenticationProps> = ({ children }) => {
     <Grid container component='main' sx={{ height: '100vh' }}>
       {/* Image à droite */}
       <Grid item xs={false} sm={4} md={5} lg={6}>
-        <Box
-          sx={{
-            backgroundImage: `url(${notedLogo})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            height: '100%',
-          }}
+        <Lottie
+          animationData={animationData}
+          loop
+          autoplay
+          className='h-full w-full object-cover'
         />
       </Grid>
       {/* Logo et formulaire */}

@@ -1,3 +1,5 @@
+import { VisibilityOffOutlined, VisibilityOutlined } from '@mui/icons-material'
+import { FormControl, IconButton,InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import { useGoogleLogin } from '@react-oauth/google'
@@ -6,7 +8,6 @@ import React from 'react'
 import { toast } from 'react-hot-toast'
 import { Link, useNavigate } from 'react-router-dom'
 
-import OldInput from '../../components/form/OldInput'
 import GoogleIcon from '../../components/icons/GoogleIcon'
 import Authentication from '../../components/view/Authentication'
 import { addAccountToDevelopmentContext, useDevelopmentContext } from '../../contexts/dev'
@@ -78,31 +79,65 @@ const SigninView: React.FC = () => {
     return emailValid
   }
 
+  const [showPassword, setShowPassword] = React.useState(false)
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show)
+
+  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault()
+  }
+
   return (
     <Authentication>
       <Stack direction='column' spacing={2}>
         <h2 className='mb-4 text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl'>
           <FormatMessage id='SIGNIN.title' />
         </h2>
-        <OldInput
+        <TextField
+          id='outlined-email-input'
           label={formatMessage({ id: 'AUTH.email' })}
+          type='email'
           value={email}
           onChange={(e) => {
             const val = e.target.value as string
             setEmail(val)
-            setEmailValid(validateEmail(val) === undefined)
-          }}
-          isInvalidBlur={!emailValid}
-          errorMessage={formatMessage({ id: 'AUTH.error.email' })}
+            setEmailValid(validateEmail(val) !== undefined)}
+          }
+          error={emailValid}
+          helperText={emailValid ? formatMessage({ id: 'AUTH.error.email' }) : ''}
         />
-        <OldInput
+        <FormControl variant='outlined'>
+          <InputLabel htmlFor='outlined-adornment-password'>
+            Password
+          </InputLabel>
+          <OutlinedInput
+            sx={{ borderRadius: '16px' }}
+            id='outlined-adornment-password'
+            type={showPassword ? 'text' : 'password'}
+            endAdornment={
+              <InputAdornment position='end'>
+                <IconButton
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge='end'
+                >
+                  {showPassword ? <VisibilityOffOutlined /> : <VisibilityOutlined />}
+                </IconButton>
+              </InputAdornment>
+            }
+            label='Password'
+          />
+        </FormControl>
+        {/* <OldInput
           label={formatMessage({ id: 'AUTH.pwd' })}
           value={password}
           onChange={(e) => {
             setPassword(e.target.value)
           }}
-        />
+        /> */}
         <Button
+          sx={{ borderRadius: '16px' }}
+          size='large'
           variant='contained'
           className='w-full'
           disabled={!formIsValid() || authenticateMutation.isLoading}
@@ -110,6 +145,8 @@ const SigninView: React.FC = () => {
           <FormatMessage id='AUTH.login' />
         </Button>
         <Button 
+          sx={{ borderRadius: '16px' }}
+          size='large'
           variant='outlined'
           className='w-full'
           onClick={() => googleLogin()}

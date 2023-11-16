@@ -134,7 +134,7 @@ const frTranslation: LocaleTypedMessages = {
   'PROFILE.beta.title': 'Fonctionnalités supplémentaires',
   'PROFILE.beta.subTitle': 'Application mobile',
   'PROFILE.beta.desc': 'Vous recevrez une invitation pour installer l\'application sur votre téléphone. Avec lui vous pouvez parcourir vos groupes, notes, invitations, membres et recommandations mais vous ne pouvez pas modifier vos notes (encore 😉).',
-  'PROFILE.beta.subDesc': 'L\'email de votre compte doit être lié à un compte Google pour être invité !',
+  'PROFILE.beta.subDesc': 'L\'email de votre compte doit être lié à un compte Google pour être invité !',
   'PROFILE.beta.button': 'Accéder à la beta',
   'PROFILE.beta.buttonResTrue': 'Envoyé!',
   'PROFILE.beta.buttonResFalse': 'Déjà rejoint',

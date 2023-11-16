@@ -5,14 +5,14 @@ import MenuItem from '@mui/material/MenuItem'
 import axios from 'axios'
 import moment from 'moment'
 import React from 'react'
+import { LoaderIcon } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 
-import LoaderIcon from '../../components/icons/LoaderIcon'
 import { StyledMenu } from '../../components/Menu/StyledMenu'
 import { TAuthContext, useAuthContext } from '../../contexts/auth'
 import { useGetAccount } from '../../hooks/api/accounts'
-import { useDeleteNoteInCurrentGroup, useGetNoteInCurrentGroup } from '../../hooks/api/notes'
-import { useGroupIdFromUrl, useNoteIdFromUrl} from '../../hooks/url'
+import { useDeleteNoteInCurrentGroup,useGetNoteInCurrentGroup } from '../../hooks/api/notes'
+import { useGroupIdFromUrl,useNoteIdFromUrl } from '../../hooks/url'
 import { FormatMessage } from '../../i18n/TextComponent'
 import { API_BASE } from '../../lib/env'
 
@@ -115,7 +115,7 @@ export const NotesOptions = ( { noteId, groupId } : Props ) => {
   )
 }
 
-const NoteViewMetadataHeader: React.FC = () => {
+export const NoteViewMetadataHeader: React.FC = () => {
   const navigate = useNavigate()
   const authContext = useAuthContext()
   const noteId = useNoteIdFromUrl()
@@ -161,7 +161,6 @@ const NoteViewMetadataHeader: React.FC = () => {
           <FormatMessage id='NOTE.delete' />
         </h5>
       </div>}
-      {/* BALISE */}
       <div className='group flex cursor-pointer items-center p-1'>
         {window.location.pathname.includes('/note/') &&
             window.location.pathname.split('/')[4] &&
@@ -172,9 +171,6 @@ const NoteViewMetadataHeader: React.FC = () => {
         }
 
       </div>
-      {/* BALISE */}
     </div>
   </div>
 }
-
-export default NoteViewMetadataHeader

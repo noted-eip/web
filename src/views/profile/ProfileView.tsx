@@ -1,7 +1,13 @@
-import { ArrowPathIcon, ChatBubbleOvalLeftEllipsisIcon,CheckIcon } from '@heroicons/react/24/outline'
-import {CodeBracketIcon, ExclamationTriangleIcon, InboxIcon, PencilIcon, XMarkIcon } from '@heroicons/react/24/solid'
+import { ArrowPathIcon } from '@heroicons/react/24/outline'
+import { PencilIcon } from '@heroicons/react/24/solid'
+import CheckIcon from '@mui/icons-material/Check'
+import ClearIcon from '@mui/icons-material/Clear'
+import InboxIcon from '@mui/icons-material/Inbox'
+import InstallMobileIcon from '@mui/icons-material/InstallMobile'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import LanguageIcon from '@mui/icons-material/Language'
+import ReportProblemIcon from '@mui/icons-material/ReportProblem'
+import SendIcon from '@mui/icons-material/Send'
 import Button from '@mui/material/Button'
 import MenuItem from '@mui/material/MenuItem'
 import Stack from '@mui/material/Stack'
@@ -134,14 +140,13 @@ const InviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
             <Button 
               variant='outlined'
               color='error'
-              size='small'
               disabled={denyInviteQ.isLoading || acceptInviteQ.isLoading}
               onClick={() => denyInviteQ.mutate({ groupId: props.invite?.groupId as string, inviteId: props.invite.id })}
               endIcon={
                 denyInviteQ.isLoading ?
                   <LoaderIcon className='h-5 w-5' />
                   :
-                  <XMarkIcon className='h-5 w-5 stroke-[3px] text-red-700 transition-all group-hover:scale-[120%] group-disabled:text-gray-700' />
+                  <ClearIcon color='error' />
               }
             >
               <FormatMessage id='PROFILE.invite.deny' />              
@@ -149,14 +154,13 @@ const InviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
             <Button
               variant='outlined'
               color='success'
-              size='small'
               disabled={denyInviteQ.isLoading || acceptInviteQ.isLoading}
               onClick={() => acceptInviteQ.mutate({ groupId: props.invite.groupId as string, inviteId: props.invite.id })}
               endIcon={
                 acceptInviteQ.isLoading ?
                   <LoaderIcon className='h-5 w-5' />
                   :
-                  <CheckIcon className='h-5 w-5 stroke-[3px] text-green-700 transition-all group-hover:scale-[120%] group-disabled:text-gray-700' />
+                  <CheckIcon color='success' />
               }
             >
               <FormatMessage id='PROFILE.invite.accept' />            
@@ -168,6 +172,10 @@ const InviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
   )
 }
 
+import { grey } from '@mui/material/colors'
+import Typography from '@mui/material/Typography'
+
+
 const ProfileViewPendingInvitesSection: React.FC = () => {
   const authContext = useAuthContext()
   const listInvitesQ = useListInvites({ recipientAccountId: authContext.accountId })
@@ -175,12 +183,12 @@ const ProfileViewPendingInvitesSection: React.FC = () => {
   return (
     <div className='mt-4 w-full rounded-md border border-gray-100 bg-gray-50'>
       {/* Header */}
-      <div className='flex items-center justify-between border-b border-[#efefef] p-5'>
+      <div className='flex items-center justify-between border-b border-[#efefef] px-5 py-3'>
         <div className='flex items-center'>
-          <InboxIcon className='mr-2 h-5 w-5 text-gray-600' />
-          <p className='text-base font-medium text-gray-600'>
+          <InboxIcon sx={{ color: grey[700] }} />
+          <Typography variant='h6' sx={{ color: grey[700] }} ml={1}>
             <FormatMessage id='GROUP.Empty.title2' />
-          </p>
+          </Typography>
         </div>
       </div>
 
@@ -228,22 +236,19 @@ const ProfileChangeLangage: React.FC = () => {
   return (
     <div className='relative mt-4 w-full rounded-md border border-gray-100 bg-gray-50'>
       {/* Header */}
-      <div className='flex items-center justify-between border-b border-[#efefef] p-5'>
+      <div className='flex items-center justify-between border-b border-[#efefef] px-5 py-3'>
         <div className='flex items-center'>
-          <LanguageIcon className='mr-2 h-5 w-5 text-gray-600' />
-          <p className='text-base font-medium text-gray-600'>              
+          <LanguageIcon sx={{ color: grey[700] }} />
+          <Typography variant='h6' sx={{ color: grey[700] }} ml={1}>
             <FormatMessage id='PROFILE.langage.title' />
-          </p>
+          </Typography>
         </div>
       </div>
       <div className='grid grid-cols-[40%_60%] p-5'>
-        <div className='relative'>
-          <p className='text-xs text-gray-600'>
-            <FormatMessage id='PROFILE.langage.desc' />
-          </p>
-        </div>
+        <Typography variant='body2' sx={{ color: grey[600] }}>
+          <FormatMessage id='PROFILE.langage.desc' />
+        </Typography>
         <div className='flex items-center justify-end'>
-          {/* BALISE */}
           <div>
             <Button
               id='demo-customized-button'
@@ -273,7 +278,6 @@ const ProfileChangeLangage: React.FC = () => {
               </MenuItem>
             </StyledMenu>
           </div>
-          {/* BALISE */}
         </div>
       </div>
     </div>
@@ -284,21 +288,19 @@ const ProfileViewFeedbackSection: React.FC = () => {
   return (
     <div className='relative mt-4 w-full rounded-md border border-gray-100 bg-gray-50'>
       {/* Header */}
-      <div className='flex items-center justify-between border-b border-[#efefef] p-5'>
+      <div className='flex items-center justify-between border-b border-[#efefef] px-5 py-3'>
         <div className='flex items-center'>
-          <ChatBubbleOvalLeftEllipsisIcon className='mr-2 h-5 w-5 text-gray-600' />
-          <p className='text-base font-medium text-gray-600'>
+          <SendIcon sx={{ color: grey[700] }} />
+          <Typography variant='h6' sx={{ color: grey[700] }} ml={1}>
             <FormatMessage id='PROFILE.feedback.title' />
-          </p>
+          </Typography>
         </div>
       </div>
 
       <div className='grid grid-cols-[40%_60%] p-5' >
-        <div className='relative'>
-          <p className='text-xs text-gray-600'>
-            <FormatMessage id='PROFILE.feedback.desc' />
-          </p>
-        </div>
+        <Typography variant='body2' sx={{ color: grey[600] }}>
+          <FormatMessage id='PROFILE.feedback.desc' />
+        </Typography>
         <div className='flex items-center justify-end'>
           <Button variant='outlined'>
             <FormatMessage id='PROFILE.feedback.button' />
@@ -315,23 +317,22 @@ const ProfileViewDangerZoneSection: React.FC = () => {
   return (
     <div className='mt-4 w-full rounded-md border border-gray-100 bg-gray-50'>
       {/* Header */}
-      <div className='flex items-center justify-between border-b border-[#efefef] p-5'>
+      <div className='flex items-center justify-between border-b border-[#efefef] px-5 py-3'>
         <div className='flex items-center'>
-          <ExclamationTriangleIcon className='mr-2 h-5 w-5 text-red-700' />
-          <p className='text-base font-medium text-red-700'>
+          <ReportProblemIcon sx={{ color: grey[700] }} />
+          <Typography variant='h6' sx={{ color: grey[700] }} ml={1}>
             <FormatMessage id='PROFILE.delete.title1' />
-          </p>
+          </Typography>
         </div>
       </div>
-
       <div className='grid grid-cols-[40%_60%] p-5'>
         <div>
-          <p className='mb-2 text-sm font-medium text-gray-800'>
+          <Typography variant='body2' fontWeight='bold' sx={{ color: grey[800] }}>
             <FormatMessage id='PROFILE.delete.title2' />
-          </p>
-          <p className='text-xs text-gray-600'>
+          </Typography>
+          <Typography variant='body2' sx={{ color: grey[600] }}>
             <FormatMessage id='PROFILE.delete.desc' />
-          </p>
+          </Typography>
         </div>
         <div className='flex items-center justify-end'>
           <Button variant='outlined' color='error' onClick={() => {deleteAccountQ.mutate(undefined)}}>
@@ -356,26 +357,25 @@ const ProfileViewBetaSection: React.FC = () => {
       <span className='absolute right-auto top-0 left-3 -translate-y-1/2 -translate-x-1/2 -rotate-12 rounded-full bg-red-400 p-0.5 px-2 text-center text-xs font-medium leading-none text-white outline outline-red-100 dark:bg-blue-900 dark:text-blue-200'>
         BETA
       </span>
-      <div className='flex items-center justify-between border-b border-[#efefef] p-5'>
+      <div className='flex items-center justify-between border-b border-[#efefef] px-5 py-3'>
         <div className='flex items-center'>
-          <CodeBracketIcon className='mr-2 h-5 w-5 text-gray-600' />
-          <p className='text-base font-medium text-gray-600'>
+          <InstallMobileIcon sx={{ color: grey[700] }} />
+          <Typography variant='h6' sx={{ color: grey[700] }} ml={1}>
             <FormatMessage id='PROFILE.beta.title' />
-          </p>
+          </Typography>
         </div>
       </div>
-
       <div className='grid grid-cols-[40%_60%] p-5'>
-        <div className='relative'>
-          <p className='mb-2 text-sm font-medium text-gray-800'>
+        <div>
+          <Typography variant='body2' fontWeight='bold' sx={{ color: grey[800] }}>
             <FormatMessage id='PROFILE.beta.subTitle' />
-          </p>
-          <p className='text-xs text-gray-600'>
+          </Typography>
+          <Typography variant='body2' sx={{ color: grey[600] }}>
             <FormatMessage id='PROFILE.beta.desc' />
-          </p>
-          <p className='text-xxs text-gray-500'>
+          </Typography>
+          <Typography variant='body2' fontSize={12} sx={{ color: grey[400] }}>
             <FormatMessage id='PROFILE.beta.subDesc' />
-          </p>
+          </Typography>
         </div>
         <div className='flex items-center justify-end'>
           {getAccountQ.isSuccess ? (getAccountQ.data?.account.isInMobileBeta === false ? (

@@ -22,7 +22,6 @@ const RecommendationFilters = () => {
   
   return (
     <div className='relative inline-block cursor-pointer text-right'>
-      {/* BALISE */}
       <div>
         <IconButton
           aria-label='more'
@@ -86,7 +85,6 @@ const RecommendationFilters = () => {
           </MenuItem>
         </StyledMenu>
       </div>
-      {/* BALISE */}
     </div>
   )
 }
