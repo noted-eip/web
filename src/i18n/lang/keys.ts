@@ -159,6 +159,8 @@ export enum TranslationKeys {
 
   /*    PANEL   */
   'PANEL.activity',
+  'PANEL.activity.loading',
+  'PANEL.activity.none',
   'PANEL.companion',
   'PANEL.companion,buton1',
   'PANEL.companion,buton2',
