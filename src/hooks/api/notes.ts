@@ -139,6 +139,11 @@ export const useInsertBlockInCurrentGroup = ( options?: MutationHookOptions<Inse
   },
   {
     ...options,
+    onSuccess: async (data) => {
+      //apiQueryClient.setQueryData(newAccountCacheKey(data.account.id), data)
+      //if (options?.onSuccess) options.onSuccess(data, variables, context)
+      return data
+    }
   })
 }
 

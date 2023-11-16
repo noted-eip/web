@@ -31,13 +31,26 @@ const EditorElement: React.FC<RenderElementProps> = props => {
   }
 }
 
-const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex?: number, localBlocks: V1Block[], localSetBlocks: any }> = props => {
+/*let localBlocks : V1Block[] = []
+
+let hasInit: bool = false
+
+const singletonSetLocalBlocks = (newBlocks: V1Block[]) => {
+  if (!hasInit) {
+    null
+  } else {
+    localBlocks = newBlocks
+  }
+}
+*/
+
+
+const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex: number, localBlocks: V1Block[], setLocalBlocks: any }> = props => {
   const authContext = useAuthContext()
   const blockContext = useBlockContext()
   const initialEditorState = noteBlocksToSlateElements(
-    props.note?.blocks === undefined || props.blockIndex === undefined ?
-      [{ type: 'TYPE_PARAGRAPH', paragraph: '' } as V1Block] :
-      [props.note?.blocks[props.blockIndex]])
+    [props.localBlocks[props.blockIndex == undefined ? 0 : props.blockIndex]]
+  )
   const editorState = React.useRef<Descendant[]>(initialEditorState)
   const renderElement = React.useCallback(props => <EditorElement {...props} />, [])
   const editor = React.useMemo(() => withShortcuts(withReact(withHistory(createEditor()))), [])
@@ -46,37 +59,54 @@ const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex?: nu
   const updateBlockMutation = useUpdateBlockInCurrentGroup()
   const deleteBlockMutation = useDeleteBlockInCurrentGroup()
 
-  const updateBlockFromSlateValue = (value: Descendant[]) => {
+  const updateBlockFromSlateValue = async (value: Descendant[]) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const lines = value as any
     editorState.current = value
 
+    console.log('BLOCK INDEX = ' + props.blockIndex)
+    props.localBlocks[props.blockIndex].paragraph = lines[0].children[0].text
     updateBlock(props.note.id, props.block == undefined ? '' : props.block.id,  stringToNoteBlock(lines[0].children[0].text))
+    props.setLocalBlocks(props.localBlocks)
 
-    if (lines[1] != null || lines[1] != undefined || lines[1].children[0].text.length > 1) {
-      insertBlock(props.note.id, props.blockIndex == undefined ? 1000 : props.blockIndex + 1,  stringToNoteBlock(lines[1].children[0].text))
+    if (lines[1] != null || lines[1] != undefined) {
+
+      const newBlockId = insertBlock(props.note.id, props.blockIndex == undefined ? 1000 : props.blockIndex + 1,  stringToNoteBlock(lines[1].children[0].text))
+
+      const newLocalBlock = { id: await newBlockId, type: 'TYPE_PARAGRAPH', paragraph: lines[1].children[0].text } as V1Block
+      
+      console.log('local blocks');console.log(props.localBlocks)
+      props.localBlocks.push(newLocalBlock)
+      console.log('new local blocks');console.log(props.localBlocks)
+      
+      props.setLocalBlocks(props.localBlocks)
+
+      editor.children = [
+        { type: 'paragraph', children: [{ text: lines[0].children[0].text }] },
+      ]
+
+      props.localBlocks.some(async element => {
+        if (element.id == await newBlockId)
+          return
+        props.setLocalBlocks(props.localBlocks)
+        return
+      })
     }
-
-    editorState.current = {} as Descendant[]
-
-    //concat line[0] & line[1] avec des \n
-    //suprimer line[1] ou juste mettre line[0] dans editorState.current
-    // comme ca on a plus de line[1] & on insert plus
   }
 
-  const insertBlock = (notedId: string, index: number | undefined, block: V1Block) => {
-    console.log('--INSERT')
-    insertBlockMutation.mutate({
+  const insertBlock = async (notedId: string, index: number | undefined, block: V1Block) => {
+    const res = await insertBlockMutation.mutateAsync({
       noteId: notedId,
       body: { 
         index: index, 
         block: block 
       } as NotesAPIInsertBlockRequest
     })
+    console.log(res.block.id)
+    return res.block.id
   }
 
   const updateBlock = (notedId: string, blockId: string | undefined, block: V1Block) => {
-    console.log('--UPDATE')
     updateBlockMutation.mutate({
       noteId:  notedId,
       blockId: blockId == undefined ? '' : blockId,
@@ -87,7 +117,6 @@ const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex?: nu
   const deleteBlock = () => {
     if (props.block == undefined)
       return
-    console.log('--DELETE')
     deleteBlockMutation.mutate({
       noteId: props.note.id,
       blockId: props.block.id,
@@ -126,9 +155,6 @@ const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex?: nu
   */
 
   const handleEditorChange = (value: Descendant[]) => {
-    editorState.current = value
-    console.log(editorState.current)
-    
     //Gerer plus tard
     // si Shift & Enter sont pressé, editor.current = "1234\n5678"
 
@@ -141,8 +167,6 @@ const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex?: nu
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const element = editorState.current[0] as any
 
-    //console.log(editorState.current)
-    console.log(element.children[0].text.length)
     if (element.children[0].text.length < 1) {
       deleteBlock()
       //return (<div>No block here<div/>)
@@ -162,14 +186,12 @@ const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex?: nu
       className='rounded-md border-gray-100 bg-gray-100 bg-gradient-to-br p-4 shadow-inner' // just blocks
       onMouseEnter={handleHover}>
       <Slate
-        // onChange={props.block == undefined ? insertBlock : updateBlockFromSlateValue}
         onChange={handleEditorChange}
         editor={editor}
         value={initialEditorState}>
         <Editable
           onKeyDown= { event => { 
-            if (event.key == 'Backspace') handleBackspace() 
-            //if (event.key == 'Enter') handleEnter() 
+            if (event.key == 'Backspace') handleBackspace()
           }}
           readOnly={authContext.accountId !== props.note.authorAccountId}
           renderElement={renderElement} />
@@ -180,34 +202,27 @@ const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex?: nu
 
 const NoteViewEditor: React.FC<{ note: V1Note }> = props => {
 
-  //const [blocks, setBlocks] = React.useState<string[]>(noteBlockstoStringArray(props.note?.blocks))
-  const [blocks, setBlocks] = React.useState<V1Block[]>( props.note?.blocks ?? [])
+  const [localBlocks, setBlocks] = React.useState<V1Block[]>( props.note?.blocks ?? [])
 
-  console.log(blocks)
+  //localBlocks = props.note.blocks == undefined ? {} as V1Block[] : props.note.blocks
+
+  console.log('IN PARENT - LocalBlocks')
+  console.log(localBlocks)
+  console.log(localBlocks.length)
+  
 
   return (
     <div>
       {
-        props.note.blocks?.length == 0 ?
-        
-          <BlockEditorItem key={`block-item-${0}`}
+        localBlocks?.map((block, index) => (
+          <BlockEditorItem key={`block-item-${index}`}
             note={props.note}
-            block={undefined}
-            blockIndex={undefined}
-            localBlocks={blocks}
-            localSetBlocks={setBlocks}
+            block={block}
+            blockIndex={index}
+            localBlocks={localBlocks}
+            setLocalBlocks={setBlocks}
           />
-
-          :
-          props.note.blocks?.map((block, index) => (
-            <BlockEditorItem key={`block-item-${index}`}
-              note={props.note}
-              block={block}
-              blockIndex={index}
-              localBlocks={blocks}
-              localSetBlocks={setBlocks}
-            />
-          ))
+        ))
       }
     </div>
   )
