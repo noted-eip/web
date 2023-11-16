@@ -159,6 +159,8 @@ export enum TranslationKeys {
 
   /*    PANEL   */
   'PANEL.activity',
+  'PANEL.activity.loading',
+  'PANEL.activity.none',
   'PANEL.companion',
   'PANEL.companion,buton1',
   'PANEL.companion,buton2',
@@ -181,4 +183,12 @@ export enum TranslationKeys {
   'CONFIRMATION.button',
   'CONFIRMATION.title.note',
   'CONFIRMATION.title.group',
+
+  /*    VALIDATION    */
+  'VALIDATION.title',
+  'VALIDATION.content',
+  'VALIDATION.placeholder',
+  'VALIDATION.button',
+  'VALIDATION.resend',
+  'VALIDATION.resend_link',
 }

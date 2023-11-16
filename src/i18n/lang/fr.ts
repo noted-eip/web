@@ -3,11 +3,11 @@ import {LocaleTypedMessages} from '../types'
 const frTranslation: LocaleTypedMessages = {
   /*    GENERIC   */
   'GENERIC.name': 'Nom',
-  'GENERIC.home': 'Acceuil',
+  'GENERIC.home': 'Accueil',
   'GENERIC.profile': 'Profil',
   'GENERIC.role': 'Rôle',
   'GENERIC.actions': 'Actions',
-    
+
   /*		AUTHENTICATION		*/
   /*  Auth  */
   'AUTH.login': 'Connexion',
@@ -46,7 +46,7 @@ const frTranslation: LocaleTypedMessages = {
 
   /*    LANDING    */
   /* Description */
-  'DESCRIPTION': 'Déscription',
+  'DESCRIPTION': 'Description',
   'DESCRIPTION.descP1': 'Noted est un espace de travail ergonomique destiné aux étudiants universitaires. Il s\'agit d\'une application Web où ils peuvent partager leurs notes et les organiser.',
   'DESCRIPTION.descP2': 'La force de Noted est son mode d\'édition unique, qui comprend des recommandations basées sur des notes publiées par les étudiants. Il permettra aux étudiants d\'améliorer leurs notes en facilitant la collaboration.',
   'DESCRIPTION.title1': 'Prendre des notes',
@@ -138,11 +138,13 @@ const frTranslation: LocaleTypedMessages = {
 
   /*    PANEL   */
   'PANEL.activity': 'Activité',
+  'PANEL.activity.loading': 'Chargement de vos activités...',
+  'PANEL.activity.none': 'Pas d\'activité récente',
   'PANEL.companion': 'Compagnion',
   'PANEL.companion,buton1': 'Filtrer par block',
   'PANEL.companion,buton2': 'Filtrer avec la note entière',
   'PANEL.companion,buton3': 'Appliquer',
-  
+
   /*    ACTIVITY    */
   'ACTIVITY': 'Activity',
 
@@ -155,11 +157,19 @@ const frTranslation: LocaleTypedMessages = {
 
   /*    CONFIRMATION    */
   'CONFIRMATION.form.desc0': 'Veuilliez entrer',
-  'CONFIRMATION.form.desc1': 'je comprends',
+  'CONFIRMATION.form.desc1': 'compris',
   'CONFIRMATION.form.desc3': 'pour confirmer',
   'CONFIRMATION.button': 'Je comprends les conséquences, ',
   'CONFIRMATION.title.note': 'Supprimer ma note',
   'CONFIRMATION.title.group': 'Supprimer un membre',
+
+  /*    VALIDATION    */
+  'VALIDATION.title': 'Veuillez valider votre compte',
+  'VALIDATION.content': 'Vous avez reçus un code d\'activation à l\'adresse suivante :',
+  'VALIDATION.placeholder': '0000',
+  'VALIDATION.button': 'Valider',
+  'VALIDATION.resend': 'Je n\'ai pas reçus le code',
+  'VALIDATION.resend_link': 'l\'envoyer à nouveau',
 }
 
 export default frTranslation
