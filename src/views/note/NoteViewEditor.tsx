@@ -65,7 +65,7 @@ const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex: num
     console.log('BLOCK INDEX = ' + props.blockIndex)
 
     // CHAT GPT
-    /*const setLocalBlocksAsync = async (updateFunction: (prevBlocks: V1Block[]) => Promise<V1Block[]>) => {
+    const setLocalBlocksAsync = async (updateFunction: (prevBlocks: V1Block[]) => Promise<V1Block[]>) => {
       const newBlocks = await updateFunction(props.localBlocks)
       props.setLocalBlocks(newBlocks)
     }
@@ -89,13 +89,14 @@ const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex: num
         editor.children = [{ type: 'paragraph', children: [{ text: lines[0].children[0].text }] }]
 
         return newLocalBlocks
+        // quand on update le premier editor ca suprrime le dernier
       }
 
       return newLocalBlocks
-    })*/
+    })
     // !CHAT GPT
-
-    props.localBlocks[props.blockIndex].paragraph = lines[0].children[0].text
+    
+    /*props.localBlocks[props.blockIndex].paragraph = lines[0].children[0].text
     updateBlock(props.note.id, props.block == undefined ? '' : props.block.id,  stringToNoteBlock(lines[0].children[0].text))
     props.setLocalBlocks(props.localBlocks)
 
@@ -121,7 +122,7 @@ const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex: num
       //   props.setLocalBlocks(props.localBlocks)
       //   return
       // })
-    }
+    }*/
   }
 
   const insertBlock = async (notedId: string, index: number | undefined, block: V1Block) => {
@@ -235,6 +236,7 @@ const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex: num
 
 const NoteViewEditor: React.FC<{ note: V1Note }> = props => {
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [localBlocks, setLocalBlocks] = React.useState<V1Block[]>( props.note?.blocks ?? [])
 
   //localBlocks = props.note.blocks == undefined ? {} as V1Block[] : props.note.blocks
@@ -244,11 +246,9 @@ const NoteViewEditor: React.FC<{ note: V1Note }> = props => {
   console.log(localBlocks.length)
 
   // Utilisez useEffect pour redessiner le composant lorsque localBlocks change
-  /*
   React.useEffect(() => {
     setLocalBlocks(props.note?.blocks ?? [])
   }, [props.note?.blocks])
-  */
   
   return (
     <div>

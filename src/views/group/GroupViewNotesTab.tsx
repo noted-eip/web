@@ -1,12 +1,16 @@
-import { ArrowPathIcon, LinkIcon as LinkIconOutline, PencilIcon as PencilIconOutline, PlusIcon, TrashIcon as TrashIconOutline } from '@heroicons/react/24/outline'
+import { LinkIcon as LinkIconOutline, PencilIcon as PencilIconOutline, TrashIcon as TrashIconOutline } from '@heroicons/react/24/outline'
 import { FolderIcon } from '@heroicons/react/24/solid'
+import axios from 'axios'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { useAuthContext } from '../../contexts/auth'
+import { useGroupContext } from '../../contexts/group'
 import { useGetAccount } from '../../hooks/api/accounts'
 import { useGetCurrentGroup } from '../../hooks/api/groups'
-import { useCreateNoteInCurrentGroup, useDeleteNoteInCurrentGroup, useListNotesInCurrentGroup } from '../../hooks/api/notes'
+import { useDeleteNoteInCurrentGroup, useListNotesInCurrentGroup } from '../../hooks/api/notes'
 import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
+import { API_BASE } from '../../lib/env'
 import { V1Note } from '../../protorepo/openapi/typescript-axios'
 import GroupViewMenu from './GroupViewMenu'
 
@@ -105,11 +109,43 @@ const GroupViewNotesTab: React.FC = () => {
   const navigate = useNavigate()
   const listNotesQ = useListNotesInCurrentGroup({})
   const getGroupQ = useGetCurrentGroup()
-  const createNoteQ = useCreateNoteInCurrentGroup({
+
+  const groupContext = useGroupContext()
+  const authContext = useAuthContext()
+
+  /*const createNoteQ = useCreateNoteInCurrentGroup({
     onSuccess: (data) => {
       navigate(`./note/${data.note.id}`)
     },
-  })
+  })*/
+  const url = `${API_BASE}/groups/${groupContext.groupId}/notes`
+
+  const handleCreateNote = async () => {
+    try {
+      const token = await authContext.token()
+      console.log(token)
+
+      const response = await axios.post(
+        url,
+        {
+          title: 'ta grand mère la note',
+          group_id: groupContext.groupId,
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          //responseType: 'application/json',
+        }
+      )
+
+      console.log(response.data)
+      navigate(`./note/${response.data.note.id}`)
+    } catch (err)
+    {
+      console.error(err)
+    }
+  }
 
   return (
     <div className='grid w-full grid-rows-1 gap-4'>
@@ -143,12 +179,13 @@ const GroupViewNotesTab: React.FC = () => {
         <button
           className='ml-4 flex shrink-0 items-center rounded-md bg-blue-50 p-2 px-3 text-sm  text-blue-500 transition-all'
           onClick={() => {
-            createNoteQ.mutate({body: {title: formatMessage({ id: 'NOTE.untitledNote' })}})
+            handleCreateNote()
+            //createNoteQ.mutate({body: {title: formatMessage({ id: 'NOTE.untitledNote' })}})
           }}
         >
           <FormatMessage id='NOTE.newNote' />
           {
-            createNoteQ.isLoading ? <ArrowPathIcon className='ml-1 h-4 w-4 animate-spin text-blue-500' /> : <PlusIcon className='ml-1 h-4 w-4 stroke-2 text-blue-500' />
+            //createNoteQ.isLoading ? <ArrowPathIcon className='ml-1 h-4 w-4 animate-spin text-blue-500' /> : <PlusIcon className='ml-1 h-4 w-4 stroke-2 text-blue-500' />
           }
         </button>
       </div>
