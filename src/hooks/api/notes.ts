@@ -3,7 +3,7 @@ import { useMutation, useQuery } from 'react-query'
 import { useAuthContext } from '../../contexts/auth'
 import { useGroupContext } from '../../contexts/group'
 import { apiQueryClient, openapiClient } from '../../lib/api'
-import { NotesAPICreateNoteRequest, V1CreateNoteResponse, V1GetNoteResponse, V1ListNotesResponse, V1Note, V1UpdateNoteResponse} from '../../protorepo/openapi/typescript-axios'
+import { NotesAPICreateNoteRequest, NotesAPIInsertBlockRequest, V1Block, V1CreateNoteResponse, V1GetNoteResponse, V1InsertBlockResponse, V1ListNotesResponse, V1Note, V1UpdateBlockResponse, V1UpdateNoteResponse } from '../../protorepo/openapi/typescript-axios'
 import { newNoteCacheKey, newNotesCacheKey } from './cache'
 import { axiosRequestOptionsWithAuthorization, MutationHookOptions, QueryHookOptions } from './helpers'
 
@@ -125,6 +125,34 @@ export const useDeleteNoteInCurrentGroup = (options?: MutationHookOptions<Delete
 
       if (options?.onSettled) options.onSettled(data, error, variables, context)
     }
+  })
+}
+
+export type InsertBlockInCurrentGroup = { noteId: string, body: NotesAPIInsertBlockRequest};
+export const useInsertBlockInCurrentGroup = ( options?: MutationHookOptions<InsertBlockInCurrentGroup, V1InsertBlockResponse> ) => {
+  const authContext = useAuthContext()
+  const groupContext = useGroupContext()
+  const currentGroupId = groupContext.groupId as string
+
+  return useMutation(async (req: InsertBlockInCurrentGroup) => {
+    return (await openapiClient.notesAPIInsertBlock(currentGroupId, req.noteId, req.body, await axiosRequestOptionsWithAuthorization(authContext))).data
+  },
+  {
+    ...options,
+  })
+}
+
+export type UpdateBlockInCurrentGroup = { noteId: string, blockId: string, body: V1Block};
+export const useUpdateBlockInCurrentGroup = ( options?: MutationHookOptions<UpdateBlockInCurrentGroup, V1UpdateBlockResponse> ) => {
+  const authContext = useAuthContext()
+  const groupContext = useGroupContext()
+  const currentGroupId = groupContext.groupId as string
+
+  return useMutation(async (req: UpdateBlockInCurrentGroup) => {
+    return (await openapiClient.notesAPIUpdateBlock(currentGroupId, req.noteId, req.blockId, req.body, await axiosRequestOptionsWithAuthorization(authContext))).data
+  },
+  {
+    ...options,
   })
 }
 

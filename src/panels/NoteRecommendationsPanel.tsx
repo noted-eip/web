@@ -1,8 +1,12 @@
 import React from 'react'
 
 import PanelSkeleton from '../components/view/PanelSkeleton'
+import {useBlockContext} from '../contexts/block'
+import {useRecoModeContext} from '../contexts/recommendation'
+import { useGetNoteInCurrentGroup } from '../hooks/api/notes'
 import { useGenerateWidgets, useGetWikipediaImage } from '../hooks/api/recommendations'
-import { useNoteIdFromUrl } from '../hooks/url'
+import { useNoteIdFromUrl} from '../hooks/url'
+import { blockToString, findArrayWidgetsFromString } from '../lib/panels'
 import { getWikipediaImageNameFromUrl } from '../lib/widget'
 import { V1Widget } from '../protorepo/openapi/typescript-axios'
 
@@ -39,6 +43,8 @@ const WidgetListItem: React.FC<{ widget: V1Widget }> = (props) => {
 
 const WidgetListCurrentGroup: React.FC = () => {
   const noteId = useNoteIdFromUrl()
+  const blockContext = useBlockContext()
+  const recoModeContext = useRecoModeContext()
 
   if (noteId == null) {
     return (
@@ -48,26 +54,49 @@ const WidgetListCurrentGroup: React.FC = () => {
   }
 
   const listWidgetsQ = useGenerateWidgets({ noteId: noteId })
+  let blockWidgetsArray : V1Widget[] = []
+
+  if (blockContext.blockId !== null || recoModeContext.recoMode == 'block') {
+    const noteQuery = useGetNoteInCurrentGroup({ noteId })
+    if (noteQuery.data?.note.blocks != undefined ) {
+      const blockId = blockContext.blockId == null ? '' : blockContext.blockId
+      const block = noteQuery.data?.note.blocks.find((block) => block.id.match(blockId))
+      if (block !== undefined) {
+        const blockContent: string = blockToString(block)
+        blockWidgetsArray = findArrayWidgetsFromString(listWidgetsQ?.data?.widgets, blockContent)
+      }
+    }
+  }
 
   return(
-    <div className='overflow-y-scroll'>
-      <div className='space-y-2'>
-        {listWidgetsQ.isSuccess ? (
-          !listWidgetsQ.data?.widgets.length ? (
-            <div className='my-4 text-center text-sm text-gray-400'>
-            You have no widgets for this note
-            </div>
+    <div className='space-y-2'>
+      {
+        recoModeContext.recoMode === 'note' ? 
+
+          listWidgetsQ.isSuccess ? (
+            !listWidgetsQ.data?.widgets.length ? (
+              <div className='my-4 text-center text-sm text-gray-400'>
+                You have no widgets for this note
+              </div>
+            ) : (
+              listWidgetsQ.data?.widgets?.map((widget, idx) => (
+                <WidgetListItem key={`widget-list-${idx}`} widget={widget} />
+              ))
+            )
           ) : (
-            listWidgetsQ.data?.widgets?.map((widget, idx) => (
+            <div className='my-4 text-center text-sm text-gray-400'>
+              Loading your widgets...
+            </div>
+          ) : blockWidgetsArray.length >= 1 ?
+            blockWidgetsArray.map((widget, idx) => (
               <WidgetListItem key={`widget-list-${idx}`} widget={widget} />
-            ))
-          )
-        ) : (
-          <div className='my-4 text-center text-sm text-gray-400'>
-          Loading your widgets...
-          </div>
-        )}
-      </div>
+            )) :
+            <div className='my-4 text-center text-sm text-gray-400'>
+                You have no widgets for this block
+            </div>
+
+      }
+        
     </div>
   )
 }

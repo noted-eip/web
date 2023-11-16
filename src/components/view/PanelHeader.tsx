@@ -1,10 +1,19 @@
 import React from 'react'
 
 import { usePanelContext } from '../../contexts/panel'
+import { FormatMessage } from '../../i18n/TextComponent'
 import { panelMetadata } from '../../lib/panels'
+import RecommendationFilters from '../../views/recommendation/Filters'
 
 const PanelHeader: React.FC = () => {
   const { activePanel, setActivePanel, panels } = usePanelContext()
+
+  const recoPanelOn = panels.some(panel => {
+    if (panel == 'note-recommendations') {
+      return true
+    }
+    return false
+  })
 
   return (
     <div className='mt-xl flex h-[36px] min-h-[36px] items-center justify-around lg:mx-lg lg:mb-lg xl:mx-xl xl:mb-xl'>
@@ -27,11 +36,19 @@ const PanelHeader: React.FC = () => {
                   activePanel === panelKey && '!text-purple-700'
                 }`}
               />
-              <span className='text-xs'>{md.displayName}</span>
+              <span className='text-xs'>
+                <FormatMessage id={md.displayName == 'PANEL.activity' ? 'PANEL.activity' : 'PANEL.companion'}/>
+              </span>
             </div>
           </div>
         )
       })}
+      {
+        recoPanelOn ? 
+          <RecommendationFilters/> : 
+          null
+      }
+      
     </div>
   )
 }

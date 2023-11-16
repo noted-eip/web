@@ -11,6 +11,7 @@ import {
   useListGroups,
 } from '../../hooks/api/groups'
 import {useGroupIdFromUrl, useNoteIdFromUrl} from '../../hooks/url'
+import { FormatMessage } from '../../i18n/TextComponent'
 import LoaderIcon from '../icons/LoaderIcon'
 import NotesOptions from './Options'
 
@@ -60,7 +61,7 @@ const GroupSelectDropdown: React.FC = () => {
                   ) : (
                     <React.Fragment>
                       <div className='ml-3 mr-1 text-gray-700'>
-                        Select a Group
+                        <FormatMessage id='DASHBOARD.selectGroup' />
                       </div>
                     </React.Fragment>
                   )}
@@ -129,7 +130,7 @@ const GroupSelectDropdown: React.FC = () => {
               ) : (
                 <React.Fragment>
                   <PlusIcon className='mr-3 h-6 w-6 text-gray-400' />
-                  Create a group
+                  <FormatMessage id='GROUP.createGroup' />
                 </React.Fragment>
               )}
             </div>

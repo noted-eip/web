@@ -1,18 +1,23 @@
 import { useGoogleLogin } from '@react-oauth/google'
 import { getAnalytics, logEvent } from 'firebase/analytics'
 import React from 'react'
+import { toast } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 
 import ContainerMd from '../../components/container/ContainerMd'
 import OldInput from '../../components/form/OldInput'
+import Notification from '../../components/notification/Notification'
 import { addAccountToDevelopmentContext, useDevelopmentContext } from '../../contexts/dev'
 import { useNoAuthContext } from '../../contexts/noauth'
 import { useAuthenticate, useAuthenticateGoogle, useCreateAccount } from '../../hooks/api/accounts'
+import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
 import { decodeToken } from '../../lib/api'
+import { TOGGLE_DEV_FEATURES } from '../../lib/env'
 import { validateEmail, validateName, validatePassword } from '../../lib/validators'
-import { V1AuthenticateGoogleResponse, V1AuthenticateResponse } from '../../protorepo/openapi/typescript-axios'
+import { V1AuthenticateGoogleResponse, V1AuthenticateResponse, V1CreateAccountResponse } from '../../protorepo/openapi/typescript-axios'
 
 const SignupView: React.FC = () => {
+  const { formatMessage } = useOurIntl()
   const analytics = getAnalytics()
   const navigate = useNavigate()
   const auth = useNoAuthContext()
@@ -34,15 +39,19 @@ const SignupView: React.FC = () => {
         )
       }
       auth.signin(data.token)
-      logEvent(analytics, 'sign_up', {
-        method: 'mail'
-      })
-      navigate('/')
+      if (!TOGGLE_DEV_FEATURES) {
+        logEvent(analytics, 'sign_up', {
+          method: 'mail'
+        })
+      }
     },
+    onError: (e) => {
+      toast.error(e.response?.data.error as string)
+    }
   })
   const createAccountMutation = useCreateAccount({
-    onSuccess: () => {
-      authenticateMutation.mutate({body: {email, password}})
+    onSuccess: (data: V1CreateAccountResponse) => {
+      navigate('/validate_account', {state: {email: data.account.email, password: password}})
     },
   })
   const authenticateGoogleMutation = useAuthenticateGoogle({
@@ -56,9 +65,11 @@ const SignupView: React.FC = () => {
         )
       }
       auth.signin(data.token)
-      logEvent(analytics, 'sign_up', {
-        method: 'google'
-      })
+      if (!TOGGLE_DEV_FEATURES) {
+        logEvent(analytics, 'sign_up', {
+          method: 'google'
+        })
+      }
       navigate('/')
     },
   })
@@ -83,10 +94,10 @@ const SignupView: React.FC = () => {
       >
         <ContainerMd>
           <h2 className='mb-4 text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl'>
-              Create an account
+            <FormatMessage id='SIGNUP.title' />
           </h2>
           <OldInput
-            label='Name'
+            label={formatMessage({ id: 'GENERIC.name' })}
             value={name}
             onChange={(e) => {
               const val = e.target.value as string
@@ -97,7 +108,7 @@ const SignupView: React.FC = () => {
             errorMessage='Invalid name'
           />
           <OldInput
-            label='Email'
+            label={formatMessage({ id: 'AUTH.email' })}
             value={email}
             onChange={(e) => {
               const val = e.target.value as string
@@ -107,9 +118,9 @@ const SignupView: React.FC = () => {
             isInvalidBlur={!emailValid}
             errorMessage='Invalid email address'
           />
+          {/** //TODO: remove the type=passwprd of the input **/}
           <OldInput
-            label='Password'
-            type='password'
+            label={formatMessage({ id: 'AUTH.pwd' })}
             tooltip='6 characters, letters numbers and symbols'
             value={password}
             onChange={(e) => {
@@ -119,6 +130,18 @@ const SignupView: React.FC = () => {
             }}
             isInvalidBlur={!passwordValid}
           />
+          <div className='relative my-5 mx-10'>
+            <p className='text-sm italic text-gray-500'>
+              Once registered, you can ask an early access to our mobile&apos;s
+              app through your account&apos;s settings !
+            </p>
+            <p className='text-xs italic text-gray-400'>
+              Only works for emails linked to a Google account.
+            </p>
+            <span className='absolute right-auto top-0 -left-2 -translate-y-1/2 -translate-x-1/2 -rotate-12 rounded-full bg-red-400 p-0.5 px-2 text-center text-xs font-medium leading-none text-white outline outline-red-100 dark:bg-blue-900 dark:text-blue-200'>
+              BETA
+            </span>
+          </div>
           <button
             className='my-2 w-full rounded-lg bg-blue-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:bg-gray-600 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
             disabled={
@@ -127,11 +150,13 @@ const SignupView: React.FC = () => {
             createAccountMutation.isLoading
             }
           >
-          Submit
+            <FormatMessage id='AUTH.register' />
           </button>
           <div style={{cursor: 'pointer'}} className='flex items-center justify-center rounded border border-gray-500 bg-white px-3 py-2 text-sm font-medium text-gray-800 dark:border-gray-500 dark:bg-gray-400'
             onClick={() => googleLogin()}>
-            <p className='mr-2 dark:text-gray-400'>Sign up with Google</p>
+            <p className='mr-2 dark:text-gray-400'>
+              <FormatMessage id='SIGNUP.signupGoogle' />
+            </p>
             <svg
               className='h-5 w-5'
               xmlns='http://www.w3.org/2000/svg'
@@ -161,6 +186,7 @@ const SignupView: React.FC = () => {
           </div>
         </ContainerMd>
       </form>
+      <Notification />
     </div>
   )
 }

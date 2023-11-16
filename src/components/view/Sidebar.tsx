@@ -3,7 +3,7 @@ import {
   ArrowRightOnRectangleIcon,
   XMarkIcon
 } from '@heroicons/react/24/outline'
-import { Cog6ToothIcon, Square2StackIcon, UserIcon } from '@heroicons/react/24/solid'
+import {Square2StackIcon, UserIcon } from '@heroicons/react/24/solid'
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
@@ -14,6 +14,7 @@ import {
 } from '../../contexts/dev'
 import { useGetAccount } from '../../hooks/api/accounts'
 import { useListInvites } from '../../hooks/api/invites'
+import { useOurIntl } from '../../i18n/TextComponent'
 import { apiQueryClient } from '../../lib/api'
 import { LS_AUTH_TOKEN_KEY, LS_GROUP_ID_KEY } from '../../lib/constants'
 import { TOGGLE_DEV_FEATURES } from '../../lib/env'
@@ -56,6 +57,7 @@ const DevAccountItem: React.FC<{ account: { id: string; token: string } }> = (pr
 }
 
 export const Sidebar: React.FC = () => {
+  const { formatMessage } = useOurIntl()
   const authContext = useAuthContext()
   const currentPath = useLocation().pathname
   const listInvitesQ = useListInvites({ recipientAccountId: authContext.accountId })
@@ -72,22 +74,21 @@ export const Sidebar: React.FC = () => {
   }, [accountsMap])
 
   const links = [
-    { path: '/', icon: Square2StackIcon, title: 'Home', numNotifications: 0 },
+    { path: '/', icon: Square2StackIcon, title: formatMessage({ id: 'GENERIC.home' }), numNotifications: 0 },
     {
       path: '/profile',
       icon: UserIcon,
-      title: 'Profile',
+      title: formatMessage({ id: 'GENERIC.profile' }),
       numNotifications:
         listInvitesQ.isSuccess && listInvitesQ.data.invites
           ? listInvitesQ.data.invites.length
           : 0,
-    },
-    { path: '/settings', icon: Cog6ToothIcon, title: 'Settings', numNotifications: 0 },
+    }
   ]
 
   return (
     <div className='hidden h-screen flex-col border-r border-gray-300 md:flex'>
-      <div className='m-lg mt-xl flex h-full flex-col sjustify-between xl:m-xl'>
+      <div className='m-lg mt-xl flex h-full flex-col justify-between xl:m-xl'>
         <div>
           {/* Logo */}
           <div className='h-[36px] w-[36px] rounded-md border border-gray-300 bg-gray-200' />
