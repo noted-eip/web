@@ -8,7 +8,7 @@ export const validateEmail = (email: string): undefined | string => {
 }
 
 export const validateName = (name: string): undefined | string => {
-  const regex = /^[A-Za-z]{3,}$/
+  const regex = /^[A-Za-z]{4,}$/
   if (regex.test(name)) {
     return undefined
   }
