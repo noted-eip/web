@@ -9,6 +9,7 @@ import { toast } from 'react-hot-toast'
 import { Link, useNavigate } from 'react-router-dom'
 
 import GoogleIcon from '../../components/icons/GoogleIcon'
+import Notification from '../../components/notification/Notification'
 import Authentication from '../../components/view/Authentication'
 import { addAccountToDevelopmentContext, useDevelopmentContext } from '../../contexts/dev'
 import { useNoAuthContext } from '../../contexts/noauth'
@@ -25,6 +26,7 @@ const SigninView: React.FC = () => {
   const navigate = useNavigate()
   const auth = useNoAuthContext()
   const [password, setPassword] = React.useState('')
+  const [showPassword, setShowPassword] = React.useState(false)
   const [email, setEmail] = React.useState('')
   const [emailValid, setEmailValid] = React.useState(false)
   const developmentContext = useDevelopmentContext()
@@ -79,8 +81,6 @@ const SigninView: React.FC = () => {
     return emailValid
   }
 
-  const [showPassword, setShowPassword] = React.useState(false)
-
   const handleClickShowPassword = () => setShowPassword((show) => !show)
 
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -89,75 +89,83 @@ const SigninView: React.FC = () => {
 
   return (
     <Authentication>
-      <Stack direction='column' spacing={2}>
-        <h2 className='mb-4 text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl'>
-          <FormatMessage id='SIGNIN.title' />
-        </h2>
-        <TextField
-          id='outlined-email-input'
-          label={formatMessage({ id: 'AUTH.email' })}
-          type='email'
-          value={email}
-          onChange={(e) => {
-            const val = e.target.value as string
-            setEmail(val)
-            setEmailValid(validateEmail(val) !== undefined)}
-          }
-          error={emailValid}
-          helperText={emailValid ? formatMessage({ id: 'AUTH.error.email' }) : ''}
-        />
-        <FormControl variant='outlined'>
-          <InputLabel htmlFor='outlined-adornment-password'>
-            Password
-          </InputLabel>
-          <OutlinedInput
-            sx={{ borderRadius: '16px' }}
-            id='outlined-adornment-password'
-            type={showPassword ? 'text' : 'password'}
-            endAdornment={
-              <InputAdornment position='end'>
-                <IconButton
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                  edge='end'
-                >
-                  {showPassword ? <VisibilityOffOutlined /> : <VisibilityOutlined />}
-                </IconButton>
-              </InputAdornment>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault()
+          authenticateMutation.mutate({body: {email, password}})
+        }}
+      >
+        <Stack direction='column' spacing={2}>
+          <h2 className='mb-4 text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl'>
+            <FormatMessage id='SIGNIN.title' />
+          </h2>
+          <TextField
+            id='outlined-email-input'
+            label={formatMessage({ id: 'AUTH.email' })}
+            type='email'
+            value={email}
+            onChange={(e) => {
+              const val = e.target.value as string
+              setEmail(val)
+              setEmailValid(validateEmail(val) !== undefined)}
             }
-            label='Password'
+            onBlur={() => {
+              setEmailValid(validateEmail(email) !== undefined)
+            }}
+            error={emailValid && email.length != 0  }
+            helperText={(emailValid && email.length != 0) && formatMessage({ id: 'AUTH.error.email' })}
           />
-        </FormControl>
-        {/* <OldInput
-          label={formatMessage({ id: 'AUTH.pwd' })}
-          value={password}
-          onChange={(e) => {
-            setPassword(e.target.value)
-          }}
-        /> */}
-        <Button
-          sx={{ borderRadius: '16px' }}
-          size='large'
-          variant='contained'
-          className='w-full'
-          disabled={!formIsValid() || authenticateMutation.isLoading}
-        >
-          <FormatMessage id='AUTH.login' />
-        </Button>
-        <Button 
-          sx={{ borderRadius: '16px' }}
-          size='large'
-          variant='outlined'
-          className='w-full'
-          onClick={() => googleLogin()}
-          endIcon={<GoogleIcon />}
-        >
-          <FormatMessage id='SIGNIN.signinGoogle' />
-        </Button>
-        <Link to='/reset_password_email' className='mt-2 text-sm text-blue-500 underline'>
-          <FormatMessage id='SIGNIN.resetPwd' />
-        </Link>
-      </Stack>
+          <FormControl variant='outlined'>
+            <InputLabel htmlFor='outlined-adornment-password'>
+              <FormatMessage id='AUTH.pwd' />
+            </InputLabel>
+            <OutlinedInput
+              sx={{ borderRadius: '16px' }}
+              id='outlined-adornment-password'
+              type={showPassword ? 'text' : 'password'}
+              value={password}
+              endAdornment={
+                <InputAdornment position='end'>
+                  <IconButton
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge='end'
+                  >
+                    {showPassword ? <VisibilityOffOutlined /> : <VisibilityOutlined />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              onChange={(e) =>
+                setPassword(e.target.value)
+              }
+            />
+          </FormControl>
+          <Button
+            type='submit'
+            sx={{ borderRadius: '16px' }}
+            size='large'
+            variant='contained'
+            className='w-full'
+            disabled={formIsValid() || authenticateMutation.isLoading}
+          >
+            <FormatMessage id='AUTH.login' />
+          </Button>
+          <Button
+            sx={{ borderRadius: '16px' }}
+            size='large'
+            variant='outlined'
+            className='w-full'
+            onClick={() => googleLogin()}
+            endIcon={<GoogleIcon />}
+          >
+            <FormatMessage id='SIGNIN.signinGoogle' />
+          </Button>
+          <Link to='/reset_password_email' className='mt-2 text-sm text-blue-500 underline'>
+            <FormatMessage id='SIGNIN.resetPwd' />
+          </Link>
+        </Stack>
+      </form>
+      <Notification />
     </Authentication>
   )
 }
