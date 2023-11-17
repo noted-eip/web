@@ -10,7 +10,6 @@ import React from 'react'
 import { useDebounce } from 'usehooks-ts'
 
 import LoaderIcon from '../../components/icons/LoaderIcon'
-import ConfirmationPanel from '../../components/pop-up/confirmation-panel'
 import { useAuthContext } from '../../contexts/auth'
 import { useGroupContext } from '../../contexts/group'
 import { useGetAccount, useSearchAccount } from '../../hooks/api/accounts'
@@ -56,13 +55,13 @@ export const GroupViewSettingsTabEditGroup: React.FC = () => {
 
   const onChangeName = (e) => {
     e.preventDefault()
-    updateGroupQ.mutate({body: {name: newName}})
+    updateGroupQ.mutate({ body: { name: newName } })
     setEditName(false)
   }
 
   const onChangeDescription = (e) => {
     e.preventDefault()
-    updateGroupQ.mutate({body: {description: newDescription}})
+    updateGroupQ.mutate({ body: { description: newDescription } })
     setEditDescription(false)
   }
 
@@ -151,76 +150,69 @@ export const GroupViewSettingsTabEditGroup: React.FC = () => {
 const GroupMemberListItem: React.FC<{ member: V1GroupMember }> = (props) => {
   const { member } = props
   const authContext = useAuthContext()
-  const account = useGetAccount({accountId: member.accountId})
+  const account = useGetAccount({ accountId: member.accountId })
   const removeMemberQ = useRemoveMemberInCurrentGroup()
   const updateGroupMemberQ = useUpdateMemberInCurrentGroup()
   const groupQ = useGetCurrentGroup()
 
-  const [open, setOpen] = React.useState<boolean>(false)
-  
   return (
-    <>
-      { open == true &&
-      <ConfirmationPanel onValidate={removeMemberQ.mutate({ accountId: member.accountId })} title='CONFIRMATION.title.group' />
-      }
-      <div className='group grid h-16 cursor-default grid-cols-[30%_40%_20%_10%] px-5 hover:bg-gray-100'>
-        <div className='flex items-center'>
-          <div className='h-9 w-9 rounded-md bg-gradient-radial from-teal-300 to-green-200' />
-          <div className='pl-3 text-sm font-medium text-gray-800'>
-            {account.isSuccess ? (
-              account.data.account.name
-            ) : (
-              <div className='skeleton h-4 w-16' />
-            )}
-          </div>
-        </div>
-        <div className='flex items-center'>
+    <div className='group grid h-16 cursor-default grid-cols-[30%_40%_20%_10%] px-5 hover:bg-gray-100'>
+      <div className='flex items-center'>
+        <div className='h-9 w-9 rounded-md bg-gradient-radial from-teal-300 to-green-200' />
+        <div className='pl-3 text-sm font-medium text-gray-800'>
           {account.isSuccess ? (
-            <p className='text-sm text-gray-500'>
-              {account.data.account.email}
-            </p>
+            account.data.account.name
           ) : (
-            <div className='skeleton h-4 w-48' />
+            <div className='skeleton h-4 w-16' />
           )}
-        </div>
-        {/* Admin Badge */}
-        <div className='flex items-center'>
-          {props.member.isAdmin ? (
-            <div className='float-right rounded-full bg-purple-200 p-1 px-2 text-xs font-medium text-purple-600'>
-            Admin
-            </div>
-          // Dirty way of checking that the current user is an admin.
-          ) : groupQ.data?.group.members?.find((acc) => {return acc.accountId === authContext.accountId && acc.isAdmin}) && (
-            <div
-              className='invisible float-right cursor-pointer rounded-full border-2 border-dashed border-gray-400 bg-gray-200 p-[2px] px-[6px] text-xs font-medium text-gray-600 opacity-75 hover:opacity-100 group-hover:visible'
-              onClick={() =>
-                updateGroupMemberQ.mutate({
-                  accountId: props.member.accountId,
-                  body: {
-                    isAdmin: true,
-                  } as V1GroupMember,
-                })
-              }
-            >
-            Admin
-            </div>
-          )}
-        </div>
-        {/* Remove Group Member */}
-        <div className='flex items-center justify-end'>
-          {props.member.accountId !== authContext.accountId &&
-        props.member.isAdmin ? null : 
-            <div className='cursor-pointer opacity-75 group-hover:opacity-100'>
-              {
-                removeMemberQ.isLoading ?
-                  <LoaderIcon className='h-9 w-9 p-2' />
-                  :
-                  <TrashIcon className='h-9 w-9 rounded-md stroke-2 p-2 text-gray-400 hover:bg-gray-200' onClick={() => {setOpen(true)}}/>
-              }
-            </div>}
         </div>
       </div>
-    </>
+      <div className='flex items-center'>
+        {account.isSuccess ? (
+          <p className='text-sm text-gray-500'>
+            {account.data.account.email}
+          </p>
+        ) : (
+          <div className='skeleton h-4 w-48' />
+        )}
+      </div>
+      {/* Admin Badge */}
+      <div className='flex items-center'>
+        {props.member.isAdmin ? (
+          <div className='float-right rounded-full bg-purple-200 p-1 px-2 text-xs font-medium text-purple-600'>
+            Admin
+          </div>
+          // Dirty way of checking that the current user is an admin.
+        ) : groupQ.data?.group.members?.find((acc) => { return acc.accountId === authContext.accountId && acc.isAdmin }) && (
+          <div
+            className='invisible float-right cursor-pointer rounded-full border-2 border-dashed border-gray-400 bg-gray-200 p-[2px] px-[6px] text-xs font-medium text-gray-600 opacity-75 hover:opacity-100 group-hover:visible'
+            onClick={() =>
+              updateGroupMemberQ.mutate({
+                accountId: props.member.accountId,
+                body: {
+                  isAdmin: true,
+                } as V1GroupMember,
+              })
+            }
+          >
+            Admin
+          </div>
+        )}
+      </div>
+      {/* Remove Group Member */}
+      <div className='flex items-center justify-end'>
+        {props.member.accountId !== authContext.accountId &&
+          props.member.isAdmin ? null :
+          <div className='cursor-pointer opacity-75 group-hover:opacity-100'>
+            {
+              removeMemberQ.isLoading ?
+                <LoaderIcon className='h-9 w-9 p-2' />
+                :
+                <TrashIcon className='h-9 w-9 rounded-md stroke-2 p-2 text-gray-400 hover:bg-gray-200' onClick={() => removeMemberQ.mutate({ accountId: props.member.accountId })} />
+            }
+          </div>}
+      </div>
+    </div>
   )
 }
 
@@ -228,7 +220,7 @@ const GroupViewSettingsTabMembersSection: React.FC = () => {
   const { formatMessage } = useOurIntl()
   const groupQ = useGetCurrentGroup()
   const [accountEmailSearch, setAccountEmailSearch] = React.useState<string>('')
-  const searchAccountQ = useSearchAccount({email: accountEmailSearch}, {enabled: false, retry: false})
+  const searchAccountQ = useSearchAccount({ email: accountEmailSearch }, { enabled: false, retry: false })
   const sendInviteQ = useSendInviteInCurrentGroup()
   const debouncedValue = useDebounce<string>(accountEmailSearch, 1000)
 
@@ -239,11 +231,11 @@ const GroupViewSettingsTabMembersSection: React.FC = () => {
   }, [debouncedValue])
 
   const onInviteFriend = () => {
-    sendInviteQ.mutate({body: {recipientAccountId: searchAccountQ.data?.account.id as string}})
+    sendInviteQ.mutate({ body: { recipientAccountId: searchAccountQ.data?.account.id as string } })
     setAccountEmailSearch('')
   }
 
-  return ( groupQ.data?.group.workspaceAccountId ? null :
+  return (groupQ.data?.group.workspaceAccountId ? null :
     <div className='mt-4 overflow-hidden rounded-md border border-gray-100 bg-gray-50'>
       {/* Header */}
       <div className='flex items-center justify-between border-b border-gray-200 p-5'>
@@ -335,8 +327,8 @@ const GroupViewSettingsTabMembersSection: React.FC = () => {
 }
 
 const PendingInviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
-  const senderAccountQ = useGetAccount({accountId: props.invite.senderAccountId})
-  const recipientAccountQ = useGetAccount({accountId: props.invite.recipientAccountId})
+  const senderAccountQ = useGetAccount({ accountId: props.invite.senderAccountId })
+  const recipientAccountQ = useGetAccount({ accountId: props.invite.recipientAccountId })
   const expiresInDateString = moment(props.invite.validUntil, 'YYYY-MM-DDTHH:mm:ssZ').fromNow()
   const revokeInviteQ = useRevokeInviteInCurrentGroup()
 
@@ -383,7 +375,7 @@ const PendingInviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
 const GroupViewSettingsTabPendingInvitesSection: React.FC = () => {
   const groupQ = useGetCurrentGroup()
 
-  return ( groupQ.data?.group.workspaceAccountId ? null :
+  return (groupQ.data?.group.workspaceAccountId ? null :
     <div className='mt-4 overflow-hidden rounded-md border border-gray-100 bg-gray-50'>
       {/* Header */}
       <div className='flex items-center justify-between border-b border-gray-200 p-5'>
