@@ -1,5 +1,5 @@
 import { VisibilityOffOutlined, VisibilityOutlined } from '@mui/icons-material'
-import { FormControl, FormHelperText, IconButton,InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material'
+import { FormControl, FormHelperText, IconButton,InputAdornment, InputLabel, OutlinedInput, TextField, Typography } from '@mui/material'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import { useGoogleLogin } from '@react-oauth/google'
@@ -28,11 +28,11 @@ const SignupView: React.FC = () => {
   const auth = useNoAuthContext()
   const [name, setName] = React.useState('')
   const [nameValid, setNameValid] = React.useState(false)
-  const [password, setPassword] = React.useState('')
-  const [showPassword, setShowPassword] = React.useState(false)
-  const [passwordValid, setPasswordValid] = React.useState(false)
   const [email, setEmail] = React.useState('')
   const [emailValid, setEmailValid] = React.useState(false)
+  const [password, setPassword] = React.useState('')
+  const [passwordValid, setPasswordValid] = React.useState(false)
+  const [showPassword, setShowPassword] = React.useState(false)
   const developmentContext = useDevelopmentContext()
   const authenticateMutation = useAuthenticate({
     onSuccess: (data: V1AuthenticateResponse) => {
@@ -97,7 +97,7 @@ const SignupView: React.FC = () => {
   }
 
   return (
-    <Authentication>
+    <Authentication animName='login'>
       <form
         onSubmit={(e) => {
           e.preventDefault()
@@ -105,42 +105,9 @@ const SignupView: React.FC = () => {
         }}
       >
         <Stack direction='column' spacing={2}>
-          <h2 className='mb-4 text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl'>
+          <Typography variant='h4' align='center' fontWeight='bold'>
             <FormatMessage id='SIGNUP.title' />
-          </h2>
-          {/* <OldInput
-            label={formatMessage({ id: 'GENERIC.name' })}
-            value={name}
-            onChange={(e) => {
-              const val = e.target.value as string
-              setName(val)
-              setNameValid(validateName(val) === undefined)
-            }}
-            isInvalidBlur={!nameValid}
-            errorMessage={formatMessage({ id: 'AUTH.error.name' })}
-          />
-          <OldInput
-            label={formatMessage({ id: 'AUTH.email' })}
-            value={email}
-            onChange={(e) => {
-              const val = e.target.value as string
-              setEmail(val)
-              setEmailValid(validateEmail(val) === undefined)
-            }}
-            isInvalidBlur={!emailValid}
-            errorMessage={formatMessage({ id: 'AUTH.error.email' })}
-          />
-          <OldInput
-            label={formatMessage({ id: 'AUTH.pwd' })}
-            tooltip={formatMessage({ id: 'AUTH.error.pwd' })}
-            value={password}
-            onChange={(e) => {
-              const val = e.target.value as string
-              setPassword(val)
-              setPasswordValid(validatePassword(val) === undefined)
-            }}
-            isInvalidBlur={!passwordValid}
-          /> */}
+          </Typography>
           <TextField
             id='outlined-name-input'
             label={formatMessage({ id: 'GENERIC.name' })}
@@ -149,15 +116,13 @@ const SignupView: React.FC = () => {
             onChange={(e) => {
               const val = e.target.value as string
               setName(val)
-              console.log('val', val)
-              console.log('nameValid: ', nameValid, validateName(val))
               setNameValid(validateName(val) === undefined)
             }}
             onBlur={() => {
               setNameValid(validateName(name) === undefined)
             }}
-            error={!nameValid}
-            helperText={!nameValid && 'name must be 4'}
+            error={!nameValid && name.length != 0}
+            helperText={(!nameValid && name.length != 0) && 'name must be 4'}
           />
           <TextField
             id='outlined-email-input'
@@ -167,17 +132,17 @@ const SignupView: React.FC = () => {
             onChange={(e) => {
               const val = e.target.value as string
               setEmail(val)
-              setEmailValid(validateEmail(val) !== undefined)}
+              setEmailValid(validateEmail(val) === undefined)}
             }
             onBlur={() => {
-              setEmailValid(validateEmail(email) !== undefined)
+              setEmailValid(validateEmail(email) === undefined)
             }}
-            error={emailValid && email.length != 0  }
-            helperText={(emailValid && email.length != 0) && formatMessage({ id: 'AUTH.error.email' })}
+            error={!emailValid && email.length != 0}
+            helperText={(!emailValid && email.length != 0) && formatMessage({ id: 'AUTH.error.email' })}
           />
           <FormControl
             variant='outlined'
-            error={passwordValid}
+            error={!passwordValid && password.length != 0}
           >
             <InputLabel htmlFor='outlined-adornment-password'>
               <FormatMessage id='AUTH.pwd' />
@@ -201,10 +166,10 @@ const SignupView: React.FC = () => {
               onChange={(e) => {
                 const val = e.target.value as string
                 setPassword(val)
-                setPasswordValid(validatePassword(val) !== undefined)
+                setPasswordValid(validatePassword(val) === undefined)
               }}
               onBlur={() => {
-                setEmailValid(validateEmail(password) !== undefined)
+                setPasswordValid(validatePassword(password) === undefined)
               }}
             />
             <FormHelperText id='outlined-weight-helper-text'><FormatMessage id='AUTH.error.pwd' /></FormHelperText>
@@ -223,17 +188,17 @@ const SignupView: React.FC = () => {
           </div>
           <Button
             type='submit'
+            sx={{ borderRadius: '16px' }}
+            size='large'
             variant='contained'
             className='w-full'
-            disabled={
-              formIsValid() ||
-                authenticateMutation.isLoading ||
-                createAccountMutation.isLoading  
-            }
+            disabled={!formIsValid() || authenticateMutation.isLoading || createAccountMutation.isLoading}
           >
             <FormatMessage id='AUTH.register' />
           </Button>
           <Button 
+            sx={{ borderRadius: '16px' }}
+            size='large'
             variant='outlined'
             className='w-full'
             onClick={() => googleLogin()}

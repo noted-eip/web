@@ -23,6 +23,7 @@ const frTranslation: LocaleTypedMessages = {
   'SIGNIN.signinGoogle': 'Connectez-vous avec Google',
   'SIGNIN.resetPwd': 'Réinitialiser le mot de passe',
 
+
   /*  Signup  */
   'SIGNUP.title': 'Créer un compte',
   'SIGNUP.signupGoogle': 'S\'inscrire avec Google',
@@ -46,6 +47,7 @@ const frTranslation: LocaleTypedMessages = {
   'RESETPWD.Pwd.title': 'Crée un nouveau mot de passe',
   'RESETPWD.Pwd.desc': 'Entrez un nouveau mot de passe pour votre compte',
   'RESETPWD.Pwd.form': 'Confirmez le mot de passe',
+  'RESETPWD.Pwd.form2': 'Mot de passe différent',
 
   /*    LANDING    */
   /* Description */

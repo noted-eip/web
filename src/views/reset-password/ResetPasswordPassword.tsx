@@ -1,27 +1,30 @@
+import { VisibilityOffOutlined, VisibilityOutlined } from '@mui/icons-material'
+import { FormControl, FormHelperText,IconButton, InputAdornment, InputLabel, OutlinedInput } from '@mui/material'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
 import React from 'react'
 import { toast } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 
-import ContainerMd from '../../components/container/ContainerMd'
-import OldInput from '../../components/form/OldInput'
 import Notification from '../../components/notification/Notification'
+import Authentication from '../../components/view/Authentication'
 import { useResetPasswordContext } from '../../hooks/api/accounts'
 import { useUpdateAccountPassword } from '../../hooks/api/password'
 import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
 import { validatePassword } from '../../lib/validators'
-
 
 const ResetPasswordPassword: React.FC = () => {
   const { formatMessage } = useOurIntl()
   const navigate = useNavigate()
   const resetPasswordContext = useResetPasswordContext()
   const [password, setPassword] = React.useState('')
+  const [passwordValid, setPasswordValid] = React.useState(false)
+  const [showPassword, setShowPassword] = React.useState(false)
+  const [confirmPassword, setConfirmPassword] = React.useState('')
   const [isResetPasswordValid, ] = React.useState(resetPasswordContext.account?.account_id !== null 
     || resetPasswordContext.account?.auth_token !== null || resetPasswordContext.account?.reset_token !== null)
-  const [confirmPassword, setConfirmPassword] = React.useState('')
-  const [passwordValid, setPasswordValid] = React.useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false)
   const updateAccountMutation = useUpdateAccountPassword({
     onSuccess: () => {
       resetPasswordContext.changeResetPassword(null)
@@ -35,59 +38,118 @@ const ResetPasswordPassword: React.FC = () => {
     return password === confirmPassword && passwordValid
   }
 
+  const handleClickShowPassword = () => setShowPassword((show) => !show)
+
+  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault()
+  }
+
+  const handleClickShowConfirmPassword = () => setShowConfirmPassword((show) => !show)
+
+  const handleMouseDownConfirmPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault()
+  }
+
   return (
-    <div className='flex h-screen w-screen items-center justify-center'>
+    <Authentication animName='error'>
       <form
         onSubmit={(e) => {
           e.preventDefault()
           updateAccountMutation.mutate({account_id: resetPasswordContext.account?.account_id as string, body: {password, token: resetPasswordContext.account?.reset_token as string}, header: resetPasswordContext.account?.auth_token as string})
         }}
       >
-        <ContainerMd>
-          <Stack direction='column' spacing={2}>
-            <h2 className='text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl'>
-              <FormatMessage id='RESETPWD.Pwd.title' />
-            </h2>
-            {!isResetPasswordValid && 
+        <Stack direction='column' spacing={2}>
+          <Typography variant='h4' align='center' fontWeight='bold'>
+            <FormatMessage id='RESETPWD.Pwd.title' />
+          </Typography>
+          {!isResetPasswordValid && 
             <div className='leading-tight tracking-tight dark:text-white'>
               <span className='text-red-500'>Account Error</span>
             </div>}
-            <p 
-              className='text-lg leading-tight tracking-tight text-gray-900'>
-              <FormatMessage id='RESETPWD.Pwd.desc' />
-            </p>
-            <OldInput
-              label={formatMessage({ id: 'AUTH.pwd' })}
-              tooltip='6 characters, letters numbers and symbols'
+          <p 
+            className='text-lg leading-tight tracking-tight text-gray-900'>
+            <FormatMessage id='RESETPWD.Pwd.desc' />
+          </p>
+          <FormControl
+            variant='outlined'
+            error={!passwordValid && password.length != 0}
+          >
+            <InputLabel htmlFor='outlined-adornment-password'>
+              <FormatMessage id='AUTH.pwd' />
+            </InputLabel>
+            <OutlinedInput
+              sx={{ borderRadius: '16px' }}
+              id='outlined-adornment-password'
+              type={showPassword ? 'text' : 'password'}
               value={password}
+              endAdornment={
+                <InputAdornment position='end'>
+                  <IconButton
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge='end'
+                  >
+                    {showPassword ? <VisibilityOffOutlined /> : <VisibilityOutlined />}
+                  </IconButton>
+                </InputAdornment>
+              }
               onChange={(e) => {
                 const val = e.target.value as string
                 setPassword(val)
                 setPasswordValid(validatePassword(val) === undefined)
               }}
-              isInvalidBlur={!passwordValid}
-            />
-            <OldInput
-              label={formatMessage({ id: 'RESETPWD.Pwd.form' })}
-              value={confirmPassword}
-              onChange={(e) => {
-                setConfirmPassword(e.target.value)
+              onBlur={() => {
+                setPasswordValid(validatePassword(password) === undefined)
               }}
-              isInvalid={password !== confirmPassword && confirmPassword.length !== 0}
-              errorMessage={'Not the same password'}
             />
-            <Button
-              variant='contained'
-              className='w-full'
-              disabled={!formIsValid() || updateAccountMutation.isLoading || !isResetPasswordValid}
-            >
-              <FormatMessage id='SIGNIN.resetPwd' />
-            </Button>
-          </Stack>
-        </ContainerMd>
+            <FormHelperText id='outlined-weight-helper-text'><FormatMessage id='AUTH.error.pwd' /></FormHelperText>
+          </FormControl>
+          <FormControl
+            variant='outlined'
+            error={password !== confirmPassword && confirmPassword.length !== 0}
+          >
+            <InputLabel htmlFor='outlined-adornment-password'>
+              <FormatMessage id='RESETPWD.Pwd.form' />
+            </InputLabel>
+            <OutlinedInput
+              sx={{ borderRadius: '16px' }}
+              id='outlined-adornment-password'
+              type={showConfirmPassword ? 'text' : 'password'}
+              value={confirmPassword}
+              endAdornment={
+                <InputAdornment position='end'>
+                  <IconButton
+                    onClick={handleClickShowConfirmPassword}
+                    onMouseDown={handleMouseDownConfirmPassword}
+                    edge='end'
+                  >
+                    {showPassword ? <VisibilityOffOutlined /> : <VisibilityOutlined />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              onChange={(e) => {
+                setConfirmPassword(e.target.value as string)
+              }}
+              // onBlur={() => {
+              //   setPasswordValid(validatePassword(password) === undefined)
+              // }}
+            />
+            {password !== confirmPassword && confirmPassword.length !== 0 && <FormHelperText id='outlined-weight-helper-text'><FormatMessage id='RESETPWD.Pwd.form2' /></FormHelperText>}
+          </FormControl>
+          <Button
+            type='submit'
+            sx={{ borderRadius: '16px' }}
+            size='large'
+            variant='contained'
+            className='w-full'
+            disabled={!formIsValid() || updateAccountMutation.isLoading || !isResetPasswordValid}
+          >
+            <FormatMessage id='SIGNIN.resetPwd' />
+          </Button>
+        </Stack>
       </form>
       <Notification />
-    </div>
+    </Authentication>
   )
 }
 

@@ -67,6 +67,7 @@ export enum TranslationKeys {
   'RESETPWD.Pwd.title',
   'RESETPWD.Pwd.desc',
   'RESETPWD.Pwd.form',
+  'RESETPWD.Pwd.form2',
 
   /*    LANDING    */
   /* Description */

@@ -9,8 +9,10 @@ import LanguageIcon from '@mui/icons-material/Language'
 import ReportProblemIcon from '@mui/icons-material/ReportProblem'
 import SendIcon from '@mui/icons-material/Send'
 import Button from '@mui/material/Button'
+import { grey } from '@mui/material/colors'
 import MenuItem from '@mui/material/MenuItem'
 import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
 import { getAnalytics, logEvent } from 'firebase/analytics'
 import React, { useState } from 'react'
 
@@ -34,7 +36,12 @@ const ProfileViewAccountSection: React.FC = () => {
   const updateAccountQ = useUpdateMyAccount()
   const getAccountQ = useGetAccount({accountId: authContext.accountId})
   const newNameInputRef = React.createRef<HTMLInputElement>()
-
+  const onChangeName = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    updateAccountQ.mutate({body: {name: newName} as V1Account})
+    setEditName(false)
+  }
+  
   useClickOutside(newNameInputRef, () => {
     setEditName(false)
   })
@@ -45,12 +52,7 @@ const ProfileViewAccountSection: React.FC = () => {
     }
   }, [getAccountQ])
 
-  const onChangeName = (e) => {
-    e.preventDefault()
-    updateAccountQ.mutate({body: {name: newName} as V1Account})
-    setEditName(false)
-  }
-
+  
   return (
     <div className='rounded-md border border-gray-100 bg-gray-50 bg-gradient-to-br p-4'>
       <div className='flex items-center'>
@@ -171,10 +173,6 @@ const InviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
     </div>
   )
 }
-
-import { grey } from '@mui/material/colors'
-import Typography from '@mui/material/Typography'
-
 
 const ProfileViewPendingInvitesSection: React.FC = () => {
   const authContext = useAuthContext()

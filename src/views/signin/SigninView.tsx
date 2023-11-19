@@ -1,5 +1,5 @@
 import { VisibilityOffOutlined, VisibilityOutlined } from '@mui/icons-material'
-import { FormControl, IconButton,InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material'
+import { FormControl, IconButton,InputAdornment, InputLabel, OutlinedInput, TextField, Typography } from '@mui/material'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import { useGoogleLogin } from '@react-oauth/google'
@@ -88,7 +88,7 @@ const SigninView: React.FC = () => {
   }
 
   return (
-    <Authentication>
+    <Authentication animName='login'>
       <form
         onSubmit={(e) => {
           e.preventDefault()
@@ -96,9 +96,9 @@ const SigninView: React.FC = () => {
         }}
       >
         <Stack direction='column' spacing={2}>
-          <h2 className='mb-4 text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl'>
+          <Typography variant='h4' align='center' fontWeight='bold'>
             <FormatMessage id='SIGNIN.title' />
-          </h2>
+          </Typography>
           <TextField
             id='outlined-email-input'
             label={formatMessage({ id: 'AUTH.email' })}

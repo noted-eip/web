@@ -46,6 +46,7 @@ const enTranslation: LocaleTypedMessages = {
   'RESETPWD.Pwd.title': 'Create a new password',
   'RESETPWD.Pwd.desc': 'Enter a new password for your account',
   'RESETPWD.Pwd.form': 'Confirm Password',
+  'RESETPWD.Pwd.form2': 'Not the same password',
 
   /*    LANDING    */
   /* Description */
