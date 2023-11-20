@@ -11,11 +11,10 @@ import Notification from '../../components/notification/Notification'
 import Authentication from '../../components/view/Authentication'
 import { useResetPasswordContext } from '../../hooks/api/accounts'
 import { useUpdateAccountPassword } from '../../hooks/api/password'
-import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
+import { FormatMessage } from '../../i18n/TextComponent'
 import { validatePassword } from '../../lib/validators'
 
 const ResetPasswordPassword: React.FC = () => {
-  const { formatMessage } = useOurIntl()
   const navigate = useNavigate()
   const resetPasswordContext = useResetPasswordContext()
   const [password, setPassword] = React.useState('')
