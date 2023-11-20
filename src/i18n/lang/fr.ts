@@ -14,11 +14,15 @@ const frTranslation: LocaleTypedMessages = {
   'AUTH.register': 'Inscription',
   'AUTH.email': 'Email',
   'AUTH.pwd': 'Mot de passe',
+  'AUTH.error.name': 'Nom invalide',
+  'AUTH.error.email': 'Adresse email invalide',
+  'AUTH.error.pwd': '6 caractères, lettres, chiffres et symboles',
 
   /* Signing */
   'SIGNIN.title': 'Connectez-vous à votre compte',
   'SIGNIN.signinGoogle': 'Connectez-vous avec Google',
   'SIGNIN.resetPwd': 'Réinitialiser le mot de passe',
+
 
   /*  Signup  */
   'SIGNUP.title': 'Créer un compte',
@@ -43,6 +47,7 @@ const frTranslation: LocaleTypedMessages = {
   'RESETPWD.Pwd.title': 'Crée un nouveau mot de passe',
   'RESETPWD.Pwd.desc': 'Entrez un nouveau mot de passe pour votre compte',
   'RESETPWD.Pwd.form': 'Confirmez le mot de passe',
+  'RESETPWD.Pwd.form2': 'Mot de passe différent',
 
   /*    LANDING    */
   /* Description */
@@ -131,10 +136,15 @@ const frTranslation: LocaleTypedMessages = {
   'PROFILE.beta.title': 'Fonctionnalités supplémentaires',
   'PROFILE.beta.subTitle': 'Application mobile',
   'PROFILE.beta.desc': 'Vous recevrez une invitation pour installer l\'application sur votre téléphone. Avec lui vous pouvez parcourir vos groupes, notes, invitations, membres et recommandations mais vous ne pouvez pas modifier vos notes (encore 😉).',
-  'PROFILE.beta.subDesc': 'L\'email de votre compte doit être lié à un compte Google pour être invité !',
+  'PROFILE.beta.subDesc': 'L\'email de votre compte doit être lié à un compte Google pour être invité !',
   'PROFILE.beta.button': 'Accéder à la beta',
   'PROFILE.beta.buttonResTrue': 'Envoyé!',
   'PROFILE.beta.buttonResFalse': 'Déjà rejoint',
+  'PROFILE.langage.title': 'Langue',
+  'PROFILE.langage.desc': 'Modifiez la langue utilisée dans l’interface utilisateur.',
+  'PROFILE.langage.options': 'Options',
+  'PROFILE.langage.fr': 'Français',
+  'PROFILE.langage.en': 'Anglais',
 
   /*    PANEL   */
   'PANEL.activity': 'Activité',
@@ -145,13 +155,6 @@ const frTranslation: LocaleTypedMessages = {
   
   /*    ACTIVITY    */
   'ACTIVITY': 'Activity',
-
-  /*    SETTINGS    */
-  'SETTINGS': 'Paramètres',
-  'SETTINGS.langage.title': 'Langue',
-  'SETTINGS.langage.options': 'Options',
-  'SETTINGS.langage.french': 'Français',
-  'SETTINGS.langage.english': 'Anglais',
 }
 
 export default frTranslation

@@ -68,15 +68,17 @@ const OldInput: React.FC<InputHTMLAttributes<HTMLInputElement> & OldInputProps> 
           </div>
         ) : null}
       </div>
-      <div className='h-4'>
-        {isInvalid || (isInvalidBlur && showError) ? (
+      {isInvalid || (isInvalidBlur && showError) ? (
+        <div className='h-4'>
           <span className='mx-2 my-1 text-xs text-red-500'>
             {errorMessage || tooltip}
           </span>
-        ) : tooltip && focus ? (
+        </div>
+      ) : tooltip && focus ? (
+        <div className='h-4'>
           <span className='mx-2 my-1 text-xs text-gray-500'>{tooltip}</span>
-        ) : null}
-      </div>
+        </div>
+      ) : null}
     </div>
   )
 

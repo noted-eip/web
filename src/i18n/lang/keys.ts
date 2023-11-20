@@ -35,6 +35,9 @@ export enum TranslationKeys {
   'AUTH.register',
   'AUTH.email',
   'AUTH.pwd',
+  'AUTH.error.name',
+  'AUTH.error.email',
+  'AUTH.error.pwd',
 
   /* Signing */
   'SIGNIN.title',
@@ -64,6 +67,7 @@ export enum TranslationKeys {
   'RESETPWD.Pwd.title',
   'RESETPWD.Pwd.desc',
   'RESETPWD.Pwd.form',
+  'RESETPWD.Pwd.form2',
 
   /*    LANDING    */
   /* Description */
@@ -156,6 +160,11 @@ export enum TranslationKeys {
   'PROFILE.beta.button',
   'PROFILE.beta.buttonResTrue',
   'PROFILE.beta.buttonResFalse',
+  'PROFILE.langage.title',
+  'PROFILE.langage.desc',
+  'PROFILE.langage.options',
+  'PROFILE.langage.fr',
+  'PROFILE.langage.en',
 
   /*    PANEL   */
   'PANEL.activity',
@@ -164,13 +173,6 @@ export enum TranslationKeys {
   'PANEL.companion,buton2',
   'PANEL.companion,buton3',
 
-  /*    ACTIVITY    */
+  /*    ACTIVITY   */
   'ACTIVITY',
-
-  /*    SETTINGS    */
-  'SETTINGS',
-  'SETTINGS.langage.title',
-  'SETTINGS.langage.options',
-  'SETTINGS.langage.french',
-  'SETTINGS.langage.english',
 }

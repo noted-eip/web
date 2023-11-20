@@ -14,6 +14,9 @@ const enTranslation: LocaleTypedMessages = {
   'AUTH.register': 'Register',
   'AUTH.email': 'Email',
   'AUTH.pwd': 'Password',
+  'AUTH.error.name': 'Invalid name',
+  'AUTH.error.email': 'Invalid email address',
+  'AUTH.error.pwd': '6 characters, letters numbers and symbols',
 
   /* Signing */
   'SIGNIN.title': 'Signin to your account',
@@ -43,6 +46,7 @@ const enTranslation: LocaleTypedMessages = {
   'RESETPWD.Pwd.title': 'Create a new password',
   'RESETPWD.Pwd.desc': 'Enter a new password for your account',
   'RESETPWD.Pwd.form': 'Confirm Password',
+  'RESETPWD.Pwd.form2': 'Not the same password',
 
   /*    LANDING    */
   /* Description */
@@ -135,6 +139,11 @@ const enTranslation: LocaleTypedMessages = {
   'PROFILE.beta.button': 'Access beta',
   'PROFILE.beta.buttonResTrue': 'Sent!',
   'PROFILE.beta.buttonResFalse': 'Already joined',
+  'PROFILE.langage.title': 'Langage',
+  'PROFILE.langage.desc': 'Change the language used in the user interface.',
+  'PROFILE.langage.options': 'Options',
+  'PROFILE.langage.fr': 'French',
+  'PROFILE.langage.en': 'English',
 
   /*    PANEL   */
   'PANEL.activity': 'Activity',
@@ -145,13 +154,6 @@ const enTranslation: LocaleTypedMessages = {
 
   /*    ACTIVITY    */
   'ACTIVITY': 'Activity',
-
-  /*    SETTINGS    */
-  'SETTINGS': 'Settings',
-  'SETTINGS.langage.title': 'Langage',
-  'SETTINGS.langage.options': 'Options',
-  'SETTINGS.langage.french': 'French',
-  'SETTINGS.langage.english': 'English',
 }
 
 export default enTranslation

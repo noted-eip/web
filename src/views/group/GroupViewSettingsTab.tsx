@@ -5,6 +5,8 @@ import {
   XMarkIcon
 } from '@heroicons/react/24/outline'
 import { EnvelopeIcon, PencilIcon, UserIcon } from '@heroicons/react/24/solid'
+import Button from '@mui/material/Button'
+import Stack from '@mui/material/Stack'
 import moment from 'moment'
 import React from 'react'
 import { useDebounce } from 'usehooks-ts'
@@ -242,7 +244,9 @@ const GroupViewSettingsTabMembersSection: React.FC = () => {
       <div className='flex items-center justify-between border-b border-gray-200 p-5'>
         <div className='flex items-center'>
           <UserIcon className='mx-2 h-5 w-5 text-gray-600' />
-          <p className='text-base font-medium text-gray-600'>Members</p>
+          <p className='text-base font-medium text-gray-600'>
+            <FormatMessage id='GROUP.settings.members.title' />
+          </p>
         </div>
         <form
           className='flex items-center'
@@ -251,48 +255,49 @@ const GroupViewSettingsTabMembersSection: React.FC = () => {
             onInviteFriend()
           }}
         >
-          <div className='flex w-64 items-center justify-center'>
-            <input
-              tabIndex={1}
-              className='h-8 w-full rounded-md rounded-r-none border border-r-0 border-gray-300 bg-white px-2 text-sm outline-none placeholder:text-gray-400 focus:border-gray-300 focus:ring-0'
-              placeholder='jhon@email.com'
-              type='email'
-              autoCorrect='off'
-              autoCapitalize='off'
-              spellCheck='false'
-              onChange={(e) => setAccountEmailSearch(e.target.value)}
-              value={accountEmailSearch || ''}
-            />
-            <div className='flex h-8 items-center justify-center rounded-md rounded-l-none border border-l-0 border-gray-300 bg-white pr-2'>
-              {searchAccountQ.isSuccess ? (
-                <CheckIcon className='h-4 w-4 stroke-2 text-green-600' />
-              ) : accountEmailSearch === '' ? (
-                <div></div>
-              ) : debouncedValue === accountEmailSearch ? (
-                searchAccountQ.isError ? (
-                  <XMarkIcon className='h-4 w-4 stroke-2 text-red-600' />
+          <Stack direction='row' spacing={2}>
+            <div className='flex w-64 items-center justify-center'>
+              <input
+                tabIndex={1}
+                className='h-8 w-full rounded-md rounded-r-none border border-r-0 border-gray-300 bg-white px-2 text-sm outline-none placeholder:text-gray-400 focus:border-gray-300 focus:ring-0'
+                placeholder='jhon@email.com'
+                type='email'
+                autoCorrect='off'
+                autoCapitalize='off'
+                spellCheck='false'
+                onChange={(e) => setAccountEmailSearch(e.target.value)}
+                value={accountEmailSearch || ''}
+              />
+              <div className='flex h-8 items-center justify-center rounded-md rounded-l-none border border-l-0 border-gray-300 bg-white pr-2'>
+                {searchAccountQ.isSuccess ? (
+                  <CheckIcon className='h-4 w-4 stroke-2 text-green-600' />
+                ) : accountEmailSearch === '' ? (
+                  <div></div>
+                ) : debouncedValue === accountEmailSearch ? (
+                  searchAccountQ.isError ? (
+                    <XMarkIcon className='h-4 w-4 stroke-2 text-red-600' />
+                  ) : (
+                    <LoaderIcon className='h-4 w-4' />
+                  )
                 ) : (
                   <LoaderIcon className='h-4 w-4' />
-                )
-              ) : (
-                <LoaderIcon className='h-4 w-4' />
-              )}
+                )}
+              </div>
             </div>
-          </div>
-          <button
-            tabIndex={2}
-            type='submit'
-            disabled={!searchAccountQ.isSuccess}
-            className='ml-2 flex h-8 cursor-pointer items-center justify-center rounded-md bg-blue-600 px-3 text-sm font-medium text-white transition-colors duration-150 disabled:bg-gray-300 disabled:text-gray-800'
-          >
-            <span className={`${sendInviteQ.isLoading && 'invisible'}`}>
-              Send invite
-            </span>
-            {sendInviteQ.isLoading && <LoaderIcon className='absolute h-5 w-5' />}
-          </button>
+            <Button 
+              tabIndex={2}
+              variant='contained'
+              size='small'
+              disabled={!searchAccountQ.isSuccess}
+            >
+              <span className={`${sendInviteQ.isLoading && 'invisible'}`}>
+                <FormatMessage id='GROUP.settings.members.button' />
+              </span>
+              {sendInviteQ.isLoading && <LoaderIcon className='absolute h-5 w-5' />}
+            </Button>
+          </Stack>
         </form>
       </div>
-
       {/* List */}
       <div className='grid w-full grid-cols-1'>
         <div className='grid h-8 grid-cols-[30%_40%_20%_10%] border-b border-gray-200 px-5'>
