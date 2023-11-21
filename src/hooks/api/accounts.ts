@@ -150,6 +150,24 @@ export const useAuthenticate = (options?: MutationHookOptions<AuthenticateReques
 export type AuthenticateRequestGoogle =  {body: V1AuthenticateGoogleRequest};
 export const useAuthenticateGoogle = (options?: MutationHookOptions<AuthenticateRequestGoogle, V1AuthenticateGoogleResponse>) => {
   return useMutation(async (req: AuthenticateRequestGoogle) => {
+    // const headers = {
+    //   'Cross-Origin-Opener-Policy': 'same-origin',
+    // }
     return (await openapiClient.accountsAPIAuthenticateGoogle(req.body, {})).data
   }, options)
 }
+
+export const useAuthenticateTokenGoogle = (options?: MutationHookOptions<AuthenticateRequestGoogle, V1AuthenticateGoogleResponse>) => {
+  return useMutation(async (req: AuthenticateRequestGoogle) => {
+    // const headers = {
+    //   'Cross-Origin-Opener-Policy': 'same-origin',
+    // }
+    return (await openapiClient.accountsAPIAuthenticateGoogle(req.body, {})).data
+  }, options)
+}
+
+// 'Access-Control-Allow-Origin': 'https:notes-are-noted.vercel.app',
+// 'Content-Security-Policy-Report-Only': 'script-src https://accounts.google.com/gsi/client; frame-src https://accounts.google.com/gsi/; connect-src https://accounts.google.com/gsi/;'
+// 'Content-Type': 'application/json',
+// 'Access-Control-Allow-Headers': 'Content-Type',
+// 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',

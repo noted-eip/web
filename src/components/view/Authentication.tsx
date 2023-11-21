@@ -2,11 +2,8 @@ import { Box, Grid } from '@mui/material'
 import Lottie from 'lottie-react'
 import React, { ReactNode } from 'react'
 
-// import notFoundAnim from '../../assets/animations/404.json'
-// import emptyBoxAnim from '../../assets/animations/empty-box.json'
 import errorAnim from '../../assets/animations/error.json'
 import loginAnim from '../../assets/animations/login.json'
-// import processAnim from '../../assets/animations/process.json'
 import notedLogo from '../../assets/logo/noted_logo.png'
 import ContainerMd from '../../components/container/ContainerMd'
 
@@ -14,19 +11,6 @@ interface AuthenticationProps {
   animName: string;
   children: ReactNode;
 }
-
-// interface AnimArr {
-//   name: string
-//   anim: string
-// }
-
-// const animArray: AnimArr = [
-//   {name: 'notFound', anim: notFoundAnim},
-//   {name: 'process', anim: processAnim},
-//   {name: 'emptyBox', anim: emptyBoxAnim},
-//   {name: 'login', anim: loginAnim},
-//   {name: 'error', anim: errorAnim},
-// ]
 
 const Authentication: React.FC<AuthenticationProps> = ({ animName, children  }) => {
   return (
@@ -53,7 +37,7 @@ const Authentication: React.FC<AuthenticationProps> = ({ animName, children  }) 
           }}
         >
           {/* Logo */}
-          <img src={notedLogo} alt='Logo' style={{ maxWidth: '100px', marginBottom: '1rem' }} />
+          <img src={notedLogo} alt='Logo' style={{ maxWidth: '140px', marginBottom: '4rem' }} />
 
           {/* Formulaire */}
           <ContainerMd>
