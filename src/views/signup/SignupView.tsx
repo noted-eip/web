@@ -6,7 +6,7 @@ import { useGoogleLogin } from '@react-oauth/google'
 import { getAnalytics, logEvent } from 'firebase/analytics'
 import React from 'react'
 import { toast } from 'react-hot-toast'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import GoogleIcon from '../../components/icons/GoogleIcon'
 import Notification from '../../components/notification/Notification'
@@ -212,6 +212,12 @@ const SignupView: React.FC = () => {
           >
             <FormatMessage id='SIGNUP.signupGoogle' />
           </Button>
+          <Link
+            to='/signin'>
+            <Typography variant='body1' color='primary' sx={{ textDecoration: 'underline' }}>
+              <FormatMessage id='SIGNUP.wantSignIn' />
+            </Typography>
+          </Link>
         </Stack>
         <Notification />
       </form>

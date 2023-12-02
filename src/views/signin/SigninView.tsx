@@ -70,6 +70,9 @@ const SigninView: React.FC = () => {
       }      
       navigate('/')
     },
+    onError: (e) => {
+      toast.error(e.response?.data.error as string)
+    }
   })
   const googleLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => {
@@ -161,8 +164,17 @@ const SigninView: React.FC = () => {
             <FormatMessage id='SIGNIN.signinGoogle' />
           </Button>
           <Link to='/reset_password_email' className='mt-2 text-sm text-blue-500 underline'>
-            <FormatMessage id='SIGNIN.resetPwd' />
+            <Typography variant='body1' color='primary' sx={{ textDecoration: 'underline' }}>
+              <FormatMessage id='SIGNIN.resetPwd' />
+            </Typography>
           </Link>
+          <Link
+            to='/signup'>
+            <Typography variant='body1' color='primary' sx={{ textDecoration: 'underline' }}>
+              <FormatMessage id='SIGNUP.wantSignUp' />
+            </Typography>
+          </Link>
+
         </Stack>
       </form>
       <Notification />

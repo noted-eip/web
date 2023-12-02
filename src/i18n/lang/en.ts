@@ -26,6 +26,8 @@ const enTranslation: LocaleTypedMessages = {
   /*  Signup  */
   'SIGNUP.title': 'Create an account',
   'SIGNUP.signupGoogle': 'Sign up with Google',
+  'SIGNUP.wantSignIn': 'Already have an account',
+  'SIGNUP.wantSignUp': 'I want to create an account',
 
   /*    RESETPASSWORD   */
 

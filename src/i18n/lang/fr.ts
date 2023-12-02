@@ -27,6 +27,8 @@ const frTranslation: LocaleTypedMessages = {
   /*  Signup  */
   'SIGNUP.title': 'Créer un compte',
   'SIGNUP.signupGoogle': 'S\'inscrire avec Google',
+  'SIGNUP.wantSignIn': 'J\'ai déjà un compte',
+  'SIGNUP.wantSignUp': 'Je veux créer un compte',
 
   /*    RESETPASSWORD   */
 

@@ -47,6 +47,8 @@ export enum TranslationKeys {
   /*  Signup  */
   'SIGNUP.title',
   'SIGNUP.signupGoogle',
+  'SIGNUP.wantSignIn',
+  'SIGNUP.wantSignUp',
 
   /*    RESETPASSWORD   */
 
