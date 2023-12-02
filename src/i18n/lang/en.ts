@@ -149,6 +149,8 @@ const enTranslation: LocaleTypedMessages = {
 
   /*    PANEL   */
   'PANEL.activity': 'Activity',
+  'PANEL.activity.loading': 'Loading your activities...',
+  'PANEL.activity.none': 'No recent activity',
   'PANEL.companion': 'Companion',
   'PANEL.companion,buton1': 'Filter by block',
   'PANEL.companion,buton2': 'Filter by entire note',
@@ -156,6 +158,21 @@ const enTranslation: LocaleTypedMessages = {
 
   /*    ACTIVITY    */
   'ACTIVITY': 'Activity',
+
+  /*    SETTINGS    */
+  'SETTINGS': 'Settings',
+  'SETTINGS.langage.title': 'Langage',
+  'SETTINGS.langage.options': 'Options',
+  'SETTINGS.langage.french': 'French',
+  'SETTINGS.langage.english': 'English',
+
+  /*    VALIDATION    */
+  'VALIDATION.title': 'Please validate your account',
+  'VALIDATION.content': 'You received an activation code at the following address:',
+  'VALIDATION.placeholder': '0000',
+  'VALIDATION.button': 'Validate',
+  'VALIDATION.resend': 'I did not receive the code',
+  'VALIDATION.resend_link': 'send again',
 }
 
 export default enTranslation

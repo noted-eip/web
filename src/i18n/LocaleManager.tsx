@@ -1,5 +1,6 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react'
-import {IntlProvider} from 'react-intl'
+/* eslint-disable */
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { IntlProvider } from 'react-intl'
 
 import { LangageContext } from '../contexts/langage'
 import { TOGGLE_DEV_FEATURES } from '../lib/env'
@@ -9,7 +10,7 @@ import {
   isASupportedLocale,
   loadTranslation,
 } from './localeUtils'
-import {LocaleMessages} from './types'
+import { LocaleMessages } from './types'
 
 interface ILocaleInformation {
   locale: string;
@@ -48,7 +49,8 @@ const LocaleManager: React.FC<any> = ({children}) => {
       changeLocale('fr')
     } else if (context?.langage === 'en') {
       changeLocale('en')
-    }}, [context?.langage])
+    }
+  }, [context?.langage])
 
   useEffect((): void => {
     for (let i = 0; i < browserLocales.length; i++) {
@@ -80,7 +82,7 @@ const LocaleManager: React.FC<any> = ({children}) => {
               changeLocale('en')
             }}
           >
-          Switch to english
+            Switch to english
           </button>
           <button
             className='my-2 w-full rounded-lg bg-blue-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:bg-gray-600 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
@@ -88,7 +90,7 @@ const LocaleManager: React.FC<any> = ({children}) => {
               changeLocale('fr')
             }}
           >
-          Switch to french
+            Switch to french
           </button>
         </div>}
         {children}

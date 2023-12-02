@@ -7,7 +7,7 @@ const frTranslation: LocaleTypedMessages = {
   'GENERIC.profile': 'Profil',
   'GENERIC.role': 'Rôle',
   'GENERIC.actions': 'Actions',
-    
+
   /*		AUTHENTICATION		*/
   /*  Auth  */
   'AUTH.login': 'Connexion',
@@ -53,7 +53,7 @@ const frTranslation: LocaleTypedMessages = {
 
   /*    LANDING    */
   /* Description */
-  'DESCRIPTION': 'Déscription',
+  'DESCRIPTION': 'Description',
   'DESCRIPTION.descP1': 'Noted est un espace de travail ergonomique destiné aux étudiants universitaires. Il s\'agit d\'une application Web où ils peuvent partager leurs notes et les organiser.',
   'DESCRIPTION.descP2': 'La force de Noted est son mode d\'édition unique, qui comprend des recommandations basées sur des notes publiées par les étudiants. Il permettra aux étudiants d\'améliorer leurs notes en facilitant la collaboration.',
   'DESCRIPTION.title1': 'Prendre des notes',
@@ -150,13 +150,30 @@ const frTranslation: LocaleTypedMessages = {
 
   /*    PANEL   */
   'PANEL.activity': 'Activité',
+  'PANEL.activity.loading': 'Chargement de vos activités...',
+  'PANEL.activity.none': 'Pas d\'activité récente',
   'PANEL.companion': 'Compagnion',
   'PANEL.companion,buton1': 'Filtrer par block',
   'PANEL.companion,buton2': 'Filtrer avec la note entière',
   'PANEL.companion,buton3': 'Appliquer',
-  
+
   /*    ACTIVITY    */
   'ACTIVITY': 'Activity',
+
+  /*    SETTINGS    */
+  'SETTINGS': 'Paramètres',
+  'SETTINGS.langage.title': 'Langue',
+  'SETTINGS.langage.options': 'Options',
+  'SETTINGS.langage.french': 'Français',
+  'SETTINGS.langage.english': 'Anglais',
+
+  /*    VALIDATION    */
+  'VALIDATION.title': 'Veuillez valider votre compte',
+  'VALIDATION.content': 'Vous avez reçus un code d\'activation à l\'adresse suivante :',
+  'VALIDATION.placeholder': '0000',
+  'VALIDATION.button': 'Valider',
+  'VALIDATION.resend': 'Je n\'ai pas reçus le code',
+  'VALIDATION.resend_link': 'l\'envoyer à nouveau',
 }
 
 export default frTranslation

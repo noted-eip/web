@@ -170,6 +170,8 @@ export enum TranslationKeys {
 
   /*    PANEL   */
   'PANEL.activity',
+  'PANEL.activity.loading',
+  'PANEL.activity.none',
   'PANEL.companion',
   'PANEL.companion,buton1',
   'PANEL.companion,buton2',
@@ -177,4 +179,19 @@ export enum TranslationKeys {
 
   /*    ACTIVITY   */
   'ACTIVITY',
+
+  /*    SETTINGS    */
+  'SETTINGS',
+  'SETTINGS.langage.title',
+  'SETTINGS.langage.options',
+  'SETTINGS.langage.french',
+  'SETTINGS.langage.english',
+
+  /*    VALIDATION    */
+  'VALIDATION.title',
+  'VALIDATION.content',
+  'VALIDATION.placeholder',
+  'VALIDATION.button',
+  'VALIDATION.resend',
+  'VALIDATION.resend_link',
 }

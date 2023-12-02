@@ -3,7 +3,7 @@ import { useMutation, useQuery } from 'react-query'
 
 import { useAuthContext } from '../../contexts/auth'
 import { apiQueryClient, openapiClient } from '../../lib/api'
-import { V1Account, V1AuthenticateGoogleRequest, V1AuthenticateGoogleResponse, V1AuthenticateRequest, V1AuthenticateResponse, V1CreateAccountRequest, V1CreateAccountResponse, V1GetAccountResponse, V1UpdateAccountResponse } from '../../protorepo/openapi/typescript-axios'
+import { V1Account, V1AuthenticateGoogleRequest, V1AuthenticateGoogleResponse, V1AuthenticateRequest, V1AuthenticateResponse, V1CreateAccountRequest, V1CreateAccountResponse, V1GetAccountResponse, V1IsAccountValidateResponse, V1SendValidationTokenRequest, V1UpdateAccountResponse, V1ValidateAccountRequest, V1ValidateAccountResponse } from '../../protorepo/openapi/typescript-axios'
 import { newAccountCacheKey } from './cache'
 import { axiosRequestOptionsWithAuthorization,MutationHookOptions, QueryHookOptions } from './helpers'
 
@@ -157,17 +157,23 @@ export const useAuthenticateGoogle = (options?: MutationHookOptions<Authenticate
   }, options)
 }
 
-export const useAuthenticateTokenGoogle = (options?: MutationHookOptions<AuthenticateRequestGoogle, V1AuthenticateGoogleResponse>) => {
-  return useMutation(async (req: AuthenticateRequestGoogle) => {
-    // const headers = {
-    //   'Cross-Origin-Opener-Policy': 'same-origin',
-    // }
-    return (await openapiClient.accountsAPIAuthenticateGoogle(req.body, {})).data
+export type ValidateAccountRequest = {body: V1ValidateAccountRequest};
+export const useValidateAccount = (options?: MutationHookOptions<ValidateAccountRequest, V1ValidateAccountResponse>) => {
+  return useMutation(async (req: ValidateAccountRequest) => {
+    return (await openapiClient.accountsAPIValidateAccount(req.body, {})).data
   }, options)
 }
 
-// 'Access-Control-Allow-Origin': 'https:notes-are-noted.vercel.app',
-// 'Content-Security-Policy-Report-Only': 'script-src https://accounts.google.com/gsi/client; frame-src https://accounts.google.com/gsi/; connect-src https://accounts.google.com/gsi/;'
-// 'Content-Type': 'application/json',
-// 'Access-Control-Allow-Headers': 'Content-Type',
-// 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+export type SendValidationTokenRequest = {body: V1SendValidationTokenRequest};
+export const useSendValidationToken = (options?: MutationHookOptions<SendValidationTokenRequest>) => {
+  return useMutation(async (req: SendValidationTokenRequest) => {
+    return (await openapiClient.accountsAPISendValidationToken(req.body)).data
+  }, options)
+}
+
+export type IsAccountValidateRequest = {body: {email: string, password: string}};
+export const useIsAccountValidate = (options?: MutationHookOptions<IsAccountValidateRequest, V1IsAccountValidateResponse>) => {
+  return useMutation(async (req: IsAccountValidateRequest) => {
+    return (await openapiClient.accountsAPIIsAccountValidate(req.body.email, req.body.password)).data
+  }, options)
+}
