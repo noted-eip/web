@@ -4,12 +4,6 @@ module.exports = {
   content: [
     './src/**/*.{js,jsx,ts,tsx}',
   ],
-  variants: {
-    extend: {
-      // 
-    },
-    hover: [],
-  },
   theme: {
     extend: {
       backgroundImage: {
@@ -29,7 +23,7 @@ module.exports = {
       }
     },
   },
-  plugins: [
-    require('@tailwindcss/forms'),
-  ],
+  // plugins: [
+  //   require('@tailwindcss/forms'),
+  // ],
 }

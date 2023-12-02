@@ -60,6 +60,9 @@ const SignupView: React.FC = () => {
     onSuccess: () => {
       authenticateMutation.mutate({body: {email, password}})
     },
+    onError: (e) => {
+      toast.error(e.response?.data.error as string)
+    }
   })
   const authenticateGoogleMutation = useAuthenticateGoogle({
     onSuccess: (data: V1AuthenticateGoogleResponse) => {
@@ -79,11 +82,14 @@ const SignupView: React.FC = () => {
       }
       navigate('/')
     },
+    onError: (e) => {
+      toast.error(e.response?.data.error as string)
+    }
   })
   const googleLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => {
       authenticateGoogleMutation.mutate({body: {clientAccessToken: tokenResponse.access_token}})
-    },
+    }
   })
 
   const formIsValid = () => {
@@ -141,7 +147,6 @@ const SignupView: React.FC = () => {
             helperText={(!emailValid && email.length != 0) && formatMessage({ id: 'AUTH.error.email' })}
           />
           <FormControl
-            variant='outlined'
             error={!passwordValid && password.length != 0}
           >
             <InputLabel htmlFor='outlined-adornment-password'>
@@ -171,6 +176,7 @@ const SignupView: React.FC = () => {
               onBlur={() => {
                 setPasswordValid(validatePassword(password) === undefined)
               }}
+              label={formatMessage({ id: 'AUTH.pwd' })}
             />
             <FormHelperText id='outlined-weight-helper-text'><FormatMessage id='AUTH.error.pwd' /></FormHelperText>
           </FormControl>
