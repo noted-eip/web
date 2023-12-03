@@ -1,12 +1,12 @@
-import React from 'react'
-import { createEditor,Descendant } from 'slate'
+import React, { useCallback } from 'react'
+import { createEditor,Descendant,Editor,Transforms } from 'slate'
 import { withHistory } from 'slate-history'
-import { Editable, RenderElementProps, Slate, withReact } from 'slate-react'
+import { Editable, RenderElementProps, Slate,withReact } from 'slate-react'
 
 import { useAuthContext } from '../../contexts/auth'
 import { useBlockContext } from '../../contexts/block'
 import { useDeleteBlockInCurrentGroup, useInsertBlockInCurrentGroup, useUpdateBlockInCurrentGroup } from '../../hooks/api/notes'
-import { noteBlocksToSlateElements,stringToNoteBlock,withShortcuts } from '../../lib/editor'
+import {stringToNoteBlock,withShortcuts } from '../../lib/editor'
 import { NotesAPIInsertBlockRequest, V1Block, V1Note } from '../../protorepo/openapi/typescript-axios'
 
 
@@ -25,8 +25,10 @@ const EditorElement: React.FC<RenderElementProps> = props => {
     case 'TYPE_LIST_ITEM':
       return <li className='py-1 px-2 text-sm first:pt-0' {...props.attributes}>{props.children}</li>
     case 'TYPE_PARAGRAPH':
+      //console.log(props.children[0].props.text)
       return <p className='py-1 text-sm text-slate-800 first:pt-0' {...props.attributes}>{props.children}</p>
     default:
+      //console.log(props.children[0].props.text)
       return <p className='py-1 text-sm text-slate-800 first:pt-0' {...props.attributes}>{props.children}</p>
   }
 }
@@ -43,12 +45,16 @@ const singletonSetLocalBlocks = (newBlocks: V1Block[]) => {
   }
 }*/
 
-const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex: number, localBlocks: V1Block[], setLocalBlocks: any }> = props => {
+const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex: number, localBlocks: V1Block[], setLocalBlocks: React.Dispatch<React.SetStateAction<V1Block[]>> }> = props => {
   const authContext = useAuthContext()
   const blockContext = useBlockContext()
-  const initialEditorState = noteBlocksToSlateElements(
-    [props.localBlocks[props.blockIndex == undefined ? 0 : props.blockIndex]]
-  )
+
+  //const initialEditorState = noteBlocksToSlateElements([ props.localBlocks[props.blockIndex] ])
+  const initialEditorState = [{ type: 'TYPE_PARAGRAPH', children: [{ text: props.localBlocks[props.blockIndex].paragraph ?? '' }] } as Descendant]
+
+  //console.log('props.blockIndex = ', props.blockIndex)
+  //console.log('initialEditorState = ', (initialEditorState[0] as any).children == undefined ? 'null' : (initialEditorState[0] as any).children[0].text)
+
   const editorState = React.useRef<Descendant[]>(initialEditorState)
   const renderElement = React.useCallback(props => <EditorElement {...props} />, [])
   const editor = React.useMemo(() => withShortcuts(withReact(withHistory(createEditor()))), [])
@@ -56,74 +62,62 @@ const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex: num
   const insertBlockMutation = useInsertBlockInCurrentGroup()
   const updateBlockMutation = useUpdateBlockInCurrentGroup()
   const deleteBlockMutation = useDeleteBlockInCurrentGroup()
+  
+  //editor.children = [{ type: 'TYPE_PARAGRAPH', children: [{ text: props.localBlocks[props.blockIndex == undefined ? 0 : props.blockIndex].paragraph }] }]
+  editorState.current = [{ type: 'TYPE_PARAGRAPH', children: [{ text: props.localBlocks[props.blockIndex]?.paragraph ?? '' }] }]
 
-  const updateBlockFromSlateValue = async (value: Descendant[]) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const lines = value as any
-    editorState.current = value
+  const firstBlockPath = [0, 0] // Adjust based on your structure
+  if (Editor.hasPath(editor, firstBlockPath)) {
+    Transforms.setNodes(editor, { text: props.localBlocks[props.blockIndex]?.paragraph ?? '' }, { at: [0, 0] })
+  } else {
+    console.log('NOPE 1')
+  }
 
-    console.log('BLOCK INDEX = ' + props.blockIndex)
+  const updateBlockFromSlateValue = useCallback(
+    async (value: Descendant[]) => {
+      //console.log(' - - - EDITOR STATE CURRENT - - - ', editorState.current)
+      const lines = value as any
+      //editorState.current = value
 
-    // CHAT GPT
-    const setLocalBlocksAsync = async (updateFunction: (prevBlocks: V1Block[]) => Promise<V1Block[]>) => {
-      const newBlocks = await updateFunction(props.localBlocks)
-      props.setLocalBlocks(newBlocks)
-    }
+      const newLocalBlocks = [...props.localBlocks]
 
-    setLocalBlocksAsync(async (prevLocalBlocks: V1Block[]) => {
-      const newLocalBlocks = [...prevLocalBlocks]
-      newLocalBlocks[props.blockIndex].paragraph = lines[0].children[0].text
+      newLocalBlocks[props.blockIndex].paragraph = lines[0]?.children[0]?.text ?? ''
       updateBlock(props.note.id, props.block?.id, stringToNoteBlock(lines[0].children[0].text))
 
       if (lines[1] != null || lines[1] != undefined) {
-        const newBlockId = await insertBlock(props.note.id, props.blockIndex == undefined ? 1000 : props.blockIndex + 1, stringToNoteBlock(lines[1].children[0].text))
+        const newBlockContent = lines[1]?.children[0]?.text ?? ''
+        const newBlockId = await insertBlock(props.note.id, props.blockIndex == undefined ? 1000 : props.blockIndex + 1, stringToNoteBlock(newBlockContent))
+        const newLocalBlock = { id: await newBlockId, type: 'TYPE_PARAGRAPH', paragraph: newBlockContent } as V1Block
 
-        const newLocalBlock = { id: await newBlockId, type: 'TYPE_PARAGRAPH', paragraph: lines[1].children[0].text } as V1Block
+        //props.setLocalBlocks((prevLocalBlocks) => [...prevLocalBlocks, newLocalBlock])
+        props.setLocalBlocks((prevLocalBlocks) => {
+          const newBlocks = [...prevLocalBlocks]
+          newBlocks.splice(props.blockIndex + 1, 0, newLocalBlock)
+          return newBlocks
+        })
+        
+        //editor.children = [{ type: 'TYPE_PARAGRAPH', children: [{ text: lines[0]?.children[0]?.text ?? '' }] }]
+        editorState.current = [{ type: 'TYPE_PARAGRAPH', children: [{ text: lines[0]?.children[0]?.text ?? '' }] }]
+        
+        const secondBlockPath = [1]
+        Transforms.removeNodes(editor, { at: secondBlockPath })
 
-        console.log('local blocks')
-        console.log(newLocalBlocks)
-        newLocalBlocks.push(newLocalBlock)
-        console.log('new local blocks')
-        console.log(newLocalBlocks)
-
-        editor.children = [{ type: 'paragraph', children: [{ text: lines[0].children[0].text }] }]
-
-        return newLocalBlocks
-        // quand on update le premier editor ca suprrime le dernier
+      } else {
+        //editor.children = [{ type: 'TYPE_PARAGRAPH', children: [{ text: lines[0]?.children[0]?.text ?? '' }] }]
+        editorState.current = [{ type: 'TYPE_PARAGRAPH', children: [{ text: lines[0]?.children[0]?.text ?? '' }] }]
+        
+        const firstBlockPath = [0, 0] // Adjust based on your structure
+        if (Editor.hasPath(editor, firstBlockPath)) {
+          Transforms.setNodes(editor, { text: props.localBlocks[props.blockIndex]?.paragraph ?? '' }, { at: [0, 0] })
+        } else {
+          console.log('NOPE 2')
+        }
+        
+        props.setLocalBlocks((prevLocalBlocks) => [...prevLocalBlocks])
       }
-
-      return newLocalBlocks
-    })
-    // !CHAT GPT
-    
-    /*props.localBlocks[props.blockIndex].paragraph = lines[0].children[0].text
-    updateBlock(props.note.id, props.block == undefined ? '' : props.block.id,  stringToNoteBlock(lines[0].children[0].text))
-    props.setLocalBlocks(props.localBlocks)
-
-    if (lines[1] != null || lines[1] != undefined) {
-
-      const newBlockId = insertBlock(props.note.id, props.blockIndex == undefined ? 1000 : props.blockIndex + 1,  stringToNoteBlock(lines[1].children[0].text))
-
-      const newLocalBlock = { id: await newBlockId, type: 'TYPE_PARAGRAPH', paragraph: lines[1].children[0].text } as V1Block
-      
-      console.log('local blocks');console.log(props.localBlocks)
-      props.localBlocks.push(newLocalBlock)
-      console.log('new local blocks');console.log(props.localBlocks)
-      
-      editor.children = [
-        { type: 'paragraph', children: [{ text: lines[0].children[0].text }] },
-      ]
-
-      props.setLocalBlocks(props.localBlocks)
-      
-      // props.localBlocks.some(async element => {
-      //   if (element.id == await newBlockId)
-      //     return
-      //   props.setLocalBlocks(props.localBlocks)
-      //   return
-      // })
-    }*/
-  }
+    },
+    [props]
+  )
 
   const insertBlock = async (notedId: string, index: number | undefined, block: V1Block) => {
     console.log('----INSERT')
@@ -134,7 +128,6 @@ const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex: num
         block: block 
       } as NotesAPIInsertBlockRequest
     })
-    console.log(res.block.id)
     return res.block.id
   }
 
@@ -222,7 +215,7 @@ const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex: num
       <Slate
         onChange={handleEditorChange}
         editor={editor}
-        value={initialEditorState}>
+        value={editorState.current}>
         <Editable
           onKeyDown= { event => { 
             if (event.key == 'Backspace') handleBackspace()
@@ -235,21 +228,15 @@ const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex: num
 }
 
 const NoteViewEditor: React.FC<{ note: V1Note }> = props => {
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [localBlocks, setLocalBlocks] = React.useState<V1Block[]>( props.note?.blocks ?? [])
 
-  //localBlocks = props.note.blocks == undefined ? {} as V1Block[] : props.note.blocks
-
-  console.log('IN PARENT - LocalBlocks')
-  console.log(localBlocks)
-  console.log(localBlocks.length)
-
-  // Utilisez useEffect pour redessiner le composant lorsque localBlocks change
+  //voir si c pas la les bails
   React.useEffect(() => {
-    setLocalBlocks(props.note?.blocks ?? [])
-  }, [props.note?.blocks])
-  
+    setLocalBlocks((prevLocalBlocks) => prevLocalBlocks ?? [])
+  }, [localBlocks])
+
+  //console.log('localBlocks papa'); console.log(localBlocks)
+
   return (
     <div>
       {

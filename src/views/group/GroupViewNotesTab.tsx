@@ -128,7 +128,7 @@ const GroupViewNotesTab: React.FC = () => {
       const response = await axios.post(
         url,
         {
-          title: 'ta grand mère la note',
+          title: 'Note sans nom',
           group_id: groupContext.groupId,
         },
         {
