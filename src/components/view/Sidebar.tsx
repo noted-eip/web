@@ -29,16 +29,16 @@ function createChildItems(
   children: IChildItems[],
   currentLocation: string,
 ): JSX.Element[] {
-  return children.map(({ name, url }) => (
-    <Link
+  return children.map(({ name, url }) => {
+    return (<Link
       key={url}
       to={url ? url : '/'}
       className={`ml-8 flex items-center justify-between rounded-md p-3 hover:bg-gray-100 ${
         url && currentLocation.includes(url) ? 'bg-gray-100' : ''
       }`}    >
       {name}
-    </Link>
-  ))
+    </Link>)
+  })
 }
 
 function createParentItems(
@@ -137,7 +137,7 @@ export const Sidebar: React.FC = () => {
         tradKey: 'GENERIC.groups',
         icon: <Group className='h-5 w-5' sx={{ color: grey[700] }} />,
         url: '/groups',
-        children: listGroupsQ?.data?.groups ? listGroupsQ.data.groups.map((el) => ({name: el.name, url: el.id})) : [],
+        children: listGroupsQ?.data?.groups ? listGroupsQ.data.groups.map((el) => ({name: el.name, url: `/group/${el.id}`})) : [],
         childrenStatus: listGroupsQ.status,
       },
       {
