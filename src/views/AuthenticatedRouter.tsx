@@ -11,6 +11,8 @@ import GroupView from './group/GroupView'
 import GroupViewNotesTab from './group/GroupViewNotesTab'
 import GroupViewSettingsTab from './group/GroupViewSettingsTab'
 import GroupViewUpgradeTab from './group/GroupViewUpgradeTab'
+import HomeView from './home/HomeView'
+import NoteListOutGroup from './note/NoteListOutGroup'
 import NoteView from './note/NoteView'
 import NotFoundView from './notfound/NotFoundView'
 import ProfileView from './profile/ProfileView'
@@ -61,7 +63,8 @@ const AuthenticatedRouter: React.FC = () => {
         <RecoModeContext.Provider value={{ recoMode: recoMode, changeRecoMode }}>
           <Routes>
             <Route path='/' element={<Dashboard />}>
-              <Route path='' element={<GroupView />} />
+              <Route path='' element={<HomeView />} />
+              <Route path='home' element={<HomeView />} />
               <Route path='groups' element={<GroupList />} />
               <Route path='group/:groupId' element={<GroupView />}>
                 <Route path='' element={<GroupViewNotesTab />} />
@@ -69,6 +72,7 @@ const AuthenticatedRouter: React.FC = () => {
                 <Route path='upgrade' element={<GroupViewUpgradeTab />} />
               </Route>
               <Route path='group/:groupId/note/:noteId' element={<NoteView />} />
+              <Route path='notes' element={<NoteListOutGroup />} />
               <Route path='profile' element={<ProfileView />} />
             </Route>
             <Route path='*' element={<NotFoundView />} />

@@ -130,7 +130,7 @@ export const Sidebar: React.FC = () => {
     (): INavbarItem[] => {
       return [{
         tradKey: 'GENERIC.home',
-        url: '/',
+        url: '/home',
         icon: <Home className='h-5 w-5' sx={{ color: grey[700] }} />,
       },
       {
