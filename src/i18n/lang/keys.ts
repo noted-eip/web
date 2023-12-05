@@ -26,8 +26,11 @@ export enum TranslationKeys {
   'GENERIC.name',
   'GENERIC.home',
   'GENERIC.profile',
+  'GENERIC.groups',
+  'GENERIC.notes',
   'GENERIC.role',
   'GENERIC.actions',
+  'GENERIC.logout',
 
   /*		AUTHENTICATION		*/
   /*  Auth  */

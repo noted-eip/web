@@ -22,7 +22,7 @@ const ViewSkeleton: React.FC<PropsWithChildren & TViewSkeletonProps> = (props) =
   }, [])
 
   return (
-    <div className='flex h-screen !max-h-screen w-full flex-col overflow-hidden'>
+    <div className='flex h-screen !max-h-screen w-full flex-col'>
       <DashboardHeader>
         {
           props.titleElement ?

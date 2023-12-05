@@ -5,8 +5,11 @@ const frTranslation: LocaleTypedMessages = {
   'GENERIC.name': 'Nom',
   'GENERIC.home': 'Accueil',
   'GENERIC.profile': 'Profil',
+  'GENERIC.groups': 'Groupes',
+  'GENERIC.notes': 'Notes',
   'GENERIC.role': 'Rôle',
   'GENERIC.actions': 'Actions',
+  'GENERIC.logout': 'Déconnexion',
 
   /*		AUTHENTICATION		*/
   /*  Auth  */
