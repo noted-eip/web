@@ -95,6 +95,7 @@ const enTranslation: LocaleTypedMessages = {
   'GROUP.Empty.desc2': 'Invites to groups will show up here.',
   'GROUP.createGroup': 'Create a group',
   'GROUP.creatingGroup': 'Creating...',
+  'GROUP.inMyGroup': 'In my group...',
 
   'GROUP.settings': 'Settings',
   'GROUP.upgrade': 'Upgrade',
@@ -115,6 +116,7 @@ const enTranslation: LocaleTypedMessages = {
   'GROUP.settings.invites.desc': 'No pending invites for this group',
 
   /*    NOTE    */
+  'NOTE.myNotes': 'My notes',
   'NOTE.newNote': 'New note',
   'NOTE.untitledNote': 'Untitled note',
   'NOTE.timecodeA': 'Last edited',

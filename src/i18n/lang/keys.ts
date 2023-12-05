@@ -116,6 +116,7 @@ export enum TranslationKeys {
   'GROUP.Empty.desc2',
   'GROUP.createGroup',
   'GROUP.creatingGroup',
+  'GROUP.inMyGroup',
 
   'GROUP.settings',
   'GROUP.upgrade',
@@ -136,6 +137,7 @@ export enum TranslationKeys {
   'GROUP.settings.invites.desc',
 
   /*    NOTE    */
+  'NOTE.myNotes',
   'NOTE.newNote',
   'NOTE.untitledNote',
   'NOTE.timecodeA',
