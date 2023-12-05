@@ -172,6 +172,7 @@ export enum TranslationKeys {
   'PANEL.activity',
   'PANEL.activity.loading',
   'PANEL.activity.none',
+  'PANEL.activity.noGroup',
   'PANEL.companion',
   'PANEL.companion,buton1',
   'PANEL.companion,buton2',

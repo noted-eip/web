@@ -69,34 +69,34 @@ const WidgetListCurrentGroup: React.FC = () => {
   }
 
   return(
-    <div className='space-y-2'>
-      {
-        recoModeContext.recoMode === 'note' ? 
+    <div className='h-full overflow-y-scroll lg:px-lg lg:pb-lg xl:px-xl xl:pb-xl'>
+      <div className='space-y-2'>
+        {
+          recoModeContext.recoMode === 'note' ? 
 
-          listWidgetsQ.isSuccess ? (
-            !listWidgetsQ.data?.widgets.length ? (
-              <div className='my-4 text-center text-sm text-gray-400'>
+            listWidgetsQ.isSuccess ? (
+              !listWidgetsQ.data?.widgets.length ? (
+                <div className='my-4 text-center text-sm text-gray-400'>
                 You have no widgets for this note
-              </div>
+                </div>
+              ) : (
+                listWidgetsQ.data?.widgets?.map((widget, idx) => (
+                  <WidgetListItem key={`widget-list-${idx}`} widget={widget} />
+                ))
+              )
             ) : (
-              listWidgetsQ.data?.widgets?.map((widget, idx) => (
-                <WidgetListItem key={`widget-list-${idx}`} widget={widget} />
-              ))
-            )
-          ) : (
-            <div className='my-4 text-center text-sm text-gray-400'>
+              <div className='my-4 text-center text-sm text-gray-400'>
               Loading your widgets...
-            </div>
-          ) : blockWidgetsArray.length >= 1 ?
-            blockWidgetsArray.map((widget, idx) => (
-              <WidgetListItem key={`widget-list-${idx}`} widget={widget} />
-            )) :
-            <div className='my-4 text-center text-sm text-gray-400'>
+              </div>
+            ) : blockWidgetsArray.length >= 1 ?
+              blockWidgetsArray.map((widget, idx) => (
+                <WidgetListItem key={`widget-list-${idx}`} widget={widget} />
+              )) :
+              <div className='my-4 text-center text-sm text-gray-400'>
                 You have no widgets for this block
-            </div>
-
-      }
-        
+              </div>
+        }
+      </div>
     </div>
   )
 }

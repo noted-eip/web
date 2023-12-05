@@ -151,7 +151,8 @@ const frTranslation: LocaleTypedMessages = {
   /*    PANEL   */
   'PANEL.activity': 'Activité',
   'PANEL.activity.loading': 'Chargement de vos activités...',
-  'PANEL.activity.none': 'Pas d\'activité récente',
+  'PANEL.activity.none': 'Aucune activité récente',
+  'PANEL.activity.noGroup': 'Aucun groupe sélectionné',
   'PANEL.companion': 'Compagnion',
   'PANEL.companion,buton1': 'Filtrer par block',
   'PANEL.companion,buton2': 'Filtrer avec la note entière',
