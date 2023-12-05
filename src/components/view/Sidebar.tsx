@@ -29,14 +29,18 @@ function createChildItems(
   children: IChildItems[],
   currentLocation: string,
 ): JSX.Element[] {
-  return children.map(({ name, url }) => {
+  const childrenLenght = children.length
+
+  return children.map(({ name, url }, idx) => {
     return (<Link
       key={url}
       to={url ? url : '/'}
-      className={`ml-8 flex items-center justify-between rounded-md p-3 hover:bg-gray-100 ${
+      className={`ml-8 ${idx !== childrenLenght - 1 && 'mb-1'} flex items-center justify-between rounded-md p-1 pl-2 hover:bg-gray-100 ${
         url && currentLocation.includes(url) ? 'bg-gray-100' : ''
       }`}    >
-      {name}
+      <Typography variant='h6' sx={{ color: grey[700] }} fontSize='16px'>
+        {name}
+      </Typography>
     </Link>)
   })
 }
@@ -55,7 +59,7 @@ function createParentItems(
       collapseCallback(tradKey)
     }
     return (
-      <nav key={tradKey} className='mb-2'>
+      <nav key={tradKey}>
         {childrenStatus ? (
           <>
             <a
@@ -74,8 +78,8 @@ function createParentItems(
               {childrenStatus === 'loading' ? 
                 <LoaderIcon className='h-5 w-5' style={{ color: grey[700] }} /> 
                 : (shouldCollapse ? 
-                  <ExpandLess className='ml-auto h-5 w-5' sx={{ color: grey[700] }}/> 
-                  : <ExpandMore className='ml-auto h-5 w-5' sx={{ color: grey[700] }}/>)}
+                  <ExpandLess className='ml-auto' /> 
+                  : <ExpandMore className='ml-auto' />)}
             </a>
             {childrenStatus === 'success' && children ?
               <Collapse in={shouldCollapse}>
@@ -131,24 +135,24 @@ export const Sidebar: React.FC = () => {
       return [{
         tradKey: 'GENERIC.home',
         url: '/home',
-        icon: <Home className='h-5 w-5' sx={{ color: grey[700] }} />,
+        icon: <Home />,
       },
       {
         tradKey: 'GENERIC.groups',
-        icon: <Group className='h-5 w-5' sx={{ color: grey[700] }} />,
+        icon: <Group />,
         url: '/groups',
         children: listGroupsQ?.data?.groups ? listGroupsQ.data.groups.map((el) => ({name: el.name, url: `/group/${el.id}`})) : [],
         childrenStatus: listGroupsQ.status,
       },
       {
         tradKey: 'GENERIC.notes',
-        icon: <Notes className='h-5 w-5' sx={{ color: grey[700] }} />,
+        icon: <Notes />,
         url: '/notes',
         children: [],
       },
       {
         tradKey: 'GENERIC.profile',
-        icon: <Person className='h-5 w-5' sx={{ color: grey[700] }} />,
+        icon: <Person />,
         url: '/profile',
       },]}, [listGroupsQ]
   )
@@ -185,7 +189,7 @@ export const Sidebar: React.FC = () => {
               className='flex items-center justify-between rounded-md p-3 hover:bg-gray-100'
               onClick={() => authContext.logout()}
             >
-              <Logout className='h-5 w-5' sx={{ color: grey[700] }} />
+              <Logout />
               <Typography variant='h6' sx={{ color: grey[700] }} ml={1}>
                 <FormattedMessage id='GENERIC.logout' />
               </Typography>

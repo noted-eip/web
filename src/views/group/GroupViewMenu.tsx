@@ -1,5 +1,5 @@
 import { RadioGroup } from '@headlessui/react'
-import { FolderIcon, SparklesIcon, UserIcon } from '@heroicons/react/24/solid'
+import { Notes, Settings } from '@mui/icons-material'
 import { getAnalytics, logEvent } from 'firebase/analytics'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -8,28 +8,21 @@ import { useGroupContext } from '../../contexts/group'
 import { useOurIntl } from '../../i18n/TextComponent'
 import { TOGGLE_DEV_FEATURES } from '../../lib/env'
 
-const GroupViewMenu: React.FC<React.PropsWithChildren & { activeTab: string }> = (
-  props
-) => {
+const GroupViewMenu: React.FC<React.PropsWithChildren & { activeTab: string }> = (props) => {
   const analytics = getAnalytics()
   const { formatMessage } = useOurIntl()
   const navigate = useNavigate()
   const groupContext = useGroupContext()
   const options = [
     {
-      name: 'Notes',
+      name: formatMessage({id: 'GENERIC.notes'}),
       path: '',
-      icon: FolderIcon,
+      icon: <Notes />,
     },
     {
-      name: formatMessage({ id: 'GROUP.settings' }),
+      name: formatMessage({id: 'GROUP.settings'}),
       path: 'settings',
-      icon: UserIcon,
-    },
-    {
-      name: formatMessage({ id: 'GROUP.upgrade' }),
-      path: 'upgrade',
-      icon: SparklesIcon,
+      icon: <Settings />,
     },
   ]
 
@@ -56,7 +49,7 @@ const GroupViewMenu: React.FC<React.PropsWithChildren & { activeTab: string }> =
               } flex cursor-pointer items-center border-r border-gray-200 px-2 py-1 text-sm text-gray-700 last:border-none`
             }
           >
-            <el.icon className='mr-2 h-3 w-3 text-gray-500' />
+            {el.icon}
             {el.name}
           </RadioGroup.Option>
         ))}
