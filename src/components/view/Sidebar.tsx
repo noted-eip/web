@@ -9,6 +9,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import notedLogo from '../../assets/logo/noted_logo.png'
 import { useAuthContext } from '../../contexts/auth'
 import { useListGroups } from '../../hooks/api/groups'
+import { useListInvites } from '../../hooks/api/invites'
 import { LocaleTranslationKeys } from '../../i18n/types'
 
 interface IChildItems {
@@ -23,6 +24,7 @@ interface INavbarItem {
   url: string;
   children?: IChildItems[];
   childrenStatus?: string;
+  numNotification?: number;
 }
 
 function createChildItems(
@@ -51,7 +53,7 @@ function createParentItems(
   collapseCallback: (tradKey: LocaleTranslationKeys) => void,
   activeCollapse?: LocaleTranslationKeys | null,
 ): JSX.Element[] {
-  return items.map(({ tradKey, url, icon, children, childrenStatus }) => {
+  return items.map(({ tradKey, url, icon, children, childrenStatus, numNotification }) => {
     const shouldCollapse =
 			activeCollapse === tradKey ||
 			(activeCollapse === undefined && url && currentLocation.includes(url)) ? true : false
@@ -59,7 +61,7 @@ function createParentItems(
       collapseCallback(tradKey)
     }
     return (
-      <nav key={tradKey}>
+      <nav key={tradKey} className='mb-2'>
         {childrenStatus ? (
           <>
             <a
@@ -106,9 +108,13 @@ function createParentItems(
               {icon != null && icon}
               <Typography variant='h6' sx={{ color: grey[700] }} ml={1}>
                 <FormattedMessage id={tradKey} />
-              </Typography>
-              
+              </Typography>  
             </div>
+            {numNotification && numNotification > 0 && (
+              <span className='flex h-5 w-5 items-center justify-center rounded-full bg-purple-200 p-1 text-xs font-medium text-purple-700'>
+                {numNotification}
+              </span>
+            )}
           </Link>
         )}
       </nav>
@@ -120,9 +126,10 @@ export const Sidebar: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const authContext = useAuthContext()
+  const listInvitesQ = useListInvites({ recipientAccountId: authContext.accountId })
   const listGroupsQ = useListGroups({ accountId: authContext.accountId })
   const [activeCollapse, setActiveCollapse] =
-		useState<LocaleTranslationKeys | null>()
+		useState<LocaleTranslationKeys | null>('GENERIC.groups')
 
   const handleCollapseClick = (tradKey: LocaleTranslationKeys): void => {
     setActiveCollapse((oldTradKey) =>
@@ -154,7 +161,10 @@ export const Sidebar: React.FC = () => {
         tradKey: 'GENERIC.profile',
         icon: <Person />,
         url: '/profile',
-      },]}, [listGroupsQ]
+        numNotification: listInvitesQ.isSuccess && listInvitesQ.data.invites
+          ? listInvitesQ.data.invites.length
+          : 0
+      },]}, [listGroupsQ, listInvitesQ]
   )
   const menuItems = useMemo(
     (): JSX.Element => (
