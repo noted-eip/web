@@ -1,12 +1,11 @@
 import React, { useCallback } from 'react'
-import { createEditor,Descendant,Editor,Transforms } from 'slate'
-import { withHistory } from 'slate-history'
-import { Editable, RenderElementProps, Slate,withReact } from 'slate-react'
+import { BaseEditor, createEditor,Descendant,Editor,Transforms } from 'slate'
+import { Editable, ReactEditor, RenderElementProps, Slate,withReact } from 'slate-react'
 
 import { useAuthContext } from '../../contexts/auth'
 import { useBlockContext } from '../../contexts/block'
 import { useDeleteBlockInCurrentGroup, useInsertBlockInCurrentGroup, useUpdateBlockInCurrentGroup } from '../../hooks/api/notes'
-import {stringToNoteBlock,withShortcuts } from '../../lib/editor'
+import {stringToNoteBlock } from '../../lib/editor'
 import { NotesAPIInsertBlockRequest, V1Block, V1Note } from '../../protorepo/openapi/typescript-axios'
 
 
@@ -46,39 +45,40 @@ const singletonSetLocalBlocks = (newBlocks: V1Block[]) => {
 }*/
 
 const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex: number, localBlocks: V1Block[], setLocalBlocks: React.Dispatch<React.SetStateAction<V1Block[]>> }> = props => {
+  if (props.block == undefined)
+    return <div/>
+
   const authContext = useAuthContext()
   const blockContext = useBlockContext()
 
-  //const initialEditorState = noteBlocksToSlateElements([ props.localBlocks[props.blockIndex] ])
-  const initialEditorState = [{ type: 'TYPE_PARAGRAPH', children: [{ text: props.localBlocks[props.blockIndex].paragraph ?? '' }] } as Descendant]
-
-  //console.log('props.blockIndex = ', props.blockIndex)
-  //console.log('initialEditorState = ', (initialEditorState[0] as any).children == undefined ? 'null' : (initialEditorState[0] as any).children[0].text)
+  const initialEditorState = [{ type: 'TYPE_PARAGRAPH', children: [{ text: props.block.paragraph ?? '' }] } as Descendant]
 
   const editorState = React.useRef<Descendant[]>(initialEditorState)
   const renderElement = React.useCallback(props => <EditorElement {...props} />, [])
-  const editor = React.useMemo(() => withShortcuts(withReact(withHistory(createEditor()))), [])
   
+  //const editor = React.useMemo(() => withShortcuts(withReact(withHistory(createEditor()))), [])
+  const editorRef = React.useRef<BaseEditor & ReactEditor>(withReact(createEditor()))
+  const editor = editorRef.current
+
   const insertBlockMutation = useInsertBlockInCurrentGroup()
   const updateBlockMutation = useUpdateBlockInCurrentGroup()
   const deleteBlockMutation = useDeleteBlockInCurrentGroup()
   
   //editor.children = [{ type: 'TYPE_PARAGRAPH', children: [{ text: props.localBlocks[props.blockIndex == undefined ? 0 : props.blockIndex].paragraph }] }]
-  editorState.current = [{ type: 'TYPE_PARAGRAPH', children: [{ text: props.localBlocks[props.blockIndex]?.paragraph ?? '' }] }]
+  editorState.current = [{ type: 'TYPE_PARAGRAPH', children: [{ text: props.block?.paragraph ?? '' }] }]
 
   const firstBlockPath = [0, 0] // Adjust based on your structure
   if (Editor.hasPath(editor, firstBlockPath)) {
-    Transforms.setNodes(editor, { text: props.localBlocks[props.blockIndex]?.paragraph ?? '' }, { at: [0, 0] })
-  } else {
-    console.log('NOPE 1')
+    Transforms.setNodes(editor, { text: props.block?.paragraph ?? '' }, { at: [0, 0] })
+    //if (props.blockIndex != 0) {
+    //  console.log(props.blockIndex)
+    //  Transforms.select(editorRef.current, {path: [0, 0], offset: 0})
+    //}
   }
 
   const updateBlockFromSlateValue = useCallback(
     async (value: Descendant[]) => {
-      //console.log(' - - - EDITOR STATE CURRENT - - - ', editorState.current)
       const lines = value as any
-      //editorState.current = value
-
       const newLocalBlocks = [...props.localBlocks]
 
       newLocalBlocks[props.blockIndex].paragraph = lines[0]?.children[0]?.text ?? ''
@@ -98,9 +98,9 @@ const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex: num
         
         //editor.children = [{ type: 'TYPE_PARAGRAPH', children: [{ text: lines[0]?.children[0]?.text ?? '' }] }]
         editorState.current = [{ type: 'TYPE_PARAGRAPH', children: [{ text: lines[0]?.children[0]?.text ?? '' }] }]
-        
         const secondBlockPath = [1]
         Transforms.removeNodes(editor, { at: secondBlockPath })
+
 
       } else {
         //editor.children = [{ type: 'TYPE_PARAGRAPH', children: [{ text: lines[0]?.children[0]?.text ?? '' }] }]
@@ -108,9 +108,7 @@ const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex: num
         
         const firstBlockPath = [0, 0] // Adjust based on your structure
         if (Editor.hasPath(editor, firstBlockPath)) {
-          Transforms.setNodes(editor, { text: props.localBlocks[props.blockIndex]?.paragraph ?? '' }, { at: [0, 0] })
-        } else {
-          console.log('NOPE 2')
+          Transforms.setNodes(editor, { text: props.block?.paragraph ?? '' }, { at: [0, 0] })
         }
         
         props.setLocalBlocks((prevLocalBlocks) => [...prevLocalBlocks])
@@ -184,19 +182,26 @@ const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex: num
   const handleEditorChange = (value: Descendant[]) => {
     //Gerer plus tard
     // si Shift & Enter sont pressé, editor.current = "1234\n5678"
-
     if (editor.operations.some(op => 'set_selection' !== op.type)) {
       updateBlockFromSlateValue(value)
     }
   }
 
   const handleBackspace = () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const element = editorState.current[0] as any
 
     if (element.children[0].text.length < 1) {
+      props.setLocalBlocks((prevLocalBlocks) => {
+        //return [
+        //  ...prevLocalBlocks.slice(0, props.blockIndex),
+        //  ...prevLocalBlocks.slice(props.blockIndex + 1)
+        //]
+        const newBlocks = [...prevLocalBlocks]
+        delete newBlocks[props.blockIndex]
+        return newBlocks
+      })
+      
       deleteBlock()
-      //return (<div>No block here<div/>)
     }
   }
 
@@ -230,7 +235,6 @@ const BlockEditorItem: React.FC<{ note: V1Note, block?: V1Block, blockIndex: num
 const NoteViewEditor: React.FC<{ note: V1Note }> = props => {
   const [localBlocks, setLocalBlocks] = React.useState<V1Block[]>( props.note?.blocks ?? [])
 
-  //voir si c pas la les bails
   React.useEffect(() => {
     setLocalBlocks((prevLocalBlocks) => prevLocalBlocks ?? [])
   }, [localBlocks])
