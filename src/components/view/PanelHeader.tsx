@@ -37,7 +37,7 @@ const PanelHeader: React.FC = () => {
                 }`}
               />
               <span className='text-xs'>
-                <FormatMessage id={md.displayName == 'PANEL.activity' ? 'PANEL.activity' : 'PANEL.companion'}/>
+                <FormatMessage id={md.displayName == 'PANEL.activity' ? 'PANEL.activity' : md.displayName == 'PANEL.companion' ?  'PANEL.companion' : 'PANEL.leaderboard'}/>
               </span>
             </div>
           </div>
@@ -48,7 +48,7 @@ const PanelHeader: React.FC = () => {
           <RecommendationFilters/> : 
           null
       }
-      
+
     </div>
   )
 }

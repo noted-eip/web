@@ -2,6 +2,7 @@ import { BoltIcon, PencilIcon } from '@heroicons/react/24/solid'
 
 import GroupActivityPanel from '../panels/GroupActivityPanel'
 import NoteRecommendationsPanel from '../panels/NoteRecommendationsPanel'
+import QuizLeaderboardPanel from '../panels/QuizLeaderboardPanel'
 import { V1Block, V1Widget } from '../protorepo/openapi/typescript-axios'
 
 export const panelMetadata = {
@@ -14,6 +15,11 @@ export const panelMetadata = {
     displayName: 'PANEL.companion',
     icon: PencilIcon,
     component: NoteRecommendationsPanel,
+  },
+  'quiz-leaderboard': {
+    displayName: 'PANEL.leaderboard',
+    icon: PencilIcon,
+    component: QuizLeaderboardPanel,
   },
 }
 

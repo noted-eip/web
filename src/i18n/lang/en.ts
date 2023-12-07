@@ -144,6 +144,9 @@ const enTranslation: LocaleTypedMessages = {
   'PANEL.companion,buton1': 'Filter by block',
   'PANEL.companion,buton2': 'Filter by entire note',
   'PANEL.companion,buton3': 'Apply',
+  'PANEL.leaderboard': 'Leaderboard',
+  'PANEL.leaderboard.loading': 'Loading the leaderboard...',
+  'PANEL.leaderboard.none': 'No quiz taken yet',
 
   /*    ACTIVITY    */
   'ACTIVITY': 'Activity',

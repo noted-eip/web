@@ -3,7 +3,7 @@ import { useMutation, useQuery } from 'react-query'
 import { useAuthContext } from '../../contexts/auth'
 import { useGroupContext } from '../../contexts/group'
 import { apiQueryClient, openapiClient } from '../../lib/api'
-import { V1GetGroupResponse, V1GetMemberResponse, V1GroupMember, V1ListGroupsResponse } from '../../protorepo/openapi/typescript-axios'
+import { V1GetGroupResponse, V1GetMemberResponse, V1GroupMember, V1ListGroupsResponse, V1TrackScoreResponse } from '../../protorepo/openapi/typescript-axios'
 import { newGroupCacheKey, newGroupsCacheKey, newMemberCacheKey } from './cache'
 import { axiosRequestOptionsWithAuthorization,MutationHookOptions, QueryHookOptions } from './helpers'
 
@@ -131,5 +131,28 @@ export const useRemoveMemberInCurrentGroup = (options?: MutationHookOptions<Remo
 
       if (options?.onSettled) options.onSettled(data, error, variables, context)
     }
+  })
+}
+
+type TrackScoreRequest = {
+  group_id: string,
+  score: number,
+  responses: number,
+};
+export const useTrackScore = (req: TrackScoreRequest, options?: QueryHookOptions<TrackScoreRequest, V1TrackScoreResponse>) => {
+  const auth = useAuthContext()
+  const groupContext = useGroupContext()
+  const queryKey = newMemberCacheKey(groupContext.groupId as string, auth.accountId as string)
+  return useQuery({
+    queryKey,
+    queryFn: async () => {
+      return (await openapiClient.groupsAPITrackScore(
+        groupContext.groupId as string,
+        '',
+        req.score,
+        req.responses,
+        await axiosRequestOptionsWithAuthorization(auth))).data
+    },
+    ...options,
   })
 }

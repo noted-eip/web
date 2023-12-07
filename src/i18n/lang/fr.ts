@@ -144,6 +144,9 @@ const frTranslation: LocaleTypedMessages = {
   'PANEL.companion,buton1': 'Filtrer par block',
   'PANEL.companion,buton2': 'Filtrer avec la note entière',
   'PANEL.companion,buton3': 'Appliquer',
+  'PANEL.leaderboard': 'Classement',
+  'PANEL.leaderboard.loading': 'Chargement du classement..',
+  'PANEL.leaderboard.none': 'Pas de classement',
 
   /*    ACTIVITY    */
   'ACTIVITY': 'Activity',
