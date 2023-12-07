@@ -55,13 +55,10 @@ const ValidateAccountView: React.FC = () => {
 
   const validateAccountMutation = useValidateAccount({
     onSuccess: () => {
-      console.log(' succes')
       authenticateMutation.mutate({ body: { email, password } })
     },
     onError: (e) => {
-      if (e.response?.data.error === 'validation-token does not match') {
-        toast.error('Token invalide veuillez reessayer')
-      }
+      toast.error(e.response?.data.error as string)
     },
   })
 
