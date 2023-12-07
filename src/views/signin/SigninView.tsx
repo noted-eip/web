@@ -33,6 +33,9 @@ const SigninView: React.FC = () => {
       } else {
         navigate('/validate_account', {state: {email: email, password: password}})
       }
+    },
+    onError: (e) => {
+      toast.error(e.response?.data.error as string)
     }
   })
   const authenticateMutation = useAuthenticate({

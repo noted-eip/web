@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 
 import ContainerMd from '../../components/container/ContainerMd'
 import OldInput from '../../components/form/OldInput'
+import Notification from '../../components/notification/Notification'
 import { addAccountToDevelopmentContext, useDevelopmentContext } from '../../contexts/dev'
 import { useNoAuthContext } from '../../contexts/noauth'
 import { useAuthenticate, useSendValidationToken, useValidateAccount, ValidateAccountRequest } from '../../hooks/api/accounts'
@@ -58,7 +59,7 @@ const ValidateAccountView: React.FC = () => {
     },
     onError: (e) => {
       toast.error(e.response?.data.error as string)
-    }
+    },
   })
 
   return (
@@ -100,6 +101,7 @@ const ValidateAccountView: React.FC = () => {
         ><FormatMessage id='VALIDATION.button' /></button>
 
       </ContainerMd>
+      <Notification />
     </div>
   )
 }
