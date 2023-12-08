@@ -14,7 +14,7 @@ import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
 import { decodeToken } from '../../lib/api'
 import { TOGGLE_DEV_FEATURES } from '../../lib/env'
 import { validateEmail, validateName, validatePassword } from '../../lib/validators'
-import { V1AuthenticateGoogleResponse, V1AuthenticateResponse } from '../../protorepo/openapi/typescript-axios'
+import { V1AuthenticateGoogleResponse, V1AuthenticateResponse, V1CreateAccountResponse } from '../../protorepo/openapi/typescript-axios'
 
 const SignupView: React.FC = () => {
   const { formatMessage } = useOurIntl()
@@ -44,15 +44,14 @@ const SignupView: React.FC = () => {
           method: 'mail'
         })
       }
-      navigate('/')
     },
     onError: (e) => {
       toast.error(e.response?.data.error as string)
     }
   })
   const createAccountMutation = useCreateAccount({
-    onSuccess: () => {
-      authenticateMutation.mutate({body: {email, password}})
+    onSuccess: (data: V1CreateAccountResponse) => {
+      navigate('/validate_account', {state: {email: data.account.email, password: password}})
     },
   })
   const authenticateGoogleMutation = useAuthenticateGoogle({
@@ -119,9 +118,9 @@ const SignupView: React.FC = () => {
             isInvalidBlur={!emailValid}
             errorMessage='Invalid email address'
           />
+          {/** //TODO: remove the type=passwprd of the input **/}
           <OldInput
             label={formatMessage({ id: 'AUTH.pwd' })}
-            type='password'
             tooltip='6 characters, letters numbers and symbols'
             value={password}
             onChange={(e) => {

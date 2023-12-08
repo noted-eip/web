@@ -24,7 +24,7 @@ const App: React.FC = () => {
   const noAuthContext = new NoAuthContextManager(setToken)
   const authContext = new AuthContextManager(token, setToken)
   const [currentLangage, setCurrentLangage] = React.useState<string | null>(
-    window.localStorage.getItem(LS_LANGAGE)
+    window.localStorage.getItem(LS_LANGAGE) || navigator.language
   )
   const firebaseConfig = {
     apiKey: 'AIzaSyBAYMc_6XiZYQyHsCkwRXVXd7UofXF6YiQ',

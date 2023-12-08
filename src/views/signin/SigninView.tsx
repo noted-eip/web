@@ -9,12 +9,12 @@ import OldInput from '../../components/form/OldInput'
 import Notification from '../../components/notification/Notification'
 import { addAccountToDevelopmentContext, useDevelopmentContext } from '../../contexts/dev'
 import { useNoAuthContext } from '../../contexts/noauth'
-import { useAuthenticate, useAuthenticateGoogle } from '../../hooks/api/accounts'
+import { IsAccountValidateRequest, useAuthenticate, useAuthenticateGoogle, useIsAccountValidate } from '../../hooks/api/accounts'
 import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
 import { decodeToken } from '../../lib/api'
 import { TOGGLE_DEV_FEATURES } from '../../lib/env'
 import { validateEmail } from '../../lib/validators'
-import { V1AuthenticateGoogleResponse, V1AuthenticateResponse } from '../../protorepo/openapi/typescript-axios'
+import { V1AuthenticateGoogleResponse, V1AuthenticateResponse, V1IsAccountValidateResponse } from '../../protorepo/openapi/typescript-axios'
 
 const SigninView: React.FC = () => {
   const { formatMessage } = useOurIntl()
@@ -25,6 +25,19 @@ const SigninView: React.FC = () => {
   const [email, setEmail] = React.useState('')
   const [emailValid, setEmailValid] = React.useState(false)
   const developmentContext = useDevelopmentContext()
+
+  const isAccountValidate = useIsAccountValidate({
+    onSuccess: (data: V1IsAccountValidateResponse) => {
+      if (data.isAccountValidate) {
+        authenticateMutation.mutate({body: {email, password}})
+      } else {
+        navigate('/validate_account', {state: {email: email, password: password}})
+      }
+    },
+    onError: (e) => {
+      toast.error(e.response?.data.error as string)
+    }
+  })
   const authenticateMutation = useAuthenticate({
     onSuccess: (data: V1AuthenticateResponse) => {
       const tokenData = decodeToken(data.token)
@@ -65,9 +78,6 @@ const SigninView: React.FC = () => {
       }      
       navigate('/')
     },
-    onError: () => {
-      console.log('google error')
-    }
   })
   const googleLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => {
@@ -85,7 +95,7 @@ const SigninView: React.FC = () => {
         className='grid basis-1/2 grid-cols-1 gap-2'
         onSubmit={(e) => {
           e.preventDefault()
-          authenticateMutation.mutate({body: {email, password}})
+          isAccountValidate.mutate({body: ({email: email, password: password})} as IsAccountValidateRequest)
         }}
       >
         <ContainerMd>
@@ -105,7 +115,6 @@ const SigninView: React.FC = () => {
           />
           <OldInput
             label={formatMessage({ id: 'AUTH.pwd' })}
-            type='password'
             value={password}
             onChange={(e) => {
               setPassword(e.target.value)

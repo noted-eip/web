@@ -3,11 +3,11 @@ import {LocaleTypedMessages} from '../types'
 const frTranslation: LocaleTypedMessages = {
   /*    GENERIC   */
   'GENERIC.name': 'Nom',
-  'GENERIC.home': 'Acceuil',
+  'GENERIC.home': 'Accueil',
   'GENERIC.profile': 'Profil',
   'GENERIC.role': 'Rôle',
   'GENERIC.actions': 'Actions',
-    
+
   /*		AUTHENTICATION		*/
   /*  Auth  */
   'AUTH.login': 'Connexion',
@@ -46,7 +46,7 @@ const frTranslation: LocaleTypedMessages = {
 
   /*    LANDING    */
   /* Description */
-  'DESCRIPTION': 'Déscription',
+  'DESCRIPTION': 'Description',
   'DESCRIPTION.descP1': 'Noted est un espace de travail ergonomique destiné aux étudiants universitaires. Il s\'agit d\'une application Web où ils peuvent partager leurs notes et les organiser.',
   'DESCRIPTION.descP2': 'La force de Noted est son mode d\'édition unique, qui comprend des recommandations basées sur des notes publiées par les étudiants. Il permettra aux étudiants d\'améliorer leurs notes en facilitant la collaboration.',
   'DESCRIPTION.title1': 'Prendre des notes',
@@ -91,9 +91,31 @@ const frTranslation: LocaleTypedMessages = {
   'GROUP.upgrade': 'Améliorer',
   'GROUP.search': 'Chercher',
 
+  'GROUP.settings.members.title': 'Membres',
+  'GROUP.settings.members.button': 'Envoyer invitation',
+  'GROUP.settings.members.colTitle1': 'NOM',
+  'GROUP.settings.members.colTitle2': 'EMAIL',
+  'GROUP.settings.members.colTitle3': 'RÔLE',
+  'GROUP.settings.members.colTitle4': 'ACTIONS',
+
+  'GROUP.settings.invites.title': 'Invitation en cours',
+  'GROUP.settings.invites.colTitle1': 'DESTINÉ À',
+  'GROUP.settings.invites.colTitle2': 'INVITÉ PAR',
+  'GROUP.settings.invites.colTitle3': 'EXPIRE DANS',
+  'GROUP.settings.invites.colTitle4': 'ACTIONS',
+  'GROUP.settings.invites.desc': 'Aucune invitation en attente pour ce groupe',
+
   /*    NOTE    */
   'NOTE.newNote': 'Nouvelle note',
   'NOTE.untitledNote': 'Note sans nom',
+  'NOTE.timecodeA': 'Dernière modification',
+  'NOTE.timecodeB': 'par',
+  'NOTE.duplicate': 'Dupliquer',
+  'NOTE.share': 'Partager',
+  'NOTE.delete': 'Supprimer',
+  'NOTE.export.button1': 'Exporter en PDF',
+  'NOTE.export.button2': 'Exporter en Markdown',
+  'NOTE.export.button3': 'Exporter',
 
   /*    PROFILE    */
   'PROFILE.invite.deny': 'Refuser',
@@ -103,6 +125,25 @@ const frTranslation: LocaleTypedMessages = {
   'PROFILE.delete.title2': 'Supprimer mon compte',
   'PROFILE.delete.desc': 'Cela a pour effet de supprimer définitivement toutes vos données personnelles, y compris vos notes.',
   'PROFILE.delete.button': 'Supprimer le compte',
+  'PROFILE.feedback.title': 'Envoyer retour',
+  'PROFILE.feedback.desc': 'Votre avis nous intéresse ! Remplissez un formulaire rapide pour nous aider à améliorer notre application. Peut-être verrez-vous une de vos idées dans nos prochaines mises à jour !',
+  'PROFILE.feedback.button': 'Accéder au formulaire',
+  'PROFILE.beta.title': 'Fonctionnalités supplémentaires',
+  'PROFILE.beta.subTitle': 'Application mobile',
+  'PROFILE.beta.desc': 'Vous recevrez une invitation pour installer l\'application sur votre téléphone. Avec lui vous pouvez parcourir vos groupes, notes, invitations, membres et recommandations mais vous ne pouvez pas modifier vos notes (encore 😉).',
+  'PROFILE.beta.subDesc': 'L\'email de votre compte doit être lié à un compte Google pour être invité !',
+  'PROFILE.beta.button': 'Accéder à la beta',
+  'PROFILE.beta.buttonResTrue': 'Envoyé!',
+  'PROFILE.beta.buttonResFalse': 'Déjà rejoint',
+
+  /*    PANEL   */
+  'PANEL.activity': 'Activité',
+  'PANEL.activity.loading': 'Chargement de vos activités...',
+  'PANEL.activity.none': 'Pas d\'activité récente',
+  'PANEL.companion': 'Compagnion',
+  'PANEL.companion,buton1': 'Filtrer par block',
+  'PANEL.companion,buton2': 'Filtrer avec la note entière',
+  'PANEL.companion,buton3': 'Appliquer',
 
   /*    ACTIVITY    */
   'ACTIVITY': 'Activity',
@@ -113,6 +154,14 @@ const frTranslation: LocaleTypedMessages = {
   'SETTINGS.langage.options': 'Options',
   'SETTINGS.langage.french': 'Français',
   'SETTINGS.langage.english': 'Anglais',
+
+  /*    VALIDATION    */
+  'VALIDATION.title': 'Veuillez valider votre compte',
+  'VALIDATION.content': 'Vous avez reçus un code d\'activation à l\'adresse suivante :',
+  'VALIDATION.placeholder': '0000',
+  'VALIDATION.button': 'Valider',
+  'VALIDATION.resend': 'Je n\'ai pas reçus le code',
+  'VALIDATION.resend_link': 'l\'envoyer à nouveau',
 }
 
 export default frTranslation

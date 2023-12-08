@@ -9,6 +9,7 @@ import axios from 'axios'
 import React from 'react'
 
 import { TAuthContext, useAuthContext } from '../../contexts/auth'
+import { FormatMessage,useOurIntl } from '../../i18n/TextComponent'
 import { API_BASE } from '../../lib/env'
 
 interface Props {
@@ -25,6 +26,7 @@ interface ItemProps {
 const extensions = ['md', 'pdf']
 
 const NotesOptions = ( { noteId, groupId } : Props ) => {
+  const { formatMessage } = useOurIntl()
   const [selectedOption, setSelectedOption] = React.useState('')
   const url = `${API_BASE}/groups/${encodeURIComponent(groupId)}/notes/${encodeURIComponent(noteId)}/export`
   const auth : TAuthContext = useAuthContext()
@@ -124,14 +126,14 @@ const NotesOptions = ( { noteId, groupId } : Props ) => {
               <div className='p-1'>
                 <Menu.Item>
                   {({ active }) => (
-                    <Item active={active} label='Export in PDF' format='pdf' />
+                    <Item active={active} label={formatMessage({id: 'NOTE.export.button1'})} format='pdf' />
                   )}
                 </Menu.Item>
                 <Menu.Item>
                   {({ active }) => (
                     <Item
                       active={active}
-                      label='Export in Markdown'
+                      label={formatMessage({id: 'NOTE.export.button2'})}
                       format='md'
                     />
                   )}
@@ -145,7 +147,7 @@ const NotesOptions = ( { noteId, groupId } : Props ) => {
                       onClick={handleExport}
                     >
                       <span className='mr-2'>
-                        Export
+                        <FormatMessage id='NOTE.export.button3' />
                         {selectedOption.length > 0 &&
                           ' (' + selectedOption + ')'}
                       </span>

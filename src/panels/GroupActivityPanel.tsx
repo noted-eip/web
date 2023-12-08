@@ -14,10 +14,10 @@ function getNoteIdInEvent(event: string) {
   let noteId = ''
   if (event != undefined) {
     const subStringFirstEvent = event.substring(
-      event.indexOf('>') + 1, 
+      event.indexOf('>') + 1,
       event.length)
     noteId = subStringFirstEvent.substring(
-      subStringFirstEvent.indexOf('<noteID:') + 8, 
+      subStringFirstEvent.indexOf('<noteID:') + 8,
       subStringFirstEvent.indexOf('>'))
   }
   return noteId
@@ -27,76 +27,95 @@ function getGroupIdInEvent(event: string) {
   let groupId = ''
   if (event != undefined) {
     const subStringFirstEvent = event.substring(
-      event.indexOf('>') + 1, 
+      event.indexOf('>') + 1,
       event.length)
     groupId = subStringFirstEvent.substring(
-      subStringFirstEvent.indexOf('<groupID:') + 9, 
+      subStringFirstEvent.indexOf('<groupID:') + 9,
       subStringFirstEvent.indexOf('>'))
   }
   return groupId
 }
 
-function getAddNoteEvent(event: string) {
+const AddNoteEvent: React.FC<{ event: string }> = props => {
   let username = 'Someone'
   let noteTitle = 'a note'
   const folder = ''
- 
+
   let everything = ''
   let firstPart = ''
   let secondPart = ''
-  
-  if (event != undefined) {
-    
-    everything = event
+
+  if (props.event != undefined) {
+
+    everything = props.event
     everything = everything.substring(everything.indexOf('>') + 1, everything.length)
     firstPart = everything.substring(0, everything.indexOf('<'))
     everything = everything.substring(everything.indexOf('>') + 1, everything.length)
     secondPart = everything.substring(0, everything.indexOf('<'))
 
-    const userId = event.substring(event.indexOf('<userID:') + 8, event.indexOf('>'))
+    const userId = props.event.substring(props.event.indexOf('<userID:') + 8, props.event.indexOf('>'))
     const getUserResponse = useGetAccount({ accountId: userId })
     if (getUserResponse.data?.account.name != undefined) {
       username = getUserResponse.data?.account.name
     }
 
-    const noteId = getNoteIdInEvent(event)
+    const noteId = getNoteIdInEvent(props.event)
     const getNoteReponse = useGetNoteInCurrentGroup({ noteId: noteId })
     if (getNoteReponse.data?.note.title != undefined) {
       noteTitle = getNoteReponse.data?.note.title
     }
   }
-  return (username + firstPart + noteTitle + secondPart + folder)
+  return (
+    <div className='inline-flex space-x-2'>
+      <span>
+        <span className='font-bold'>{ username }</span>
+        <span className='font-normal'>{ firstPart }</span>
+        <span className='font-bold'>{ noteTitle }</span>
+        <span className='font-normal'>{ secondPart }</span>
+        <span className='font-normal'>{ folder }</span>
+      </span>
+    </div>
+  )
 }
 
-function getUpdateOnMemberEvent(event: string) {
-  let username = 'Mr.Smith'
-  let groupName = 'a mysterious group'
- 
+const UpdateOnMemberEvent: React.FC<{ event: string }> = props => {
+  let username = 'Someone'
+  let groupName = 'a group'
+
   let everything = ''
   let firstPart = ''
   let secondPart = ''
-  
-  if (event != undefined) {
-    
-    everything = event
+
+  if (props.event != undefined) {
+
+    everything = props.event
     everything = everything.substring(everything.indexOf('>') + 1, everything.length)
     firstPart = everything.substring(0, everything.indexOf('<'))
     everything = everything.substring(everything.indexOf('>') + 1, everything.length)
     secondPart = everything.substring(0, everything.indexOf('<'))
 
-    const userId = event.substring(event.indexOf('<userID:') + 8, event.indexOf('>'))
+    const userId = props.event.substring(props.event.indexOf('<userID:') + 8, props.event.indexOf('>'))
     const getUserResponse = useGetAccount({ accountId: userId })
     if (getUserResponse.data?.account.name != undefined) {
       username = getUserResponse.data?.account.name
     }
 
-    const groupId = getGroupIdInEvent(event)
+    const groupId = getGroupIdInEvent(props.event)
     const getGroupReponse = useGetGroup({ groupId: groupId })
     if (getGroupReponse.data?.group.name != undefined) {
       groupName = getGroupReponse.data?.group.name
     }
   }
-  return (username + firstPart + groupName + secondPart)
+  return (
+    <div className='inline-flex space-x-2'>
+      <span>
+        <span className='font-bold'>{ username }</span>
+        <span className='font-normal'>{ firstPart }</span>
+        <span className='font-bold'>{ groupName }</span>
+        <span className='font-normal'>{ secondPart }</span>
+      </span>
+    </div>
+  )
 }
 
 function getDateFormat(unformatedDate: string) {
@@ -115,12 +134,12 @@ function getDateFormat(unformatedDate: string) {
 
 function getRoute(activityType: string, currentGroupId: string, redirectId: string) {
   let url
-  switch(activityType) { 
-    case 'ADD-NOTE': { 
+  switch (activityType) {
+    case 'ADD-NOTE': {
       url = `./group/${currentGroupId}/note/${redirectId}`
       break
-    } 
-    case 'ADD-MEMBER': { 
+    }
+    case 'ADD-MEMBER': {
       url = `./group/${redirectId}`
       break
     }
@@ -132,20 +151,16 @@ function getRoute(activityType: string, currentGroupId: string, redirectId: stri
   return url
 }
 
-let nbSameActivity = 0
 let indexFirstSameActivity = -1
 let lastActivity = ''
 
 const ActivityListItem: React.FC<{ activity: V1GroupActivity, nextActivity?: V1GroupActivity, indexActivity: number, nbActivities: number }> = (props) => {
   const groupContext = useGroupContext()
   const navigate = useNavigate()
-  let event
   let redirectId
   let icon
 
   if (props.indexActivity == 0) {
-    //console.log('------------------RESET--------------------')
-    nbSameActivity = 0
     indexFirstSameActivity = -1
     lastActivity = ''
   }
@@ -155,21 +170,18 @@ const ActivityListItem: React.FC<{ activity: V1GroupActivity, nextActivity?: V1G
   }
 
 
-  switch(props.activity.type) { 
+  switch (props.activity.type) { 
     case 'ADD-NOTE': {
-      event = getAddNoteEvent(props.activity?.event)
       redirectId = getNoteIdInEvent(props.activity?.event)
       icon = <DocumentPlusIcon className='mr-3 h-6 w-6 text-green-400' />
       break
-    } 
-    case 'ADD-MEMBER': { 
-      event = getUpdateOnMemberEvent(props.activity?.event)
+    }
+    case 'ADD-MEMBER': {
       redirectId = getGroupIdInEvent(props.activity?.event)
       icon = <ArrowRightOnRectangleIcon className='mr-3 h-6 w-6 text-green-400' />
       break
     }
-    case 'REMOVE-MEMBER': { 
-      event = getUpdateOnMemberEvent(props.activity?.event)
+    case 'REMOVE-MEMBER': {
       redirectId = getGroupIdInEvent(props.activity?.event)
       icon = <ArrowRightOnRectangleIcon className='mr-3 h-6 w-6 text-red-400' />
       break
@@ -182,36 +194,27 @@ const ActivityListItem: React.FC<{ activity: V1GroupActivity, nextActivity?: V1G
         indexFirstSameActivity = props.indexActivity
       }
       lastActivity = props.activity.type
-      return null
     }
   }
 
   const dateFormat = getDateFormat(props.activity?.createdAt)
 
-  if (indexFirstSameActivity == -1) {
-    nbSameActivity = 0
-  } else {
-    nbSameActivity = (props.indexActivity + 1) - indexFirstSameActivity
-  }
-
   return (
     <div className='group cursor-pointer'>
-      {nbSameActivity == 0 ?
-        <p></p> :
-        <span className='absolute right-0 m-1.5 h-4 w-4 -translate-x-6 rounded-full bg-blue-200 p-0.5 text-center text-xs font-medium leading-none text-white group-hover:bg-blue-400'>
-          {nbSameActivity}
-        </span>
-      }
       <div 
         className='rounded-md border border-gray-100 bg-gray-50 bg-gradient-to-br p-4 group-hover:bg-gray-100 group-hover:shadow-inner'
-        onClick={() => navigate(getRoute(props.activity.type, groupContext.groupId as string, redirectId))}
+        onClick={() => redirectId.length < 1 ? null : navigate(getRoute(props.activity.type, groupContext.groupId as string, redirectId))}
       >
         <div className='flex items-center'>
           <div className='grid grid-flow-col gap-1 p-1'>
             {icon}
           </div>
           <div className='flex flex-col'>
-            <p className='font-normal'>{ event }</p>
+            { 
+              props.activity.type == 'ADD-NOTE' ?
+                <AddNoteEvent event={props.activity?.event}/> :
+                <UpdateOnMemberEvent event={props.activity?.event}/> 
+            }
             <p className='text-gray-700'>{ dateFormat }</p>
           </div>
         </div>
@@ -232,7 +235,7 @@ const ActivityListCurrentGroup: React.FC = () => {
               No recent activity
             </div>
           ) : (
-            listActivitiesQ.data?.activities?.map((activity, idx) => (
+            listActivitiesQ.data?.activities?.slice(0).reverse().map((activity, idx) => (
               <ActivityListItem key={`activity-list-${activity.id}-${idx}`} activity={activity} nextActivity={listActivitiesQ.data?.activities.at(idx + 1)} indexActivity={idx} nbActivities={listActivitiesQ.data.activities.length} />
             ))
           )
