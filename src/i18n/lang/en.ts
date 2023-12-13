@@ -14,6 +14,9 @@ const enTranslation: LocaleTypedMessages = {
   'AUTH.register': 'Register',
   'AUTH.email': 'Email',
   'AUTH.pwd': 'Password',
+  'AUTH.error.name': 'Invalid name',
+  'AUTH.error.email': 'Invalid email address',
+  'AUTH.error.pwd': '6 characters, letters numbers and symbols',
 
   /* Signing */
   'SIGNIN.title': 'Signin to your account',
@@ -23,6 +26,8 @@ const enTranslation: LocaleTypedMessages = {
   /*  Signup  */
   'SIGNUP.title': 'Create an account',
   'SIGNUP.signupGoogle': 'Sign up with Google',
+  'SIGNUP.wantSignIn': 'Already have an account',
+  'SIGNUP.wantSignUp': 'I want to create an account',
 
   /*    RESETPASSWORD   */
 
@@ -43,6 +48,7 @@ const enTranslation: LocaleTypedMessages = {
   'RESETPWD.Pwd.title': 'Create a new password',
   'RESETPWD.Pwd.desc': 'Enter a new password for your account',
   'RESETPWD.Pwd.form': 'Confirm Password',
+  'RESETPWD.Pwd.form2': 'Not the same password',
 
   /*    LANDING    */
   /* Description */
@@ -135,11 +141,17 @@ const enTranslation: LocaleTypedMessages = {
   'PROFILE.beta.button': 'Access beta',
   'PROFILE.beta.buttonResTrue': 'Sent!',
   'PROFILE.beta.buttonResFalse': 'Already joined',
+  'PROFILE.langage.title': 'Langage',
+  'PROFILE.langage.desc': 'Change the language used in the user interface.',
+  'PROFILE.langage.options': 'Options',
+  'PROFILE.langage.fr': 'French',
+  'PROFILE.langage.en': 'English',
 
   /*    PANEL   */
   'PANEL.activity': 'Activity',
   'PANEL.activity.loading': 'Loading your activities...',
   'PANEL.activity.none': 'No recent activity',
+  'PANEL.activity.noGroup': 'No group selected',
   'PANEL.companion': 'Companion',
   'PANEL.companion,buton1': 'Filter by block',
   'PANEL.companion,buton2': 'Filter by entire note',

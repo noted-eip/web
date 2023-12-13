@@ -1,6 +1,9 @@
+import Lottie from 'lottie-react'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import emptyAnim from '../assets/animations/empty-box.json'
+import processAnim from '../assets/animations/process.json'
 import PanelSkeleton from '../components/view/PanelSkeleton'
 import { useGroupContext } from '../contexts/group'
 import { useGetAccount } from '../hooks/api/accounts'
@@ -185,30 +188,63 @@ const ActivityListCurrentGroup: React.FC = () => {
   const listActivitiesQ = useListActivitiesInCurrentGroup({ limit: 100 })
 
   return (
-    <div className='space-y-2'>
-      {listActivitiesQ.isSuccess ? (
-        !listActivitiesQ.data?.activities?.length ? (
-          <div className='my-4 text-center text-sm text-gray-400'>
-            <FormatMessage id='PANEL.activity.none' />
-          </div>
+    <div className={`h-full overflow-y-scroll ${(!listActivitiesQ.isSuccess || (listActivitiesQ.isSuccess && !listActivitiesQ.data?.activities?.length)) && 'flex items-center justify-center'} lg:px-lg lg:pb-lg xl:px-xl xl:pb-xl`}>
+      <div className='my-4 space-y-2 text-center'>
+        {listActivitiesQ.isSuccess ? (
+          !listActivitiesQ.data?.activities?.length ? (
+            <>
+              <FormatMessage id='PANEL.activity.none' />
+              <Lottie
+                animationData={emptyAnim}
+                loop
+                autoplay
+                className='h-full w-full'
+              />
+            </>
+          ) : (
+            listActivitiesQ.data?.activities?.map((activity, idx) => (
+              <ActivityListItem key={`activity-list-${activity.id}-${idx}`} activity={activity} />
+            ))
+          )
         ) : (
-          listActivitiesQ.data?.activities?.map((activity, idx) => (
-            <ActivityListItem key={`activity-list-${activity.id}-${idx}`} activity={activity} />
-          ))
-        )
-      ) : (
-        <div className='my-4 text-center text-sm text-gray-400'>
-          <FormatMessage id='PANEL.activity.loading' />
-        </div>
-      )}
+          <>
+            <FormatMessage id='PANEL.activity.loading' />
+            <Lottie
+              animationData={listActivitiesQ.isLoading ? processAnim : emptyAnim}
+              loop
+              autoplay
+              className='h-full w-full'
+            />
+          </>
+        )}
+      </div>
+    </div>
+  )
+}
+
+const ActivityListNoGroup: React.FC = () => {
+  return (
+    <div className='flex h-full items-center justify-center overflow-y-scroll lg:px-lg lg:pb-lg xl:px-xl xl:pb-xl'>
+      <div className='my-4 space-y-2 text-center'>
+        <FormatMessage id='PANEL.activity.noGroup' />
+        <Lottie
+          animationData={emptyAnim}
+          loop
+          autoplay
+          className='h-full w-full'
+        />
+      </div>
     </div>
   )
 }
 
 const GroupActivityPanel: React.FC = () => {
+  const groupContext = useGroupContext()
+  const currentGroupId = groupContext.groupId as string
+
   return (
     <PanelSkeleton>
-      <ActivityListCurrentGroup />
+      {currentGroupId ? <ActivityListCurrentGroup /> : <ActivityListNoGroup />}
     </PanelSkeleton>
   )
 }
