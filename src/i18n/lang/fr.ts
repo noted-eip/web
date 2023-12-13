@@ -5,8 +5,11 @@ const frTranslation: LocaleTypedMessages = {
   'GENERIC.name': 'Nom',
   'GENERIC.home': 'Accueil',
   'GENERIC.profile': 'Profil',
+  'GENERIC.groups': 'Groupes',
+  'GENERIC.notes': 'Notes',
   'GENERIC.role': 'Rôle',
   'GENERIC.actions': 'Actions',
+  'GENERIC.logout': 'Déconnexion',
 
   /*		AUTHENTICATION		*/
   /*  Auth  */
@@ -93,6 +96,7 @@ const frTranslation: LocaleTypedMessages = {
   'GROUP.Empty.desc2': 'Les invitations aux groupes s\'afficheront ici.',
   'GROUP.createGroup': 'Créer un groupe',
   'GROUP.creatingGroup': 'Création...',
+  'GROUP.inMyGroup': 'Dans mon groupe...',
 
   'GROUP.settings': 'Paramètres',
   'GROUP.upgrade': 'Améliorer',
@@ -113,6 +117,7 @@ const frTranslation: LocaleTypedMessages = {
   'GROUP.settings.invites.desc': 'Aucune invitation en attente pour ce groupe',
 
   /*    NOTE    */
+  'NOTE.myNotes': 'Mes notes',
   'NOTE.newNote': 'Nouvelle note',
   'NOTE.untitledNote': 'Note sans nom',
   'NOTE.timecodeA': 'Dernière modification',

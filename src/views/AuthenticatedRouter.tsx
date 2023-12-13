@@ -6,10 +6,12 @@ import { BlockContext } from '../contexts/block'
 import { GroupContext } from '../contexts/group'
 import { RecoModeContext } from '../contexts/recommendation'
 import { LS_BLOCK_ID_KEY, LS_GROUP_ID_KEY, LS_RECO_MODE } from '../lib/constants'
+import GroupList from './group/GroupList'
 import GroupView from './group/GroupView'
 import GroupViewNotesTab from './group/GroupViewNotesTab'
 import GroupViewSettingsTab from './group/GroupViewSettingsTab'
-import GroupViewUpgradeTab from './group/GroupViewUpgradeTab'
+import HomeView from './home/HomeView'
+import NoteListOutGroup from './note/NoteListOutGroup'
 import NoteView from './note/NoteView'
 import NotFoundView from './notfound/NotFoundView'
 import ProfileView from './profile/ProfileView'
@@ -60,14 +62,16 @@ const AuthenticatedRouter: React.FC = () => {
         <RecoModeContext.Provider value={{ recoMode: recoMode, changeRecoMode }}>
           <Routes>
             <Route path='/' element={<Dashboard />}>
-              <Route path='' element={<GroupView />} />
+              <Route path='' element={<HomeView />} />
+              <Route path='home' element={<HomeView />} />
+              <Route path='groups' element={<GroupList />} />
               <Route path='group/:groupId' element={<GroupView />}>
                 <Route path='' element={<GroupViewNotesTab />} />
                 <Route path='settings' element={<GroupViewSettingsTab />} />
-                <Route path='upgrade' element={<GroupViewUpgradeTab />} />
               </Route>
-              <Route path='profile' element={<ProfileView />} />
               <Route path='group/:groupId/note/:noteId' element={<NoteView />} />
+              <Route path='notes' element={<NoteListOutGroup />} />
+              <Route path='profile' element={<ProfileView />} />
             </Route>
             <Route path='*' element={<NotFoundView />} />
           </Routes>

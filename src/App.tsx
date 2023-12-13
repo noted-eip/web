@@ -1,4 +1,5 @@
 import { CssBaseline } from '@mui/material'
+import { grey } from '@mui/material/colors'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import { initializeApp } from 'firebase/app'
@@ -54,6 +55,15 @@ const App: React.FC = () => {
   
     },
     components: {
+      MuiSvgIcon: {
+        styleOverrides: {
+          root: {
+            width: '1.25rem',
+            height: '1.25rem',
+            color: grey[700],
+          },
+        },
+      },  
       MuiInputBase: {
         styleOverrides: { 
           root: {

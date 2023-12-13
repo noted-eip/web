@@ -26,8 +26,11 @@ export enum TranslationKeys {
   'GENERIC.name',
   'GENERIC.home',
   'GENERIC.profile',
+  'GENERIC.groups',
+  'GENERIC.notes',
   'GENERIC.role',
   'GENERIC.actions',
+  'GENERIC.logout',
 
   /*		AUTHENTICATION		*/
   /*  Auth  */
@@ -113,6 +116,7 @@ export enum TranslationKeys {
   'GROUP.Empty.desc2',
   'GROUP.createGroup',
   'GROUP.creatingGroup',
+  'GROUP.inMyGroup',
 
   'GROUP.settings',
   'GROUP.upgrade',
@@ -133,6 +137,7 @@ export enum TranslationKeys {
   'GROUP.settings.invites.desc',
 
   /*    NOTE    */
+  'NOTE.myNotes',
   'NOTE.newNote',
   'NOTE.untitledNote',
   'NOTE.timecodeA',
