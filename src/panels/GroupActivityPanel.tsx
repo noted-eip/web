@@ -36,82 +36,58 @@ function getGroupIdInEvent(event: string) {
   return groupId
 }
 
-const AddNoteEvent: React.FC<{ event: string }> = props => {
-  let username = 'Someone'
-  let noteTitle = 'a note'
-  const folder = ''
+const AddNoteEvent: React.FC<{ event: string, noteName: string, accountName: string, folderName: string }> = props => {
+  //const username = 'Someone'
+  //const noteName = 'a note'
+  //const folder = ''
 
   let everything = ''
   let firstPart = ''
   let secondPart = ''
 
   if (props.event != undefined) {
-
     everything = props.event
     everything = everything.substring(everything.indexOf('>') + 1, everything.length)
     firstPart = everything.substring(0, everything.indexOf('<'))
     everything = everything.substring(everything.indexOf('>') + 1, everything.length)
     secondPart = everything.substring(0, everything.indexOf('<'))
-
-    const userId = props.event.substring(props.event.indexOf('<userID:') + 8, props.event.indexOf('>'))
-    const getUserResponse = useGetAccount({ accountId: userId })
-    if (getUserResponse.data?.account.name != undefined) {
-      username = getUserResponse.data?.account.name
-    }
-
-    const noteId = getNoteIdInEvent(props.event)
-    const getNoteReponse = useGetNoteInCurrentGroup({ noteId: noteId })
-    if (getNoteReponse.data?.note.title != undefined) {
-      noteTitle = getNoteReponse.data?.note.title
-    }
   }
+
   return (
     <div className='inline-flex space-x-2'>
       <span>
-        <span className='font-bold'>{ username }</span>
+        <span className='font-bold'>{ props.accountName }</span>
         <span className='font-normal'>{ firstPart }</span>
-        <span className='font-bold'>{ noteTitle }</span>
+        <span className='font-bold'>{ props.noteName }</span>
         <span className='font-normal'>{ secondPart }</span>
-        <span className='font-normal'>{ folder }</span>
+        <span className='font-normal'>{ props.folderName }</span>
       </span>
     </div>
   )
 }
 
-const UpdateOnMemberEvent: React.FC<{ event: string }> = props => {
-  let username = 'Someone'
-  let groupName = 'a group'
+const UpdateOnMemberEvent: React.FC<{ event: string, groupName: string, accountName: string }> = props => {
+  //const username = 'Someone'
+  //const groupName = 'a group'
 
   let everything = ''
   let firstPart = ''
   let secondPart = ''
 
   if (props.event != undefined) {
-
     everything = props.event
     everything = everything.substring(everything.indexOf('>') + 1, everything.length)
     firstPart = everything.substring(0, everything.indexOf('<'))
     everything = everything.substring(everything.indexOf('>') + 1, everything.length)
     secondPart = everything.substring(0, everything.indexOf('<'))
-
-    const userId = props.event.substring(props.event.indexOf('<userID:') + 8, props.event.indexOf('>'))
-    const getUserResponse = useGetAccount({ accountId: userId })
-    if (getUserResponse.data?.account.name != undefined) {
-      username = getUserResponse.data?.account.name
-    }
-
-    const groupId = getGroupIdInEvent(props.event)
-    const getGroupReponse = useGetGroup({ groupId: groupId })
-    if (getGroupReponse.data?.group.name != undefined) {
-      groupName = getGroupReponse.data?.group.name
-    }
   }
+
   return (
     <div className='inline-flex space-x-2'>
       <span>
-        <span className='font-bold'>{ username }</span>
+        <span className='font-bold'>{ props.accountName }</span>
         <span className='font-normal'>{ firstPart }</span>
-        <span className='font-bold'>{ groupName }</span>
+        <span className='font-bold'>{ props.groupName }</span>
         <span className='font-normal'>{ secondPart }</span>
       </span>
     </div>
@@ -151,8 +127,35 @@ function getRoute(activityType: string, currentGroupId: string, redirectId: stri
   return url
 }
 
-let indexFirstSameActivity = -1
-let lastActivity = ''
+function getNoteNameFromEvent(event: string) {
+  let noteTitle = ''
+  const noteId = getNoteIdInEvent(event)
+  const getNoteReponse = useGetNoteInCurrentGroup({ noteId: noteId })
+  if (getNoteReponse.data?.note.title != undefined) {
+    noteTitle = getNoteReponse.data?.note.title
+  }
+  return noteTitle
+}
+function getAccountNameFromEvent(event: string)
+{
+  let accountName = ''
+  const userId = event.substring(event.indexOf('<userID:') + 8, event.indexOf('>'))
+  const getUserResponse = useGetAccount({ accountId: userId })
+  if (getUserResponse.data?.account.name != undefined) {
+    accountName = getUserResponse.data?.account.name
+  }
+  return accountName
+}
+function getGroupNameFromEvent(event: string)
+{
+  let groupName = ''
+  const groupId = getGroupIdInEvent(event)
+  const getGroupReponse = useGetGroup({ groupId: groupId })
+  if (getGroupReponse.data?.group.name != undefined) {
+    groupName = getGroupReponse.data?.group.name
+  }
+  return groupName
+}
 
 const ActivityListItem: React.FC<{ activity: V1GroupActivity, nextActivity?: V1GroupActivity, indexActivity: number, nbActivities: number }> = (props) => {
   const groupContext = useGroupContext()
@@ -160,23 +163,22 @@ const ActivityListItem: React.FC<{ activity: V1GroupActivity, nextActivity?: V1G
   let redirectId
   let icon
 
-  if (props.indexActivity == 0) {
-    indexFirstSameActivity = -1
-    lastActivity = ''
-  }
-
-  if (lastActivity != props.activity.type) {
-    indexFirstSameActivity = -1
-  }
-
+  let noteName = ''
+  let accountName = ''
+  let groupName = ''
+  const folderName = ''
 
   switch (props.activity.type) { 
     case 'ADD-NOTE': {
+      noteName = getNoteNameFromEvent(props.activity?.event)
+      accountName = getAccountNameFromEvent(props.activity?.event)
       redirectId = getNoteIdInEvent(props.activity?.event)
       icon = <DocumentPlusIcon className='mr-3 h-6 w-6 text-green-400' />
       break
     }
     case 'ADD-MEMBER': {
+      groupName = getGroupNameFromEvent(props.activity?.event)
+      accountName = getAccountNameFromEvent(props.activity?.event)
       redirectId = getGroupIdInEvent(props.activity?.event)
       icon = <ArrowRightOnRectangleIcon className='mr-3 h-6 w-6 text-green-400' />
       break
@@ -188,22 +190,24 @@ const ActivityListItem: React.FC<{ activity: V1GroupActivity, nextActivity?: V1G
     }
   }
 
-  if (props.nextActivity != undefined) {
-    if (props.nextActivity.type == props.activity.type) {
-      if (indexFirstSameActivity == -1) {
-        indexFirstSameActivity = props.indexActivity
-      }
-      lastActivity = props.activity.type
-    }
-  }
-
   const dateFormat = getDateFormat(props.activity?.createdAt)
 
   return (
     <div className='group cursor-pointer'>
       <div 
         className='rounded-md border border-gray-100 bg-gray-50 bg-gradient-to-br p-4 group-hover:bg-gray-100 group-hover:shadow-inner'
-        onClick={() => redirectId.length < 1 ? null : navigate(getRoute(props.activity.type, groupContext.groupId as string, redirectId))}
+        onClick={
+          props.activity.type == 'ADD-NOTE' ? 
+            noteName.length < 1 ?  
+              () => null//pop up
+              :
+              () => navigate(getRoute(props.activity.type, groupContext.groupId as string, redirectId))
+            :
+            accountName.length < 1 ? 
+              () => null//pop up
+              :
+              () => navigate(getRoute(props.activity.type, groupContext.groupId as string, redirectId))
+        }
       >
         <div className='flex items-center'>
           <div className='grid grid-flow-col gap-1 p-1'>
@@ -212,8 +216,8 @@ const ActivityListItem: React.FC<{ activity: V1GroupActivity, nextActivity?: V1G
           <div className='flex flex-col'>
             { 
               props.activity.type == 'ADD-NOTE' ?
-                <AddNoteEvent event={props.activity?.event}/> :
-                <UpdateOnMemberEvent event={props.activity?.event}/> 
+                <AddNoteEvent event={props.activity?.event} noteName={noteName} accountName={accountName} folderName={folderName} /> :
+                <UpdateOnMemberEvent event={props.activity?.event} groupName={groupName} accountName={accountName}/> 
             }
             <p className='text-gray-700'>{ dateFormat }</p>
           </div>
