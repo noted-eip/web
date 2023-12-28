@@ -21,7 +21,6 @@ import { useRemoveMemberInCurrentGroup, useUpdateMemberInCurrentGroup } from '..
 import useClickOutside from '../../hooks/click'
 import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
 import { V1GroupInvite, V1GroupMember } from '../../protorepo/openapi/typescript-axios'
-import GroupViewMenu from './GroupViewMenu'
 
 export const GroupViewSettingsTabEditGroup: React.FC = () => {
   const [editName, setEditName] = React.useState(false)
@@ -436,10 +435,6 @@ const GroupViewSettingsTabPendingInvitesSection: React.FC = () => {
 const GroupViewSettingsTab: React.FC = () => {
   return (
     <div className='grid grid-rows-1 gap-4'>
-      <GroupViewMenu activeTab={'settings'}>
-        <div></div>
-      </GroupViewMenu>
-
       <div className='mb-8 flex w-full flex-col'>
         <GroupViewSettingsTabEditGroup />
         <GroupViewSettingsTabMembersSection />

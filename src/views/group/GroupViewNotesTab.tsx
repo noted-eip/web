@@ -1,5 +1,4 @@
 import { ArrowPathIcon, LinkIcon as LinkIconOutline, PencilIcon as PencilIconOutline, PlusIcon, TrashIcon as TrashIconOutline } from '@heroicons/react/24/outline'
-import { FolderIcon } from '@heroicons/react/24/solid'
 import { Button, Stack } from '@mui/material'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -9,7 +8,6 @@ import { useGetCurrentGroup } from '../../hooks/api/groups'
 import { useCreateNoteInCurrentGroup, useDeleteNoteInCurrentGroup, useListNotesInCurrentGroup } from '../../hooks/api/notes'
 import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
 import { V1Note } from '../../protorepo/openapi/typescript-axios'
-import GroupViewMenu from './GroupViewMenu'
 
 type NotesLiNotesListGridItemContextMenuProps = {
   note: V1Note,
@@ -115,24 +113,6 @@ const GroupViewNotesTab: React.FC = () => {
   return (
     <div className='grid w-full grid-rows-1 gap-4'>
       {/* Menu */}
-      <GroupViewMenu activeTab={''}>
-        <div className='flex items-center'>
-          {getGroupQ.isSuccess ? (
-            <div className='mr-4 flex h-7 rounded bg-gray-100 px-2'>
-              <div className='flex items-center'>
-                <FolderIcon className='mr-2 h-4 w-4 text-gray-500' />
-                <p className='mr-1 cursor-pointer text-sm text-gray-500 decoration-blue-500 decoration-2 hover:underline'>
-                  {getGroupQ.data.group.name}
-                </p>
-              </div>
-            </div>
-          ) : (
-            <React.Fragment>
-              <div className='skeleton h-7 w-56'></div>
-            </React.Fragment>
-          )}
-        </div>
-      </GroupViewMenu>
 
       {/* Search bar */}
       <Stack direction='row' spacing={2}>
