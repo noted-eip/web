@@ -182,6 +182,7 @@ export enum TranslationKeys {
   'PANEL.companion,buton1',
   'PANEL.companion,buton2',
   'PANEL.companion,buton3',
+  'PANEL.quizs',
 
   /*    ACTIVITY   */
   'ACTIVITY',

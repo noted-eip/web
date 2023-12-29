@@ -161,6 +161,7 @@ const enTranslation: LocaleTypedMessages = {
   'PANEL.companion,buton1': 'Filter by block',
   'PANEL.companion,buton2': 'Filter by entire note',
   'PANEL.companion,buton3': 'Apply',
+  'PANEL.quizs': 'Quizs',
 
   /*    ACTIVITY    */
   'ACTIVITY': 'Activity',

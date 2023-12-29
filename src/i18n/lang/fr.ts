@@ -162,6 +162,7 @@ const frTranslation: LocaleTypedMessages = {
   'PANEL.companion,buton1': 'Filtrer par block',
   'PANEL.companion,buton2': 'Filtrer avec la note entière',
   'PANEL.companion,buton3': 'Appliquer',
+  'PANEL.quizs': 'Quizs',
 
   /*    ACTIVITY    */
   'ACTIVITY': 'Activity',
