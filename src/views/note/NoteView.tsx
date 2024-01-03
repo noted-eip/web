@@ -9,6 +9,7 @@ import NoteViewMetadataHeader from './NoteMetadataHeader'
 import NoteViewEditor from './NoteViewEditor'
 import NoteViewHeader from './NoteViewHeader'
 
+
 function editorLoadingSkeleton(): React.ReactElement<unknown, string> | null {
   return <div className='m-lg grid gap-2 opacity-50 xl:m-xl'>
     <div className='skeleton mb-2 h-6 w-96' />

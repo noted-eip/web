@@ -1,6 +1,7 @@
 import { BaseEditor, Descendant, Editor, Element as SlateElement, Point, Range, Transforms } from 'slate'
 import { ReactEditor } from 'slate-react'
 
+import { BlockContext } from '../contexts/note'
 import { V1Block } from '../protorepo/openapi/typescript-axios'
 
 export type NoteTitleElement = { type: 'TYPE_NOTE_TITLE'; children: SlateText[] }
@@ -132,6 +133,56 @@ export const withShortcuts = editor => {
   }
 
   return editor
+}
+
+export const noteBlocksToContextBlocks = (blocks: V1Block[]): BlockContext[] => {
+  const blocksContext: BlockContext[] = []
+
+  for (let i = 0; i < blocks.length; i++) {
+    switch (blocks[i].type) {
+      case 'TYPE_HEADING_1':
+        blocksContext.push({
+          id: blocks[i].id,
+          type: 'TYPE_HEADING_1',
+          content: blocks[i]?.heading || '',
+          index: i,
+          isFocused: false
+        })
+        break
+      case 'TYPE_HEADING_2':
+        blocksContext.push({
+          id: blocks[i].id,
+          type: 'TYPE_HEADING_2',
+          content: blocks[i]?.heading || '',
+          index: i,
+          isFocused: false
+        })
+        break
+      case 'TYPE_HEADING_3':
+        blocksContext.push({
+          id: blocks[i].id,
+          type: 'TYPE_HEADING_3',
+          content: blocks[i]?.heading || '',
+          index: i,
+          isFocused: false
+        })
+        break
+      case 'TYPE_PARAGRAPH':
+        blocksContext.push({
+          id: blocks[i].id,
+          type: 'TYPE_PARAGRAPH',
+          content: blocks[i]?.paragraph || '',
+          index: i,
+          isFocused: false
+        })
+        break
+      default:
+        console.warn(`Block with type ${blocks[i].type} is not known, it will be overwritten.`)
+    }
+  }
+
+  return blocksContext
+
 }
 
 export const noteBlocksToSlateElements = (blocks: V1Block[]): Descendant[] => {
