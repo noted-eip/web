@@ -65,8 +65,10 @@ export enum TranslationKeys {
   /* ResetPassword Token  */
   'RESETPWD.Token.title',
   'RESETPWD.Token.desc',
-  'RESETPWD.Token.form',
-  'RESETPWD.Token.button',
+  'RESETPWD.Token.resend',
+  'RESETPWD.Token.noCode',
+  'RESETPWD.Token.badToken',
+  'RESETPWD.Token.tokenResend',
 
   /*  ResetPassword Password  */
   'RESETPWD.Pwd.title',
