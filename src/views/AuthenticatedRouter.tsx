@@ -19,17 +19,18 @@ import ProfileView from './profile/ProfileView'
 // Describes routes that are available to authenticated users.
 const AuthenticatedRouter: React.FC = () => {
   const navigate = useNavigate()
+
+  // State for managing group, recommendation mode, and block ID
   const [groupID, setGroupID] = React.useState<string | null>(
     window.localStorage.getItem(LS_GROUP_ID_KEY)
   )
-
   const [recoMode, setRecoMode] = React.useState<string | null>(
     window.localStorage.getItem(LS_RECO_MODE)
   )
-
   const [blockId, setBlock] = React.useState<string | null>(null)
 
-  const changeGroup = (val) => {
+  // Change group function
+  const changeGroup = (val: string | null) => {
     setGroupID(val)
     if (val === null) {
       window.localStorage.removeItem(LS_GROUP_ID_KEY)
@@ -40,7 +41,8 @@ const AuthenticatedRouter: React.FC = () => {
     }
   }
 
-  const changeRecoMode = (val) => {
+  // Change recommendation mode function
+  const changeRecoMode = (val: string | null) => {
     setRecoMode(val)
     if (val === null) {
       window.localStorage.removeItem(LS_RECO_MODE)
@@ -49,17 +51,21 @@ const AuthenticatedRouter: React.FC = () => {
     }
   }
 
-  const changeBlock = (val) => {
+  // Change block ID function
+  const changeBlock = (val: string | null) => {
     setBlock(val)
     if (val !== null) {
       window.localStorage.setItem(LS_BLOCK_ID_KEY, val)
     }
+    // TODO: l'item n'est jamais remove meme à la déconexion de l'utilisateur
   }
 
   return (
+    // Context providers for group, block, and recommendation mode
     <GroupContext.Provider value={{ groupId: groupID, changeGroup }}>
       <BlockContext.Provider value={{ blockId: blockId, changeBlock }}>
         <RecoModeContext.Provider value={{ recoMode: recoMode, changeRecoMode }}>
+          {/* Define routes for authenticated users */}
           <Routes>
             <Route path='/' element={<Dashboard />}>
               <Route path='' element={<HomeView />} />

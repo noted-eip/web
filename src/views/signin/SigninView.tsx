@@ -1,5 +1,16 @@
-import { VisibilityOffOutlined, VisibilityOutlined } from '@mui/icons-material'
-import { FormControl, IconButton,InputAdornment, InputLabel, OutlinedInput, TextField, Typography } from '@mui/material'
+import {
+  VisibilityOffOutlined,
+  VisibilityOutlined
+} from '@mui/icons-material'
+import {
+  FormControl,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
+  TextField,
+  Typography
+} from '@mui/material'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import { useGoogleLogin } from '@react-oauth/google'
@@ -11,14 +22,26 @@ import { Link, useNavigate } from 'react-router-dom'
 import GoogleIcon from '../../components/icons/GoogleIcon'
 import Notification from '../../components/notification/Notification'
 import Authentication from '../../components/view/Authentication'
-import { addAccountToDevelopmentContext, useDevelopmentContext } from '../../contexts/dev'
+import {
+  addAccountToDevelopmentContext,
+  useDevelopmentContext
+} from '../../contexts/dev'
 import { useNoAuthContext } from '../../contexts/noauth'
-import { IsAccountValidateRequest, useAuthenticate, useAuthenticateGoogle, useIsAccountValidate } from '../../hooks/api/accounts'
+import {
+  IsAccountValidateRequest,
+  useAuthenticate,
+  useAuthenticateGoogle,
+  useIsAccountValidate
+} from '../../hooks/api/accounts'
 import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
 import { decodeToken } from '../../lib/api'
 import { TOGGLE_DEV_FEATURES } from '../../lib/env'
 import { validateEmail } from '../../lib/validators'
-import { V1AuthenticateGoogleResponse, V1AuthenticateResponse, V1IsAccountValidateResponse } from '../../protorepo/openapi/typescript-axios'
+import {
+  V1AuthenticateGoogleResponse,
+  V1AuthenticateResponse,
+  V1IsAccountValidateResponse
+} from '../../protorepo/openapi/typescript-axios'
 
 const SigninView: React.FC = () => {
   const { formatMessage } = useOurIntl()
@@ -30,19 +53,8 @@ const SigninView: React.FC = () => {
   const [email, setEmail] = React.useState('')
   const [emailValid, setEmailValid] = React.useState(false)
   const developmentContext = useDevelopmentContext()
-
-  const isAccountValidate = useIsAccountValidate({
-    onSuccess: (data: V1IsAccountValidateResponse) => {
-      if (data.isAccountValidate) {
-        authenticateMutation.mutate({body: {email, password}})
-      } else {
-        navigate('/validate_account', {state: {email: email, password: password}})
-      }
-    },
-    onError: (e) => {
-      toast.error(e.response?.data.error as string)
-    }
-  })
+ 
+  // Hook for authenticating with email and password
   const authenticateMutation = useAuthenticate({
     onSuccess: (data: V1AuthenticateResponse) => {
       const tokenData = decodeToken(data.token)
@@ -65,6 +77,22 @@ const SigninView: React.FC = () => {
       toast.error(e.response?.data.error as string)
     }
   })
+
+  // Hook for checking if the account is validate
+  const isAccountValidate = useIsAccountValidate({
+    onSuccess: (data: V1IsAccountValidateResponse) => {
+      if (data.isAccountValidate) {
+        authenticateMutation.mutate({body: {email, password}})
+      } else {
+        navigate('/validate_account', {state: {email: email, password: password}})
+      }
+    },
+    onError: (e) => {
+      toast.error(e.response?.data.error as string)
+    }
+  })
+ 
+  // Hook for authenticating with Google on our server side
   const authenticateGoogleMutation = useAuthenticateGoogle({
     onSuccess: (data: V1AuthenticateGoogleResponse) => {
       const tokenData = decodeToken(data.token)
@@ -87,18 +115,18 @@ const SigninView: React.FC = () => {
       toast.error(e.response?.data.error as string)
     }
   })
+ 
+  // Hook for handling Google login on the Google side
   const googleLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => {
       authenticateGoogleMutation.mutate({body: {clientAccessToken: tokenResponse.access_token}})
     }
   })
 
-  const formIsValid = () => {
-    return emailValid
-  }
-
+  // Function to toggle password visibility
   const handleClickShowPassword = () => setShowPassword((show) => !show)
 
+  // Function to prevent default mouse down behavior
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
   }
@@ -112,9 +140,12 @@ const SigninView: React.FC = () => {
         }}
       >
         <Stack direction='column' spacing={2}>
+          {/* HEADER */}
           <Typography variant='h4' align='center' fontWeight='bold'>
             <FormatMessage id='SIGNIN.title' />
           </Typography>
+          {/* BODY */}
+          {/* email form */}
           <TextField
             id='outlined-email-input'
             label={formatMessage({ id: 'AUTH.email' })}
@@ -128,9 +159,10 @@ const SigninView: React.FC = () => {
             onBlur={() => {
               setEmailValid(validateEmail(email) !== undefined)
             }}
-            error={emailValid && email.length != 0  }
+            error={emailValid && email.length != 0}
             helperText={(emailValid && email.length != 0) && formatMessage({ id: 'AUTH.error.email' })}
           />
+          {/* password form */}
           <FormControl variant='outlined'>
             <InputLabel htmlFor='outlined-adornment-password'>
               <FormatMessage id='AUTH.pwd' />
@@ -156,13 +188,14 @@ const SigninView: React.FC = () => {
               }
             />
           </FormControl>
+          {/* FOOTER */}
           <Button
             type='submit'
             sx={{ borderRadius: '16px' }}
             size='large'
             variant='contained'
             className='w-full'
-            disabled={formIsValid() || authenticateMutation.isLoading}
+            disabled={emailValid || authenticateMutation.isLoading}
           >
             <FormatMessage id='AUTH.login' />
           </Button>
@@ -187,7 +220,6 @@ const SigninView: React.FC = () => {
               <FormatMessage id='SIGNUP.wantSignUp' />
             </Typography>
           </Link>
-
         </Stack>
       </form>
       <Notification />

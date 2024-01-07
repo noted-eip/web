@@ -24,6 +24,8 @@ const ResetPasswordEmail: React.FC = () => {
   const resetPasswordContext = useResetPasswordContext()
   const [email, setEmail] = React.useState('')
   const [emailValid, setEmailValid] = React.useState(false)
+
+  // Hook for receiving a reset password token with email
   const forgetAccountPasswordMutation = useForgetAccountPassword({
     onSuccess: (data: V1ForgetAccountPasswordResponse) => {
       resetPasswordContext.changeResetPassword({account_id: data.accountId, reset_token: null, auth_token: null})
@@ -33,16 +35,13 @@ const ResetPasswordEmail: React.FC = () => {
       toast.error(e.response?.data.error as string)
     }
   })
-  
-  const formIsValid = () => {
-    return emailValid
-  }
-  
+
   if (!TOGGLE_DEV_FEATURES) {
     logEvent(analytics, 'page_view', {
       page_title: 'resetPasswordEmail'
     })
   }
+
   return (
     <Authentication animName='error'>
       <form
@@ -52,6 +51,7 @@ const ResetPasswordEmail: React.FC = () => {
         }}
       >
         <Stack direction='column' spacing={2}>
+          {/* HEADER */}
           <Typography variant='h4' align='center' fontWeight='bold'>
             <FormatMessage id='RESETPWD.Email.title' />
           </Typography>
@@ -63,6 +63,8 @@ const ResetPasswordEmail: React.FC = () => {
               <FormatMessage id='RESETPWD.Email.desc2' />
             </p>
           </div>
+          {/* BODY */}
+          {/* email form */}
           <TextField
             id='outlined-email-input'
             label={formatMessage({ id: 'RESETPWD.Email.form' })}
@@ -79,13 +81,14 @@ const ResetPasswordEmail: React.FC = () => {
             error={emailValid && email.length != 0  }
             helperText={(emailValid && email.length != 0) && formatMessage({ id: 'AUTH.error.email' })}
           />
+          {/* FOOTER */}
           <Button
             type='submit'
             sx={{ borderRadius: '16px' }}
             size='large'
             variant='contained'
             className='w-full'
-            disabled={!formIsValid() || forgetAccountPasswordMutation.isLoading}
+            disabled={!emailValid || forgetAccountPasswordMutation.isLoading}
           >
             <FormatMessage id='RESETPWD.Email.button' />
           </Button>

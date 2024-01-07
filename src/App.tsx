@@ -7,18 +7,27 @@ import React from 'react'
 import { QueryClientProvider } from 'react-query'
 import { BrowserRouter } from 'react-router-dom'
 
-import { AuthContext, AuthContextManager } from './contexts/auth'
-import { DevelopmentContext, TAccountsMap } from './contexts/dev'
+import {
+  AuthContext,
+  AuthContextManager
+} from './contexts/auth'
+import {
+  DevelopmentContext,
+  TAccountsMap
+} from './contexts/dev'
 import { LangageContext } from './contexts/langage'
 import { NoAuthContext, NoAuthContextManager } from './contexts/noauth'
 import LocaleManager from './i18n/LocaleManager'
 import { apiQueryClient } from './lib/api'
-import { LS_DEVELOPMENT_DATA_KEY, LS_LANGAGE } from './lib/constants'
+import {
+  LS_DEVELOPMENT_DATA_KEY,
+  LS_LANGAGE
+} from './lib/constants'
 import { GOOGLE_CLIENT_ID, TOGGLE_DEV_FEATURES } from './lib/env'
 import AuthenticatedRouter from './views/AuthenticatedRouter'
 import UnauthenticatedRouter from './views/UnauthenticatedRouter'
-
 const App: React.FC = () => {
+  /* Initialisation of the auth context */
   const [token, setToken] = React.useState<null | string>(null)
   const [hasLoaded, setHasLoaded] = React.useState(false)
   const [accounts, setAccounts] = React.useState<TAccountsMap>(
@@ -26,9 +35,8 @@ const App: React.FC = () => {
   )
   const noAuthContext = new NoAuthContextManager(setToken)
   const authContext = new AuthContextManager(token, setToken)
-  const [currentLangage, setCurrentLangage] = React.useState<string | null>(
-    window.localStorage.getItem(LS_LANGAGE) || navigator.language
-  )
+
+  // Firebase configuration
   const firebaseConfig = {
     apiKey: 'AIzaSyBAYMc_6XiZYQyHsCkwRXVXd7UofXF6YiQ',
     authDomain: 'noted-354512.firebaseapp.com',
@@ -38,6 +46,13 @@ const App: React.FC = () => {
     appId: '1:871625340195:web:aa69f8236ad0da4e2fc896',
     measurementId: 'G-XFC30W0DZ'
   }
+
+  /* Initialisation of the default langage */
+  const [currentLangage, setCurrentLangage] = React.useState<string | null>(
+    window.localStorage.getItem(LS_LANGAGE) || navigator.language
+  )
+
+  // Material-UI Theme
   const theme = createTheme({
     palette: {
       primary: {
@@ -96,14 +111,18 @@ const App: React.FC = () => {
       },
     },
   })
-  
+
+  // Initialize Firebase
   initializeApp(firebaseConfig)
+
   React.useEffect(() => {
+    // Attempt to sign in from local storage
     noAuthContext.attemptSigninFromLocalStorage()
     setHasLoaded(true)
   }, [])
-
-  const changeLangage = (val) => {
+  
+  // Change Language Function
+  const changeLangage = (val: string | null) => {
     setCurrentLangage(val)
     if (val === null) {
       window.localStorage.removeItem(LS_LANGAGE)
@@ -111,23 +130,32 @@ const App: React.FC = () => {
       window.localStorage.setItem(LS_LANGAGE, val)
     }
   }
-
+  
   return (
     <ThemeProvider theme={theme}>
+      {/* Reset CSS styles */}
       <CssBaseline />
+      {/* Language context provider */}
       <LangageContext.Provider value={{langage: currentLangage, changeLangage}}>
+        {/* Localization manager */}
         <LocaleManager>
+          {/* Google OAuth provider for authentication */}
           <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+            {/* React Router for navigation */}
             <BrowserRouter>
+              {/* Development context provider */}
               <DevelopmentContext.Provider
                 value={TOGGLE_DEV_FEATURES ? { accounts, setAccounts } : undefined}
               >
+                {/* Query Client provider for API calls */}
                 <QueryClientProvider client={apiQueryClient}>
                   {!hasLoaded ? null : token !== null ? (
+                  /* Authenticated user router */
                     <AuthContext.Provider value={authContext}>
                       <AuthenticatedRouter />
                     </AuthContext.Provider>
                   ) : (
+                  /* Unauthenticated user router */
                     <NoAuthContext.Provider value={noAuthContext}>
                       <UnauthenticatedRouter />
                     </NoAuthContext.Provider>
@@ -141,5 +169,5 @@ const App: React.FC = () => {
     </ThemeProvider>
   )
 }
-
+  
 export default App

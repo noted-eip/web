@@ -19,6 +19,8 @@ const ResetPasswordEmail: React.FC = () => {
   const [token, setToken] = React.useState('')
   const [isTokenValid, setIsTokenValid] = React.useState(true)
   const [isAccountIdValid, ] = React.useState(resetPasswordContext.account?.account_id !== null)
+  
+  // Hook for receiving a reset password token with email
   const forgetAccountPasswordValidateTokenMutation = useForgetAccountPasswordValidateToken({
     onSuccess: (data: V1ForgetAccountPasswordValidateTokenResponse) => {
       resetPasswordContext.changeResetPassword({account_id: data.account.id, reset_token: data.resetToken, auth_token: data.authToken})
@@ -28,6 +30,7 @@ const ResetPasswordEmail: React.FC = () => {
       setIsTokenValid(false)
     },
   })
+
   const formIsValid = () => {
     return token.length !== 0
   }
@@ -41,6 +44,7 @@ const ResetPasswordEmail: React.FC = () => {
         }}
       >
         <Stack direction='column' spacing={2}>
+          {/* HEADER */}
           <Typography variant='h4' align='center' fontWeight='bold'>
             <FormatMessage id='RESETPWD.Token.title' />
           </Typography>
@@ -50,6 +54,8 @@ const ResetPasswordEmail: React.FC = () => {
           <p className='text-lg leading-tight tracking-tight text-gray-900'>
             <FormatMessage id='RESETPWD.Token.desc' />
           </p>
+          {/* BODY */}
+          {/* token form */}
           <TextField
             id='outlined-token-input'
             label={formatMessage({ id: 'RESETPWD.Token.form' })}
@@ -61,6 +67,7 @@ const ResetPasswordEmail: React.FC = () => {
             error={!isTokenValid && token.length != 0}
             helperText={(!isTokenValid && token.length != 0) && 'Invalid token address'}
           />
+          {/* FOOTER */}
           <Button
             type='submit'
             sx={{ borderRadius: '16px' }}

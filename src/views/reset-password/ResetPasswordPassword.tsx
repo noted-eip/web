@@ -24,6 +24,8 @@ const ResetPasswordPassword: React.FC = () => {
   const [isResetPasswordValid, ] = React.useState(resetPasswordContext.account?.account_id !== null 
     || resetPasswordContext.account?.auth_token !== null || resetPasswordContext.account?.reset_token !== null)
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false)
+  
+  // Hook for updating the account password
   const updateAccountMutation = useUpdateAccountPassword({
     onSuccess: () => {
       resetPasswordContext.changeResetPassword(null)
@@ -33,18 +35,23 @@ const ResetPasswordPassword: React.FC = () => {
       toast.error(e.response?.data.error as string)
     }
   })
+  
   const formIsValid = () => {
     return password === confirmPassword && passwordValid
   }
 
+  // Function to toggle password visibility
   const handleClickShowPassword = () => setShowPassword((show) => !show)
 
+  // Function to prevent default mouse down behavior
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
   }
 
+  // Function to toggle confirm password visibility
   const handleClickShowConfirmPassword = () => setShowConfirmPassword((show) => !show)
 
+  // Function to prevent default mouse down behavior for the confirm password
   const handleMouseDownConfirmPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
   }
@@ -58,9 +65,11 @@ const ResetPasswordPassword: React.FC = () => {
         }}
       >
         <Stack direction='column' spacing={2}>
+          {/* HEADER */}
           <Typography variant='h4' align='center' fontWeight='bold'>
             <FormatMessage id='RESETPWD.Pwd.title' />
           </Typography>
+          {/* TODO: Error handling for the user*/}
           {!isResetPasswordValid && 
             <div className='leading-tight tracking-tight dark:text-white'>
               <span className='text-red-500'>Account Error</span>
@@ -69,6 +78,8 @@ const ResetPasswordPassword: React.FC = () => {
             className='text-lg leading-tight tracking-tight text-gray-900'>
             <FormatMessage id='RESETPWD.Pwd.desc' />
           </p>
+          {/* BODY */}
+          {/* password form */}
           <FormControl
             variant='outlined'
             error={!passwordValid && password.length != 0}
@@ -103,6 +114,7 @@ const ResetPasswordPassword: React.FC = () => {
             />
             <FormHelperText id='outlined-weight-helper-text'><FormatMessage id='AUTH.error.pwd' /></FormHelperText>
           </FormControl>
+          {/* confirm password form */}
           <FormControl
             variant='outlined'
             error={password !== confirmPassword && confirmPassword.length !== 0}
@@ -129,12 +141,10 @@ const ResetPasswordPassword: React.FC = () => {
               onChange={(e) => {
                 setConfirmPassword(e.target.value as string)
               }}
-              // onBlur={() => {
-              //   setPasswordValid(validatePassword(password) === undefined)
-              // }}
             />
             {password !== confirmPassword && confirmPassword.length !== 0 && <FormHelperText id='outlined-weight-helper-text'><FormatMessage id='RESETPWD.Pwd.form2' /></FormHelperText>}
           </FormControl>
+          {/* FOOTER */}
           <Button
             type='submit'
             sx={{ borderRadius: '16px' }}

@@ -21,7 +21,6 @@ import { validateEmail, validateName, validatePassword } from '../../lib/validat
 import { V1AuthenticateGoogleResponse, V1AuthenticateResponse, V1CreateAccountResponse } from '../../protorepo/openapi/typescript-axios'
 
 const SignupView: React.FC = () => {
-
   const { formatMessage } = useOurIntl()
   const analytics = getAnalytics()
   const navigate = useNavigate()
@@ -34,6 +33,8 @@ const SignupView: React.FC = () => {
   const [passwordValid, setPasswordValid] = React.useState(false)
   const [showPassword, setShowPassword] = React.useState(false)
   const developmentContext = useDevelopmentContext()
+ 
+  // Hook for authenticating with email and password
   const authenticateMutation = useAuthenticate({
     onSuccess: (data: V1AuthenticateResponse) => {
       const tokenData = decodeToken(data.token)
@@ -55,6 +56,8 @@ const SignupView: React.FC = () => {
       toast.error(e.response?.data.error as string)
     }
   })
+  
+  // Hook for account creation with email and password
   const createAccountMutation = useCreateAccount({
     onSuccess: (data: V1CreateAccountResponse) => {
       navigate('/validate_account', {state: {email: data.account.email, password: password}})
@@ -63,6 +66,8 @@ const SignupView: React.FC = () => {
       toast.error(e.response?.data.error as string)
     }
   })
+
+  // Hook for authenticating with Google on our server side
   const authenticateGoogleMutation = useAuthenticateGoogle({
     onSuccess: (data: V1AuthenticateGoogleResponse) => {
       const tokenData = decodeToken(data.token)
@@ -85,6 +90,8 @@ const SignupView: React.FC = () => {
       toast.error(e.response?.data.error as string)
     }
   })
+ 
+  // Hook for handling Google login on the Google side
   const googleLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => {
       authenticateGoogleMutation.mutate({body: {clientAccessToken: tokenResponse.access_token}})
@@ -95,8 +102,10 @@ const SignupView: React.FC = () => {
     return nameValid && passwordValid && emailValid
   }
   
+  // Function to toggle password visibility
   const handleClickShowPassword = () => setShowPassword((show) => !show)
 
+  // Function to prevent default mouse down behavior
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
   }
@@ -110,9 +119,12 @@ const SignupView: React.FC = () => {
         }}
       >
         <Stack direction='column' spacing={2}>
+          {/* HEADER */}
           <Typography variant='h4' align='center' fontWeight='bold'>
             <FormatMessage id='SIGNUP.title' />
           </Typography>
+          {/* BODY */}
+          {/* name form */}
           <TextField
             id='outlined-name-input'
             label={formatMessage({ id: 'GENERIC.name' })}
@@ -129,6 +141,7 @@ const SignupView: React.FC = () => {
             error={!nameValid && name.length != 0}
             helperText={(!nameValid && name.length != 0) && 'name must be 4'}
           />
+          {/* email form */}
           <TextField
             id='outlined-email-input'
             label={formatMessage({ id: 'AUTH.email' })}
@@ -145,6 +158,7 @@ const SignupView: React.FC = () => {
             error={!emailValid && email.length != 0}
             helperText={(!emailValid && email.length != 0) && formatMessage({ id: 'AUTH.error.email' })}
           />
+          {/* password form */}
           <FormControl
             error={!passwordValid && password.length != 0}
           >
@@ -191,6 +205,7 @@ const SignupView: React.FC = () => {
               BETA
             </span>
           </div>
+          {/* FOOTER */}
           <Button
             type='submit'
             sx={{ borderRadius: '16px' }}

@@ -20,16 +20,14 @@ const ValidateAccountView: React.FC = () => {
   const navigate = useNavigate()
   const auth = useNoAuthContext()
   const location = useLocation()
-
   const { formatMessage } = useOurIntl()
   const [code, setCode] = React.useState('')
   const [codeValid, setCodeValid] = React.useState(false)
   const { email, password } = location.state as { email: string, password: string }
-
   const developmentContext = useDevelopmentContext()
-
   const sendValidationEmailMutation = useSendValidationToken()
 
+  // Hook for authenticating with email and password
   const authenticateMutation = useAuthenticate({
     onSuccess: (data: V1AuthenticateResponse) => {
       const tokenData = decodeToken(data.token)
@@ -53,6 +51,7 @@ const ValidateAccountView: React.FC = () => {
     }
   })
 
+  // Hook for validating an account with email
   const validateAccountMutation = useValidateAccount({
     onSuccess: () => {
       authenticateMutation.mutate({ body: { email, password } })
