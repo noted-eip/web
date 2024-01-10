@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { createEditor, Descendant, Editor, Transforms } from 'slate'
 import { withHistory } from 'slate-history'
 import {
@@ -13,7 +13,12 @@ import { BlockContext } from '../../contexts/note'
 import {
   useUpdateBlockInCurrentGroup
 } from '../../hooks/api/notes'
-import {stringToNoteBlock, withShortcuts } from '../../lib/editor'
+import { 
+  blockContextToNoteBlock,
+  noteBlocksContextToSlateElements,
+  slateElementsToString, 
+  withShortcuts 
+} from '../../lib/editor'
 import {
   V1Block,
   V1Note
@@ -29,87 +34,68 @@ export const BlockEditorItem: React.FC<{
   
   const blockContext = useBlockContext()
   const updateBlockMutation = useUpdateBlockInCurrentGroup()
-  const { blocks, setBlocks } = useNoteContext()
-
-  const initialEditorState = [
-    {
-      type: 'TYPE_PARAGRAPH',
-      children: [{ text: 'lol-' + block.index }]
-    } as Descendant
-  ]
+  const { blocks, setBlocks, updateBlock } = useNoteContext()
   
-  /*noteBlocksToSlateElements(
-    [
-      {
-        id: block.id,
-        type: block.type,
-        paragraph: block.content
-      }
-    ] as V1Block[]
-  )*/
-  
+  const initialEditorState = noteBlocksContextToSlateElements([blocks[block.index]])
   const editorState = React.useRef<Descendant[]>(initialEditorState)
   editorState.current = initialEditorState
-
   const editor = React.useMemo(() => withShortcuts(withReact(withHistory(createEditor()))), [])
- 
-  //prevent null editor
+
+
   if (!Editor.hasPath(editor, [0, 0])) {
     Transforms.insertNodes (
       editor,
-      { type: 'TYPE_PARAGRAPH', children: [{ text: 'lol-' + block.index }] },
+      { type: 'TYPE_PARAGRAPH', children: [{ text: 'error on block id ' + block.index }] },
       { at: [editor.children.length] }
     )
     editor.history = { undos: [], redos: [] }
   }
 
-  //Set the focus on the isFocused block by useState
-  React.useEffect(() => {
+  useEffect(() => {
     blocks.forEach((currentBlock) => {
-      if (currentBlock.isFocused && block?.index == currentBlock.index)
+      if (currentBlock != undefined)
       {
-        console.log('=====================>', block?.index)
-        ReactEditor.focus(editor)
-        Transforms.select(editor, Editor.end(editor, []))
+        if (currentBlock.isFocused && block?.index == currentBlock.index)
+        {
+          //console.log('==================SWITCH FOCUS====================')
+          ReactEditor.focus(editor)
+          Transforms.select(editor, Editor.end(editor, []))
+        }
       }
     })
+    // peut être enlever blocks de [] pour la perf
   }, [editor, blocks])
 
-  console.log('2-BlockEditorItem : normal flow', blocks)
+  /*useEffect(() => {
+    console.log(blocks)
+  }, [blocks])*/
+
+  // Problème - quand on update dans cette fonction, blocks sont pas a jour
+  const updateBlockFromSlateValue = useCallback((value: Descendant[]) => {
+    console.log('=====>2-BlockEditorItem : block at the start of updateBlockFromSlateValue', blocks)
+
+    const updatedContent = slateElementsToString(value)
+    const newBlock: BlockContext = {
+      id: block.id,
+      type: 'TYPE_PARAGRAPH',
+      content: updatedContent,
+      index: block.index,
+      isFocused: block.isFocused
+    }
+
+    updateBlockBackend(note.id, block?.id, blockContextToNoteBlock(newBlock))
+    blocks[blockIndex].content = updatedContent
+    updateBlock(block.index, newBlock)
+
+    // @WARNING - Y a un monde cette ligne fait tout crash pdnt le hot reload ou des fois comme ca pour le kiff
+    // @TODO : push tout 1 par 1 OU blc
+    editorState.current = [{ type: 'TYPE_PARAGRAPH', children: [{ text: updatedContent ?? '' }] }]
   
-  const updateBlockFromSlateValue = 
-     (value: Descendant[]) => {
-       const lines = value as any
-       console.log('2-BlockEditorItem : block at the start of updateBlockFromSlateValue', blocks)
-       const newBlocks = [...blocks]
+    //setBlocks(newBlocks)
+    console.log('=====>2-BlockEditorItem : set context in updateBlockFromSlateValue', blocks)
+  }, [blocks])
   
-       newBlocks[blockIndex].content = lines[0]?.children[0]?.text ?? ''
-       updateBlock(
-         note.id,
-         block?.id,
-         stringToNoteBlock(lines[0].children[0].text)
-       )
-  
-       editorState.current = [
-         {
-           type: 'TYPE_PARAGRAPH',
-           children: [{ text: lines[0]?.children[0]?.text ?? '' }]
-         }
-       ]
-  
-       const firstBlockPath = [0, 0]
-       if (Editor.hasPath(editor, firstBlockPath)) {
-         Transforms.setNodes(
-           editor,
-           { text: block?.content ?? '' },
-           { at: [0, 0] }
-         )
-       }
-       console.log('2-BlockEditorItem : set context in updateBlockFromSlateValue', newBlocks)
-       //setBlocks(newBlocks)
-     }
-  
-  const updateBlock = (
+  const updateBlockBackend = (
     notedId: string,
     blockId: string | undefined,
     block: V1Block

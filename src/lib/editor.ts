@@ -1,4 +1,5 @@
 import { BaseEditor, Descendant, Editor, Element as SlateElement, Point, Range, Transforms } from 'slate'
+import { BaseRange } from 'slate'
 import { ReactEditor } from 'slate-react'
 
 import { BlockContext } from '../contexts/note'
@@ -135,6 +136,79 @@ export const withShortcuts = editor => {
   return editor
 }
 
+export const getSplitContentByCursorFromEditor = (editorState: Descendant[], selection: BaseRange): [string, string] => {
+  // @TODO (?) : prendre BlockContext[]
+
+  const lines = editorState as any
+  const cursorRowPosition = selection.focus.path[0]
+  const cursorColumnPosition = selection.focus.offset
+  
+  let contentBeforeEnter = ''
+  let contentAfterEnter = ''
+
+  for (let i = 0; i < lines.length; ++i) 
+  {
+    for (let j = 0; j < lines[i].children[0].text.length; ++j) 
+    {
+      if (i < cursorRowPosition) {
+        contentBeforeEnter += lines[i].children[0].text[j]
+
+        // @note: add a '\n' at end line
+        if (j == lines[i].children[0].text.length - 1)  {
+          contentBeforeEnter += '\n'
+        }
+      
+      } else if (i == cursorRowPosition && cursorColumnPosition > j) {
+        contentBeforeEnter += lines[i].children[0].text[j]
+      } else {
+        contentAfterEnter += lines[i].children[0].text[j]
+
+        // @note: add a '\n' at end line, excepted the last line
+        if (i != lines.length - 1 && j == lines[i].children[0].text.length - 1) {
+          contentAfterEnter += '\n'
+        }
+
+      }
+    }
+  }
+
+  // if you use blocks[index].content - 
+  // -> content has '\n' at each Shift + enter
+  /*const array = lines[0].children[0].text.split(['\n']) as string[]
+    console.log('MERGE', array)
+
+    for (let i = 0; i < array.length; ++i) {
+      for (let j = 0; j < array[i].length; ++j) {
+        if (i < cursorRowPosition) {
+          contentBeforeEnter += array[i][j]
+        } else if (i == cursorRowPosition && cursorColumnPosition > j) {
+          contentBeforeEnter += array[i][j]
+        } else {
+          contentAfterEnter += array[i][j]
+          if (i != array.length - 1 && j == array[i].length - 1) {
+            contentAfterEnter += '\n'
+          }
+        }
+      }
+    }*/
+  
+  return [contentBeforeEnter, contentAfterEnter]
+}
+
+export const slateElementsToString = (value: Descendant[]): string => {
+  const lines = value as any
+  let res = ''
+
+  lines.forEach((line, index) => {
+    res += line?.children[0]?.text ?? ''
+    if (index != lines.length - 1) {
+      res += '\n'
+    }
+  })
+
+  return res
+}
+
 export const noteBlocksToContextBlocks = (blocks: V1Block[]): BlockContext[] => {
   const blocksContext: BlockContext[] = []
 
@@ -239,6 +313,56 @@ export const noteBlocksToSlateElements = (blocks: V1Block[]): Descendant[] => {
   return slateElements
 }
 
+export const noteBlocksContextToSlateElements = (blocks: BlockContext[]): Descendant[] => {
+  const slateElements: Descendant[] = []
+
+  const blockType = blocks[0].type
+  const stringArray = blocks[0].content.split('\n') as string[]
+
+  for (let i = 0; i < stringArray.length; i++) {
+    switch (blockType) {
+      case 'TYPE_HEADING_1':
+        slateElements.push({ type: 'TYPE_HEADING_1', children: [{ text: stringArray[i] || '' }] })
+        break
+      case 'TYPE_HEADING_2':
+        slateElements.push({ type: 'TYPE_HEADING_2', children: [{ text: stringArray[i] || '' }] })
+        break
+      case 'TYPE_HEADING_3':
+        slateElements.push({ type: 'TYPE_HEADING_3', children: [{ text: stringArray[i] || '' }] })
+        break
+      case 'TYPE_PARAGRAPH':
+        slateElements.push({ type: 'TYPE_PARAGRAPH', children: [{ text: stringArray[i] || '' }] })
+        break
+      case 'TYPE_BULLET_POINT': {
+        //const bulletPoints: ListItemElement[] = []
+        //for (; i < blocks.length && blockType === 'TYPE_BULLET_POINT';) {
+        //bulletPoints.push({ type: 'TYPE_LIST_ITEM', children: [{ text: blocks[i].content || '' }] })
+        //  if (i + 1 < blocks.length && blocks[i + 1].type === 'TYPE_BULLET_POINT') i++
+        //  else break
+        //}
+        //slateElements.push({ type: 'TYPE_BULLET_LIST', children: bulletPoints })
+        slateElements.push({ type: 'TYPE_LIST_ITEM', children: [{ text: stringArray[i] || '' }] })
+        break
+      }
+      case 'TYPE_NUMBER_POINT': {
+        //const numberPoints: ListItemElement[] = []
+        //for (; i < blocks.length && blockType === 'TYPE_NUMBER_POINT';) {
+        //  numberPoints.push({ type: 'TYPE_LIST_ITEM', children: [{ text: blocks[i].content || '' }] })
+        //  if (i + 1 < blocks.length && blocks[i + 1].type === 'TYPE_NUMBER_POINT') i++
+        //  else break
+        //}
+        //slateElements.push({ type: 'TYPE_NUMBER_LIST', children: numberPoints })
+        slateElements.push({ type: 'TYPE_LIST_ITEM', children: [{ text: stringArray[i] || '' }] })
+        break
+      }
+      default:
+        console.warn(`Block with type ${blockType} is not known, it will be overwritten.`)
+    }
+  }
+
+  return slateElements
+}
+
 export const slateElementsToNoteBlock = (elements: Descendant[]): V1Block => {
   const block: V1Block = {id: '', type: 'TYPE_PARAGRAPH'}
 
@@ -321,6 +445,18 @@ export const noteBlockstoStringArray = (blocks: V1Block[] | undefined): string[]
 
   return arr
 } 
+
+export const blockContextToNoteBlock = (blockContext: BlockContext): V1Block => {
+  const block: V1Block = 
+  {
+    id: blockContext.id, 
+    type: 'TYPE_PARAGRAPH',
+    paragraph: blockContext.content
+
+  }
+
+  return block
+}
 
 export const stringToNoteBlock = (content: string): V1Block => {
   const block: V1Block = {id: '', type: 'TYPE_PARAGRAPH'}

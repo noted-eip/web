@@ -19,7 +19,7 @@ interface TNoteContext {
   blocks: BlockContext[]
   setBlocks: React.Dispatch<BlockContext[]>
   insertBlock: (notedId: string, index: number | undefined, block: V1Block) => void
-  updateBlock: (notedId: string, blockId: string, block: V1Block) => void
+  updateBlock: (index: number, block: BlockContext) => void
   deleteBlock: (notedId: string, blockId: string) => void
 }
 
@@ -44,11 +44,14 @@ const TNoteContextProvider: React.FC<React.PropsWithChildren> = ({
     console.log(`insert ${notedId} ${index} ${block}`)
     return null
   }
-  const updateBlock = (notedId: string, blockId: string, block: V1Block) => 
+  
+  // Endpoint backend ?
+  //const updateBlock = (notedId: string, blockId: string, block: V1Block)
+  const updateBlock = (index: number, block: BlockContext) => 
   {
-    console.log(`udpate ${notedId} ${blockId} ${block}`)
-    return null
+    blocks[index] = block
   }
+
   const deleteBlock = (notedId: string, blockId: string) => 
   {
     console.log(`udpate ${notedId} ${blockId}`)
