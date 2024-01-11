@@ -1,4 +1,3 @@
-import { ArrowPathIcon } from '@heroicons/react/24/outline'
 import { PencilIcon } from '@heroicons/react/24/solid'
 import CheckIcon from '@mui/icons-material/Check'
 import ClearIcon from '@mui/icons-material/Clear'
@@ -56,9 +55,11 @@ const ProfileViewAccountSection: React.FC = () => {
   return (
     <div className='rounded-md border border-gray-100 bg-gray-50 bg-gradient-to-br p-4'>
       <div className='flex items-center'>
-        <div className='group mr-4 h-16 w-16 rounded-md bg-gradient-radial from-teal-300 to-green-200'>
-          <div className='hidden h-full w-full cursor-pointer items-center justify-center rounded-md bg-[rgba(255,255,255,0.2)] group-hover:flex'>
-            <ArrowPathIcon className='hidden h-6 w-6 stroke-2 text-gray-500 group-hover:block' />
+        <div className='mr-4 h-16 w-16 rounded-md bg-gradient-radial from-teal-300 to-green-200'>
+          <div className='flex h-full w-full items-center justify-center rounded-md bg-[rgba(255,255,255,0.2)] '>
+            <label className='items-center justify-center text-3xl font-semibold'>
+              {getAccountQ.data?.account.name.charAt(0).toUpperCase() || 'W'}
+            </label>
           </div>
         </div>
         <div className='flex flex-col'>
