@@ -1,4 +1,4 @@
-import { BoltIcon, PencilIcon } from '@heroicons/react/24/solid'
+import { AcademicCapIcon, BoltIcon, PencilIcon } from '@heroicons/react/24/solid'
 
 import GroupActivityPanel from '../panels/GroupActivityPanel'
 import NoteRecommendationsPanel from '../panels/NoteRecommendationsPanel'
@@ -18,7 +18,7 @@ export const panelMetadata = {
   },
   'quiz-leaderboard': {
     displayName: 'PANEL.leaderboard',
-    icon: PencilIcon,
+    icon: AcademicCapIcon,
     component: QuizLeaderboardPanel,
   },
 }
