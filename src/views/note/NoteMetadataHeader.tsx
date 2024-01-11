@@ -131,9 +131,8 @@ export const NoteViewMetadataHeader: React.FC = () => {
     {/* Last edited by */}
     <div className='flex items-center'>
       <h5 className='mr-1 text-gray-500'><FormatMessage id='NOTE.timecodeA' /> {modifiedAtRelative} <FormatMessage id='NOTE.timecodeB' /> </h5>
-      <div className='flex h-6 cursor-pointer items-center rounded border bg-white p-[2px] px-1 text-xs'>
+      <div className='flex h-6 items-center rounded border bg-white p-[2px] px-1 text-xs'>
         {authorAccountQ.data ? <>
-          <div className='mr-1 h-3 w-3 rounded bg-gradient-radial from-teal-300 to-green-200' />
           {authorAccountQ.data.account.name}
         </> : <LoaderIcon className='h-3 w-3' />}
       </div>
