@@ -162,6 +162,9 @@ const enTranslation: LocaleTypedMessages = {
   'PANEL.companion,buton2': 'Filter by entire note',
   'PANEL.companion,buton3': 'Apply',
   'PANEL.quizs': 'Quizs',
+  'PANEL.quizs.notFound': 'Your quiz has not been found.',
+  'PANEL.quizs.next': 'Next',
+  'PANEL.quizs.generate': 'Generate',
 
   /*    ACTIVITY    */
   'ACTIVITY': 'Activity',

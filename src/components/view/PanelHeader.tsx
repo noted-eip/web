@@ -19,7 +19,7 @@ const PanelHeader: React.FC = () => {
   return (
     <div className='mt-xl flex h-[36px] min-h-[36px] items-center justify-around lg:mx-lg lg:mb-lg xl:mx-xl xl:mb-xl'>
       {panels.map((panelKey, idx) => {
-        console.log(panelKey)
+        // console.log(panelKey)
         const md = panelMetadata[panelKey]
         return (
           <div

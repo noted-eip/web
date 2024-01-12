@@ -163,6 +163,9 @@ const frTranslation: LocaleTypedMessages = {
   'PANEL.companion,buton2': 'Filtrer avec la note entière',
   'PANEL.companion,buton3': 'Appliquer',
   'PANEL.quizs': 'Quizs',
+  'PANEL.quizs.notFound': 'Votre quiz n\' a pas été trouvé',
+  'PANEL.quizs.next': 'Suivant',
+  'PANEL.quizs.generate': 'Générer',
 
   /*    ACTIVITY    */
   'ACTIVITY': 'Activity',

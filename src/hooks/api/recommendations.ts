@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 
 import { useAuthContext } from '../../contexts/auth'
 import { useGroupContext } from '../../contexts/group'
@@ -6,7 +6,7 @@ import { openapiClient } from '../../lib/api'
 import { getWikipediaImage } from '../../lib/widget'
 import { V1GenerateQuizResponse, V1GenerateWidgetsResponse, V1ListQuizsResponse } from '../../protorepo/openapi/typescript-axios'
 import { newQuizsCacheKey, newWidgetsCacheKey, newWikipediaImageCacheKey } from '../api/cache'
-import { axiosRequestOptionsWithAuthorization, QueryHookOptions } from './helpers'
+import { axiosRequestOptionsWithAuthorization, MutationHookOptions, QueryHookOptions } from './helpers'
 
 export type GenerateWidgetsRequest = { noteId: string };
 export const useGenerateWidgets = (req: GenerateWidgetsRequest, options?: QueryHookOptions<GenerateWidgetsRequest, V1GenerateWidgetsResponse>) => {
@@ -38,17 +38,16 @@ export const useGetWikipediaImage = (req: GetWikipediaImageRequest, options?: Qu
 }
 
 export type GenerateQuizRequest = { noteId : string };
-export const useGenerateQuiz = (req: GenerateQuizRequest, options?: QueryHookOptions<GenerateQuizRequest, V1GenerateQuizResponse>) => {
+export const useGenerateQuiz = (options?: MutationHookOptions<GenerateQuizRequest, V1GenerateQuizResponse>) => {
   const authContext = useAuthContext()
   const groupContext = useGroupContext()
   const currentGroupId = groupContext.groupId as string
-  const queryKey = newQuizsCacheKey(currentGroupId, req.noteId)
+  // const queryKey = newQuizsCacheKey(currentGroupId, req.noteId)
 
-  return useQuery({
-    queryKey: queryKey,
-    queryFn: async () => {
-      return (await openapiClient.notesAPIGenerateQuiz(currentGroupId, req.noteId, await axiosRequestOptionsWithAuthorization(authContext))).data
-    },
+  return useMutation(async (req: GenerateQuizRequest) => {
+    return (await openapiClient.notesAPIGenerateQuiz(currentGroupId, req.noteId, await axiosRequestOptionsWithAuthorization(authContext))).data
+  },
+  {
     ...options,
   })
 }
