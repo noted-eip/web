@@ -63,7 +63,9 @@ const GenerateWidget: React.FC<{goBack: () => void, quiz: V1Quiz }> = (props) =>
   if (currentQuestion == null) {
     return (
       <div className='my-4 text-center text-sm text-gray-400'>
-        <p>{'No quiz found'}</p>
+        <p>
+          <FormatMessage id='PANEL.quizs.notFound' />
+        </p>
       </div>)
   }
 
