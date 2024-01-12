@@ -30,7 +30,6 @@ export const useOurIntl = (): Omit<IntlShape, 'formatMessage'> & {
   ) => string;
 } => {
   const {formatMessage, ...rest} = useReactIntl()
-
   return {
     ...rest,
     formatMessage,

@@ -12,7 +12,7 @@ export enum AvailableLang {
 		- The page and the location can be optional depending on the category
 		- Put in caps the first letter of the page
 		- Locate the word with the html tags and in UpperCamelCase
-		- If the key is in multiple pages, put "Generic" for the page of the word
+		- If the key isin mult iple pages, put "Generic" for the page of the word
 		- Categories of word:
 				- Authentication
 				- Profile information
@@ -200,4 +200,14 @@ export enum TranslationKeys {
   'VALIDATION.button',
   'VALIDATION.resend',
   'VALIDATION.resend_link',
+
+  /*    ERROR    */
+
+  'ERROR.connection.created_with_google',
+  'ERROR.connection.input_invalid',
+  'ERROR.connection.input_does_not_match',
+  'ERROR.creation.already_exist',
+  'ERROR.creation.input_invalid',
+  'ERROR.validation.token_does_not_match',
+  'ERROR.unknown',
 }

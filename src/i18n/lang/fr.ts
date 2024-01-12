@@ -180,6 +180,16 @@ const frTranslation: LocaleTypedMessages = {
   'VALIDATION.button': 'Valider',
   'VALIDATION.resend': 'Je n\'ai pas reçus le code',
   'VALIDATION.resend_link': 'l\'envoyer à nouveau',
+
+  /*    ERROR    */
+
+  'ERROR.connection.created_with_google' : 'Veuillez vous connecter avec Google.',
+  'ERROR.connection.input_invalid' : 'Veuillez remplir tous les champs.',
+  'ERROR.connection.input_does_not_match' : 'Les mots de passe ne correspondent pas.',
+  'ERROR.creation.already_exist' : 'Ce compte existe déjà.',
+  'ERROR.creation.input_invalid' : 'Veuillez remplir tous les champs.',
+  'ERROR.validation.token_does_not_match' : 'Le code ne correspond pas.',
+  'ERROR.unknown' : 'Erreur inconnue',
 }
 
 export default frTranslation
