@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { useAuthContext } from '../../contexts/auth'
 import { useGroupContext } from '../../contexts/group'
+import { useNoteContext } from '../../contexts/note'
 import { useGetAccount } from '../../hooks/api/accounts'
 import { useGetCurrentGroup } from '../../hooks/api/groups'
 import { useDeleteNoteInCurrentGroup, useListNotesInCurrentGroup } from '../../hooks/api/notes'
@@ -112,6 +113,12 @@ const GroupViewNotesTab: React.FC = () => {
 
   const groupContext = useGroupContext()
   const authContext = useAuthContext()
+
+  const { clearBlocksContext } = useNoteContext()
+
+  React.useEffect(() => {
+    clearBlocksContext()
+  }, [])
 
   /*const createNoteQ = useCreateNoteInCurrentGroup({
     onSuccess: (data) => {

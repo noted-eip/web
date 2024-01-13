@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChatBubbleOvalLeftEllipsisIcon } from '@heroicons/react/24/outline'
 import { Bars3Icon } from '@heroicons/react/24/outline'
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback } from 'react'
 import { createEditor, Descendant, Editor, Transforms } from 'slate'
 import { withHistory } from 'slate-history'
 import {
@@ -38,8 +38,8 @@ export const BlockEditorItem: React.FC<{
 
   const blockContext = useBlockContext()
   const updateBlockMutation = useUpdateBlockInCurrentGroup()
-  const { blocks, setBlocks, updateBlock } = useNoteContext()
-  
+  const { blocks } = useNoteContext()
+
   const initialEditorState = noteBlocksContextToSlateElements([blocks[block.index]])
   const editorState = React.useRef<Descendant[]>(initialEditorState)
   editorState.current = initialEditorState
@@ -49,13 +49,26 @@ export const BlockEditorItem: React.FC<{
   if (!Editor.hasPath(editor, [0, 0])) {
     Transforms.insertNodes (
       editor,
-      { type: 'TYPE_PARAGRAPH', children: [{ text: 'error on block id ' + block.index }] },
+      { type: 'TYPE_PARAGRAPH', children: [{ text: '' }], style: [] },
       { at: [editor.children.length] }
     )
     editor.history = { undos: [], redos: [] }
   }
 
-  useEffect(() => 
+  /*
+  if (initialEditorState)
+  {
+    const childrens = (initialEditorState[0] as any).children
+    console.log(childrens[0].text)
+    if (childrens.length == 1 && childrens[0].text.length < 1 && blockIndex == 0)
+    {
+      childrens[0].text = 'Insert your text here'
+      //editorState.current = initialEditorState
+    }
+  }
+  */
+
+  React.useEffect(() => 
   {
     blocks.forEach((currentBlock) => {
       if (currentBlock != undefined)
@@ -71,47 +84,45 @@ export const BlockEditorItem: React.FC<{
   }, [editor, blocks])
 
 
-  // ET SI - le seul contexte qui nouus interesse c celui du block & de l'editeur ACTUEL.
   const updateBlockFromSlateValue = useCallback((value: Descendant[]) => 
   {
+    editorState.current = value
+
     const updatedContent = slateElementsToString(value)
 
     const newBlock: BlockContext = {
-      id: block.id, type: 'TYPE_PARAGRAPH',
+      id: block.id, 
+      type: (editorState.current[0] as any).type,
       content: updatedContent,
-      index: block.index, isFocused: block.isFocused
+      index: block.index, 
+      isFocused: block.isFocused
     }
 
-    console.log('2-BlockEditorItem : in callback ', blocks)
+    //console.log('2-BlockEditorItem : in callback ', blocks)
 
     updateBlockBackend(note.id, block?.id, blockContextToNoteBlock(newBlock))
-    blocks[blockIndex].content = updatedContent
-    //updateBlock(block.index, newBlock)
-    //setBlocks([newBlock])
-
-    // @TODO : push tout 1 par 1 OU blc
-    editorState.current = [{ type: 'TYPE_PARAGRAPH', children: [{ text: updatedContent ?? '' }] }]
+    blocks[blockIndex] = newBlock
   
   }, [blocks])
   
   const updateBlockBackend = (
-    notedId: string,
+    noteId: string,
     blockId: string | undefined,
     block: V1Block
   ) => {
-    console.log('-------Update -2- / content ', block.paragraph)
+    console.log('-------Update -2- / content ', block)
+    console.log('-------Update -2- / noteId ', noteId)
     updateBlockMutation.mutate({
-      noteId: notedId,
+      noteId: noteId,
       blockId: blockId == undefined ? '' : blockId,
       body: block
     })
   }
   
-  //const debouncedFunction = React.useMemo(() => debounce(hasBlocks ? updateBlockFromSlateValue : insertBlockFromSlateValue, 5), [])
-  
   const handleEditorChange = (value: Descendant[]) => {
     if (editor.operations.some(op => 'set_selection' !== op.type)) {
       updateBlockFromSlateValue(value)
+      setIsHovered(false)
     }
   }
   
@@ -130,10 +141,9 @@ export const BlockEditorItem: React.FC<{
   return (
 
     <div
-      className={`mx-xl flex max-w-screen-xl items-center justify-between rounded-md ${isHovered ? 'border-gray-50 bg-gray-50 bg-gradient-to-br shadow-inner' : ''}`}
+      className={`mx-xl flex max-w-screen-xl items-center justify-between rounded-md ${isHovered ? 'border-gray-50 bg-gray-50 bg-gradient-to-br shadow-inner' : ''} overflow-x-hidden`}
       onMouseEnter={handleHover}
       onMouseLeave={handleLeave}
-      style={{ overflowX: 'hidden' }}
     >
       <div className='h-6 w-8 px-2'>
         {isHovered ? (
@@ -143,7 +153,7 @@ export const BlockEditorItem: React.FC<{
         )}
       </div>
 
-      <div className={'grow rounded-md bg-transparent p-4'} style={{ overflowX: 'hidden' }}>
+      <div className='grow rounded-md bg-transparent p-4' style={{ maxWidth: 'full', overflowX: 'hidden' }}>
         <Slate
           onChange={handleEditorChange}
           editor={editor}
@@ -165,6 +175,7 @@ export const BlockEditorItem: React.FC<{
         ) : (
           <div className='flex h-6 w-6 items-center justify-center'></div>
         )}
+        <div className='h-2 w-8 px-2'/>
       </div>
     </div>
     

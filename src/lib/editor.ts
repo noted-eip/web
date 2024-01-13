@@ -3,10 +3,10 @@ import { BaseRange } from 'slate'
 import { ReactEditor } from 'slate-react'
 
 import { BlockContext } from '../contexts/note'
-import { V1Block } from '../protorepo/openapi/typescript-axios'
+import { V1Block, V1BlockType } from '../protorepo/openapi/typescript-axios'
 
 export type NoteTitleElement = { type: 'TYPE_NOTE_TITLE'; children: SlateText[] }
-export type ParagraphElement = { type: 'TYPE_PARAGRAPH'; children: SlateText[] }
+export type ParagraphElement = { type: 'TYPE_PARAGRAPH'; children: SlateText[], style: SlateStyle[] }
 export type HeadingOneElement = { type: 'TYPE_HEADING_1'; children: SlateText[] }
 export type HeadingTwoElement = { type: 'TYPE_HEADING_2'; children: SlateText[] }
 export type HeadingThreeElement = { type: 'TYPE_HEADING_3'; children: SlateText[] }
@@ -15,6 +15,7 @@ export type NumberListElement = { type: 'TYPE_NUMBER_LIST'; children: ListItemEl
 export type ListItemElement = { type: 'TYPE_LIST_ITEM'; children: SlateText[] }
 
 export type SlateText = { text: string }
+export type SlateStyle = { bold: boolean }
 
 declare module 'slate' {
   interface CustomTypes {
@@ -168,45 +169,6 @@ export const getSplitContentByCursorFromEditor = (editor: BaseEditor & ReactEdit
     }
 
   }
-
-  /*for (let i = 0; i < lines.length; ++i) {
-    for (let j = 0; j < lines[i].children[0].text.length; ++j) {
-      if (i < cursorRowPosition) {
-        contentBeforeEnter += lines[i].children[0].text[j]
-        // @note: add a '\n' at end line
-        if (j == lines[i].children[0].text.length - 1)  {
-          contentBeforeEnter += '\n'
-        }
-      } else if (i == cursorRowPosition && cursorColumnPosition > j) {
-        contentBeforeEnter += lines[i].children[0].text[j]
-      } else {
-        contentAfterEnter += lines[i].children[0].text[j]
-        // @note: add a '\n' at end line, excepted the last line
-        if (i != lines.length - 1 && j == lines[i].children[0].text.length - 1) {
-          contentAfterEnter += '\n'
-        }
-      }
-    }
-  }*/
-
-  /*const lines = editorState as any
-  const array = lines[0].children[0].text.split(['\n']) as string[]
-    console.log('MERGE', array)
-
-    for (let i = 0; i < array.length; ++i) {
-      for (let j = 0; j < array[i].length; ++j) {
-        if (i < cursorRowPosition) {
-          contentBeforeEnter += array[i][j]
-        } else if (i == cursorRowPosition && cursorColumnPosition > j) {
-          contentBeforeEnter += array[i][j]
-        } else {
-          contentAfterEnter += array[i][j]
-          if (i != array.length - 1 && j == array[i].length - 1) {
-            contentAfterEnter += '\n'
-          }
-        }
-      }
-    }*/
   
   return [contentBeforeEnter, contentAfterEnter]
 }
@@ -290,7 +252,7 @@ export const noteBlocksToSlateElements = (blocks: V1Block[]): Descendant[] => {
         slateElements.push({ type: 'TYPE_HEADING_3', children: [{ text: blocks[i].heading || '' }] })
         break
       case 'TYPE_PARAGRAPH':
-        slateElements.push({ type: 'TYPE_PARAGRAPH', children: [{ text: blocks[i].paragraph || '' }] })
+        slateElements.push({ type: 'TYPE_PARAGRAPH', children: [{ text: blocks[i].paragraph || '' }], style: [] })
         break
       case 'TYPE_BULLET_POINT': {
         const bulletPoints: ListItemElement[] = []
@@ -347,7 +309,7 @@ export const noteBlocksContextToSlateElements = (blocks: BlockContext[]): Descen
         slateElements.push({ type: 'TYPE_HEADING_3', children: [{ text: stringArray[i] || '' }] })
         break
       case 'TYPE_PARAGRAPH':
-        slateElements.push({ type: 'TYPE_PARAGRAPH', children: [{ text: stringArray[i] || '' }] })
+        slateElements.push({ type: 'TYPE_PARAGRAPH', children: [{ text: stringArray[i] || '' }], style: [] })
         break
       case 'TYPE_BULLET_POINT': {
         //const bulletPoints: ListItemElement[] = []
@@ -463,12 +425,34 @@ export const noteBlockstoStringArray = (blocks: V1Block[] | undefined): string[]
 } 
 
 export const blockContextToNoteBlock = (blockContext: BlockContext): V1Block => {
+  
   const block: V1Block = 
   {
     id: blockContext.id, 
-    type: 'TYPE_PARAGRAPH',
-    paragraph: blockContext.content
+    type: blockContext.type as V1BlockType,
+  }
 
+  switch (blockContext.type) {
+    case 'TYPE_HEADING_1':
+      block.heading = blockContext.content
+      break
+    case 'TYPE_HEADING_2':
+      block.heading = blockContext.content
+      break
+    case 'TYPE_HEADING_3':
+      block.heading = blockContext.content
+      break
+    case 'TYPE_PARAGRAPH':
+      block.paragraph = blockContext.content
+      break
+    case 'TYPE_BULLET_LIST':
+      block.bulletPoint = blockContext.content
+      break
+    case 'TYPE_NUMBER_LIST':
+      block.numberPoint = blockContext.content
+      break
+    default:
+      break
   }
 
   return block

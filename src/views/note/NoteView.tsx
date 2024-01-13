@@ -27,6 +27,20 @@ const NoteView: React.FC = () => {
   const analytics = getAnalytics()
   const noteId = useNoteIdFromUrl()
   const noteQuery = useGetNoteInCurrentGroup({ noteId })
+  const [isLoading, setIsLoading] = React.useState(true)
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await noteQuery.refetch()
+        setIsLoading(false)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    }
+
+    fetchData()
+  }, [noteId])
 
   if (!TOGGLE_DEV_FEATURES) {
     logEvent(analytics, 'page_view', {
@@ -34,18 +48,19 @@ const NoteView: React.FC = () => {
     })
   }
 
-  return <ViewSkeleton titleElement={<NoteViewHeader />} panels={['group-activity', 'note-recommendations']}>
-    <div className='w-full'>
-      <NoteViewMetadataHeader />
-      <div className='p-2'/>
-      {
-        noteQuery.data ?
-          <NoteViewEditor note={noteQuery.data.note} />
-          :
+  return (
+    <ViewSkeleton titleElement={<NoteViewHeader />} panels={['group-activity', 'note-recommendations']}>
+      <div className='w-full'>
+        <NoteViewMetadataHeader />
+        <div className='p-2'/>
+        {isLoading ? (
           editorLoadingSkeleton()
-      }
-    </div>
-  </ViewSkeleton>
+        ) : (
+          noteQuery.data && <NoteViewEditor note={noteQuery.data.note} />
+        )}
+      </div>
+    </ViewSkeleton>
+  )
 }
 
 export default NoteView

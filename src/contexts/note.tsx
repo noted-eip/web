@@ -14,10 +14,9 @@ type BlockContext = {
 }
 
 interface TNoteContext {
-  //noteId: string
-  //changeNote: React.Dispatch<string | null>
   blocks: BlockContext[]
   setBlocks: React.Dispatch<BlockContext[]>
+  clearBlocksContext: () => void
   insertBlock: (notedId: string, index: number | undefined, block: V1Block) => void
   updateBlock: (index: number, block: BlockContext) => void
   deleteBlock: (notedId: string, blockId: string) => void
@@ -39,9 +38,10 @@ const TNoteContextProvider: React.FC<React.PropsWithChildren> = ({
     
   const [blocks, setBlocks] = React.useState<BlockContext[]>([])
 
-  /*React.useEffect(() => {
-    console.log(blocks)
-  }, [blocks])*/
+  const clearBlocksContext = () =>
+  {
+    setBlocks([])
+  }
       
   const insertBlock = (notedId: string, index: number | undefined, block: V1Block) => 
   {
@@ -69,6 +69,7 @@ const TNoteContextProvider: React.FC<React.PropsWithChildren> = ({
     <NoteContext.Provider
       value={{
         blocks,
+        clearBlocksContext,
         setBlocks,
         insertBlock,
         updateBlock,

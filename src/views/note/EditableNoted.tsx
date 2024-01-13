@@ -14,9 +14,9 @@ import {
   useUpdateBlockInCurrentGroup
 } from '../../hooks/api/notes'
 import { 
+  blockContextToNoteBlock,
   getSplitContentByCursorFromEditor,
-  stringToNoteBlock
-} from '../../lib/editor'
+  stringToNoteBlock} from '../../lib/editor'
 import {
   NotesAPIInsertBlockRequest,
   V1Block,
@@ -43,13 +43,12 @@ export const EditableNoted: React.FC<{
     props => <EditorElement {...props} />,
     []
   )
-  
+
   const insertBlockBackend = async (
     notedId: string,
     index: number | undefined,
     block: V1Block
   ) => {
-    console.log('-------Insert -3- / content ', block.paragraph)
     const res = await insertBlockMutation.mutateAsync({
       noteId: notedId,
       body: {
@@ -65,7 +64,6 @@ export const EditableNoted: React.FC<{
     blockId: string | undefined,
     block: V1Block
   ) => {
-    console.log('-------Update -3- / content ', block.paragraph)
     updateBlockMutation.mutate({
       noteId: notedId,
       blockId: blockId == undefined ? '' : blockId,
@@ -77,7 +75,6 @@ export const EditableNoted: React.FC<{
     notedId: string,
     blockId: string | undefined
   ) => {
-    console.log('-------Delete -3-')
     if (block == undefined) return
     deleteBlockMutation.mutate({
       noteId: notedId,
@@ -110,30 +107,35 @@ export const EditableNoted: React.FC<{
     const beforeEnterContentArray = contentBeforeEnter.split('\n') as string[]
     const lastLineContentBeforeEnter = beforeEnterContentArray[beforeEnterContentArray.length - 1]
     
-    updateBlockBackend(note.id, block?.id ?? '', stringToNoteBlock(contentBeforeEnter))
-    //insertBlockBackend(note.id, blockIndex + 1 ?? 1000, stringToNoteBlock(contentAfterEnter))
-    const newBlockId = await insertBlockBackend(note.id, blockIndex + 1 ?? 1000, stringToNoteBlock(contentAfterEnter))
-
-    const oldLocalBlock = { id: block?.id, type: block?.type,
-      content: contentBeforeEnter, index: blockIndex,
+    const oldLocalBlock = { 
+      id: block?.id, 
+      type: blocks[blockIndex].type,
+      content: contentBeforeEnter, 
+      index: blockIndex,
       isFocused: false
     } as BlockContext
+
+    updateBlockBackend(note.id, block?.id ?? '', blockContextToNoteBlock(oldLocalBlock))
+    
+    const newBlockId = await insertBlockBackend(note.id, blockIndex + 1 ?? 1000, stringToNoteBlock(contentAfterEnter))
     
     const newLocalBlock = { 
-      id: newBlockId, type: 'TYPE_PARAGRAPH',
-      content: contentAfterEnter, index: blockIndex + 1,
+      id: newBlockId, 
+      type: 'TYPE_PARAGRAPH',
+      content: contentAfterEnter, 
+      index: blockIndex + 1,
       isFocused: true
     } as BlockContext
 
 
-    console.log('======> 3-EditableNoted : blocks begin handle enter ', blocks)
+    //console.log('3-EditableNoted : blocks begin handle enter ', blocks)
     
     const newBlocks = [...blocks]
     newBlocks[blockIndex] = oldLocalBlock
     newBlocks.splice(blockIndex + 1, 0, newLocalBlock)
     setBlocks(newBlocks)
     
-    console.log('======> 3-EditableNoted : newBlocks after handle enter ', newBlocks)
+    //console.log('3-EditableNoted : newBlocks after handle enter ', newBlocks)
 
 
     if (contentAfterEnter.length > 0) {
@@ -143,12 +145,10 @@ export const EditableNoted: React.FC<{
 
       Transforms.insertNodes(
         editor,
-        { type: 'TYPE_PARAGRAPH', children: [{ text: lastLineContentBeforeEnter }] },
+        { type: 'TYPE_PARAGRAPH', children: [{ text: lastLineContentBeforeEnter }], style: [] },
         { at: [columnPosition] }
       )
     }
-
-    //editorState.current = noteBlocksContextToSlateElements([oldLocalBlock])
 
   }
   
@@ -162,13 +162,13 @@ export const EditableNoted: React.FC<{
             && selection?.focus.offset === Editor.start(editor, []).offset) 
           {
             event.preventDefault()
+            // @Todo : merge content before cursor
             handleBackspace()
           }
         }
 
         if (event.key === 'Enter' && !event.shiftKey) {
           event.preventDefault()
-          // @TODO BUG : split le contenu d'avant le curseur
           handleEnter()
         }
 
