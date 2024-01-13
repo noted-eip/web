@@ -40,8 +40,8 @@ function getGroupIdInEvent(event: string) {
 }
 
 function getAddNoteEvent(event: string) {
-  let username = ''
-  let noteTitle = ''
+  let username = 'Someone'
+  let noteTitle = 'a note'
   const folder = ''
 
   let everything = ''
@@ -58,15 +58,16 @@ function getAddNoteEvent(event: string) {
 
     const userId = event.substring(event.indexOf('<userID:') + 8, event.indexOf('>'))
     const getUserResponse = useGetAccount({ accountId: userId })
-    if (getUserResponse.data?.account.name != undefined)
+    if (getUserResponse.data?.account.name != undefined) {
       username = getUserResponse.data?.account.name
+    }
 
     const noteId = getNoteIdInEvent(event)
     const getNoteReponse = useGetNoteInCurrentGroup({ noteId: noteId })
-    if (getNoteReponse.data?.note.title != undefined)
+    if (getNoteReponse.data?.note.title != undefined) {
       noteTitle = getNoteReponse.data?.note.title
+    }
   }
-
   return (username + firstPart + noteTitle + secondPart + folder)
 }
 
@@ -88,17 +89,18 @@ function getUpdateOnMemberEvent(event: string) {
 
     const userId = event.substring(event.indexOf('<userID:') + 8, event.indexOf('>'))
     const getUserResponse = useGetAccount({ accountId: userId })
-    if (getUserResponse.data?.account.name != undefined)
+    if (getUserResponse.data?.account.name != undefined) {
       username = getUserResponse.data?.account.name
+    }
 
     const groupId = getGroupIdInEvent(event)
     const getGroupReponse = useGetGroup({ groupId: groupId })
-    if (getGroupReponse.data?.group.name != undefined)
+    if (getGroupReponse.data?.group.name != undefined) {
       groupName = getGroupReponse.data?.group.name
+    }
   }
-
   return (username + firstPart + groupName + secondPart)
- }
+}
 
 function getDateFormat(unformatedDate: string) {
   let everything = ''
@@ -200,7 +202,6 @@ const ActivityListCurrentGroup: React.FC = () => {
               />
             </>
           ) : (
-          /*listActivitiesQ.data?.activities?.slice().reverse().map((activity, idx) => (*/
             listActivitiesQ.data?.activities?.map((activity, idx) => (
               <ActivityListItem key={`activity-list-${activity.id}-${idx}`} activity={activity} />
             ))
