@@ -27,6 +27,7 @@
     "lottie-react": "^2.4.0",
     "lottie-web": "^5.12.2",
     "moment": "^2.29.4",
+    "mui-numpad": "^0.1.4-alpha",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",

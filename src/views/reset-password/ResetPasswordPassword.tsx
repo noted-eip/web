@@ -73,7 +73,10 @@ const ResetPasswordPassword: React.FC = () => {
             variant='outlined'
             error={!passwordValid && password.length != 0}
           >
-            <InputLabel htmlFor='outlined-adornment-password'>
+            <InputLabel
+              htmlFor='outlined-adornment-password'
+              sx={{ backgroundColor: 'white', padding: '0 4px', marginLeft: '8px', zIndex: 1 }}
+            >
               <FormatMessage id='AUTH.pwd' />
             </InputLabel>
             <OutlinedInput
@@ -107,7 +110,10 @@ const ResetPasswordPassword: React.FC = () => {
             variant='outlined'
             error={password !== confirmPassword && confirmPassword.length !== 0}
           >
-            <InputLabel htmlFor='outlined-adornment-password'>
+            <InputLabel
+              htmlFor='outlined-adornment-password'
+              sx={{ backgroundColor: 'white', padding: '0 4px', marginLeft: '8px', zIndex: 1 }}
+            >
               <FormatMessage id='RESETPWD.Pwd.form' />
             </InputLabel>
             <OutlinedInput
@@ -129,9 +135,6 @@ const ResetPasswordPassword: React.FC = () => {
               onChange={(e) => {
                 setConfirmPassword(e.target.value as string)
               }}
-              // onBlur={() => {
-              //   setPasswordValid(validatePassword(password) === undefined)
-              // }}
             />
             {password !== confirmPassword && confirmPassword.length !== 0 && <FormHelperText id='outlined-weight-helper-text'><FormatMessage id='RESETPWD.Pwd.form2' /></FormHelperText>}
           </FormControl>

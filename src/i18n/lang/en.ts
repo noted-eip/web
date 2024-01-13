@@ -44,8 +44,10 @@ const enTranslation: LocaleTypedMessages = {
   /* ResetPassword Token  */
   'RESETPWD.Token.title': 'Verification',
   'RESETPWD.Token.desc': 'Enter the verification code we just sent you on your email address',
-  'RESETPWD.Token.form': 'Your token',
-  'RESETPWD.Token.button': 'Send token',
+  'RESETPWD.Token.noCode': 'You didn\'t receive the token ? ',
+  'RESETPWD.Token.resend': 'Resend your token',
+  'RESETPWD.Token.badToken': 'Bad token',
+  'RESETPWD.Token.tokenResend': 'We sent you another token !',
 
   /*  ResetPassword Password  */
   'RESETPWD.Pwd.title': 'Create a new password',
