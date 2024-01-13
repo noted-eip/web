@@ -41,19 +41,19 @@ const ConfirmationPanel: React.FC<{onValidate: any, title: any, content?: any}> 
             <div className='px-1 font-bold'> <FormatMessage id={'CONFIRMATION.form.desc1'}/> </div>
             <FormatMessage id={'CONFIRMATION.form.desc3'}/>
           </div>
-          <div className='border-b-2 px-2'>
+          <div className='mx-4 mb-2'>
             <TextField
               margin='normal'
               id='validationText'
               fullWidth
               size='small'
-              variant='outlined'
+              variant='filled'
               onChange={(e) => {
                 handleType(e.target.value)
               }}
             />
           </div>
-          <div className='flex place-content-center p-2'>
+          <div className='flex place-content-center border-t-2 p-2'>
             {enable ?
               <button onClick={onValidate} className='rounded border border-red-500 bg-red-100 py-2 px-4 font-semibold text-red-700 hover:border-transparent hover:bg-red-300 hover:text-white'>
                 <FormatMessage id={'CONFIRMATION.button'} /> <FormatMessage id={title} />
