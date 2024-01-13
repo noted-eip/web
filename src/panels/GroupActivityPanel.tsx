@@ -98,36 +98,7 @@ function getUpdateOnMemberEvent(event: string) {
   }
 
   return (username + firstPart + groupName + secondPart)
-  /*
-  let username = ''
-  let groupName = ''
- 
-  if (event == undefined)
-    return ''
-    
-  let everything = event
-  everything = everything.substring(everything.indexOf('>') + 1, everything.length)
-  const firstPart = everything.substring(0, everything.indexOf('<'))
-  everything = everything.substring(everything.indexOf('>') + 1, everything.length)
-  const secondPart = everything.substring(0, everything.indexOf('<'))
-
-  const userId = event.substring(event.indexOf('<userID:') + 8, event.indexOf('>'))
-  const getUserResponse = useGetAccount({ accountId: userId })
-  if (getUserResponse.data?.account.name != undefined && getUserResponse.status == 'success')
-    username = getUserResponse.data?.account.name
-  else
-    return ''
-
-  const groupId = getGroupIdInEvent(event)
-  const getGroupReponse = useGetGroup({ groupId: groupId })
-  if (getGroupReponse.data?.group.name != undefined && getGroupReponse.status == 'success')
-    groupName = getGroupReponse.data?.group.name
-  else
-    return ''
-
-  return (username + firstPart + groupName + secondPart)
-  */
-}
+ }
 
 function getDateFormat(unformatedDate: string) {
   let everything = ''
@@ -171,22 +142,16 @@ const ActivityListItem: React.FC<{ activity: V1GroupActivity }> = (props) => {
   switch (props.activity.type) {
     case 'ADD-NOTE': {
       event = getAddNoteEvent(props.activity?.event)
-      //if (event == '')
-      //  return <div></div>
       redirectId = getNoteIdInEvent(props.activity?.event)
       break
     }
     case 'ADD-MEMBER': {
       event = getUpdateOnMemberEvent(props.activity?.event)
-      //if (event == '')
-      //  return <div></div>
       redirectId = getGroupIdInEvent(props.activity?.event)
       break
     }
     case 'REMOVE-MEMBER': {
       event = getUpdateOnMemberEvent(props.activity?.event)
-      //if (event == '')
-      //  return <div></div>
       redirectId = getGroupIdInEvent(props.activity?.event)
       break
     }
