@@ -10,6 +10,7 @@ const NoteViewEditor: React.FC<{ note: V1Note }> = ({ note }) => {
   const { blocks, setBlocks } = useNoteContext()
 
   React.useEffect(() => {
+    //console.log('1-NoteViewEditor : blocks from backend', note?.blocks)
     setBlocks(noteBlocksToContextBlocks(note?.blocks ?? []))
   }, [note?.blocks])
 
