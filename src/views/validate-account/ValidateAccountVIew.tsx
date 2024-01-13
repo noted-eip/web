@@ -10,7 +10,7 @@ import { addAccountToDevelopmentContext, useDevelopmentContext } from '../../con
 import { useNoAuthContext } from '../../contexts/noauth'
 import { useAuthenticate, useSendValidationToken, useValidateAccount, ValidateAccountRequest } from '../../hooks/api/accounts'
 import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
-import { decodeToken } from '../../lib/api'
+import { beautifyError, decodeToken } from '../../lib/api'
 import { TOGGLE_DEV_FEATURES } from '../../lib/env'
 import { validateCode } from '../../lib/validators'
 import { V1AuthenticateResponse } from '../../protorepo/openapi/typescript-axios'
@@ -49,7 +49,7 @@ const ValidateAccountView: React.FC = () => {
       navigate('/')
     },
     onError: (e) => {
-      toast.error(e.response?.data.error as string)
+      toast.error(beautifyError(e.response?.data.error, 'validation', formatMessage))
     }
   })
 
@@ -58,7 +58,7 @@ const ValidateAccountView: React.FC = () => {
       authenticateMutation.mutate({ body: { email, password } })
     },
     onError: (e) => {
-      toast.error(e.response?.data.error as string)
+      toast.error(beautifyError(e.response?.data.error, 'validation', formatMessage))
     },
   })
 

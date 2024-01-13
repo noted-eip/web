@@ -62,7 +62,7 @@ const SigninView: React.FC = () => {
       navigate('/')
     },
     onError: (e) => {
-      // toast.error(beautifyError(e.response?.data.error, 'connection'))
+      toast.error(beautifyError(e.response?.data.error, 'connection', formatMessage))
     }
   })
   const authenticateGoogleMutation = useAuthenticateGoogle({
@@ -84,7 +84,7 @@ const SigninView: React.FC = () => {
       navigate('/')
     },
     onError: (e) => {
-      // toast.error(beautifyError(e.response?.data.error, 'connection'))
+      toast.error(beautifyError(e.response?.data.error, 'connection', formatMessage))
     }
   })
   const googleLogin = useGoogleLogin({

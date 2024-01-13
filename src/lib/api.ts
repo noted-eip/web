@@ -26,17 +26,13 @@ const decodeToken = (token: string): { aid: string } => {
 
 export { apiQueryClient, decodeToken,openapiClient }
 
-type module_type = 'connection' | 'creation' | 'validation'
-  
+type module_type = 'connection' | 'creation' | 'validation' | 'export' | 'quiz' | 'invite'
 
 export const beautifyError = (error: string | undefined, module: module_type, formatMessage: any) : string => {
-  console.log('err 0 ')
-  console.log('err 0.5')
-  console.log('err 1 ' + error)
   if (!error) {
     return formatMessage({ id: 'ERROR.unknown' })
   }
-  console.log('err 2 ' + error)
+
   switch (module) {
     case 'connection':
       if (error.includes('wrong password or email')) {
@@ -53,6 +49,15 @@ export const beautifyError = (error: string | undefined, module: module_type, fo
       return formatMessage({ id: 'ERROR.creation.input_invalid' })
     case 'validation':
       return formatMessage({ id: 'ERROR.validation.token_does_not_match' })
+    case 'export':
+      return formatMessage({ id: 'ERROR.export.something_wrong' })
+    case 'quiz':
+      return formatMessage({ id: 'ERROR.quiz.something_wrong' })
+    case 'invite':
+      if (error.includes('already invited')) {
+        return formatMessage({ id: 'ERROR.invite.already_exist' })
+      }
+      return formatMessage({ id: 'ERROR.invite.something_wrong' })
     default:
       return formatMessage({ id: 'ERROR.unknown' })
   }

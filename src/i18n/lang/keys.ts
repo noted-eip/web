@@ -209,5 +209,9 @@ export enum TranslationKeys {
   'ERROR.creation.already_exist',
   'ERROR.creation.input_invalid',
   'ERROR.validation.token_does_not_match',
+  'ERROR.export.something_wrong',
+  'ERROR.quiz.something_wrong',
+  'ERROR.invite.something_wrong',
+  'ERROR.invite.already_exist',
   'ERROR.unknown',
 }
