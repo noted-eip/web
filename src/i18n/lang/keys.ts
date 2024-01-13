@@ -26,8 +26,11 @@ export enum TranslationKeys {
   'GENERIC.name',
   'GENERIC.home',
   'GENERIC.profile',
+  'GENERIC.groups',
+  'GENERIC.notes',
   'GENERIC.role',
   'GENERIC.actions',
+  'GENERIC.logout',
 
   /*		AUTHENTICATION		*/
   /*  Auth  */
@@ -35,6 +38,9 @@ export enum TranslationKeys {
   'AUTH.register',
   'AUTH.email',
   'AUTH.pwd',
+  'AUTH.error.name',
+  'AUTH.error.email',
+  'AUTH.error.pwd',
 
   /* Signing */
   'SIGNIN.title',
@@ -44,6 +50,8 @@ export enum TranslationKeys {
   /*  Signup  */
   'SIGNUP.title',
   'SIGNUP.signupGoogle',
+  'SIGNUP.wantSignIn',
+  'SIGNUP.wantSignUp',
 
   /*    RESETPASSWORD   */
 
@@ -57,13 +65,16 @@ export enum TranslationKeys {
   /* ResetPassword Token  */
   'RESETPWD.Token.title',
   'RESETPWD.Token.desc',
-  'RESETPWD.Token.form',
-  'RESETPWD.Token.button',
+  'RESETPWD.Token.resend',
+  'RESETPWD.Token.noCode',
+  'RESETPWD.Token.badToken',
+  'RESETPWD.Token.tokenResend',
 
   /*  ResetPassword Password  */
   'RESETPWD.Pwd.title',
   'RESETPWD.Pwd.desc',
   'RESETPWD.Pwd.form',
+  'RESETPWD.Pwd.form2',
 
   /*    LANDING    */
   /* Description */
@@ -107,6 +118,7 @@ export enum TranslationKeys {
   'GROUP.Empty.desc2',
   'GROUP.createGroup',
   'GROUP.creatingGroup',
+  'GROUP.inMyGroup',
 
   'GROUP.settings',
   'GROUP.upgrade',
@@ -127,6 +139,7 @@ export enum TranslationKeys {
   'GROUP.settings.invites.desc',
 
   /*    NOTE    */
+  'NOTE.myNotes',
   'NOTE.newNote',
   'NOTE.untitledNote',
   'NOTE.timecodeA',
@@ -156,17 +169,23 @@ export enum TranslationKeys {
   'PROFILE.beta.button',
   'PROFILE.beta.buttonResTrue',
   'PROFILE.beta.buttonResFalse',
+  'PROFILE.langage.title',
+  'PROFILE.langage.desc',
+  'PROFILE.langage.options',
+  'PROFILE.langage.fr',
+  'PROFILE.langage.en',
 
   /*    PANEL   */
   'PANEL.activity',
   'PANEL.activity.loading',
   'PANEL.activity.none',
+  'PANEL.activity.noGroup',
   'PANEL.companion',
   'PANEL.companion,buton1',
   'PANEL.companion,buton2',
   'PANEL.companion,buton3',
 
-  /*    ACTIVITY    */
+  /*    ACTIVITY   */
   'ACTIVITY',
 
   /*    SETTINGS    */

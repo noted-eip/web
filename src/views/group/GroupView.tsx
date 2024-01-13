@@ -1,16 +1,16 @@
 import React from 'react'
-import { Outlet, useNavigate, useParams } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import ViewSkeleton from '../../components/view/ViewSkeleton'
 import { useGroupContext } from '../../contexts/group'
-import { useOurIntl } from '../../i18n/TextComponent'
 import GroupViewEmptyState from './GroupViewEmptyState'
+import GroupViewMenu from './GroupViewMenu'
 
 const GroupView: React.FC = () => {
-  const { formatMessage } = useOurIntl()
   const groupContext = useGroupContext()
   const navigate = useNavigate()
   const routerParams = useParams()
+  const location = useLocation()
   const [isLoading, setIsLoading] = React.useState(true)
 
   // Synchronises the current group from the local storage
@@ -30,7 +30,7 @@ const GroupView: React.FC = () => {
   }
 
   return (
-    <ViewSkeleton title={formatMessage({ id: 'GENERIC.home' })} panels={['group-activity']}>
+    <ViewSkeleton element={<GroupViewMenu activeTab={location.pathname.endsWith('/settings') ? 'settings' : ''} />} panels={['group-activity']}>
       {groupContext.groupId ? (
         <div className='mx-lg mb-lg w-full xl:mx-xl xl:mb-xl'>
           <Outlet />

@@ -5,8 +5,11 @@ const frTranslation: LocaleTypedMessages = {
   'GENERIC.name': 'Nom',
   'GENERIC.home': 'Accueil',
   'GENERIC.profile': 'Profil',
+  'GENERIC.groups': 'Groupes',
+  'GENERIC.notes': 'Notes',
   'GENERIC.role': 'Rôle',
   'GENERIC.actions': 'Actions',
+  'GENERIC.logout': 'Déconnexion',
 
   /*		AUTHENTICATION		*/
   /*  Auth  */
@@ -14,15 +17,21 @@ const frTranslation: LocaleTypedMessages = {
   'AUTH.register': 'Inscription',
   'AUTH.email': 'Email',
   'AUTH.pwd': 'Mot de passe',
+  'AUTH.error.name': 'Nom invalide',
+  'AUTH.error.email': 'Adresse email invalide',
+  'AUTH.error.pwd': '6 caractères, lettres, chiffres et symboles',
 
   /* Signing */
   'SIGNIN.title': 'Connectez-vous à votre compte',
   'SIGNIN.signinGoogle': 'Connectez-vous avec Google',
   'SIGNIN.resetPwd': 'Réinitialiser le mot de passe',
 
+
   /*  Signup  */
   'SIGNUP.title': 'Créer un compte',
   'SIGNUP.signupGoogle': 'S\'inscrire avec Google',
+  'SIGNUP.wantSignIn': 'J\'ai déjà un compte',
+  'SIGNUP.wantSignUp': 'Je veux créer un compte',
 
   /*    RESETPASSWORD   */
 
@@ -36,13 +45,16 @@ const frTranslation: LocaleTypedMessages = {
   /* ResetPassword Token  */
   'RESETPWD.Token.title': 'Vérification',
   'RESETPWD.Token.desc': 'Entrez le code de vérification que nous venons de vous envoyer sur votre adresse e-mail',
-  'RESETPWD.Token.form': 'Votre jeton',
-  'RESETPWD.Token.button': 'Envoyer token',
+  'RESETPWD.Token.noCode': 'Vous n\'avez pas reçu le code ? ',
+  'RESETPWD.Token.resend': 'Renvoyez le code',
+  'RESETPWD.Token.badToken': 'Mauvais token',
+  'RESETPWD.Token.tokenResend': 'Un nouveau code a été envoyé !',
 
   /*  ResetPassword Password  */
   'RESETPWD.Pwd.title': 'Crée un nouveau mot de passe',
   'RESETPWD.Pwd.desc': 'Entrez un nouveau mot de passe pour votre compte',
   'RESETPWD.Pwd.form': 'Confirmez le mot de passe',
+  'RESETPWD.Pwd.form2': 'Mot de passe différent',
 
   /*    LANDING    */
   /* Description */
@@ -86,6 +98,7 @@ const frTranslation: LocaleTypedMessages = {
   'GROUP.Empty.desc2': 'Les invitations aux groupes s\'afficheront ici.',
   'GROUP.createGroup': 'Créer un groupe',
   'GROUP.creatingGroup': 'Création...',
+  'GROUP.inMyGroup': 'Dans mon groupe...',
 
   'GROUP.settings': 'Paramètres',
   'GROUP.upgrade': 'Améliorer',
@@ -106,6 +119,7 @@ const frTranslation: LocaleTypedMessages = {
   'GROUP.settings.invites.desc': 'Aucune invitation en attente pour ce groupe',
 
   /*    NOTE    */
+  'NOTE.myNotes': 'Mes notes',
   'NOTE.newNote': 'Nouvelle note',
   'NOTE.untitledNote': 'Note sans nom',
   'NOTE.timecodeA': 'Dernière modification',
@@ -131,15 +145,21 @@ const frTranslation: LocaleTypedMessages = {
   'PROFILE.beta.title': 'Fonctionnalités supplémentaires',
   'PROFILE.beta.subTitle': 'Application mobile',
   'PROFILE.beta.desc': 'Vous recevrez une invitation pour installer l\'application sur votre téléphone. Avec lui vous pouvez parcourir vos groupes, notes, invitations, membres et recommandations mais vous ne pouvez pas modifier vos notes (encore 😉).',
-  'PROFILE.beta.subDesc': 'L\'email de votre compte doit être lié à un compte Google pour être invité !',
+  'PROFILE.beta.subDesc': 'L\'email de votre compte doit être lié à un compte Google pour être invité !',
   'PROFILE.beta.button': 'Accéder à la beta',
   'PROFILE.beta.buttonResTrue': 'Envoyé!',
   'PROFILE.beta.buttonResFalse': 'Déjà rejoint',
+  'PROFILE.langage.title': 'Langue',
+  'PROFILE.langage.desc': 'Modifiez la langue utilisée dans l’interface utilisateur.',
+  'PROFILE.langage.options': 'Options',
+  'PROFILE.langage.fr': 'Français',
+  'PROFILE.langage.en': 'Anglais',
 
   /*    PANEL   */
   'PANEL.activity': 'Activité',
   'PANEL.activity.loading': 'Chargement de vos activités...',
-  'PANEL.activity.none': 'Pas d\'activité récente',
+  'PANEL.activity.none': 'Aucune activité récente',
+  'PANEL.activity.noGroup': 'Aucun groupe sélectionné',
   'PANEL.companion': 'Compagnion',
   'PANEL.companion,buton1': 'Filtrer par block',
   'PANEL.companion,buton2': 'Filtrer avec la note entière',

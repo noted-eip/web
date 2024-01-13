@@ -52,11 +52,12 @@ const GroupViewEmptyState: React.FC = () => {
             </div>
           ))}
       </div>
+      {/* TODO: last button to replace with mui */}
       <button
         onClick={() => {
           createGroupQ.mutate({body: {name: 'My Group', description: 'Created on ' + new Date().toDateString()}})
         }}
-        className='mt-4 flex  items-center rounded-full bg-blue-600 p-2 px-4 text-sm text-white hover:bg-blue-700'
+        className='mt-4 flex items-center rounded-full bg-blue-600 p-2 px-4 text-sm text-white hover:bg-blue-700'
       >
         <PlusIcon className='mr-1 h-4 w-4 stroke-2' />
         {createGroupQ.isLoading ? formatMessage({ id: 'GROUP.creatingGroup' }) : formatMessage({ id: 'GROUP.createGroup' })}

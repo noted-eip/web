@@ -1,3 +1,6 @@
+import { CssBaseline } from '@mui/material'
+import { grey } from '@mui/material/colors'
+import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import { initializeApp } from 'firebase/app'
 import React from 'react'
@@ -35,7 +38,65 @@ const App: React.FC = () => {
     appId: '1:871625340195:web:aa69f8236ad0da4e2fc896',
     measurementId: 'G-XFC30W0DZ'
   }
-
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: '#2a777d',
+      },
+      secondary: {
+        main: '#328d94',
+      },
+    },
+    typography: {
+      fontFamily: 'Nunito, sans-serif',
+      h6: {
+        fontSize: 18,
+      },
+  
+    },
+    components: {
+      MuiSvgIcon: {
+        styleOverrides: {
+          root: {
+            width: '1.25rem',
+            height: '1.25rem',
+            color: grey[700],
+          },
+        },
+      },  
+      MuiInputBase: {
+        styleOverrides: { 
+          root: {
+            borderRadius: '16px',
+          },
+        },
+      },
+      MuiOutlinedInput: {
+        styleOverrides: {
+          root: {
+            borderRadius: '16px',
+          },
+        },
+      },
+      MuiButton: {
+        variants: [
+          {
+            props: { variant: 'outlined' },
+            style: {
+              textTransform: 'none',
+            },
+          },
+          {
+            props: { variant: 'contained' },
+            style: {
+              textTransform: 'none',
+            },
+          },
+        ],
+      },
+    },
+  })
+  
   initializeApp(firebaseConfig)
   React.useEffect(() => {
     noAuthContext.attemptSigninFromLocalStorage()
@@ -52,29 +113,32 @@ const App: React.FC = () => {
   }
 
   return (
-    <LangageContext.Provider value={{langage: currentLangage, changeLangage}}>
-      <LocaleManager>
-        <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-          <BrowserRouter>
-            <DevelopmentContext.Provider
-              value={TOGGLE_DEV_FEATURES ? { accounts, setAccounts } : undefined}
-            >
-              <QueryClientProvider client={apiQueryClient}>
-                {!hasLoaded ? null : token !== null ? (
-                  <AuthContext.Provider value={authContext}>
-                    <AuthenticatedRouter />
-                  </AuthContext.Provider>
-                ) : (
-                  <NoAuthContext.Provider value={noAuthContext}>
-                    <UnauthenticatedRouter />
-                  </NoAuthContext.Provider>
-                )}
-              </QueryClientProvider>
-            </DevelopmentContext.Provider>
-          </BrowserRouter>
-        </GoogleOAuthProvider>
-      </LocaleManager>
-    </LangageContext.Provider>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <LangageContext.Provider value={{langage: currentLangage, changeLangage}}>
+        <LocaleManager>
+          <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+            <BrowserRouter>
+              <DevelopmentContext.Provider
+                value={TOGGLE_DEV_FEATURES ? { accounts, setAccounts } : undefined}
+              >
+                <QueryClientProvider client={apiQueryClient}>
+                  {!hasLoaded ? null : token !== null ? (
+                    <AuthContext.Provider value={authContext}>
+                      <AuthenticatedRouter />
+                    </AuthContext.Provider>
+                  ) : (
+                    <NoAuthContext.Provider value={noAuthContext}>
+                      <UnauthenticatedRouter />
+                    </NoAuthContext.Provider>
+                  )}
+                </QueryClientProvider>
+              </DevelopmentContext.Provider>
+            </BrowserRouter>
+          </GoogleOAuthProvider>
+        </LocaleManager>
+      </LangageContext.Provider>
+    </ThemeProvider>
   )
 }
 

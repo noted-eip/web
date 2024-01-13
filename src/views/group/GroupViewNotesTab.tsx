@@ -1,5 +1,5 @@
 import { ArrowPathIcon, LinkIcon as LinkIconOutline, PencilIcon as PencilIconOutline, PlusIcon, TrashIcon as TrashIconOutline } from '@heroicons/react/24/outline'
-import { FolderIcon } from '@heroicons/react/24/solid'
+import { Button, Stack } from '@mui/material'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -8,7 +8,6 @@ import { useGetCurrentGroup } from '../../hooks/api/groups'
 import { useCreateNoteInCurrentGroup, useDeleteNoteInCurrentGroup, useListNotesInCurrentGroup } from '../../hooks/api/notes'
 import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
 import { V1Note } from '../../protorepo/openapi/typescript-axios'
-import GroupViewMenu from './GroupViewMenu'
 
 type NotesLiNotesListGridItemContextMenuProps = {
   note: V1Note,
@@ -114,45 +113,29 @@ const GroupViewNotesTab: React.FC = () => {
   return (
     <div className='grid w-full grid-rows-1 gap-4'>
       {/* Menu */}
-      <GroupViewMenu activeTab={''}>
-        <div className='flex items-center'>
-          {getGroupQ.isSuccess ? (
-            <div className='mr-4 flex h-7 rounded bg-gray-100 px-2'>
-              <div className='flex items-center'>
-                <FolderIcon className='mr-2 h-4 w-4 text-gray-500' />
-                <p className='mr-1 cursor-pointer text-sm text-gray-500 decoration-blue-500 decoration-2 hover:underline'>
-                  {getGroupQ.data.group.name}
-                </p>
-              </div>
-            </div>
-          ) : (
-            <React.Fragment>
-              <div className='skeleton h-7 w-56'></div>
-            </React.Fragment>
-          )}
-        </div>
-      </GroupViewMenu>
 
       {/* Search bar */}
-      <div className='flex grid-rows-[auto_auto]'>
+      <Stack direction='row' spacing={2}>
         <input
           className='w-full rounded-md border border-gray-200 p-2 text-sm placeholder:text-gray-400'
           placeholder={`${formatMessage({ id: 'GROUP.search' })} ${getGroupQ.data?.group.name || ''}`}
           type='text'
         />
-        <button
-          className='ml-4 flex shrink-0 items-center rounded-md bg-blue-50 p-2 px-3 text-sm  text-blue-500 transition-all'
+        <Button
+          variant='outlined'
+          className='shrink-0'
           onClick={() => {
             createNoteQ.mutate({body: {title: formatMessage({ id: 'NOTE.untitledNote' })}})
           }}
+          endIcon={
+            createNoteQ.isLoading ?
+              <ArrowPathIcon className='h-5 w-5 animate-spin text-blue-500' /> : 
+              <PlusIcon className='h-5 w-5 stroke-2 text-blue-500' />
+          }
         >
           <FormatMessage id='NOTE.newNote' />
-          {
-            createNoteQ.isLoading ? <ArrowPathIcon className='ml-1 h-4 w-4 animate-spin text-blue-500' /> : <PlusIcon className='ml-1 h-4 w-4 stroke-2 text-blue-500' />
-          }
-        </button>
-      </div>
-
+        </Button>
+      </Stack>
       {/* Notes Grid */}
       <div className='grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-3 lg:grid-cols-3 lg:gap-4 xl:grid-cols-4'>
         {listNotesQ.isSuccess ? (

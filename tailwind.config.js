@@ -21,9 +21,9 @@ module.exports = {
       fontSize: {
         'xxs': '0.69rem'
       }
-    }
+    },
   },
-  plugins: [
-    require('@tailwindcss/forms'),
-  ],
+  // plugins: [
+  //   require('@tailwindcss/forms'),
+  // ],
 }

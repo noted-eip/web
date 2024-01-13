@@ -8,7 +8,7 @@
     "@headlessui/react": "^1.7.7",
     "@heroicons/react": "^2.0.12",
     "@mui/icons-material": "^5.14.1",
-    "@mui/material": "^5.14.2",
+    "@mui/material": "^5.14.15",
     "@react-native-firebase/app": "^18.3.0",
     "@react-oauth/google": "^0.7.0",
     "@tanstack/react-query-devtools": "^4.24.6",
@@ -19,12 +19,15 @@
     "@types/node": "^16.11.41",
     "@types/react": "^18.0.14",
     "@types/react-dom": "^18.0.5",
-    "axios": "^0.27.2",
+    "axios": "^1.6.2",
     "firebase": "^10.1.0",
     "jspdf": "^2.5.1",
     "jwt-decode": "^3.1.2",
     "lodash.debounce": "^4.0.8",
+    "lottie-react": "^2.4.0",
+    "lottie-web": "^5.12.2",
     "moment": "^2.29.4",
+    "mui-numpad": "^0.1.4-alpha",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",
@@ -67,7 +70,6 @@
     ]
   },
   "devDependencies": {
-    
     "@tailwindcss/forms": "^0.5.3",
     "@types/uuid": "^9.0.1",
     "@typescript-eslint/eslint-plugin": "^5.30.0",
