@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { ChatBubbleOvalLeftEllipsisIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon } from '@heroicons/react/24/outline'
 import React, { useCallback, useEffect } from 'react'
 import { createEditor, Descendant, Editor, Transforms } from 'slate'
 import { withHistory } from 'slate-history'
@@ -30,8 +32,10 @@ export const BlockEditorItem: React.FC<{
   block: BlockContext
   blockIndex: number
 }> = ({ note, block, blockIndex }) => {
-  if (block == undefined) return <div />
-  
+  if (block == undefined) return <div/>
+
+  const [isHovered, setIsHovered] = React.useState(false)
+
   const blockContext = useBlockContext()
   const updateBlockMutation = useUpdateBlockInCurrentGroup()
   const { blocks, setBlocks, updateBlock } = useNoteContext()
@@ -51,48 +55,43 @@ export const BlockEditorItem: React.FC<{
     editor.history = { undos: [], redos: [] }
   }
 
-  useEffect(() => {
+  useEffect(() => 
+  {
     blocks.forEach((currentBlock) => {
       if (currentBlock != undefined)
       {
         if (currentBlock.isFocused && block?.index == currentBlock.index)
         {
-          //console.log('==================SWITCH FOCUS====================')
           ReactEditor.focus(editor)
           Transforms.select(editor, Editor.end(editor, []))
         }
       }
     })
-    // peut être enlever blocks de [] pour la perf
+    // @todo: peut être enlever blocks de [] pour la perf
   }, [editor, blocks])
 
-  /*useEffect(() => {
-    console.log(blocks)
-  }, [blocks])*/
 
-  // Problème - quand on update dans cette fonction, blocks sont pas a jour
-  const updateBlockFromSlateValue = useCallback((value: Descendant[]) => {
-    console.log('=====>2-BlockEditorItem : block at the start of updateBlockFromSlateValue', blocks)
-
+  // ET SI - le seul contexte qui nouus interesse c celui du block & de l'editeur ACTUEL.
+  const updateBlockFromSlateValue = useCallback((value: Descendant[]) => 
+  {
     const updatedContent = slateElementsToString(value)
+
     const newBlock: BlockContext = {
-      id: block.id,
-      type: 'TYPE_PARAGRAPH',
+      id: block.id, type: 'TYPE_PARAGRAPH',
       content: updatedContent,
-      index: block.index,
-      isFocused: block.isFocused
+      index: block.index, isFocused: block.isFocused
     }
+
+    console.log('2-BlockEditorItem : in callback ', blocks)
 
     updateBlockBackend(note.id, block?.id, blockContextToNoteBlock(newBlock))
     blocks[blockIndex].content = updatedContent
-    updateBlock(block.index, newBlock)
+    //updateBlock(block.index, newBlock)
+    //setBlocks([newBlock])
 
-    // @WARNING - Y a un monde cette ligne fait tout crash pdnt le hot reload ou des fois comme ca pour le kiff
     // @TODO : push tout 1 par 1 OU blc
     editorState.current = [{ type: 'TYPE_PARAGRAPH', children: [{ text: updatedContent ?? '' }] }]
   
-    //setBlocks(newBlocks)
-    console.log('=====>2-BlockEditorItem : set context in updateBlockFromSlateValue', blocks)
   }, [blocks])
   
   const updateBlockBackend = (
@@ -100,7 +99,7 @@ export const BlockEditorItem: React.FC<{
     blockId: string | undefined,
     block: V1Block
   ) => {
-    console.log('----UPDATE')
+    console.log('-------Update -2- / content ', block.paragraph)
     updateBlockMutation.mutate({
       noteId: notedId,
       blockId: blockId == undefined ? '' : blockId,
@@ -117,29 +116,57 @@ export const BlockEditorItem: React.FC<{
   }
   
   const handleHover = () => {
+    setIsHovered(true)
     if (block != undefined) {
       blockContext.changeBlock(block.id)
     }
   }
-  
+
+  const handleLeave = () => {
+    setIsHovered(false)
+  }
+
+
   return (
+
     <div
-      className='rounded-md border-gray-100 bg-gray-100 bg-gradient-to-br p-4 shadow-inner'
+      className={`mx-xl flex max-w-screen-xl items-center justify-between rounded-md ${isHovered ? 'border-gray-50 bg-gray-50 bg-gradient-to-br shadow-inner' : ''}`}
       onMouseEnter={handleHover}
+      onMouseLeave={handleLeave}
+      style={{ overflowX: 'hidden' }}
     >
-      <Slate
-        onChange={handleEditorChange}
-        editor={editor}
-        value={editorState.current}
-      >
-        <EditableNoted
-          block={block}
-          note={note}
+      <div className='h-6 w-8 px-2'>
+        {isHovered ? (
+          <Bars3Icon className='h-6 w-6 text-gray-400' />
+        ) : (
+          <div className='flex h-6 w-6 items-center justify-center'></div>
+        )}
+      </div>
+
+      <div className={'grow rounded-md bg-transparent p-4'} style={{ overflowX: 'hidden' }}>
+        <Slate
+          onChange={handleEditorChange}
           editor={editor}
-          blockIndex={blockIndex}
-          editorState={editorState.current}
-        />
-      </Slate>
+          value={editorState.current}
+        >
+          <EditableNoted
+            block={block}
+            note={note}
+            editor={editor}
+            blockIndex={blockIndex}
+            editorState={editorState.current}
+          />
+        </Slate>
+      </div>
+
+      <div className='h-6 w-8'>
+        {isHovered ? (
+          <ChatBubbleOvalLeftEllipsisIcon className='h-6 w-6 text-gray-400' />
+        ) : (
+          <div className='flex h-6 w-6 items-center justify-center'></div>
+        )}
+      </div>
     </div>
+    
   )
 }

@@ -136,45 +136,61 @@ export const withShortcuts = editor => {
   return editor
 }
 
-export const getSplitContentByCursorFromEditor = (editorState: Descendant[], selection: BaseRange): [string, string] => {
-  // @TODO (?) : prendre BlockContext[]
+export const getSplitContentByCursorFromEditor = (editor: BaseEditor & ReactEditor, selection: BaseRange): [string, string] => {
 
-  const lines = editorState as any
   const cursorRowPosition = selection.focus.path[0]
   const cursorColumnPosition = selection.focus.offset
   
   let contentBeforeEnter = ''
   let contentAfterEnter = ''
 
-  for (let i = 0; i < lines.length; ++i) 
-  {
-    for (let j = 0; j < lines[i].children[0].text.length; ++j) 
-    {
+  const lines = editor.children as any
+
+  for (let i = 0; i < lines.length; ++i) {
+    const line = lines[i].children[0]
+    
+    for (let j = 0; j < line.text.length; ++j) {
+
+      if (i < cursorRowPosition) {
+        contentBeforeEnter += line.text[j]
+        if (j == line.text.length - 1) {
+          contentBeforeEnter += '\n'
+        }
+      } else if (i == cursorRowPosition && cursorColumnPosition > j) {
+        contentBeforeEnter += line.text[j]
+      } else {
+        contentAfterEnter += line.text[j]
+        if (i != lines.length - 1 && j == line.text.length - 1) {
+          contentAfterEnter += '\n'
+        }
+      }
+
+    }
+
+  }
+
+  /*for (let i = 0; i < lines.length; ++i) {
+    for (let j = 0; j < lines[i].children[0].text.length; ++j) {
       if (i < cursorRowPosition) {
         contentBeforeEnter += lines[i].children[0].text[j]
-
         // @note: add a '\n' at end line
         if (j == lines[i].children[0].text.length - 1)  {
           contentBeforeEnter += '\n'
         }
-      
       } else if (i == cursorRowPosition && cursorColumnPosition > j) {
         contentBeforeEnter += lines[i].children[0].text[j]
       } else {
         contentAfterEnter += lines[i].children[0].text[j]
-
         // @note: add a '\n' at end line, excepted the last line
         if (i != lines.length - 1 && j == lines[i].children[0].text.length - 1) {
           contentAfterEnter += '\n'
         }
-
       }
     }
-  }
+  }*/
 
-  // if you use blocks[index].content - 
-  // -> content has '\n' at each Shift + enter
-  /*const array = lines[0].children[0].text.split(['\n']) as string[]
+  /*const lines = editorState as any
+  const array = lines[0].children[0].text.split(['\n']) as string[]
     console.log('MERGE', array)
 
     for (let i = 0; i < array.length; ++i) {

@@ -37,6 +37,7 @@ const NoteView: React.FC = () => {
   return <ViewSkeleton titleElement={<NoteViewHeader />} panels={['group-activity', 'note-recommendations']}>
     <div className='w-full'>
       <NoteViewMetadataHeader />
+      <div className='p-2'/>
       {
         noteQuery.data ?
           <NoteViewEditor note={noteQuery.data.note} />

@@ -38,6 +38,10 @@ const TNoteContextProvider: React.FC<React.PropsWithChildren> = ({
 }) => {
     
   const [blocks, setBlocks] = React.useState<BlockContext[]>([])
+
+  /*React.useEffect(() => {
+    console.log(blocks)
+  }, [blocks])*/
       
   const insertBlock = (notedId: string, index: number | undefined, block: V1Block) => 
   {
@@ -45,11 +49,12 @@ const TNoteContextProvider: React.FC<React.PropsWithChildren> = ({
     return null
   }
   
-  // Endpoint backend ?
-  //const updateBlock = (notedId: string, blockId: string, block: V1Block)
   const updateBlock = (index: number, block: BlockContext) => 
   {
-    blocks[index] = block
+    const newBlocks = [...blocks]
+    newBlocks.splice(index, 1, block)
+    setBlocks(newBlocks)//comme je setBlocks ca tej cqui a avant
+    console.log('0-Context : in updateBlock ', blocks)
   }
 
   const deleteBlock = (notedId: string, blockId: string) => 

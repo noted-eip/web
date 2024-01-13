@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react'
-import { BaseEditor, Descendant, Editor } from 'slate'
+import { BaseEditor, Descendant, Editor, Transforms } from 'slate'
 import {
   Editable,
   ReactEditor} from 'slate-react'
@@ -13,7 +13,10 @@ import {
   useInsertBlockInCurrentGroup,
   useUpdateBlockInCurrentGroup
 } from '../../hooks/api/notes'
-import { getSplitContentByCursorFromEditor,stringToNoteBlock } from '../../lib/editor'
+import { 
+  getSplitContentByCursorFromEditor,
+  stringToNoteBlock
+} from '../../lib/editor'
 import {
   NotesAPIInsertBlockRequest,
   V1Block,
@@ -46,7 +49,7 @@ export const EditableNoted: React.FC<{
     index: number | undefined,
     block: V1Block
   ) => {
-    console.log('----INSERT')
+    console.log('-------Insert -3- / content ', block.paragraph)
     const res = await insertBlockMutation.mutateAsync({
       noteId: notedId,
       body: {
@@ -62,7 +65,7 @@ export const EditableNoted: React.FC<{
     blockId: string | undefined,
     block: V1Block
   ) => {
-    console.log('----UPDATE')
+    console.log('-------Update -3- / content ', block.paragraph)
     updateBlockMutation.mutate({
       noteId: notedId,
       blockId: blockId == undefined ? '' : blockId,
@@ -74,7 +77,7 @@ export const EditableNoted: React.FC<{
     notedId: string,
     blockId: string | undefined
   ) => {
-    console.log('----DELETE')
+    console.log('-------Delete -3-')
     if (block == undefined) return
     deleteBlockMutation.mutate({
       noteId: notedId,
@@ -96,50 +99,57 @@ export const EditableNoted: React.FC<{
     }
   }
   
-  const handleEnter = () => {
+  const handleEnter = async () => {
     const { selection } = editor
   
     if (selection == null)
       return
 
-    const [contentBeforeEnter, contentAfterEnter] = getSplitContentByCursorFromEditor(editorState, selection)
+    const [contentBeforeEnter, contentAfterEnter] = getSplitContentByCursorFromEditor(editor, selection)
+    const columnPosition = selection.focus.path[0]
+    const beforeEnterContentArray = contentBeforeEnter.split('\n') as string[]
+    const lastLineContentBeforeEnter = beforeEnterContentArray[beforeEnterContentArray.length - 1]
     
     updateBlockBackend(note.id, block?.id ?? '', stringToNoteBlock(contentBeforeEnter))
-    insertBlockBackend(note.id, blockIndex + 1 ?? 1000, stringToNoteBlock(contentAfterEnter))
-    //const newBlockId = await insertBlock(note.id, blockIndex == undefined ? 1000 : blockIndex + 1, stringToNoteBlock(newBlockContent))
+    //insertBlockBackend(note.id, blockIndex + 1 ?? 1000, stringToNoteBlock(contentAfterEnter))
+    const newBlockId = await insertBlockBackend(note.id, blockIndex + 1 ?? 1000, stringToNoteBlock(contentAfterEnter))
 
     const oldLocalBlock = { id: block?.id, type: block?.type,
       content: contentBeforeEnter, index: blockIndex,
       isFocused: false
     } as BlockContext
     
-    const newLocalBlock = { id: 'fake-id', type: 'TYPE_PARAGRAPH',
+    const newLocalBlock = { 
+      id: newBlockId, type: 'TYPE_PARAGRAPH',
       content: contentAfterEnter, index: blockIndex + 1,
       isFocused: true
     } as BlockContext
 
 
+    console.log('======> 3-EditableNoted : blocks begin handle enter ', blocks)
+    
     const newBlocks = [...blocks]
-    console.log('3-EditableNoted : newBlocks begin handle enter ', newBlocks)
-
     newBlocks[blockIndex] = oldLocalBlock
-    if (newBlocks[0] != undefined) console.log('3-EditableNoted : newBlocks[0] middle handle enter ', newBlocks[0].content)
-    if (newBlocks[1] != undefined) console.log('3-EditableNoted : newBlocks[1] middle handle enter ', newBlocks[1].content)
-    if (newBlocks[2] != undefined) console.log('3-EditableNoted : newBlocks[2] middle handle enter ', newBlocks[2].content)
-
-    // EN FONCTION DE SI (blockIndex + 1 == undefined) push un block OU insert un block
-    newBlocks.push(newLocalBlock)
-    //newBlocks.splice(blockIndex + 1, 0, newLocalBlock)
-
+    newBlocks.splice(blockIndex + 1, 0, newLocalBlock)
     setBlocks(newBlocks)
+    
+    console.log('======> 3-EditableNoted : newBlocks after handle enter ', newBlocks)
 
-    console.log('3-EditableNoted : newBlocks after handle enter ', newBlocks)
-    console.log('3-EditableNoted : blocks after handle enter ', blocks)
 
-    // test de set l'editeur
-    //Transforms.setNodes(editor, { type: 'TYPE_PARAGRAPH', children: [{ text: contentBeforeEnter }] })
+    if (contentAfterEnter.length > 0) {
+      for (let i = Editor.end(editor, []).path[0]; i >= columnPosition; --i) {
+        Transforms.removeNodes(editor, { at: [i] })
+      }
+
+      Transforms.insertNodes(
+        editor,
+        { type: 'TYPE_PARAGRAPH', children: [{ text: lastLineContentBeforeEnter }] },
+        { at: [columnPosition] }
+      )
+    }
+
     //editorState.current = noteBlocksContextToSlateElements([oldLocalBlock])
-    //editor.children = noteBlocksContextToSlateElements([oldLocalBlock])
+
   }
   
   return (
@@ -152,7 +162,6 @@ export const EditableNoted: React.FC<{
             && selection?.focus.offset === Editor.start(editor, []).offset) 
           {
             event.preventDefault()
-            // @TODO : merge ce qu'il y a dans ce bloc avec celui d'avant
             handleBackspace()
           }
         }
