@@ -22,19 +22,3 @@ export const useListActivitiesInCurrentGroup = (req: ListActivitiesInCurrentGrou
     ...options,
   })
 }
-
-// export type ListActivitiesInCurrentGroupRequest = {limit?: number, offset?: number};
-// export const useListActivitiesInCurrentGroup = (req: ListActivitiesInCurrentGroupRequest, options?: QueryHookOptions<ListActivitiesInCurrentGroupRequest, V1ListActivitiesResponse> ) => {
-//   const authContext = useAuthContext()
-//   const groupContext = useGroupContext()
-//   const currentGroupId = groupContext.groupId as string
-//   const activitiesCacheKey = newActivitiesCacheKey(currentGroupId)
-// 
-//   return useQuery({
-//     queryKey: activitiesCacheKey,
-//     queryFn: async () => {
-//       return (await openapiClient.groupsAPIListActivities(undefined, /*author_accoutn_id*/, req.limit, req.offset, await axiosRequestOptionsWithAuthorization(authContext))).data
-//     },
-//     ...options,
-//   })
-// }
