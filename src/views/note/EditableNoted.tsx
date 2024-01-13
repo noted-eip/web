@@ -127,17 +127,11 @@ export const EditableNoted: React.FC<{
       isFocused: true
     } as BlockContext
 
-
-    //console.log('3-EditableNoted : blocks begin handle enter ', blocks)
-    
     const newBlocks = [...blocks]
     newBlocks[blockIndex] = oldLocalBlock
     newBlocks.splice(blockIndex + 1, 0, newLocalBlock)
     setBlocks(newBlocks)
     
-    //console.log('3-EditableNoted : newBlocks after handle enter ', newBlocks)
-
-
     if (contentAfterEnter.length > 0) {
       for (let i = Editor.end(editor, []).path[0]; i >= columnPosition; --i) {
         Transforms.removeNodes(editor, { at: [i] })

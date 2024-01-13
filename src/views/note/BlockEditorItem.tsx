@@ -55,18 +55,6 @@ export const BlockEditorItem: React.FC<{
     editor.history = { undos: [], redos: [] }
   }
 
-  /*
-  if (initialEditorState)
-  {
-    const childrens = (initialEditorState[0] as any).children
-    console.log(childrens[0].text)
-    if (childrens.length == 1 && childrens[0].text.length < 1 && blockIndex == 0)
-    {
-      childrens[0].text = 'Insert your text here'
-      //editorState.current = initialEditorState
-    }
-  }
-  */
 
   React.useEffect(() => 
   {
@@ -98,8 +86,6 @@ export const BlockEditorItem: React.FC<{
       isFocused: block.isFocused
     }
 
-    //console.log('2-BlockEditorItem : in callback ', blocks)
-
     updateBlockBackend(note.id, block?.id, blockContextToNoteBlock(newBlock))
     blocks[blockIndex] = newBlock
   
@@ -110,8 +96,6 @@ export const BlockEditorItem: React.FC<{
     blockId: string | undefined,
     block: V1Block
   ) => {
-    console.log('-------Update -2- / content ', block)
-    console.log('-------Update -2- / noteId ', noteId)
     updateBlockMutation.mutate({
       noteId: noteId,
       blockId: blockId == undefined ? '' : blockId,

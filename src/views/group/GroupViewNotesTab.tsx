@@ -124,34 +124,6 @@ const GroupViewNotesTab: React.FC = () => {
       navigate(`./note/${data.note.id}`)
     },
   })
-  /*const url = `${API_BASE}/groups/${groupContext.groupId}/notes`
-
-  const handleCreateNote = async () => {
-    try {
-      const token = await authContext.token()
-      console.log(token)
-
-      const response = await axios.post(
-        url,
-        {
-          title: 'Note sans nom',
-          group_id: groupContext.groupId,
-        },
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          },
-          //responseType: 'application/json',
-        }
-      )
-
-      console.log(response.data)
-      navigate(`./note/${response.data.note.id}`)
-    } catch (err)
-    {
-      console.error(err)
-    }
-  }*/
 
   return (
     <div className='grid w-full grid-rows-1 gap-4'>
