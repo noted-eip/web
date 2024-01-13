@@ -20,7 +20,7 @@ import {
 import {
   NotesAPIInsertBlockRequest,
   V1Block,
-  V1Note
+  V1Note+ block.index
 } from '../../protorepo/openapi/typescript-axios'
 import { EditorElement } from './EditorElement'
 
