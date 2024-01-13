@@ -195,6 +195,14 @@ export enum TranslationKeys {
   'SETTINGS.langage.french',
   'SETTINGS.langage.english',
 
+  /*    CONFIRMATION    */
+  'CONFIRMATION.form.desc0',
+  'CONFIRMATION.form.desc1',
+  'CONFIRMATION.form.desc3',
+  'CONFIRMATION.button',
+  'CONFIRMATION.title.note',
+  'CONFIRMATION.title.group',
+
   /*    VALIDATION    */
   'VALIDATION.title',
   'VALIDATION.content',

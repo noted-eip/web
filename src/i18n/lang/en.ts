@@ -174,6 +174,14 @@ const enTranslation: LocaleTypedMessages = {
   'SETTINGS.langage.french': 'French',
   'SETTINGS.langage.english': 'English',
 
+  /*    CONFIRMATION    */
+  'CONFIRMATION.form.desc0': 'Please type',
+  'CONFIRMATION.form.desc1': 'understood',
+  'CONFIRMATION.form.desc3': 'to confirm.',
+  'CONFIRMATION.button': 'I understand the consequences',
+  'CONFIRMATION.title.note': 'Delete my note',
+  'CONFIRMATION.title.group': 'Delete my group',
+
   /*    VALIDATION    */
   'VALIDATION.title': 'Please validate your account',
   'VALIDATION.content': 'You received an activation code at the following address:',

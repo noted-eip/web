@@ -175,6 +175,14 @@ const frTranslation: LocaleTypedMessages = {
   'SETTINGS.langage.french': 'Français',
   'SETTINGS.langage.english': 'Anglais',
 
+  /*    CONFIRMATION    */
+  'CONFIRMATION.form.desc0': 'Veuilliez entrer',
+  'CONFIRMATION.form.desc1': 'compris',
+  'CONFIRMATION.form.desc3': 'pour confirmer',
+  'CONFIRMATION.button': 'Je comprends les conséquences, ',
+  'CONFIRMATION.title.note': 'Supprimer ma note',
+  'CONFIRMATION.title.group': 'Supprimer un membre',
+
   /*    VALIDATION    */
   'VALIDATION.title': 'Veuillez valider votre compte',
   'VALIDATION.content': 'Vous avez reçus un code d\'activation à l\'adresse suivante :',

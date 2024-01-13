@@ -17,6 +17,7 @@ import React, { useState } from 'react'
 
 import LoaderIcon from '../../components/icons/LoaderIcon'
 import { StyledMenu } from '../../components/Menu/StyledMenu'
+import ConfirmationPanel from '../../components/pop-up/confirmation-panel'
 import ViewSkeleton from '../../components/view/ViewSkeleton'
 import { useAuthContext } from '../../contexts/auth'
 import { LangageContext } from '../../contexts/langage'
@@ -312,34 +313,47 @@ const ProfileViewFeedbackSection: React.FC = () => {
 
 const ProfileViewDangerZoneSection: React.FC = () => {
   const deleteAccountQ = useDeleteMyAccount()
+  const [open, setOpen] = React.useState(false)
+
+  const handleOpen = () => {
+    setOpen(true)
+  }
+
+  const onValidate = () => {
+    deleteAccountQ.mutate(undefined)
+  }
+
 
   return (
-    <div className='mt-4 w-full rounded-md border border-gray-100 bg-gray-50'>
-      {/* Header */}
-      <div className='flex items-center justify-between border-b border-[#efefef] px-5 py-3'>
-        <div className='flex items-center'>
-          <ReportProblemIcon sx={{ color: grey[700] }} />
-          <Typography variant='h6' sx={{ color: grey[700] }} ml={1}>
-            <FormatMessage id='PROFILE.delete.title1' />
-          </Typography>
+    <React.Fragment>
+      {open ? <ConfirmationPanel onValidate={onValidate} title='PROFILE.delete.title2' content='PROFILE.delete.desc'/> : null}
+      <div className='mt-4 w-full rounded-md border border-gray-100 bg-gray-50'>
+        {/* Header */}
+        <div className='flex items-center justify-between border-b border-[#efefef] px-5 py-3'>
+          <div className='flex items-center'>
+            <ReportProblemIcon sx={{ color: grey[700] }} />
+            <Typography variant='h6' sx={{ color: grey[700] }} ml={1}>
+              <FormatMessage id='PROFILE.delete.title1' />
+            </Typography>
+          </div>
+        </div>
+        <div className='grid grid-cols-[40%_60%] p-5'>
+          <div>
+            <Typography variant='body2' fontWeight='bold' sx={{ color: grey[800] }}>
+              <FormatMessage id='PROFILE.delete.title2' />
+            </Typography>
+            <Typography variant='body2' sx={{ color: grey[600] }}>
+              <FormatMessage id='PROFILE.delete.desc' />
+            </Typography>
+          </div>
+          <div className='flex items-center justify-end'>
+            <Button variant='outlined' color='error' onClick={handleOpen}>
+              <FormatMessage id='PROFILE.delete.button' />
+            </Button>
+          </div>
         </div>
       </div>
-      <div className='grid grid-cols-[40%_60%] p-5'>
-        <div>
-          <Typography variant='body2' fontWeight='bold' sx={{ color: grey[800] }}>
-            <FormatMessage id='PROFILE.delete.title2' />
-          </Typography>
-          <Typography variant='body2' sx={{ color: grey[600] }}>
-            <FormatMessage id='PROFILE.delete.desc' />
-          </Typography>
-        </div>
-        <div className='flex items-center justify-end'>
-          <Button variant='outlined' color='error' onClick={() => {deleteAccountQ.mutate(undefined)}}>
-            <FormatMessage id='PROFILE.delete.button' />
-          </Button>
-        </div>
-      </div>
-    </div>
+    </React.Fragment>
   )
 }
 
