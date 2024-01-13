@@ -69,7 +69,7 @@ const WidgetListCurrentGroup: React.FC = () => {
   }
 
   return(
-    <div className='overflow-y-scroll'>
+    <div className='h-full overflow-y-scroll lg:px-lg lg:pb-lg xl:px-xl xl:pb-xl'>
       <div className='space-y-2'>
         {
           recoModeContext.recoMode === 'note' ? 
@@ -95,9 +95,7 @@ const WidgetListCurrentGroup: React.FC = () => {
               <div className='my-4 text-center text-sm text-gray-400'>
                 You have no widgets for this block
               </div>
-
         }
-        
       </div>
     </div>
   )

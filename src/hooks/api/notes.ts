@@ -15,6 +15,8 @@ export const useCreateNoteInCurrentGroup = (options?: MutationHookOptions<Create
 
   return useMutation({
     mutationFn: async (req: CreateNoteRequest) => {
+      // TODO: make it possible to change the language with a dropdown on the note ?
+      req.body.lang = 'fr'
       return (await openapiClient.notesAPICreateNote(groupContext.groupId as string, req.body, await axiosRequestOptionsWithAuthorization(authContext))).data
     },
     ...options,

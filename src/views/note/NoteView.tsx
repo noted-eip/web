@@ -5,7 +5,7 @@ import ViewSkeleton from '../../components/view/ViewSkeleton'
 import { useGetNoteInCurrentGroup } from '../../hooks/api/notes'
 import { useNoteIdFromUrl } from '../../hooks/url'
 import { TOGGLE_DEV_FEATURES } from '../../lib/env'
-import NoteViewMetadataHeader from './NoteMetadataHeader'
+import {NoteViewMetadataHeader} from './NoteMetadataHeader'
 import NoteViewEditor from './NoteViewEditor'
 import NoteViewHeader from './NoteViewHeader'
 

@@ -1,26 +1,28 @@
-import Button from '@mui/material/Button'
-import Stack from '@mui/material/Stack'
-import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
+import { Button,Stack, TextField, Typography } from '@mui/material'
+import { getAnalytics, logEvent } from 'firebase/analytics'
 import React, { RefObject, useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import Notification from '../../components/notification/Notification'
 import Authentication from '../../components/view/Authentication'
-import { useResetPasswordContext } from '../../hooks/api/accounts'
-import { useForgetAccountPassword, useForgetAccountPasswordValidateToken } from '../../hooks/api/password'
+import { addAccountToDevelopmentContext, useDevelopmentContext } from '../../contexts/dev'
+import { useNoAuthContext } from '../../contexts/noauth'
+import { useAuthenticate, useSendValidationToken, useValidateAccount, ValidateAccountRequest } from '../../hooks/api/accounts'
 import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
-import { V1ForgetAccountPasswordResponse, V1ForgetAccountPasswordValidateTokenResponse } from '../../protorepo/openapi/typescript-axios'
+import { decodeToken } from '../../lib/api'
+import { TOGGLE_DEV_FEATURES } from '../../lib/env'
+import { V1AuthenticateResponse } from '../../protorepo/openapi/typescript-axios'
 
-const ResetPasswordEmail: React.FC = () => {
-  const { formatMessage } = useOurIntl()
+const ValidateAccountView: React.FC = () => {
+  const analytics = getAnalytics()
   const navigate = useNavigate()
-  const resetPasswordContext = useResetPasswordContext()
-  const [isAccountIdValid, ] = React.useState(resetPasswordContext.account?.account_id !== null)
-  const [isEmailResend, setIsEmailResend] = React.useState(false)
+  const auth = useNoAuthContext()
   const location = useLocation()
-  const email = location.state?.email || ''
+  const [isEmailResend, setIsEmailResend] = React.useState(false)
+
+  const { formatMessage } = useOurIntl()
+  const { email, password } = location.state as { email: string, password: string }
   const [codes, setCodes] = useState(['', '', '', ''])
   const inputRefs = useRef<Array<RefObject<HTMLInputElement>>>(Array(4).fill(null).map(() => React.createRef()))
   
@@ -39,22 +41,39 @@ const ResetPasswordEmail: React.FC = () => {
       inputRefs.current[index - 1].current?.focus()
     }
   }
-  
-  const forgetAccountPasswordMutation = useForgetAccountPassword({
-    onSuccess: (data: V1ForgetAccountPasswordResponse) => {
-      resetPasswordContext.changeResetPassword({account_id: data.accountId, reset_token: null, auth_token: null})
+  const developmentContext = useDevelopmentContext()
+
+  const sendValidationEmailMutation = useSendValidationToken()
+
+  const authenticateMutation = useAuthenticate({
+    onSuccess: (data: V1AuthenticateResponse) => {
+      const tokenData = decodeToken(data.token)
+      if (developmentContext !== undefined) {
+        addAccountToDevelopmentContext(
+          tokenData.aid,
+          data.token,
+          developmentContext.setAccounts
+        )
+      }
+      auth.signin(data.token)
+      if (!TOGGLE_DEV_FEATURES) {
+        logEvent(analytics, 'login', {
+          method: 'mail'
+        })
+      }
+      navigate('/')
     },
     onError: (e) => {
       toast.error(e.response?.data.error as string)
     }
   })
 
-  const forgetAccountPasswordValidateTokenMutation = useForgetAccountPasswordValidateToken({
-    onSuccess: (data: V1ForgetAccountPasswordValidateTokenResponse) => {
-      resetPasswordContext.changeResetPassword({account_id: data.account.id, reset_token: data.resetToken, auth_token: data.authToken})
-      navigate('/reset_password_password') 
+  const validateAccountMutation = useValidateAccount({
+    onSuccess: () => {
+      authenticateMutation.mutate({ body: { email, password } })
     },
     onError: () => {
+      // TODO: oui ca poiurrai etre une autre erreur peut etre
       toast.error(formatMessage({ id: 'RESETPWD.Token.badToken' }) as string)
       setCodes(['', '', '', ''])
       inputRefs.current.map((e) => {e.current?.blur()})
@@ -65,23 +84,20 @@ const ResetPasswordEmail: React.FC = () => {
     const areAllNumbers = codes.every((element) => !isNaN(parseFloat(element)) && typeof parseFloat(element) === 'number')
 
     if (areAllNumbers) {
-      forgetAccountPasswordValidateTokenMutation.mutate({body: {accountId: resetPasswordContext.account?.account_id as string, token: codes.join('')}})
+      validateAccountMutation.mutate({ body: ({ email: email, password: password, validationToken: codes.join('') }) } as ValidateAccountRequest)      
       setIsEmailResend(false)
     }
   }, [codes])
 
   return (
-    <Authentication animName='error'>
+    <Authentication animName='login'>
       <form>
         <Stack direction='column' spacing={2}>
           <Typography variant='h4' align='center' fontWeight='bold'>
-            <FormatMessage id='RESETPWD.Token.title' />
+            <FormatMessage id='VALIDATION.title' />
           </Typography>
-          {(!isAccountIdValid || email === '') && <div className='leading-tight tracking-tight'>
-            <span className='text-red-500'>Account Error</span>
-          </div>}
           <p className='text-lg leading-tight tracking-tight text-gray-900'>
-            <FormatMessage id='RESETPWD.Token.desc' />
+            <FormatMessage id='VALIDATION.content' />
           </p>
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center'  }}>
             {codes.map((value, index) => (
@@ -107,16 +123,16 @@ const ResetPasswordEmail: React.FC = () => {
             ))}
           </div>
           <Typography variant='body2' align='center' color='textSecondary' mt={2}>
-            {formatMessage({ id: 'RESETPWD.Token.noCode' })}
+            {formatMessage({ id: 'VALIDATION.resend' })}
             <Button
               color='primary'
               size='small'
               onClick={() => {
-                forgetAccountPasswordMutation.mutate({body: {email}})
+                sendValidationEmailMutation.mutate({ body: ({ email: email, password: password }) } as ValidateAccountRequest)
                 setIsEmailResend(true)
               }}
             >
-              {formatMessage({ id: 'RESETPWD.Token.resend' })}
+              {formatMessage({ id: 'VALIDATION.resend_link' })}
             </Button>
           </Typography>
           {isEmailResend && 
@@ -131,4 +147,4 @@ const ResetPasswordEmail: React.FC = () => {
   )
 }
 
-export default ResetPasswordEmail
+export default ValidateAccountView

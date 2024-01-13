@@ -5,8 +5,11 @@ const enTranslation: LocaleTypedMessages = {
   'GENERIC.name': 'Name',
   'GENERIC.home': 'Home',
   'GENERIC.profile': 'Profile',
+  'GENERIC.groups': 'Groups',
+  'GENERIC.notes': 'Notes',
   'GENERIC.role': 'Role',
   'GENERIC.actions': 'Actions',
+  'GENERIC.logout': 'Logout',
 
   /*		AUTHENTICATION		*/
   /*  Auth  */
@@ -14,6 +17,9 @@ const enTranslation: LocaleTypedMessages = {
   'AUTH.register': 'Register',
   'AUTH.email': 'Email',
   'AUTH.pwd': 'Password',
+  'AUTH.error.name': 'Invalid name',
+  'AUTH.error.email': 'Invalid email address',
+  'AUTH.error.pwd': '6 characters, letters numbers and symbols',
 
   /* Signing */
   'SIGNIN.title': 'Signin to your account',
@@ -23,6 +29,8 @@ const enTranslation: LocaleTypedMessages = {
   /*  Signup  */
   'SIGNUP.title': 'Create an account',
   'SIGNUP.signupGoogle': 'Sign up with Google',
+  'SIGNUP.wantSignIn': 'Already have an account',
+  'SIGNUP.wantSignUp': 'I want to create an account',
 
   /*    RESETPASSWORD   */
 
@@ -36,13 +44,16 @@ const enTranslation: LocaleTypedMessages = {
   /* ResetPassword Token  */
   'RESETPWD.Token.title': 'Verification',
   'RESETPWD.Token.desc': 'Enter the verification code we just sent you on your email address',
-  'RESETPWD.Token.form': 'Your token',
-  'RESETPWD.Token.button': 'Send token',
+  'RESETPWD.Token.noCode': 'You didn\'t receive the token ? ',
+  'RESETPWD.Token.resend': 'Resend your token',
+  'RESETPWD.Token.badToken': 'Bad token',
+  'RESETPWD.Token.tokenResend': 'We sent you another token !',
 
   /*  ResetPassword Password  */
   'RESETPWD.Pwd.title': 'Create a new password',
   'RESETPWD.Pwd.desc': 'Enter a new password for your account',
   'RESETPWD.Pwd.form': 'Confirm Password',
+  'RESETPWD.Pwd.form2': 'Not the same password',
 
   /*    LANDING    */
   /* Description */
@@ -86,6 +97,7 @@ const enTranslation: LocaleTypedMessages = {
   'GROUP.Empty.desc2': 'Invites to groups will show up here.',
   'GROUP.createGroup': 'Create a group',
   'GROUP.creatingGroup': 'Creating...',
+  'GROUP.inMyGroup': 'In my group...',
 
   'GROUP.settings': 'Settings',
   'GROUP.upgrade': 'Upgrade',
@@ -106,6 +118,7 @@ const enTranslation: LocaleTypedMessages = {
   'GROUP.settings.invites.desc': 'No pending invites for this group',
 
   /*    NOTE    */
+  'NOTE.myNotes': 'My notes',
   'NOTE.newNote': 'New note',
   'NOTE.untitledNote': 'Untitled note',
   'NOTE.timecodeA': 'Last edited',
@@ -135,9 +148,17 @@ const enTranslation: LocaleTypedMessages = {
   'PROFILE.beta.button': 'Access beta',
   'PROFILE.beta.buttonResTrue': 'Sent!',
   'PROFILE.beta.buttonResFalse': 'Already joined',
+  'PROFILE.langage.title': 'Langage',
+  'PROFILE.langage.desc': 'Change the language used in the user interface.',
+  'PROFILE.langage.options': 'Options',
+  'PROFILE.langage.fr': 'French',
+  'PROFILE.langage.en': 'English',
 
   /*    PANEL   */
   'PANEL.activity': 'Activity',
+  'PANEL.activity.loading': 'Loading your activities...',
+  'PANEL.activity.none': 'No recent activity',
+  'PANEL.activity.noGroup': 'No group selected',
   'PANEL.companion': 'Companion',
   'PANEL.companion,buton1': 'Filter by block',
   'PANEL.companion,buton2': 'Filter by entire note',
@@ -152,6 +173,22 @@ const enTranslation: LocaleTypedMessages = {
   'SETTINGS.langage.options': 'Options',
   'SETTINGS.langage.french': 'French',
   'SETTINGS.langage.english': 'English',
+
+  /*    CONFIRMATION    */
+  'CONFIRMATION.form.desc0': 'Please type',
+  'CONFIRMATION.form.desc1': 'understood',
+  'CONFIRMATION.form.desc3': 'to confirm.',
+  'CONFIRMATION.button': 'I understand the consequences',
+  'CONFIRMATION.title.note': 'Delete my note',
+  'CONFIRMATION.title.group': 'Delete my group',
+
+  /*    VALIDATION    */
+  'VALIDATION.title': 'Please validate your account',
+  'VALIDATION.content': 'You received an activation code at the following address:',
+  'VALIDATION.placeholder': '0000',
+  'VALIDATION.button': 'Validate',
+  'VALIDATION.resend': 'I did not receive the code',
+  'VALIDATION.resend_link': 'send again',
 }
 
 export default enTranslation

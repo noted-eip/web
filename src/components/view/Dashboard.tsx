@@ -12,7 +12,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <PanelContext.Provider value={{ activePanel, setActivePanel, panels, setPanels }}>
-      <div className='grid h-screen w-screen grid-cols-[auto] bg-white md:grid-cols-[68px_auto] lg:grid-cols-[68px_auto_386px] xl:grid-cols-[216px_auto_400px]'>
+      <div className='grid h-screen w-screen bg-white md:grid-cols-[216px_auto] lg:grid-cols-[216px_auto_300px] xl:grid-cols-[216px_auto_400px]'>
         <Sidebar />
         <Outlet />
         <Panel />
