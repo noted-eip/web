@@ -1,5 +1,6 @@
 import { BoltIcon, PencilIcon } from '@heroicons/react/24/solid'
 
+import GroupActivityNotesPanel from '../panels/GroupActivityNoGroup'
 import GroupActivityPanel from '../panels/GroupActivityPanel'
 import NoteRecommendationsPanel from '../panels/NoteRecommendationsPanel'
 import { V1Block, V1Widget } from '../protorepo/openapi/typescript-axios'
@@ -9,6 +10,11 @@ export const panelMetadata = {
     displayName: 'PANEL.activity',
     icon: BoltIcon,
     component: GroupActivityPanel,
+  },
+  'group-activity-no-group': {
+    displayName: 'PANEL.activity',
+    icon: BoltIcon,
+    component: GroupActivityNotesPanel,
   },
   'note-recommendations': {
     displayName: 'PANEL.companion',

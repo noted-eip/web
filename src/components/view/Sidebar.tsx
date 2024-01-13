@@ -42,6 +42,7 @@ function createChildItems(
         key={name}
         variant='outlined'
         color='primary'
+        className='mb-1'
         startIcon={!createGroupQ.isLoading && <GroupAdd style={{ color: '#2a777d' }} />}
         onClick={() => {
           createGroupQ.mutate({
