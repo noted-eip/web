@@ -68,35 +68,6 @@ function getAddNoteEvent(event: string) {
   }
 
   return (username + firstPart + noteTitle + secondPart + folder)
-
-  /*let username = ''
-  let noteTitle = ''
-  const folder = ''
-  
-  if (event == undefined || event == '')
-    return ''
-  
-  let everything = event
-  everything = everything.substring(everything.indexOf('>') + 1, everything.length)
-  const firstPart = everything.substring(0, Lottieeverything.indexOf('<'))
-  everything = everything.substring(everything.indexOf('>') + 1, everything.length)
-  const secondPart = everything.substring(0, everything.indexOf('<'))
-
-  const userId = event.substring(event.indexOf('<userID:') + 8, event.indexOf('>'))
-  const getUserResponse = useGetAccount({ accountId: userId })
-  if (getUserResponse.data?.account.name != undefined && getUserResponse.status == 'success')
-    username = getUserResponse.data?.account.name
-  else
-    return ''
-
-  const noteId = getNoteIdInEvent(event)
-  const getNoteReponse = useGetNoteInCurrentGroup({ noteId: noteId })
-  if (getNoteReponse.data?.note.title != undefined && getNoteReponse.status == 'success')
-    noteTitle = getNoteReponse.data?.note.title
-  else
-    return ''
-
-  return (username + firstPart + noteTitle + secondPart + folder)*/
 }
 
 function getUpdateOnMemberEvent(event: string) {
