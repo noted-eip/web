@@ -1,5 +1,7 @@
 import { BoltIcon, PencilIcon } from '@heroicons/react/24/solid'
+import { ChatBubble } from '@mui/icons-material'
 
+import BlockCommentsPanel from '../panels/BlockCommentsPanel'
 import GroupActivityNotesPanel from '../panels/GroupActivityNoGroup'
 import GroupActivityPanel from '../panels/GroupActivityPanel'
 import NoteRecommendationsPanel from '../panels/NoteRecommendationsPanel'
@@ -21,6 +23,12 @@ export const panelMetadata = {
     icon: PencilIcon,
     component: NoteRecommendationsPanel,
   },
+  'block-comments': {
+    displayName: 'PANEL.comments',
+    icon: ChatBubble,
+    component: BlockCommentsPanel,
+  },
+
 }
 
 export const findArrayWidgetsFromString = ( widgetsSrc: V1Widget[] | undefined, data: string ): V1Widget[] => {

@@ -172,6 +172,11 @@ const enTranslation: LocaleTypedMessages = {
   'PANEL.companion,buton1': 'Filter by block',
   'PANEL.companion,buton2': 'Filter by entire note',
   'PANEL.companion,buton3': 'Apply',
+  'PANEL.comments': 'Comments',
+  'PANEL.comments.empty': 'No comments on this block',
+  'PANEL.comments.loading': 'Loading comments...',
+  'PANEL.comments.noblock': 'No selected blocks',
+  'PANEL.comments.comment': 'Comment',
 
   /*    ACTIVITY    */
   'ACTIVITY': 'Activity',

@@ -193,6 +193,11 @@ export enum TranslationKeys {
   'PANEL.companion,buton1',
   'PANEL.companion,buton2',
   'PANEL.companion,buton3',
+  'PANEL.comments',
+  'PANEL.comments.empty',
+  'PANEL.comments.loading',
+  'PANEL.comments.noblock',
+  'PANEL.comments.comment',
 
   /*    ACTIVITY   */
   'ACTIVITY',
