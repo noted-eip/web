@@ -45,20 +45,6 @@ export const useListNotesInCurrentGroup = (req: ListNotesInCurrentGroupRequest, 
   })
 }
 
-/*
-export const useGetCurrentNote = (options?: QueryHookOptions<GetGroupRequest, V1GetGroupResponse>) => {
-  const groupContext = useGroupContext()
-  return useGetGroup({groupId: groupContext.groupId as string}, {
-    ...options,
-    // If no access to the group, switch group.
-    onError: (error) => {
-      groupContext.changeGroup(null)
-      if (options?.onError) options.onError(error)
-    }
-  })
-}
-*/
-
 export type GetNoteInCurrentGroupRequest = { noteId: string }
 export const useGetNoteInCurrentGroup = (req: GetNoteInCurrentGroupRequest, options?: QueryHookOptions<GetNoteInCurrentGroupRequest, V1GetNoteResponse>) => {
   const authContext = useAuthContext()
@@ -83,7 +69,7 @@ export const useListNotes = (req: ListNotesRequest, options?: QueryHookOptions<L
   return useQuery({
     queryKey: queryKey,
     queryFn: async () => {
-      return (await openapiClient.notesAPIListNotes(req.groupId, req.authorAccountId, req.limit, req.offset, await axiosRequestOptionsWithAuthorization(authContext))).data
+      return (await openapiClient.notesAPIListNotes2('', req.authorAccountId, req.limit, req.offset, await axiosRequestOptionsWithAuthorization(authContext))).data
     },
     ...options,
   })
