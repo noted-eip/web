@@ -183,7 +183,7 @@ const GroupMemberListItem: React.FC<{ member: V1GroupMember }> = (props) => {
           <div className='float-right rounded-full bg-purple-200 p-1 px-2 text-xs font-medium text-purple-600'>
             Admin
           </div>
-          // Dirty way of checking that the current user is an admin.
+          // Way of checking that the current user is an admin.
         ) : groupQ.data?.group.members?.find((acc) => { return acc.accountId === authContext.accountId && acc.isAdmin }) && (
           <div
             className='invisible float-right cursor-pointer rounded-full border-2 border-dashed border-gray-400 bg-gray-200 p-[2px] px-[6px] text-xs font-medium text-gray-600 opacity-75 hover:opacity-100 group-hover:visible'

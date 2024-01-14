@@ -20,7 +20,6 @@ type NotesLiNotesListGridItemContextMenuProps = {
   }[],
 }
 
-// TODO: Extract to re-usable context menu component.
 const NotesListGridItemContextMenu: React.FC<NotesLiNotesListGridItemContextMenuProps> = (props) => {
   const [contextData, setContextData] = React.useState({ visible:false, posX: 0, posY: 0})
   const contextRef = React.useRef<HTMLDivElement>(null)
@@ -92,7 +91,6 @@ export const NotesListGridItem: React.FC<{ note: V1Note }> = (props) => {
         targetId={`group-view-notes-tab-grid-${props.note.id}`}
         options={[
           // TODO: on le dev ca ?
-          // {icon: PencilIconOutline, name: 'Rename', onClick: () => { alert('Not implemented, you can rename the note when clicking on it and editing the title.') }},
           // {icon: LinkIconOutline, name: 'Copy Link', onClick: () => { alert('Not implemented') }},
           {icon: TrashIconOutline, name: 'Delete', onClick: () => { deleteNoteQ.mutate({ noteId: props.note.id }) }},
         ]}

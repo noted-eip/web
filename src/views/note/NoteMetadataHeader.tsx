@@ -1,4 +1,4 @@
-import { ArrowPathIcon, DocumentDuplicateIcon, ShareIcon, TrashIcon } from '@heroicons/react/24/solid'
+import { ArrowPathIcon, DocumentDuplicateIcon, TrashIcon } from '@heroicons/react/24/solid'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import IconButton from '@mui/material/IconButton'
 import MenuItem from '@mui/material/MenuItem'
@@ -120,12 +120,20 @@ export const NoteViewMetadataHeader: React.FC = () => {
   const authContext = useAuthContext()
   const noteId = useNoteIdFromUrl()
   const noteQ = useGetNoteInCurrentGroup({ noteId })
-  const deleteNoteQ = useDeleteNoteInCurrentGroup({ onSuccess: () => { navigate('../..') }})
   const modifiedAtRelative = noteQ.data && noteQ.data.note.modifiedAt && moment(noteQ.data.note.modifiedAt, 'YYYY-MM-DDTHH:mm:ss.SSSZ').fromNow()
   const authorAccountQ = useGetAccount({ accountId: noteQ.data?.note.authorAccountId as string }, { enabled: !!noteQ.data?.note.authorAccountId })
   const canIEdit = noteQ.data?.note.authorAccountId === authContext.accountId
 
-  const handleDeleteNote = () => deleteNoteQ.mutate({ noteId })
+  const deleteNoteQ = useDeleteNoteInCurrentGroup(
+    {
+      onSuccess: () => {
+        navigate(`/group/${noteQ.data?.note.groupId}`)
+      }
+    })
+
+  const handleDeleteNote = () => {
+    deleteNoteQ.mutate({ noteId })
+  }
 
   return <div className='mx-xl flex h-10 items-center justify-between rounded-md border border-gray-100 bg-gray-50 p-1 px-2'>
     {/* Last edited by */}
@@ -144,13 +152,6 @@ export const NoteViewMetadataHeader: React.FC = () => {
         <DocumentDuplicateIcon className='mr-1 h-4 w-4 text-gray-500 group-hover:text-blue-500' />
         <h5 className='text-gray-500 group-hover:text-blue-500'>
           <FormatMessage id='NOTE.duplicate' />
-        </h5>
-      </div>
-      {/* Share */}
-      <div className='group flex cursor-pointer items-center rounded p-1 hover:bg-blue-50' onClick={() => alert('Not Implemented')}>
-        <ShareIcon className='mr-1 h-4 w-4 text-gray-500 group-hover:text-blue-500' />
-        <h5 className='text-gray-500 group-hover:text-blue-500'>
-          <FormatMessage id='NOTE.share' />
         </h5>
       </div>
       {/* Delete */}
