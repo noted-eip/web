@@ -44,11 +44,11 @@ const ListQuizs: React.FC = () => {
         </Button>
       </div>
       {quizList.isSuccess ?
-        <List className='overflow-y-scroll'>
+        <List className='m-4 space-y-2 overflow-y-scroll'>
           {
             quizList?.data.quizs?.map((quiz, idx) => {
               return (
-                <ListItem disablePadding key={quiz.id}>
+                <ListItem key={quiz.id}>
                   <ListItemButton onClick={() => {setSelectedQuiz(quiz), openQuizModal()}}>
                     <ListItemText primary={'Quiz ' + idx} />
                     <ListItemIcon className='flex h-12 w-12 justify-center'>
