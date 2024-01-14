@@ -210,4 +210,7 @@ export enum TranslationKeys {
   'VALIDATION.button',
   'VALIDATION.resend',
   'VALIDATION.resend_link',
+
+  /*    EDITOR    */
+  'EDITOR.placeholder'
 }

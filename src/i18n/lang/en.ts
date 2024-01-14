@@ -189,6 +189,9 @@ const enTranslation: LocaleTypedMessages = {
   'VALIDATION.button': 'Validate',
   'VALIDATION.resend': 'I did not receive the code',
   'VALIDATION.resend_link': 'send again',
+
+  /*    EDITOR    */
+  'EDITOR.placeholder': 'Insert your text here...',
 }
 
 export default enTranslation

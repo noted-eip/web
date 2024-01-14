@@ -190,6 +190,9 @@ const frTranslation: LocaleTypedMessages = {
   'VALIDATION.button': 'Valider',
   'VALIDATION.resend': 'Je n\'ai pas reçus le code',
   'VALIDATION.resend_link': 'l\'envoyer à nouveau',
+
+  /*    EDITOR    */
+  'EDITOR.placeholder': 'Insérez votre text ici...',
 }
 
 export default frTranslation

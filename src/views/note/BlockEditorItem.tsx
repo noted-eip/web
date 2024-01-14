@@ -17,6 +17,7 @@ import {
 } from '../../hooks/api/notes'
 import { 
   blockContextToNoteBlock,
+  defaultBgColor,
   noteBlocksContextToSlateElements,
   slateElementsToString, 
   withShortcuts 
@@ -49,24 +50,11 @@ export const BlockEditorItem: React.FC<{
   if (!Editor.hasPath(editor, [0, 0])) {
     Transforms.insertNodes (
       editor,
-      { type: 'TYPE_PARAGRAPH', children: [{ text: '' }], style: [] },
+      { type: 'TYPE_PARAGRAPH', children: [{ text: '', bold: false, italic: false, code: false, underline: false, color: defaultBgColor }] },
       { at: [editor.children.length] }
     )
     editor.history = { undos: [], redos: [] }
   }
-
-  /*
-  if (initialEditorState)
-  {
-    const childrens = (initialEditorState[0] as any).children
-    console.log(childrens[0].text)
-    if (childrens.length == 1 && childrens[0].text.length < 1 && blockIndex == 0)
-    {
-      childrens[0].text = 'Insert your text here'
-      //editorState.current = initialEditorState
-    }
-  }
-  */
 
   React.useEffect(() => 
   {

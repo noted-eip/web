@@ -6,7 +6,7 @@ import { BlockContext } from '../contexts/note'
 import { V1Block, V1BlockType } from '../protorepo/openapi/typescript-axios'
 
 export type NoteTitleElement = { type: 'TYPE_NOTE_TITLE'; children: SlateText[] }
-export type ParagraphElement = { type: 'TYPE_PARAGRAPH'; children: SlateText[], style: SlateStyle[] }
+export type ParagraphElement = { type: 'TYPE_PARAGRAPH'; children: SlateText[] }
 export type HeadingOneElement = { type: 'TYPE_HEADING_1'; children: SlateText[] }
 export type HeadingTwoElement = { type: 'TYPE_HEADING_2'; children: SlateText[] }
 export type HeadingThreeElement = { type: 'TYPE_HEADING_3'; children: SlateText[] }
@@ -14,8 +14,35 @@ export type BulletListElement = { type: 'TYPE_BULLET_LIST'; children: ListItemEl
 export type NumberListElement = { type: 'TYPE_NUMBER_LIST'; children: ListItemElement[] }
 export type ListItemElement = { type: 'TYPE_LIST_ITEM'; children: SlateText[] }
 
-export type SlateText = { text: string }
-export type SlateStyle = { bold: boolean }
+export type BackgroundColor = {
+  r: number,
+  g: number,
+  b: number,
+  a: number
+}
+
+export const defaultBgColor: BackgroundColor = {
+  r: 0, g: 0, b: 0, a: 0
+}
+
+
+export type SlateText = {
+  text: string, 
+  bold: boolean, 
+  italic: boolean, 
+  code: boolean, 
+  underline: boolean,
+  color: BackgroundColor
+}
+
+export const defaultSlateText: SlateText = {
+  text: '',
+  bold: false,
+  italic: false,
+  code: false,
+  underline: false,
+  color: defaultBgColor
+}
 
 declare module 'slate' {
   interface CustomTypes {
@@ -23,6 +50,14 @@ declare module 'slate' {
     Element: ParagraphElement | HeadingOneElement | HeadingTwoElement | HeadingThreeElement | BulletListElement | NumberListElement | ListItemElement
     Text: SlateText
   }
+}
+
+export const HOTKEYS = {
+  'mod+b': 'bold',
+  'mod+i': 'italic',
+  'mod+u': 'underline',
+  'mod+p`': 'code',
+  'mod+m`': 'color'
 }
 
 const SHORTCUTS = {
@@ -243,21 +278,21 @@ export const noteBlocksToSlateElements = (blocks: V1Block[]): Descendant[] => {
   for (let i = 0; i < blocks.length; i++) {
     switch (blocks[i].type) {
       case 'TYPE_HEADING_1':
-        slateElements.push({ type: 'TYPE_HEADING_1', children: [{ text: blocks[i].heading || '' }] })
+        slateElements.push({ type: 'TYPE_HEADING_1', children: [{ text: blocks[i].heading || '', bold: false, italic: false, code: false, underline: false, color: defaultBgColor }] })
         break
       case 'TYPE_HEADING_2':
-        slateElements.push({ type: 'TYPE_HEADING_2', children: [{ text: blocks[i].heading || '' }] })
+        slateElements.push({ type: 'TYPE_HEADING_2', children: [{ text: blocks[i].heading || '', bold: false, italic: false, code: false, underline: false, color: defaultBgColor }] })
         break
       case 'TYPE_HEADING_3':
-        slateElements.push({ type: 'TYPE_HEADING_3', children: [{ text: blocks[i].heading || '' }] })
+        slateElements.push({ type: 'TYPE_HEADING_3', children: [{ text: blocks[i].heading || '', bold: false, italic: false, code: false, underline: false, color: defaultBgColor }] })
         break
       case 'TYPE_PARAGRAPH':
-        slateElements.push({ type: 'TYPE_PARAGRAPH', children: [{ text: blocks[i].paragraph || '' }], style: [] })
+        slateElements.push({ type: 'TYPE_PARAGRAPH', children: [{ text: blocks[i].paragraph || '', bold: false, italic: false, code: false, underline: false, color: defaultBgColor }] })
         break
       case 'TYPE_BULLET_POINT': {
         const bulletPoints: ListItemElement[] = []
         for (; i < blocks.length && blocks[i].type === 'TYPE_BULLET_POINT';) {
-          bulletPoints.push({ type: 'TYPE_LIST_ITEM', children: [{ text: blocks[i].bulletPoint || '' }] })
+          bulletPoints.push({ type: 'TYPE_LIST_ITEM', children: [{ text: blocks[i].bulletPoint || '', bold: false, italic: false, code: false, underline: false, color: defaultBgColor }] })
           if (i + 1 < blocks.length && blocks[i + 1].type === 'TYPE_BULLET_POINT') i++
           else break
         }
@@ -267,7 +302,7 @@ export const noteBlocksToSlateElements = (blocks: V1Block[]): Descendant[] => {
       case 'TYPE_NUMBER_POINT': {
         const numberPoints: ListItemElement[] = []
         for (; i < blocks.length && blocks[i].type === 'TYPE_NUMBER_POINT';) {
-          numberPoints.push({ type: 'TYPE_LIST_ITEM', children: [{ text: blocks[i].numberPoint || '' }] })
+          numberPoints.push({ type: 'TYPE_LIST_ITEM', children: [{ text: blocks[i].numberPoint || '', bold: false, italic: false, code: false, underline: false, color: defaultBgColor }] })
           if (i + 1 < blocks.length && blocks[i + 1].type === 'TYPE_NUMBER_POINT') i++
           else break
         }
@@ -300,16 +335,16 @@ export const noteBlocksContextToSlateElements = (blocks: BlockContext[]): Descen
   for (let i = 0; i < stringArray.length; i++) {
     switch (blockType) {
       case 'TYPE_HEADING_1':
-        slateElements.push({ type: 'TYPE_HEADING_1', children: [{ text: stringArray[i] || '' }] })
+        slateElements.push({ type: 'TYPE_HEADING_1', children: [{ text: stringArray[i] || '', bold: false, italic: false, code: false, underline: false, color: defaultBgColor }] })
         break
       case 'TYPE_HEADING_2':
-        slateElements.push({ type: 'TYPE_HEADING_2', children: [{ text: stringArray[i] || '' }] })
+        slateElements.push({ type: 'TYPE_HEADING_2', children: [{ text: stringArray[i] || '', bold: false, italic: false, code: false, underline: false, color: defaultBgColor }] })
         break
       case 'TYPE_HEADING_3':
-        slateElements.push({ type: 'TYPE_HEADING_3', children: [{ text: stringArray[i] || '' }] })
+        slateElements.push({ type: 'TYPE_HEADING_3', children: [{ text: stringArray[i] || '', bold: false, italic: false, code: false, underline: false, color: defaultBgColor }] })
         break
       case 'TYPE_PARAGRAPH':
-        slateElements.push({ type: 'TYPE_PARAGRAPH', children: [{ text: stringArray[i] || '' }], style: [] })
+        slateElements.push({ type: 'TYPE_PARAGRAPH', children: [{ text: stringArray[i] || '', bold: false, italic: false, code: false, underline: false, color: defaultBgColor }] })
         break
       case 'TYPE_BULLET_POINT': {
         //const bulletPoints: ListItemElement[] = []
@@ -319,7 +354,7 @@ export const noteBlocksContextToSlateElements = (blocks: BlockContext[]): Descen
         //  else break
         //}
         //slateElements.push({ type: 'TYPE_BULLET_LIST', children: bulletPoints })
-        slateElements.push({ type: 'TYPE_LIST_ITEM', children: [{ text: stringArray[i] || '' }] })
+        slateElements.push({ type: 'TYPE_LIST_ITEM', children: [{ text: stringArray[i] || '', bold: false, italic: false, code: false, underline: false, color: defaultBgColor }] })
         break
       }
       case 'TYPE_NUMBER_POINT': {
@@ -330,7 +365,7 @@ export const noteBlocksContextToSlateElements = (blocks: BlockContext[]): Descen
         //  else break
         //}
         //slateElements.push({ type: 'TYPE_NUMBER_LIST', children: numberPoints })
-        slateElements.push({ type: 'TYPE_LIST_ITEM', children: [{ text: stringArray[i] || '' }] })
+        slateElements.push({ type: 'TYPE_LIST_ITEM', children: [{ text: stringArray[i] || '', bold: false, italic: false, code: false, underline: false, color: defaultBgColor }] })
         break
       }
       default:

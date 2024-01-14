@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import isHotkey from 'is-hotkey'
 import React from 'react'
 import { BaseEditor, Descendant, Editor, Transforms } from 'slate'
 import {
@@ -13,9 +14,12 @@ import {
   useInsertBlockInCurrentGroup,
   useUpdateBlockInCurrentGroup
 } from '../../hooks/api/notes'
+import { useOurIntl } from '../../i18n/TextComponent'
 import { 
   blockContextToNoteBlock,
+  defaultBgColor,
   getSplitContentByCursorFromEditor,
+  HOTKEYS,
   stringToNoteBlock} from '../../lib/editor'
 import {
   NotesAPIInsertBlockRequest,
@@ -23,6 +27,7 @@ import {
   V1Note
 } from '../../protorepo/openapi/typescript-axios'
 import { EditorElement } from './EditorElement'
+import { Leaf } from './Leaf'
 
 export const EditableNoted: React.FC<{
   note: V1Note
@@ -32,6 +37,7 @@ export const EditableNoted: React.FC<{
   editor: BaseEditor & ReactEditor
 }> = ({ editor, block, note, editorState, blockIndex }) => {
   
+  const { formatMessage } = useOurIntl()
   const authContext = useAuthContext()
   const { blocks, setBlocks } = useNoteContext()
 
@@ -41,6 +47,11 @@ export const EditableNoted: React.FC<{
 
   const renderElement = React.useCallback(
     props => <EditorElement {...props} />,
+    []
+  )
+
+  const renderLeaf = React.useCallback(
+    props => <Leaf {...props} />, 
     []
   )
 
@@ -137,6 +148,7 @@ export const EditableNoted: React.FC<{
     
     //console.log('3-EditableNoted : newBlocks after handle enter ', newBlocks)
 
+    // @note: replacing the current block with updated content
     if (contentAfterEnter.length > 0) {
       for (let i = Editor.end(editor, []).path[0]; i >= columnPosition; --i) {
         Transforms.removeNodes(editor, { at: [i] })
@@ -144,17 +156,53 @@ export const EditableNoted: React.FC<{
 
       Transforms.insertNodes(
         editor,
-        { type: 'TYPE_PARAGRAPH', children: [{ text: lastLineContentBeforeEnter }], style: [] },
+        { type: 'TYPE_PARAGRAPH', children: [
+          {
+            text: lastLineContentBeforeEnter, 
+            bold: false, italic: false, code: false, underline: false,
+            color: defaultBgColor
+          }]
+        },
         { at: [columnPosition] }
       )
     }
-
   }
+
+  // TEST
+  const isMarkActive = (editor, format) => {
+    const marks = Editor.marks(editor)
+    
+    console.log('Marks : ', marks)
+    return marks ? marks[format] === true : false
+  }
+
+  const toggleMark = (editor, format) => {
+    const isActive = isMarkActive(editor, format)
+  
+    if (isActive) {
+      console.log('removeMark ', format)
+      Editor.removeMark(editor, format)
+    } else {
+      console.log('addMarkMark ', format)
+      Editor.addMark(editor, format, true)
+    }
+  }
+  // TEST
+  
   
   return (
     <Editable
       onKeyDown={event => {
         const {selection} = editor
+
+        for (const hotkey in HOTKEYS) {
+          if (isHotkey(hotkey, event as any)) {
+            console.log('hotkey = ', hotkey)
+            event.preventDefault()
+            const mark = HOTKEYS[hotkey]
+            toggleMark(editor, mark)
+          }
+        }
 
         if (event.key == 'Backspace' && block?.index != 0) {
           if (selection?.focus.path[0] === Editor.start(editor, []).path[0]
@@ -214,6 +262,9 @@ export const EditableNoted: React.FC<{
       }}
       readOnly={authContext.accountId !== note.authorAccountId}
       renderElement={renderElement}
+      renderLeaf={renderLeaf}
+      placeholder={formatMessage({id: 'EDITOR.placeholder'})}
+      spellCheck
     />
   )
 }
