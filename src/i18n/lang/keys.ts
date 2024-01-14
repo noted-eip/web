@@ -65,8 +65,10 @@ export enum TranslationKeys {
   /* ResetPassword Token  */
   'RESETPWD.Token.title',
   'RESETPWD.Token.desc',
-  'RESETPWD.Token.form',
-  'RESETPWD.Token.button',
+  'RESETPWD.Token.resend',
+  'RESETPWD.Token.noCode',
+  'RESETPWD.Token.badToken',
+  'RESETPWD.Token.tokenResend',
 
   /*  ResetPassword Password  */
   'RESETPWD.Pwd.title',
@@ -192,6 +194,14 @@ export enum TranslationKeys {
   'SETTINGS.langage.options',
   'SETTINGS.langage.french',
   'SETTINGS.langage.english',
+
+  /*    CONFIRMATION    */
+  'CONFIRMATION.form.desc0',
+  'CONFIRMATION.form.desc1',
+  'CONFIRMATION.form.desc3',
+  'CONFIRMATION.button',
+  'CONFIRMATION.title.note',
+  'CONFIRMATION.title.group',
 
   /*    VALIDATION    */
   'VALIDATION.title',

@@ -44,8 +44,10 @@ const enTranslation: LocaleTypedMessages = {
   /* ResetPassword Token  */
   'RESETPWD.Token.title': 'Verification',
   'RESETPWD.Token.desc': 'Enter the verification code we just sent you on your email address',
-  'RESETPWD.Token.form': 'Your token',
-  'RESETPWD.Token.button': 'Send token',
+  'RESETPWD.Token.noCode': 'You didn\'t receive the token ? ',
+  'RESETPWD.Token.resend': 'Resend your token',
+  'RESETPWD.Token.badToken': 'Bad token',
+  'RESETPWD.Token.tokenResend': 'We sent you another token !',
 
   /*  ResetPassword Password  */
   'RESETPWD.Pwd.title': 'Create a new password',
@@ -171,6 +173,14 @@ const enTranslation: LocaleTypedMessages = {
   'SETTINGS.langage.options': 'Options',
   'SETTINGS.langage.french': 'French',
   'SETTINGS.langage.english': 'English',
+
+  /*    CONFIRMATION    */
+  'CONFIRMATION.form.desc0': 'Please type',
+  'CONFIRMATION.form.desc1': 'understood',
+  'CONFIRMATION.form.desc3': 'to confirm.',
+  'CONFIRMATION.button': 'I understand the consequences',
+  'CONFIRMATION.title.note': 'Delete my note',
+  'CONFIRMATION.title.group': 'Delete my group',
 
   /*    VALIDATION    */
   'VALIDATION.title': 'Please validate your account',

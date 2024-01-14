@@ -6,6 +6,7 @@ export type TViewSkeletonProps = {
   title?: string
   titleElement?: JSX.Element
   panels: TPanelKey[]
+  element?: JSX.Element
 }
 
 const ViewSkeleton: React.FC<PropsWithChildren & TViewSkeletonProps> = (props) => {
@@ -23,9 +24,10 @@ const ViewSkeleton: React.FC<PropsWithChildren & TViewSkeletonProps> = (props) =
   return (
     <div className='flex h-screen !max-h-screen w-full flex-col'>
       <div className='bg-white px-lg pb-lg pt-xl xl:px-xl xl:pb-xl'>
-        <div className='flex h-[36px] max-h-[36px] items-center justify-between'>
-          { props.titleElement ? props.titleElement : <h2>{props.title}</h2> }
-        </div>
+        {props.element != null ? props.element :
+          <div className='flex h-[36px] max-h-[36px] items-center justify-between'>
+            { props.titleElement ? props.titleElement : <h2>{props.title}</h2> }
+          </div>}
       </div>
       <div className='flex h-full w-full overflow-y-scroll'>{props.children}</div>
     </div>

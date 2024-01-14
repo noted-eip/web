@@ -21,7 +21,6 @@ import { useRemoveMemberInCurrentGroup, useUpdateMemberInCurrentGroup } from '..
 import useClickOutside from '../../hooks/click'
 import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
 import { V1GroupInvite, V1GroupMember } from '../../protorepo/openapi/typescript-axios'
-import GroupViewMenu from './GroupViewMenu'
 
 export const GroupViewSettingsTabEditGroup: React.FC = () => {
   const [editName, setEditName] = React.useState(false)
@@ -57,13 +56,13 @@ export const GroupViewSettingsTabEditGroup: React.FC = () => {
 
   const onChangeName = (e) => {
     e.preventDefault()
-    updateGroupQ.mutate({body: {name: newName}})
+    updateGroupQ.mutate({ body: { name: newName } })
     setEditName(false)
   }
 
   const onChangeDescription = (e) => {
     e.preventDefault()
-    updateGroupQ.mutate({body: {description: newDescription}})
+    updateGroupQ.mutate({ body: { description: newDescription } })
     setEditDescription(false)
   }
 
@@ -150,8 +149,9 @@ export const GroupViewSettingsTabEditGroup: React.FC = () => {
 }
 
 const GroupMemberListItem: React.FC<{ member: V1GroupMember }> = (props) => {
+  const { member } = props
   const authContext = useAuthContext()
-  const account = useGetAccount({accountId: props.member.accountId})
+  const account = useGetAccount({ accountId: member.accountId })
   const removeMemberQ = useRemoveMemberInCurrentGroup()
   const updateGroupMemberQ = useUpdateMemberInCurrentGroup()
   const groupQ = useGetCurrentGroup()
@@ -184,7 +184,7 @@ const GroupMemberListItem: React.FC<{ member: V1GroupMember }> = (props) => {
             Admin
           </div>
           // Dirty way of checking that the current user is an admin.
-        ) : groupQ.data?.group.members?.find((acc) => {return acc.accountId === authContext.accountId && acc.isAdmin}) && (
+        ) : groupQ.data?.group.members?.find((acc) => { return acc.accountId === authContext.accountId && acc.isAdmin }) && (
           <div
             className='invisible float-right cursor-pointer rounded-full border-2 border-dashed border-gray-400 bg-gray-200 p-[2px] px-[6px] text-xs font-medium text-gray-600 opacity-75 hover:opacity-100 group-hover:visible'
             onClick={() =>
@@ -203,15 +203,13 @@ const GroupMemberListItem: React.FC<{ member: V1GroupMember }> = (props) => {
       {/* Remove Group Member */}
       <div className='flex items-center justify-end'>
         {props.member.accountId !== authContext.accountId &&
-        props.member.isAdmin ? null : 
+          props.member.isAdmin ? null :
           <div className='cursor-pointer opacity-75 group-hover:opacity-100'>
             {
               removeMemberQ.isLoading ?
                 <LoaderIcon className='h-9 w-9 p-2' />
                 :
-                <TrashIcon className='h-9 w-9 rounded-md stroke-2 p-2 text-gray-400 hover:bg-gray-200' onClick={() => {
-                  removeMemberQ.mutate({ accountId: props.member.accountId })
-                }} />
+                <TrashIcon className='h-9 w-9 rounded-md stroke-2 p-2 text-gray-400 hover:bg-gray-200' onClick={() => removeMemberQ.mutate({ accountId: props.member.accountId })} />
             }
           </div>}
       </div>
@@ -223,7 +221,7 @@ const GroupViewSettingsTabMembersSection: React.FC = () => {
   const { formatMessage } = useOurIntl()
   const groupQ = useGetCurrentGroup()
   const [accountEmailSearch, setAccountEmailSearch] = React.useState<string>('')
-  const searchAccountQ = useSearchAccount({email: accountEmailSearch}, {enabled: false, retry: false})
+  const searchAccountQ = useSearchAccount({ email: accountEmailSearch }, { enabled: false, retry: false })
   const sendInviteQ = useSendInviteInCurrentGroup()
   const debouncedValue = useDebounce<string>(accountEmailSearch, 1000)
 
@@ -234,11 +232,11 @@ const GroupViewSettingsTabMembersSection: React.FC = () => {
   }, [debouncedValue])
 
   const onInviteFriend = () => {
-    sendInviteQ.mutate({body: {recipientAccountId: searchAccountQ.data?.account.id as string}})
+    sendInviteQ.mutate({ body: { recipientAccountId: searchAccountQ.data?.account.id as string } })
     setAccountEmailSearch('')
   }
 
-  return ( groupQ.data?.group.workspaceAccountId ? null :
+  return (groupQ.data?.group.workspaceAccountId ? null :
     <div className='mt-4 overflow-hidden rounded-md border border-gray-100 bg-gray-50'>
       {/* Header */}
       <div className='flex items-center justify-between border-b border-gray-200 p-5'>
@@ -315,12 +313,12 @@ const GroupViewSettingsTabMembersSection: React.FC = () => {
           </span>
         </div>
         {groupQ.isSuccess ? (
-          groupQ.data.group.members?.map((el, idx) => (
+          groupQ.data.group.members?.map((el, idx) =>
             <GroupMemberListItem
               key={`group-member-list-${el.accountId}-${idx}`}
               member={el}
             />
-          ))
+          )
         ) : (
           <div className='px-5'>
             <div className='skeleton my-5 h-6 w-full' />
@@ -333,8 +331,8 @@ const GroupViewSettingsTabMembersSection: React.FC = () => {
 }
 
 const PendingInviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
-  const senderAccountQ = useGetAccount({accountId: props.invite.senderAccountId})
-  const recipientAccountQ = useGetAccount({accountId: props.invite.recipientAccountId})
+  const senderAccountQ = useGetAccount({ accountId: props.invite.senderAccountId })
+  const recipientAccountQ = useGetAccount({ accountId: props.invite.recipientAccountId })
   const expiresInDateString = moment(props.invite.validUntil, 'YYYY-MM-DDTHH:mm:ssZ').fromNow()
   const revokeInviteQ = useRevokeInviteInCurrentGroup()
 
@@ -381,7 +379,7 @@ const PendingInviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
 const GroupViewSettingsTabPendingInvitesSection: React.FC = () => {
   const groupQ = useGetCurrentGroup()
 
-  return ( groupQ.data?.group.workspaceAccountId ? null :
+  return (groupQ.data?.group.workspaceAccountId ? null :
     <div className='mt-4 overflow-hidden rounded-md border border-gray-100 bg-gray-50'>
       {/* Header */}
       <div className='flex items-center justify-between border-b border-gray-200 p-5'>
@@ -436,10 +434,6 @@ const GroupViewSettingsTabPendingInvitesSection: React.FC = () => {
 const GroupViewSettingsTab: React.FC = () => {
   return (
     <div className='grid grid-rows-1 gap-4'>
-      <GroupViewMenu activeTab={'settings'}>
-        <div></div>
-      </GroupViewMenu>
-
       <div className='mb-8 flex w-full flex-col'>
         <GroupViewSettingsTabEditGroup />
         <GroupViewSettingsTabMembersSection />

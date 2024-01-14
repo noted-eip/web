@@ -1,18 +1,17 @@
+import { Button,Stack, TextField, Typography } from '@mui/material'
 import { getAnalytics, logEvent } from 'firebase/analytics'
-import React from 'react'
+import React, { RefObject, useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-import ContainerMd from '../../components/container/ContainerMd'
-import OldInput from '../../components/form/OldInput'
 import Notification from '../../components/notification/Notification'
+import Authentication from '../../components/view/Authentication'
 import { addAccountToDevelopmentContext, useDevelopmentContext } from '../../contexts/dev'
 import { useNoAuthContext } from '../../contexts/noauth'
 import { useAuthenticate, useSendValidationToken, useValidateAccount, ValidateAccountRequest } from '../../hooks/api/accounts'
 import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
 import { decodeToken } from '../../lib/api'
 import { TOGGLE_DEV_FEATURES } from '../../lib/env'
-import { validateCode } from '../../lib/validators'
 import { V1AuthenticateResponse } from '../../protorepo/openapi/typescript-axios'
 
 const ValidateAccountView: React.FC = () => {
@@ -20,12 +19,28 @@ const ValidateAccountView: React.FC = () => {
   const navigate = useNavigate()
   const auth = useNoAuthContext()
   const location = useLocation()
+  const [isEmailResend, setIsEmailResend] = React.useState(false)
 
   const { formatMessage } = useOurIntl()
-  const [code, setCode] = React.useState('')
-  const [codeValid, setCodeValid] = React.useState(false)
   const { email, password } = location.state as { email: string, password: string }
+  const [codes, setCodes] = useState(['', '', '', ''])
+  const inputRefs = useRef<Array<RefObject<HTMLInputElement>>>(Array(4).fill(null).map(() => React.createRef()))
+  
+  const handleChange = (index: number, value: string) => {
+    const newCodes = [...codes]
+    newCodes[index] = value
+    setCodes(newCodes)
 
+    if (value !== '' && index < 3) {
+      inputRefs.current[index + 1].current?.focus()
+    }
+  }
+
+  const handleKeyDown = (index: number, event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Backspace' && index > 0 && !codes[index]) {
+      inputRefs.current[index - 1].current?.focus()
+    }
+  }
   const developmentContext = useDevelopmentContext()
 
   const sendValidationEmailMutation = useSendValidationToken()
@@ -57,52 +72,78 @@ const ValidateAccountView: React.FC = () => {
     onSuccess: () => {
       authenticateMutation.mutate({ body: { email, password } })
     },
-    onError: (e) => {
-      toast.error(e.response?.data.error as string)
+    onError: () => {
+      // TODO: oui ca poiurrai etre une autre erreur peut etre
+      toast.error(formatMessage({ id: 'RESETPWD.Token.badToken' }) as string)
+      setCodes(['', '', '', ''])
+      inputRefs.current.map((e) => {e.current?.blur()})
     },
   })
 
+  useEffect(() => {
+    const areAllNumbers = codes.every((element) => !isNaN(parseFloat(element)) && typeof parseFloat(element) === 'number')
+
+    if (areAllNumbers) {
+      validateAccountMutation.mutate({ body: ({ email: email, password: password, validationToken: codes.join('') }) } as ValidateAccountRequest)      
+      setIsEmailResend(false)
+    }
+  }, [codes])
+
   return (
-    <div className='flex h-screen w-screen items-center justify-center'>
-      <ContainerMd>
-        <h2 className='mb-4 text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl'>
-          <FormatMessage id='VALIDATION.title' />
-        </h2>
-        <OldInput
-          label={formatMessage({ id: 'VALIDATION.content' })}
-          placeholder={formatMessage({ id: 'VALIDATION.placeholder' })}
-          onChange={(e) => {
-            const val = e.target.value as string
-            setCode(val)
-            setCodeValid(validateCode(val) === undefined)
-          }}
-          isInvalidBlur={!codeValid}
-          errorMessage='Invalid code'
-        />
-        <div className='my-4 mx-2 flex flex-row'>
-          <label className='mr-1 text-sm leading-tight tracking-tight text-gray-900 dark:text-white'>
-            <FormatMessage id='VALIDATION.resend' />
-          </label>
-          <label className='cursor-pointer text-sm  font-semibold leading-tight tracking-tight text-gray-900 underline dark:text-white'
-            onClick={() => {
-              sendValidationEmailMutation.mutate({ body: ({ email: email, password: password }) } as ValidateAccountRequest)
-            }}
-          >
-            <FormatMessage id='VALIDATION.resend_link' />
-
-          </label>
-        </div>
-        <button
-          className='my-2 mt-4 w-full rounded-lg bg-blue-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:bg-gray-600 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
-          disabled={
-            !codeValid
+    <Authentication animName='login'>
+      <form>
+        <Stack direction='column' spacing={2}>
+          <Typography variant='h4' align='center' fontWeight='bold'>
+            <FormatMessage id='VALIDATION.title' />
+          </Typography>
+          <p className='text-lg leading-tight tracking-tight text-gray-900'>
+            <FormatMessage id='VALIDATION.content' />
+          </p>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center'  }}>
+            {codes.map((value, index) => (
+              <TextField
+                key={index}
+                inputRef={inputRefs.current[index]}
+                type='token'
+                value={value}
+                onChange={(e) => handleChange(index, e.target.value)}
+                onKeyDown={(e) => handleKeyDown(index, e)}
+                style={{
+                  width: '2em',
+                  marginRight: `${index !== 3 ? '8' : '0'}px`,
+                  textAlign: 'center',
+                  fontSize: '1.2em',
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+                inputProps={{
+                  maxLength: 1,
+                }}
+              />
+            ))}
+          </div>
+          <Typography variant='body2' align='center' color='textSecondary' mt={2}>
+            {formatMessage({ id: 'VALIDATION.resend' })}
+            <Button
+              color='primary'
+              size='small'
+              onClick={() => {
+                sendValidationEmailMutation.mutate({ body: ({ email: email, password: password }) } as ValidateAccountRequest)
+                setIsEmailResend(true)
+              }}
+            >
+              {formatMessage({ id: 'VALIDATION.resend_link' })}
+            </Button>
+          </Typography>
+          {isEmailResend && 
+           <Typography variant='body2' align='center' color='primary' mt={2}>
+             {formatMessage({ id: 'RESETPWD.Token.tokenResend' })}
+           </Typography>
           }
-          onClick={() => validateAccountMutation.mutate({ body: ({ email: email, password: password, validationToken: code }) } as ValidateAccountRequest)}
-        ><FormatMessage id='VALIDATION.button' /></button>
-
-      </ContainerMd>
+        </Stack>
+      </form>
       <Notification />
-    </div>
+    </Authentication>
   )
 }
 

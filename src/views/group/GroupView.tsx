@@ -30,7 +30,7 @@ const GroupView: React.FC = () => {
   }
 
   return (
-    <ViewSkeleton title={formatMessage({ id: 'GROUP.inMyGroup' })} panels={['group-activity']}>
+    <ViewSkeleton title={formatMessage({ id: 'GENERIC.home' })} panels={['group-activity']}>
       {groupContext.groupId ? (
         <div className='mx-lg mb-lg w-full xl:mx-xl xl:mb-xl'>
           <Outlet />
