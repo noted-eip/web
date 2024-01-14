@@ -29,12 +29,6 @@ const TeamLanding: React.FC = () => {
     {
       name: 'Maxime Dodin',  role: formatMessage({ id: 'TEAM.roleRespPres' }), desc: formatMessage({ id: 'TEAM.descBackDevops' }), imgSrc: maximePhoto
     },
-    // {
-    //   name: 'Diego Rojas',  role: 'Dev', desc: 'Fronted, backend and devops developer', imgSrc: diegoPhoto
-    // },
-    // {
-    //   name: 'Bachir Benzaoui',  role: 'Dev', desc: 'Backend and devops developer', imgSrc: bachirPhoto
-    // },
     {
       name: 'Killian Fleury',  role: formatMessage({ id: 'TEAM.roleRespFront' }), desc: formatMessage({ id: 'TEAM.descFront' }), imgSrc: kilianPhoto
     }

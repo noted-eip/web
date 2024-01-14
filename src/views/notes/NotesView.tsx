@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 
 import ViewSkeleton from '../../components/view/ViewSkeleton'
 import { useAuthContext } from '../../contexts/auth'
+import { useGroupContext } from '../../contexts/group'
 import { useGetAccount } from '../../hooks/api/accounts'
 import { useDeleteNoteInCurrentGroup, useListNotes } from '../../hooks/api/notes'
 import { useOurIntl } from '../../i18n/TextComponent'
@@ -74,12 +75,18 @@ const NotesListGridItem: React.FC<{ note: V1Note }> = (props) => {
   const authorQ = useGetAccount({accountId: props.note.authorAccountId})
   const deleteNoteQ = useDeleteNoteInCurrentGroup()
   const navigate = useNavigate()
+  const groupContext = useGroupContext()
+
+  const handleViewNote = () => {
+    groupContext.changeGroup(props.note.groupId)
+    navigate(`/group/${props.note.groupId}/note/${props.note.id}`)
+  }
 
   return (
     <div>
       <div
         className='flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-md border border-gray-100 bg-gray-50 p-2 transition-all hover:bg-gray-100 hover:shadow-inner'
-        onClick={() => navigate(`./note/${props.note.id}`)}
+        onClick={handleViewNote}
         id={`group-view-notes-tab-grid-${props.note.id}`}
       >
         <div className='mb-2 h-2/3 w-1/2 rounded-md bg-white shadow-md' />
