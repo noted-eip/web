@@ -38,8 +38,8 @@ const DescriptionLanding: React.FC = () => {
             />
           </div>
           <div className='md:basis-7/12 lg:w-1/2'>
-            <h2 className='text-3xl font-bold text-gray-900 dark:text-white md:text-4xl'>
-            Noted
+            <h2 className='text-3xl font-bold text-gray-800 dark:text-white md:text-4xl'>
+              <FormatMessage id='DESCRIPTION' />
             </h2>
             <p className='my-8 text-gray-600 dark:text-gray-300'>
               <FormatMessage id='DESCRIPTION.descP1' />
