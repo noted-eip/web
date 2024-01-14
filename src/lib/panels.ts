@@ -1,6 +1,7 @@
 import { AcademicCapIcon, BoltIcon, PencilIcon } from '@heroicons/react/24/solid'
 import { QuestionAnswer } from '@mui/icons-material'
 
+import GroupActivityNotesPanel from '../panels/GroupActivityNoGroup'
 import GroupActivityPanel from '../panels/GroupActivityPanel'
 import NoteRecommendationsPanel from '../panels/NoteRecommendationsPanel'
 import QuizLeaderboardPanel from '../panels/QuizsLeaderBoardPanel'
@@ -12,6 +13,11 @@ export const panelMetadata = {
     displayName: 'PANEL.activity',
     icon: BoltIcon,
     component: GroupActivityPanel,
+  },
+  'group-activity-no-group': {
+    displayName: 'PANEL.activity',
+    icon: BoltIcon,
+    component: GroupActivityNotesPanel,
   },
   'note-recommendations': {
     displayName: 'PANEL.companion',

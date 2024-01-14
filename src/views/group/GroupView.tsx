@@ -1,5 +1,5 @@
 import React from 'react'
-import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Outlet, useNavigate, useParams } from 'react-router-dom'
 
 import ViewSkeleton from '../../components/view/ViewSkeleton'
 import { useGroupContext } from '../../contexts/group'
@@ -10,7 +10,6 @@ const GroupView: React.FC = () => {
   const groupContext = useGroupContext()
   const navigate = useNavigate()
   const routerParams = useParams()
-  const location = useLocation()
   const [isLoading, setIsLoading] = React.useState(true)
 
   // Synchronises the current group from the local storage

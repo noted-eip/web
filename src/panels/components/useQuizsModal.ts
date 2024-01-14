@@ -33,6 +33,7 @@ export const useQuizsModal = (noteId: string, selectedQuiz: V1Quiz | undefined) 
   }
 
   const handleValidateAnwser = () => {
+    setGoodAnswer(selectedQuiz?.questions?.[selectedQuestion].solutions?.[0] || '')
     setIsAnswerValidated(true)
     if (goodAnswer == selectedQuiz?.questions?.[selectedQuestion].answers?.[selectedAnswer]) {
       setScore(score + 1)
@@ -40,6 +41,7 @@ export const useQuizsModal = (noteId: string, selectedQuiz: V1Quiz | undefined) 
   }
 
   const answers = selectedQuiz?.questions?.[selectedQuestion].answers 
+
   return {
     selectedQuestion,
     selectedAnswer,

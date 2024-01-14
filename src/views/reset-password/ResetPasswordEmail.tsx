@@ -27,7 +27,7 @@ const ResetPasswordEmail: React.FC = () => {
   const forgetAccountPasswordMutation = useForgetAccountPassword({
     onSuccess: (data: V1ForgetAccountPasswordResponse) => {
       resetPasswordContext.changeResetPassword({account_id: data.accountId, reset_token: null, auth_token: null})
-      navigate('/reset_password_token')
+      navigate('/reset_password_token', { state: { email }})
     },
     onError: (e) => {
       toast.error(e.response?.data.error as string)
@@ -71,13 +71,13 @@ const ResetPasswordEmail: React.FC = () => {
             onChange={(e) => {
               const val = e.target.value as string
               setEmail(val)
-              setEmailValid(validateEmail(val) !== undefined)}
+              setEmailValid(validateEmail(val) === undefined)}
             }
             onBlur={() => {
-              setEmailValid(validateEmail(email) !== undefined)
+              setEmailValid(validateEmail(email) === undefined)
             }}
-            error={emailValid && email.length != 0  }
-            helperText={(emailValid && email.length != 0) && formatMessage({ id: 'AUTH.error.email' })}
+            error={!emailValid || email.length === 0}
+            helperText={(!emailValid || email.length === 0) && formatMessage({ id: 'AUTH.error.email' })}
           />
           <Button
             type='submit'

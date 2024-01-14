@@ -45,20 +45,6 @@ export const useListNotesInCurrentGroup = (req: ListNotesInCurrentGroupRequest, 
   })
 }
 
-/*
-export const useGetCurrentNote = (options?: QueryHookOptions<GetGroupRequest, V1GetGroupResponse>) => {
-  const groupContext = useGroupContext()
-  return useGetGroup({groupId: groupContext.groupId as string}, {
-    ...options,
-    // If no access to the group, switch group.
-    onError: (error) => {
-      groupContext.changeGroup(null)
-      if (options?.onError) options.onError(error)
-    }
-  })
-}
-*/
-
 export type GetNoteInCurrentGroupRequest = { noteId: string }
 export const useGetNoteInCurrentGroup = (req: GetNoteInCurrentGroupRequest, options?: QueryHookOptions<GetNoteInCurrentGroupRequest, V1GetNoteResponse>) => {
   const authContext = useAuthContext()
@@ -83,7 +69,7 @@ export const useListNotes = (req: ListNotesRequest, options?: QueryHookOptions<L
   return useQuery({
     queryKey: queryKey,
     queryFn: async () => {
-      return (await openapiClient.notesAPIListNotes(req.groupId, req.authorAccountId, req.limit, req.offset, await axiosRequestOptionsWithAuthorization(authContext))).data
+      return (await openapiClient.notesAPIListNotes2('', req.authorAccountId, req.limit, req.offset, await axiosRequestOptionsWithAuthorization(authContext))).data
     },
     ...options,
   })
@@ -141,6 +127,9 @@ export const useInsertBlockInCurrentGroup = ( options?: MutationHookOptions<Inse
   },
   {
     ...options,
+    onSuccess: async (data) => {
+      return data
+    }
   })
 }
 
@@ -152,6 +141,20 @@ export const useUpdateBlockInCurrentGroup = ( options?: MutationHookOptions<Upda
 
   return useMutation(async (req: UpdateBlockInCurrentGroup) => {
     return (await openapiClient.notesAPIUpdateBlock(currentGroupId, req.noteId, req.blockId, req.body, await axiosRequestOptionsWithAuthorization(authContext))).data
+  },
+  {
+    ...options,
+  })
+}
+
+export type DeleteBlockInCurrentGroup = { noteId: string, blockId: string};
+export const useDeleteBlockInCurrentGroup = ( options?: MutationHookOptions<DeleteBlockInCurrentGroup, object> ) => {
+  const authContext = useAuthContext()
+  const groupContext = useGroupContext()
+  const currentGroupId = groupContext.groupId as string
+
+  return useMutation(async (req: DeleteBlockInCurrentGroup) => {
+    return (await openapiClient.notesAPIDeleteBlock(currentGroupId, req.noteId, req.blockId, await axiosRequestOptionsWithAuthorization(authContext))).data
   },
   {
     ...options,
