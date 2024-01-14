@@ -12,12 +12,12 @@ export const useQuizsPanel = () => {
   const quitQuizModal = () => setToggleQuizModal(false)
   const openQuizModal = () => setToggleQuizModal(true)
   const quizList = useListQuizs({ noteId: noteId })
-  
   const [selectedQuiz, setSelectedQuiz] = useState<V1Quiz | undefined>(undefined)
   
   const generateQuizHandler = useGenerateQuiz({
     onSuccess: (data: V1GenerateQuizResponse) => {
       setSelectedQuiz(data.quiz)
+      quizList.refetch()
     },
     onError: (e) => {
       toast.error(e.response?.data.error as string)

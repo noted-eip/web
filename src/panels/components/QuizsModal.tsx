@@ -106,9 +106,9 @@ const QuizsModal: React.FC<{ open: boolean, onClose: () => void, noteId: string,
               <Button
                 className='m-8 p-2 font-bold'
                 size='large'
-                color={isAnswerValidated && ans == goodAnswer ? 'success' : isAnswerValidated && ans != goodAnswer ? 'error' : 'primary' }
+                color={isAnswerValidated && goodAnswer.includes(ans) ? 'success' : isAnswerValidated && !goodAnswer.includes(ans) ? 'error' : 'primary' }
                 key={idx} onClick={() => {!isAnswerValidated ? onSelectedAnswer(idx) : null}}> 
-                <Checkbox checked={idx == selectedAnswer} disabled={isAnswerValidated}/>
+                <Checkbox checked={selectedAnswer.includes(idx)} disabled={isAnswerValidated}/>
                 {ans}
               </Button>
             ))}
