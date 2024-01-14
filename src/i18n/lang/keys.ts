@@ -53,6 +53,10 @@ export enum TranslationKeys {
   'SIGNUP.wantSignIn',
   'SIGNUP.wantSignUp',
 
+  /* Home */
+  'HOME.lastGroups',
+  'HOME.lastNotes',
+
   /*    RESETPASSWORD   */
 
   /* ResetPassword Email  */
@@ -152,6 +156,9 @@ export enum TranslationKeys {
   'NOTE.export.button1',
   'NOTE.export.button2',
   'NOTE.export.button3',
+
+  /* Notes */
+  'NOTES.noNotes',
 
   /*    PROFILE    */
   'PROFILE.invite.deny',

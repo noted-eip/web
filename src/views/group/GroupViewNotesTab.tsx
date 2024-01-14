@@ -70,7 +70,7 @@ const NotesListGridItemContextMenu: React.FC<NotesLiNotesListGridItemContextMenu
   </div>
 }
 
-const NotesListGridItem: React.FC<{ note: V1Note }> = (props) => {
+export const NotesListGridItem: React.FC<{ note: V1Note }> = (props) => {
   const authorQ = useGetAccount({accountId: props.note.authorAccountId})
   const deleteNoteQ = useDeleteNoteInCurrentGroup()
   const navigate = useNavigate()

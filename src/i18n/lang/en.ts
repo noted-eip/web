@@ -32,6 +32,10 @@ const enTranslation: LocaleTypedMessages = {
   'SIGNUP.wantSignIn': 'Already have an account',
   'SIGNUP.wantSignUp': 'I want to create an account',
 
+  /* Home */
+  'HOME.lastGroups': 'Last groups',
+  'HOME.lastNotes': 'Last notes',
+  
   /*    RESETPASSWORD   */
 
   /* ResetPassword Email  */
@@ -131,6 +135,9 @@ const enTranslation: LocaleTypedMessages = {
   'NOTE.export.button1': 'Export in PDF',
   'NOTE.export.button2': 'Export in Markdown',
   'NOTE.export.button3': 'Export',
+
+  /* Notes */
+  'NOTES.noNotes': 'No notes',
 
   /*    PROFILE    */
   'PROFILE.invite.deny': 'Deny',

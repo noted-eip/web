@@ -33,6 +33,10 @@ const frTranslation: LocaleTypedMessages = {
   'SIGNUP.wantSignIn': 'J\'ai déjà un compte',
   'SIGNUP.wantSignUp': 'Je veux créer un compte',
 
+  /* Home */
+  'HOME.lastGroups': 'Derniers groupes',
+  'HOME.lastNotes': 'Dernières notes',
+  
   /*    RESETPASSWORD   */
 
   /* ResetPassword Email  */
@@ -131,6 +135,9 @@ const frTranslation: LocaleTypedMessages = {
   'NOTE.export.button1': 'Exporter en PDF',
   'NOTE.export.button2': 'Exporter en Markdown',
   'NOTE.export.button3': 'Exporter',
+
+  /* Notes */
+  'NOTES.noNotes': 'Aucune notes',
 
   /*    PROFILE    */
   'PROFILE.invite.deny': 'Refuser',

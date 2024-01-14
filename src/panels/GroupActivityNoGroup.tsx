@@ -7,7 +7,7 @@ import { FormatMessage } from '../i18n/TextComponent'
 
 const ActivityListNoGroup: React.FC = () => {
   return (
-    <div className='flex h-full items-center justify-center overflow-y-scroll lg:px-lg lg:pb-lg xl:px-xl xl:pb-xl'>
+    <div className='flex h-full items-center justify-center lg:px-lg lg:pb-lg xl:px-xl xl:pb-xl'>
       <div className='my-4 space-y-2 text-center'>
         <FormatMessage id='PANEL.activity.noGroup' />
         <Lottie
