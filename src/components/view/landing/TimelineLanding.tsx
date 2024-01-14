@@ -6,7 +6,6 @@ import TimelineItem from '@mui/lab/TimelineItem'
 import TimelineSeparator from '@mui/lab/TimelineSeparator'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
-import Typography from '@mui/material/Typography'
 import React from 'react'
 
 import { FormatMessage, useOurIntl } from '../../../i18n/TextComponent'
@@ -31,8 +30,8 @@ const TimelineCard: React.FC<ITimelineCard> = ({ title, desc }) => {
       <TimelineContent>
         <Card>
           <CardContent>
-            <Typography variant='h6'>{title}</Typography>
-            <Typography variant='body1'>{desc}</Typography>
+            <h4 className='text-lg font-semibold text-gray-700'>{title}</h4>
+            <p className='text-gray-600'>{desc}</p>
           </CardContent>
         </Card>
       </TimelineContent>
@@ -56,10 +55,10 @@ const TimelineLanding: React.FC = () => {
       title: 'Beta & Growth Hacking',  desc: formatMessage({ id: 'TIMELINE.desc4' })
     },
     {
-      title: 'Consolidation',  desc: formatMessage({ id: 'TIMELINE.desc4' })
+      title: 'Consolidation',  desc: formatMessage({ id: 'TIMELINE.desc5' })
     },
     {
-      title: 'Lauch and Metrics',  desc: formatMessage({ id: 'TIMELINE.desc4' })
+      title: 'Lauch and Metrics',  desc: formatMessage({ id: 'TIMELINE.desc6' })
     }
   ]
   
