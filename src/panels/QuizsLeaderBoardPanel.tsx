@@ -91,7 +91,7 @@ const LeaderboardListMembers: React.FC = () => {
   })
 
   return (
-    <div className='space-y-2'>
+    <div className='my-4 space-y-2 lg:px-lg lg:pb-lg xl:px-xl xl:pb-xl'>
       {currentGroup.isSuccess ? (
         !members ? (
           <div className='my-4 text-center text-sm text-gray-400'>

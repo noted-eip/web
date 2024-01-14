@@ -44,7 +44,7 @@ const ListQuizs: React.FC = () => {
         </Button>
       </div>
       {quizList.isSuccess ?
-        <List>
+        <List className='overflow-y-scroll'>
           {
             quizList?.data.quizs?.map((quiz, idx) => {
               return (
