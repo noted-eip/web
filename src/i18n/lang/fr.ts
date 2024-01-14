@@ -75,18 +75,19 @@ const frTranslation: LocaleTypedMessages = {
   'TIMELINE.desc1': 'Au cours de ce sprint, nous essayons différentes technologies et bibliothèques pour le backend et pour le web, le mobile et le bureau.',
   'TIMELINE.desc2': 'Au cours de ce sprint, nous choisissons quelles technologies et bibliothèques seront utilisées et quelle plate-forme sera prise en charge. Ensuite, nous commençons à créer la fonctionnalité principale de Noted.',
   'TIMELINE.desc3': 'Au cours de ce sprint, nous avons amélioré et finalisé les fonctionnalités du dernier sprint et commencé les prochaines fonctionnalités de base.',
-  'TIMELINE.desc4': 'Au cours de ce sprint, nous avons implémenté les fonctionnalités les plus importantes de notre application pour l\'édition et la recommandation de notes. A noté avoir sa première beta utilisable !',
-
+  'TIMELINE.desc4': 'Au cours de ce sprint, nous avons implémenté les fonctionnalités les plus importantes de notre application pour l\'édition et la recommandation de notes. Noted a sa première beta utilisable !',
+  'TIMELINE.desc5': 'Au cours de ce sprint, nous avons continué l\'implémentation des fonctionnalités majeures de l\'application.',
+  'TIMELINE.desc6': 'Au cours de ce sprint, nous avons développé l\'unicité graphique entre le frontend et le mobile, implémenté les dernières fonctionnalités comme le quiz et réglé tous les derniers problèmes graphiquent et de logique.',
   /* Team */
   'TEAM': 'L\'équipe',
   'TEAM.roleRespDeadDocs': 'Responsable Deadlines and docs',
   'TEAM.roleRespFront': 'Responsable Frontend',
   'TEAM.roleRespBack': 'Responsable Backend',
   'TEAM.roleRespPres': 'Responsable Presentation',
-  'TEAM.roleDev': 'Développeur',
+  'TEAM.rolePersona': 'Responsable Persona',
   'TEAM.descBackDevops': 'Développeur backend et devops',
   'TEAM.descMobile': 'Développeur mobile',
-  'TEAM.descFront': 'Développeur frontend web',
+  'TEAM.descFront': 'Développeur frontend',
 
   /* Contact */
   'CONTACT': 'Contact',

@@ -127,6 +127,9 @@ export const useInsertBlockInCurrentGroup = ( options?: MutationHookOptions<Inse
   },
   {
     ...options,
+    onSuccess: async (data) => {
+      return data
+    }
   })
 }
 
@@ -138,6 +141,20 @@ export const useUpdateBlockInCurrentGroup = ( options?: MutationHookOptions<Upda
 
   return useMutation(async (req: UpdateBlockInCurrentGroup) => {
     return (await openapiClient.notesAPIUpdateBlock(currentGroupId, req.noteId, req.blockId, req.body, await axiosRequestOptionsWithAuthorization(authContext))).data
+  },
+  {
+    ...options,
+  })
+}
+
+export type DeleteBlockInCurrentGroup = { noteId: string, blockId: string};
+export const useDeleteBlockInCurrentGroup = ( options?: MutationHookOptions<DeleteBlockInCurrentGroup, object> ) => {
+  const authContext = useAuthContext()
+  const groupContext = useGroupContext()
+  const currentGroupId = groupContext.groupId as string
+
+  return useMutation(async (req: DeleteBlockInCurrentGroup) => {
+    return (await openapiClient.notesAPIDeleteBlock(currentGroupId, req.noteId, req.blockId, await axiosRequestOptionsWithAuthorization(authContext))).data
   },
   {
     ...options,

@@ -1,9 +1,9 @@
 import React from 'react'
 
-import balthazarPhoto from '../../../assets/team_photos/balthazar.png'
+import balthazarPhoto from '../../../assets/team_photos/balthi.jpg'
 import edouardPhoto from '../../../assets/team_photos/edouard.jpeg'
-import gabrielPhoto from '../../../assets/team_photos/Gabi.jpg'
-import kilianPhoto from '../../../assets/team_photos/Kilian.jpg'
+import gabrielPhoto from '../../../assets/team_photos/gabriel.jpg'
+import kilianPhoto from '../../../assets/team_photos/killian.jpg'
 import maximePhoto from '../../../assets/team_photos/maxime.jpg'
 import { FormatMessage, useOurIntl } from '../../../i18n/TextComponent'
 
@@ -24,7 +24,7 @@ const TeamLanding: React.FC = () => {
       name: 'Gabriel Medoukali',  role: formatMessage({ id: 'TEAM.roleRespDeadDocs' }), desc: formatMessage({ id: 'TEAM.descBackDevops' }), imgSrc: gabrielPhoto
     },
     {
-      name: 'Balthazar Roque',  role: formatMessage({ id: 'TEAM.roleDev' }), desc: formatMessage({ id: 'TEAM.descMobile' }), imgSrc: balthazarPhoto
+      name: 'Balthazar Roque',  role: formatMessage({ id: 'TEAM.rolePersona' }), desc: formatMessage({ id: 'TEAM.descMobile' }), imgSrc: balthazarPhoto
     },
     {
       name: 'Maxime Dodin',  role: formatMessage({ id: 'TEAM.roleRespPres' }), desc: formatMessage({ id: 'TEAM.descBackDevops' }), imgSrc: maximePhoto

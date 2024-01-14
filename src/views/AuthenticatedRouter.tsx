@@ -4,6 +4,7 @@ import { Route, Routes, useNavigate } from 'react-router-dom'
 import Dashboard from '../components/view/Dashboard'
 import { BlockContext } from '../contexts/block'
 import { GroupContext } from '../contexts/group'
+import TNoteContextProvider from '../contexts/note'
 import { RecoModeContext } from '../contexts/recommendation'
 import { LS_BLOCK_ID_KEY, LS_GROUP_ID_KEY, LS_RECO_MODE } from '../lib/constants'
 import GroupList from './group/GroupList'
@@ -59,23 +60,25 @@ const AuthenticatedRouter: React.FC = () => {
   return (
     <GroupContext.Provider value={{ groupId: groupID, changeGroup }}>
       <BlockContext.Provider value={{ blockId: blockId, changeBlock }}>
-        <RecoModeContext.Provider value={{ recoMode: recoMode, changeRecoMode }}>
-          <Routes>
-            <Route path='/' element={<Dashboard />}>
-              <Route path='' element={<HomeView />} />
-              <Route path='home' element={<HomeView />} />
-              <Route path='groups' element={<GroupList />} />
-              <Route path='group/:groupId' element={<GroupView />}>
-                <Route path='' element={<GroupViewNotesTab />} />
-                <Route path='settings' element={<GroupViewSettingsTab />} />
+        <TNoteContextProvider>
+          <RecoModeContext.Provider value={{ recoMode: recoMode, changeRecoMode }}>
+            <Routes>
+              <Route path='/' element={<Dashboard />}>
+                <Route path='' element={<HomeView />} />
+                <Route path='home' element={<HomeView />} />
+                <Route path='groups' element={<GroupList />} />
+                <Route path='group/:groupId' element={<GroupView />}>
+                  <Route path='' element={<GroupViewNotesTab />} />
+                  <Route path='settings' element={<GroupViewSettingsTab />} />
+                </Route>
+                <Route path='group/:groupId/note/:noteId' element={<NoteView />} />
+                <Route path='notes' element={<NotesView />} />
+                <Route path='profile' element={<ProfileView />} />
               </Route>
-              <Route path='group/:groupId/note/:noteId' element={<NoteView />} />
-              <Route path='notes' element={<NotesView />} />
-              <Route path='profile' element={<ProfileView />} />
-            </Route>
-            <Route path='*' element={<NotFoundView />} />
-          </Routes>
-        </RecoModeContext.Provider>
+              <Route path='*' element={<NotFoundView />} />
+            </Routes>
+          </RecoModeContext.Provider>
+        </TNoteContextProvider>
       </BlockContext.Provider>
     </GroupContext.Provider>
   )

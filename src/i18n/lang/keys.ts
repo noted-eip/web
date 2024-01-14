@@ -96,6 +96,8 @@ export enum TranslationKeys {
   'TIMELINE.desc2',
   'TIMELINE.desc3',
   'TIMELINE.desc4',
+  'TIMELINE.desc5',
+  'TIMELINE.desc6',
 
   /* Team */
   'TEAM',
@@ -103,7 +105,7 @@ export enum TranslationKeys {
   'TEAM.roleRespFront',
   'TEAM.roleRespBack',
   'TEAM.roleRespPres',
-  'TEAM.roleDev',
+  'TEAM.rolePersona',
   'TEAM.descBackDevops',
   'TEAM.descMobile',
   'TEAM.descFront',
