@@ -186,6 +186,10 @@ export enum TranslationKeys {
   'PANEL.quizs.notFound',
   'PANEL.quizs.next',
   'PANEL.quizs.generate',
+  'PANEL.leaderboard',
+  'PANEL.leaderboard.loading',
+  'PANEL.leaderboard.none',
+
 
   /*    ACTIVITY   */
   'ACTIVITY',
@@ -204,4 +208,12 @@ export enum TranslationKeys {
   'VALIDATION.button',
   'VALIDATION.resend',
   'VALIDATION.resend_link',
+
+  
+  /*    QUIZS    */
+  'QUIZS.button.check',
+  'QUIZS.button.next',
+  'QUIZS.button.quit',
+  'QUIZS.score',
+  'QUIZS.noQuiz',
 }

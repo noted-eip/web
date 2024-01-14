@@ -1,9 +1,11 @@
-import { TrophyIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { TrophyIcon } from '@heroicons/react/24/outline'
 import { Box, Button, Checkbox, CircularProgress, Dialog, DialogContent, DialogTitle, Slide } from '@mui/material'
 import { TransitionProps } from '@mui/material/transitions'
 import React from 'react'
 
+import { FormatMessage } from '../../i18n/TextComponent'
 import { V1Quiz } from '../../protorepo/openapi/typescript-axios'
+import { useQuizsModal } from './useQuizsModal'
 
 
 const Transition = React.forwardRef(function Transition(
@@ -20,6 +22,7 @@ export interface QuizsModalProps {
   open: boolean
   selectedQuiz: V1Quiz | undefined
   isLoaded: boolean
+  noteId: string
 }
 
 const ResultQuizsModal: React.FC<{onClose: () => void, score: number, nbQuestions: number}> = (props) => {
@@ -32,27 +35,26 @@ const ResultQuizsModal: React.FC<{onClose: () => void, score: number, nbQuestion
         </Box>
       </DialogContent>
       <DialogContent className='my-2 flex justify-center'>
-        <DialogTitle>{`Votre score est de ${score}/${nbQuestions}`}</DialogTitle>
+        <DialogTitle>
+          <FormatMessage id={'QUIZS.score' }/>
+          {` ${score} / ${nbQuestions}`}
+        </DialogTitle>
       </DialogContent>
       <DialogContent className='my-2 flex justify-center'>
-        <Button className='' onClick={onClose}>{'Fermer'}</Button>
+        <Button className='' onClick={onClose}>
+          <FormatMessage id={'QUIZS.button.quit' }/>
+        </Button>
       </DialogContent>
     </DialogContent>)
   )
 }
 
-const LoadingQuizsModal: React.FC<{onClose: () => void}> = (props) => {
-  const { onClose } = props
+const LoadingQuizsModal: React.FC = () => {
   return (
     <DialogContent>
-      <DialogContent>
-        <DialogTitle>{'Loading...'}</DialogTitle>
-        <Button className='' onClick={onClose}>
-          <Box sx={{ display: 'flex' }}>
-            <XMarkIcon />
-          </Box>
-        </Button>
-      </DialogContent>
+      <DialogTitle>
+        <FormatMessage id={'QUIZS.noQuiz' }/>
+      </DialogTitle>
       <DialogContent className='my-8 flex justify-center'>
         <Box sx={{ display: 'flex' }}>
           <CircularProgress />
@@ -64,39 +66,20 @@ const LoadingQuizsModal: React.FC<{onClose: () => void}> = (props) => {
 
 const QuizsModal: React.FC<{ open: boolean, onClose: () => void, noteId: string, selectedQuiz: V1Quiz | undefined, isLoading: boolean }> = (props) => {
 
-  const { open, onClose, selectedQuiz, isLoading } = props
-  const [selectedQuestion, setSelectedQuestion] = React.useState<number>(0)
-  const [selectedAnswer, setSelectedAnswer] = React.useState<number>(-1)
-  const [goodAnswer, setGoodAnswer] = React.useState<string>('')
-  const [isAnswerValidated, setIsAnswerValidated] = React.useState<boolean>(false)
-  const [score, setScore] = React.useState<number>(0)
-  const [displayResult, setDisplayResult] = React.useState<boolean>(false)
+  const { open, onClose, selectedQuiz, noteId, isLoading } = props
+  const { 
+    displayResult,
+    answers,
+    isAnswerValidated,
+    selectedQuestion,
+    selectedAnswer,
+    goodAnswer,
+    score,
+    handleNextQuestion,
+    handleValidateAnwser,
+    onSelectedAnswer
+  } = useQuizsModal(noteId, selectedQuiz)
 
-
-  const onSelectedAnswer = (idx: number) => {
-    setGoodAnswer(selectedQuiz?.questions?.[selectedQuestion].solutions?.[0] || '')
-    setSelectedAnswer(idx)
-  }
-
-  const handleNextQuestion = () => {
-    setIsAnswerValidated(false)
-    setSelectedAnswer(-1)
-    if (selectedQuestion + 1 < (selectedQuiz?.questions?.length || 0)) {
-      setSelectedQuestion(selectedQuestion + 1)
-    } else {
-      setDisplayResult(true)
-    }
-    setGoodAnswer(selectedQuiz?.questions?.[selectedQuestion].solutions?.[0] || '')
-  }
-
-  const handleValidateAnwser = () => {
-    setIsAnswerValidated(true)
-    if (goodAnswer == selectedQuiz?.questions?.[selectedQuestion].answers?.[selectedAnswer]) {
-      setScore(score + 1)
-    }
-  }
-
-  const answers = selectedQuiz?.questions?.[selectedQuestion].answers
 
   return (
     <Dialog
@@ -113,7 +96,7 @@ const QuizsModal: React.FC<{ open: boolean, onClose: () => void, noteId: string,
       aria-describedby='alert-dialog-slide-description'
     >
       {isLoading || selectedQuiz?.questions == undefined ?
-        <LoadingQuizsModal onClose={onClose} /> :
+        <LoadingQuizsModal/> :
         displayResult ?
           <ResultQuizsModal onClose={onClose} score={score} nbQuestions={selectedQuiz?.questions?.length || 0} />
           :
@@ -133,9 +116,13 @@ const QuizsModal: React.FC<{ open: boolean, onClose: () => void, noteId: string,
             <DialogTitle className='m-4 self-center text-base'>{`Question ${selectedQuestion + 1} / ${selectedQuiz?.questions?.length}`}</DialogTitle>
             <div className='m-4 flex justify-center'>
               {isAnswerValidated == false  ?
-                <Button onClick={handleValidateAnwser}>{'Verifier'}</Button>
+                <Button onClick={handleValidateAnwser}>
+                  <FormatMessage id={'QUIZS.button.check' }/>
+                </Button>
                 :
-                <Button onClick={handleNextQuestion}>{'Suivant'}</Button>
+                <Button onClick={handleNextQuestion}>
+                  <FormatMessage id={'QUIZS.button.next' }/>
+                </Button>
               }
             </div>
           </React.Fragment>)

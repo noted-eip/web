@@ -166,6 +166,10 @@ const frTranslation: LocaleTypedMessages = {
   'PANEL.quizs.notFound': 'Votre quiz n\' a pas été trouvé',
   'PANEL.quizs.next': 'Suivant',
   'PANEL.quizs.generate': 'Générer',
+  'PANEL.leaderboard': 'Classement',
+  'PANEL.leaderboard.loading': 'Chargement du classement..',
+  'PANEL.leaderboard.none': 'Pas de classement',
+
 
   /*    ACTIVITY    */
   'ACTIVITY': 'Activity',
@@ -184,6 +188,13 @@ const frTranslation: LocaleTypedMessages = {
   'VALIDATION.button': 'Valider',
   'VALIDATION.resend': 'Je n\'ai pas reçus le code',
   'VALIDATION.resend_link': 'l\'envoyer à nouveau',
+
+  /*    QUIZS    */
+  'QUIZS.button.check': 'Vérifier',
+  'QUIZS.button.next': 'Suivant',
+  'QUIZS.button.quit': 'Retourner à la note',
+  'QUIZS.score': 'Votre score est de',
+  'QUIZS.noQuiz': 'Chargement de vos quizs...',
 }
 
 export default frTranslation

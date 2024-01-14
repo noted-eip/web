@@ -1,10 +1,11 @@
-import { BoltIcon, PencilIcon } from '@heroicons/react/24/solid'
+import { AcademicCapIcon, BoltIcon, PencilIcon } from '@heroicons/react/24/solid'
 import { QuestionAnswer } from '@mui/icons-material'
 
 import GroupActivityPanel from '../panels/GroupActivityPanel'
 import NoteRecommendationsPanel from '../panels/NoteRecommendationsPanel'
+import QuizLeaderboardPanel from '../panels/QuizsLeaderBoardPanel'
 import NoteQuizsPanel from '../panels/QuizsPanels'
-import { V1Block, V1Widget } from '../protorepo/openapi/typescript-axios'
+import { V1Block,V1Widget } from '../protorepo/openapi/typescript-axios'
 
 export const panelMetadata = {
   'group-activity': {
@@ -21,6 +22,11 @@ export const panelMetadata = {
     displayName: 'PANEL.quizs',
     icon: QuestionAnswer,
     component: NoteQuizsPanel,
+  },
+  'quiz-leaderboard': {
+    displayName: 'PANEL.leaderboard',
+    icon: AcademicCapIcon,
+    component: QuizLeaderboardPanel,
   },
 }
 

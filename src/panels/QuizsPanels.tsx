@@ -1,24 +1,23 @@
 import { BookOpenIcon } from '@heroicons/react/24/outline'
 import { Button, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
-import React, { useState } from 'react'
-import toast from 'react-hot-toast'
+import React from 'react'
 
 import PanelSkeleton from '../components/view/PanelSkeleton'
-import { useGenerateQuiz, useListQuizs } from '../hooks/api/recommendations'
-import { useNoteIdFromUrl } from '../hooks/url'
 import { FormatMessage } from '../i18n/TextComponent'
-import { V1GenerateQuizResponse, V1Quiz } from '../protorepo/openapi/typescript-axios'
 import QuizsModal from './components/QuizsModal'
+import { useQuizsPanel } from './useQuizsPanel'
 
 const ListQuizs: React.FC = () => {
-  const noteId = useNoteIdFromUrl()
-
-  const [toggleQuizModal, setToggleQuizModal] = useState(false)
-  const quitQuizModal = () => setToggleQuizModal(false)
-  const openQuizModal = () => setToggleQuizModal(true)
-  const quizList = useListQuizs({ noteId: noteId })
-
-  const [selectedQuiz, setSelectedQuiz] = useState<V1Quiz | undefined>(undefined)
+  const { 
+    noteId, 
+    quizList, 
+    generateQuizHandler, 
+    toggleQuizModal, 
+    openQuizModal, 
+    quitQuizModal, 
+    setSelectedQuiz,
+    selectedQuiz, 
+  } = useQuizsPanel()
 
   //Can find note ? 
   if (noteId == null) {
@@ -27,17 +26,6 @@ const ListQuizs: React.FC = () => {
         <FormatMessage id='PANEL.quizs.notFound' />
       </div>)
   }
-
-  const generateQuizHandler = useGenerateQuiz({
-    onSuccess: (data: V1GenerateQuizResponse) => {
-      setSelectedQuiz(data.quiz)
-    },
-    onError: (e) => {
-      toast.error(e.response?.data.error as string)
-    }
-  })
-
-
   // Generate quizz and check loading state
   return (
     <React.Fragment>

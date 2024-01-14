@@ -165,6 +165,9 @@ const enTranslation: LocaleTypedMessages = {
   'PANEL.quizs.notFound': 'Your quiz has not been found.',
   'PANEL.quizs.next': 'Next',
   'PANEL.quizs.generate': 'Generate',
+  'PANEL.leaderboard': 'Leaderboard',
+  'PANEL.leaderboard.loading': 'Loading the leaderboard...',
+  'PANEL.leaderboard.none': 'No quiz taken yet',
 
   /*    ACTIVITY    */
   'ACTIVITY': 'Activity',
@@ -183,6 +186,13 @@ const enTranslation: LocaleTypedMessages = {
   'VALIDATION.button': 'Validate',
   'VALIDATION.resend': 'I did not receive the code',
   'VALIDATION.resend_link': 'send again',
+
+  /*    QUIZS    */
+  'QUIZS.button.check': 'Verify',
+  'QUIZS.button.next': 'Next',
+  'QUIZS.button.quit': 'Go back to the note',
+  'QUIZS.score': 'Your score is',
+  'QUIZS.noQuiz': 'Loading your quizs...',
 }
 
 export default enTranslation

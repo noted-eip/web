@@ -8,7 +8,7 @@ import { useBlockContext } from '../../contexts/block'
 import { useInsertBlockInCurrentGroup,useUpdateBlockInCurrentGroup } from '../../hooks/api/notes'
 import { noteBlocksToSlateElements, slateElementsToNoteBlock, withShortcuts } from '../../lib/editor'
 import { blocksAreEqual } from '../../lib/editor'
-import { NotesAPIInsertBlockRequest,V1Block, V1Note } from '../../protorepo/openapi/typescript-axios'
+import { NotesAPIInsertBlockRequest, V1Block,V1Note } from '../../protorepo/openapi/typescript-axios'
 
 
 
