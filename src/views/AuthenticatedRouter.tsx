@@ -12,8 +12,8 @@ import GroupView from './group/GroupView'
 import GroupViewNotesTab from './group/GroupViewNotesTab'
 import GroupViewSettingsTab from './group/GroupViewSettingsTab'
 import HomeView from './home/HomeView'
-import NoteListOutGroup from './note/NoteListOutGroup'
 import NoteView from './note/NoteView'
+import NotesView from './notes/NotesView'
 import NotFoundView from './notfound/NotFoundView'
 import ProfileView from './profile/ProfileView'
 
@@ -72,7 +72,7 @@ const AuthenticatedRouter: React.FC = () => {
                   <Route path='settings' element={<GroupViewSettingsTab />} />
                 </Route>
                 <Route path='group/:groupId/note/:noteId' element={<NoteView />} />
-                <Route path='notes' element={<NoteListOutGroup />} />
+                <Route path='notes' element={<NotesView />} />
                 <Route path='profile' element={<ProfileView />} />
               </Route>
               <Route path='*' element={<NotFoundView />} />

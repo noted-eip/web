@@ -1,13 +1,13 @@
-import { ArrowPathIcon, PlusIcon, TrashIcon as TrashIconOutline } from '@heroicons/react/24/outline'
-import { Button, Stack } from '@mui/material'
+import { TrashIcon as TrashIconOutline } from '@heroicons/react/24/outline'
+import { Stack } from '@mui/material'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { useNoteContext } from '../../contexts/note'
+import ViewSkeleton from '../../components/view/ViewSkeleton'
+import { useAuthContext } from '../../contexts/auth'
 import { useGetAccount } from '../../hooks/api/accounts'
-import { useGetCurrentGroup } from '../../hooks/api/groups'
-import { useCreateNoteInCurrentGroup, useDeleteNoteInCurrentGroup, useListNotesInCurrentGroup } from '../../hooks/api/notes'
-import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
+import { useDeleteNoteInCurrentGroup, useListNotes } from '../../hooks/api/notes'
+import { useOurIntl } from '../../i18n/TextComponent'
 import { V1Note } from '../../protorepo/openapi/typescript-axios'
 
 type NotesLiNotesListGridItemContextMenuProps = {
@@ -101,49 +101,21 @@ const NotesListGridItem: React.FC<{ note: V1Note }> = (props) => {
   )
 }
 
-const GroupViewNotesTab: React.FC = () => {
+const NotesList: React.FC = () => {
   const { formatMessage } = useOurIntl()
-  const navigate = useNavigate()
-  const listNotesQ = useListNotesInCurrentGroup({})
-  const getGroupQ = useGetCurrentGroup()
-
-  const { clearBlocksContext } = useNoteContext()
-
-  React.useEffect(() => {
-    clearBlocksContext()
-  }, [])
-
-  const createNoteQ = useCreateNoteInCurrentGroup({
-    onSuccess: (data) => {
-      navigate(`./note/${data.note.id}`)
-    },
-  })
+  const authContext = useAuthContext()
+  const listNotesQ = useListNotes({authorAccountId: authContext.accountId})
 
   return (
     <div className='grid w-full grid-rows-1 gap-4'>
       {/* Menu */}
-
       {/* Search bar */}
       <Stack direction='row' spacing={2}>
         <input
           className='w-full rounded-md border border-gray-200 p-2 text-sm placeholder:text-gray-400'
-          placeholder={`${formatMessage({ id: 'GROUP.search' })} ${getGroupQ.data?.group.name || ''}`}
+          placeholder={`${formatMessage({ id: 'GROUP.search' })} une note`}
           type='text'
         />
-        <Button
-          variant='outlined'
-          className='shrink-0'
-          onClick={() => {
-            createNoteQ.mutate({body: {title: formatMessage({ id: 'NOTE.untitledNote' })}})
-          }}
-          endIcon={
-            createNoteQ.isLoading ?
-              <ArrowPathIcon className='h-5 w-5 animate-spin text-blue-500' /> : 
-              <PlusIcon className='h-5 w-5 stroke-2 text-blue-500' />
-          }
-        >
-          <FormatMessage id='NOTE.newNote' />
-        </Button>
       </Stack>
       {/* Notes Grid */}
       <div className='grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-3 lg:grid-cols-3 lg:gap-4 xl:grid-cols-4'>
@@ -162,4 +134,18 @@ const GroupViewNotesTab: React.FC = () => {
   )
 }
 
-export default GroupViewNotesTab
+
+const NotesView: React.FC = () => {
+  const { formatMessage } = useOurIntl()
+
+  return (
+    <ViewSkeleton title={formatMessage({ id: 'GENERIC.notes' })} panels={['group-activity-no-group']}>
+      <div className='mx-lg mb-lg w-full xl:mx-xl xl:mb-xl'>
+        <NotesList />
+      </div>
+    </ViewSkeleton>
+  )
+}
+
+
+export default NotesView
