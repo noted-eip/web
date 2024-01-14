@@ -3,6 +3,7 @@ import { Button, Stack } from '@mui/material'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { useNoteContext } from '../../contexts/note'
 import { useGetAccount } from '../../hooks/api/accounts'
 import { useGetCurrentGroup } from '../../hooks/api/groups'
 import { useCreateNoteInCurrentGroup, useDeleteNoteInCurrentGroup, useListNotesInCurrentGroup } from '../../hooks/api/notes'
@@ -105,6 +106,13 @@ const GroupViewNotesTab: React.FC = () => {
   const navigate = useNavigate()
   const listNotesQ = useListNotesInCurrentGroup({})
   const getGroupQ = useGetCurrentGroup()
+
+  const { clearBlocksContext } = useNoteContext()
+
+  React.useEffect(() => {
+    clearBlocksContext()
+  }, [])
+
   const createNoteQ = useCreateNoteInCurrentGroup({
     onSuccess: (data) => {
       navigate(`./note/${data.note.id}`)

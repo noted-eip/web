@@ -9,6 +9,7 @@ import {NoteViewMetadataHeader} from './NoteMetadataHeader'
 import NoteViewEditor from './NoteViewEditor'
 import NoteViewHeader from './NoteViewHeader'
 
+
 function editorLoadingSkeleton(): React.ReactElement<unknown, string> | null {
   return <div className='m-lg grid gap-2 opacity-50 xl:m-xl'>
     <div className='skeleton mb-2 h-6 w-96' />
@@ -26,23 +27,40 @@ const NoteView: React.FC = () => {
   const analytics = getAnalytics()
   const noteId = useNoteIdFromUrl()
   const noteQuery = useGetNoteInCurrentGroup({ noteId })
+  const [isLoading, setIsLoading] = React.useState(true)
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await noteQuery.refetch()
+        setIsLoading(false)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    }
+
+    fetchData()
+  }, [noteId])
 
   if (!TOGGLE_DEV_FEATURES) {
     logEvent(analytics, 'page_view', {
       page_title: 'note_page'
     })
   }
-  return <ViewSkeleton titleElement={<NoteViewHeader />} panels={['group-activity', 'note-recommendations']}>
-    <div className='w-full'>
-      <NoteViewMetadataHeader />
-      {
-        noteQuery.data ?
-          <NoteViewEditor note={noteQuery.data.note} />
-          :
+
+  return (
+    <ViewSkeleton titleElement={<NoteViewHeader />} panels={['group-activity', 'note-recommendations']}>
+      <div className='w-full'>
+        <NoteViewMetadataHeader />
+        <div className='p-2'/>
+        {isLoading ? (
           editorLoadingSkeleton()
-      }
-    </div>
-  </ViewSkeleton>
+        ) : (
+          noteQuery.data && <NoteViewEditor note={noteQuery.data.note} />
+        )}
+      </div>
+    </ViewSkeleton>
+  )
 }
 
 export default NoteView
