@@ -53,6 +53,10 @@ export enum TranslationKeys {
   'SIGNUP.wantSignIn',
   'SIGNUP.wantSignUp',
 
+  /* Home */
+  'HOME.lastGroups',
+  'HOME.lastNotes',
+
   /*    RESETPASSWORD   */
 
   /* ResetPassword Email  */

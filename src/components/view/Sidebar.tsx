@@ -71,7 +71,7 @@ function createChildItems(
     return (<Link
       key={url}
       to={url ? url : '/'}
-      className={`ml-8 ${idx !== childrenLenght - 1 && 'mb-1'} flex items-center justify-between rounded-md p-1 pl-2 hover:bg-gray-100 ${
+      className={`ml-8 ${idx !== childrenLenght - 1 && 'mb-1'} ${idx === 0 && 'mt-1'} flex items-center justify-between rounded-md p-1 pl-2 hover:bg-gray-100 ${
         url && currentLocation.includes(url) ? 'bg-gray-100' : ''
       }`}>
       <Typography variant='h6' sx={{ color: grey[700] }} fontSize='16px'>

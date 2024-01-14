@@ -9,7 +9,7 @@ export const Panel: React.FC = () => {
   const activePanelComponent = panelMetadata[activePanel].component
 
   return (
-    <div className='hidden h-screen !max-h-screen overflow-hidden border-l border-gray-300 lg:flex'>
+    <div className='hidden h-screen !max-h-screen overflow-hidden border-l border-gray-400 lg:flex'>
       {activePanelComponent({}, {})}
     </div>
   )

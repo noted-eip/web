@@ -32,6 +32,10 @@ const enTranslation: LocaleTypedMessages = {
   'SIGNUP.wantSignIn': 'Already have an account',
   'SIGNUP.wantSignUp': 'I want to create an account',
 
+  /* Home */
+  'HOME.lastGroups': 'Last groups',
+  'HOME.lastNotes': 'Last notes',
+  
   /*    RESETPASSWORD   */
 
   /* ResetPassword Email  */

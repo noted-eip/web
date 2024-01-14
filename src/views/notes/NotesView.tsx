@@ -71,7 +71,7 @@ const NotesListGridItemContextMenu: React.FC<NotesLiNotesListGridItemContextMenu
   </div>
 }
 
-const NotesListGridItem: React.FC<{ note: V1Note }> = (props) => {
+export const NotesListGridItemNoGroup: React.FC<{ note: V1Note }> = (props) => {
   const authorQ = useGetAccount({accountId: props.note.authorAccountId})
   const deleteNoteQ = useDeleteNoteInCurrentGroup()
   const navigate = useNavigate()
@@ -128,7 +128,7 @@ const NotesList: React.FC = () => {
       <div className='grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-3 lg:grid-cols-3 lg:gap-4 xl:grid-cols-4'>
         {listNotesQ.isSuccess ? (
           listNotesQ.data?.notes?.map((note, idx) => (
-            <NotesListGridItem
+            <NotesListGridItemNoGroup
               key={`group-view-notes-tab-grid-${note.id}-${idx}`}
               note={note}
             />

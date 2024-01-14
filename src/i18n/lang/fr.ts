@@ -33,6 +33,10 @@ const frTranslation: LocaleTypedMessages = {
   'SIGNUP.wantSignIn': 'J\'ai déjà un compte',
   'SIGNUP.wantSignUp': 'Je veux créer un compte',
 
+  /* Home */
+  'HOME.lastGroups': 'Derniers groupes',
+  'HOME.lastNotes': 'Dernières notes',
+  
   /*    RESETPASSWORD   */
 
   /* ResetPassword Email  */
