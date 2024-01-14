@@ -5,7 +5,7 @@ import {
 } from '../protorepo/openapi/typescript-axios'
 
 
-type BlockContext = {
+export type BlockContext = {
   id: string
   type: string
   content: string
@@ -24,7 +24,7 @@ interface TNoteContext {
 
 const NoteContext = React.createContext<TNoteContext | undefined>(undefined)
 
-const useNoteContext = () => {
+export const useNoteContext = () => {
   const context = React.useContext(NoteContext)
   if (context === undefined) {
     throw new Error('NoteContext used outside of provider')
@@ -43,9 +43,8 @@ const TNoteContextProvider: React.FC<React.PropsWithChildren> = ({
     setBlocks([])
   }
       
-  const insertBlock = (notedId: string, index: number | undefined, block: V1Block) => 
+  const insertBlock = () => 
   {
-    console.log(`insert ${notedId} ${index} ${block}`)
     return null
   }
   
@@ -53,17 +52,13 @@ const TNoteContextProvider: React.FC<React.PropsWithChildren> = ({
   {
     const newBlocks = [...blocks]
     newBlocks.splice(index, 1, block)
-    setBlocks(newBlocks)//comme je setBlocks ca tej cqui a avant
-    console.log('0-Context : in updateBlock ', blocks)
+    setBlocks(newBlocks)
   }
 
-  const deleteBlock = (notedId: string, blockId: string) => 
+  const deleteBlock = () => 
   {
-    console.log(`udpate ${notedId} ${blockId}`)
     return null
   }
-
-  console.log('0-Context : ', blocks)
 
   return (
     <NoteContext.Provider
@@ -80,7 +75,5 @@ const TNoteContextProvider: React.FC<React.PropsWithChildren> = ({
     </NoteContext.Provider>
   )
 }
-  
-export type { BlockContext }
-export { useNoteContext }
+
 export default TNoteContextProvider

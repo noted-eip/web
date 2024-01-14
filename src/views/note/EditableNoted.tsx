@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react'
 import { BaseEditor, Descendant, Editor, Transforms } from 'slate'
 import {
@@ -83,9 +82,9 @@ export const EditableNoted: React.FC<{
   }
 
   const handleBackspace = () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const element = editorState[0] as any
 
-    console.log('handleBackspace')
     if (element.children[0].text.length < 1 && blockIndex != 0) {
       const newBlocks = [...blocks]
       newBlocks[blockIndex - 1].isFocused = true
@@ -127,16 +126,11 @@ export const EditableNoted: React.FC<{
       isFocused: true
     } as BlockContext
 
-
-    //console.log('3-EditableNoted : blocks begin handle enter ', blocks)
-    
     const newBlocks = [...blocks]
     newBlocks[blockIndex] = oldLocalBlock
     newBlocks.splice(blockIndex + 1, 0, newLocalBlock)
     setBlocks(newBlocks)
     
-    //console.log('3-EditableNoted : newBlocks after handle enter ', newBlocks)
-
     if (contentAfterEnter.length > 0) {
       for (let i = Editor.end(editor, []).path[0]; i >= columnPosition; --i) {
         Transforms.removeNodes(editor, { at: [i] })
@@ -161,7 +155,7 @@ export const EditableNoted: React.FC<{
             && selection?.focus.offset === Editor.start(editor, []).offset) 
           {
             event.preventDefault()
-            // @Todo : merge content before cursor
+            // @todo : merge content before cursor
             handleBackspace()
           }
         }

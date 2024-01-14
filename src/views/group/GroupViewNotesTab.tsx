@@ -1,17 +1,13 @@
 import { ArrowPathIcon, LinkIcon as LinkIconOutline, PencilIcon as PencilIconOutline, PlusIcon, TrashIcon as TrashIconOutline } from '@heroicons/react/24/outline'
 import { Button, Stack } from '@mui/material'
-//import axios from 'axios'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
-//import { useAuthContext } from '../../contexts/auth'
-//import { useGroupContext } from '../../contexts/group'
 import { useNoteContext } from '../../contexts/note'
 import { useGetAccount } from '../../hooks/api/accounts'
 import { useGetCurrentGroup } from '../../hooks/api/groups'
 import { useCreateNoteInCurrentGroup, useDeleteNoteInCurrentGroup, useListNotesInCurrentGroup } from '../../hooks/api/notes'
 import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
-//import { API_BASE } from '../../lib/env'
 import { V1Note } from '../../protorepo/openapi/typescript-axios'
 
 type NotesLiNotesListGridItemContextMenuProps = {
@@ -110,9 +106,6 @@ const GroupViewNotesTab: React.FC = () => {
   const listNotesQ = useListNotesInCurrentGroup({})
   const getGroupQ = useGetCurrentGroup()
 
-  //const groupContext = useGroupContext()
-  //const authContext = useAuthContext()
-
   const { clearBlocksContext } = useNoteContext()
 
   React.useEffect(() => {
@@ -140,7 +133,6 @@ const GroupViewNotesTab: React.FC = () => {
           variant='outlined'
           className='shrink-0'
           onClick={() => {
-            //handleCreateNote()
             createNoteQ.mutate({body: {title: formatMessage({ id: 'NOTE.untitledNote' })}})
           }}
           endIcon={

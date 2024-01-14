@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChatBubbleOvalLeftEllipsisIcon } from '@heroicons/react/24/outline'
 import { Bars3Icon } from '@heroicons/react/24/outline'
 import React, { useCallback } from 'react'
@@ -55,19 +54,6 @@ export const BlockEditorItem: React.FC<{
     editor.history = { undos: [], redos: [] }
   }
 
-  /*
-  if (initialEditorState)
-  {
-    const childrens = (initialEditorState[0] as any).children
-    console.log(childrens[0].text)
-    if (childrens.length == 1 && childrens[0].text.length < 1 && blockIndex == 0)
-    {
-      childrens[0].text = 'Insert your text here'
-      //editorState.current = initialEditorState
-    }
-  }
-  */
-
   React.useEffect(() => 
   {
     blocks.forEach((currentBlock) => {
@@ -92,13 +78,13 @@ export const BlockEditorItem: React.FC<{
 
     const newBlock: BlockContext = {
       id: block.id, 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       type: (editorState.current[0] as any).type,
       content: updatedContent,
       index: block.index, 
       isFocused: block.isFocused
     }
 
-    //console.log('2-BlockEditorItem : in callback ', blocks)
 
     updateBlockBackend(note.id, block?.id, blockContextToNoteBlock(newBlock))
     blocks[blockIndex] = newBlock
