@@ -135,6 +135,9 @@ const frTranslation: LocaleTypedMessages = {
   'NOTE.export.button2': 'Exporter en Markdown',
   'NOTE.export.button3': 'Exporter',
 
+  /* Notes */
+  'NOTES.noNotes': 'Aucune notes',
+
   /*    PROFILE    */
   'PROFILE.invite.deny': 'Refuser',
   'PROFILE.invite.accept': 'Accepter',

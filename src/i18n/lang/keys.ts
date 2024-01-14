@@ -155,6 +155,9 @@ export enum TranslationKeys {
   'NOTE.export.button2',
   'NOTE.export.button3',
 
+  /* Notes */
+  'NOTES.noNotes',
+
   /*    PROFILE    */
   'PROFILE.invite.deny',
   'PROFILE.invite.accept',

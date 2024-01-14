@@ -8,7 +8,7 @@ import { useAuthContext } from '../../contexts/auth'
 import { useGroupContext } from '../../contexts/group'
 import { useGetAccount } from '../../hooks/api/accounts'
 import { useDeleteNoteInCurrentGroup, useListNotes } from '../../hooks/api/notes'
-import { useOurIntl } from '../../i18n/TextComponent'
+import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
 import { V1Note } from '../../protorepo/openapi/typescript-axios'
 
 type NotesLiNotesListGridItemContextMenuProps = {
@@ -108,47 +108,43 @@ export const NotesListGridItemNoGroup: React.FC<{ note: V1Note }> = (props) => {
   )
 }
 
-const NotesList: React.FC = () => {
+const NotesView: React.FC = () => {
   const { formatMessage } = useOurIntl()
   const authContext = useAuthContext()
   const listNotesQ = useListNotes({authorAccountId: authContext.accountId})
 
   return (
-    <div className='grid w-full grid-rows-1 gap-4'>
-      {/* Menu */}
-      {/* Search bar */}
-      <Stack direction='row' spacing={2}>
-        <input
-          className='w-full rounded-md border border-gray-200 p-2 text-sm placeholder:text-gray-400'
-          placeholder={`${formatMessage({ id: 'GROUP.search' })} une note`}
-          type='text'
-        />
-      </Stack>
-      {/* Notes Grid */}
-      <div className='grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-3 lg:grid-cols-3 lg:gap-4 xl:grid-cols-4'>
-        {listNotesQ.isSuccess ? (
-          listNotesQ.data?.notes?.map((note, idx) => (
-            <NotesListGridItemNoGroup
-              key={`group-view-notes-tab-grid-${note.id}-${idx}`}
-              note={note}
-            />
-          ))
-        ) : (
-          <div className='skeleton h-48 w-full' />
-        )}
-      </div>
-    </div>
-  )
-}
-
-
-const NotesView: React.FC = () => {
-  const { formatMessage } = useOurIntl()
-
-  return (
     <ViewSkeleton title={formatMessage({ id: 'GENERIC.notes' })} panels={['group-activity-no-group']}>
       <div className='mx-lg mb-lg w-full xl:mx-xl xl:mb-xl'>
-        <NotesList />
+        <div className='grid w-full grid-rows-1 gap-4'>
+          {/* Search bar */}
+          <Stack direction='row' spacing={2}>
+            <input
+              className='w-full rounded-md border border-gray-200 p-2 text-sm placeholder:text-gray-400'
+              placeholder={`${formatMessage({ id: 'GROUP.search' })} une note`}
+              type='text'
+            />
+          </Stack>
+          {/* Notes Grid */}
+          {listNotesQ.isSuccess ? 
+            (listNotesQ.data.notes?.length !== 0 ? 
+              <div className='grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-3 lg:grid-cols-3 lg:gap-4 xl:grid-cols-4'>
+                {listNotesQ.data.notes?.map((note, idx) => (
+                  <NotesListGridItemNoGroup
+                    key={`group-view-notes-tab-grid-${note.id}-${idx}`}
+                    note={note}
+                  />
+                ))}
+              </div>
+              : 
+              <div className='flex h-full items-center justify-center lg:px-lg lg:pb-lg xl:px-xl xl:pb-xl'>
+                <div className='my-4 space-y-2 text-center'>
+                  <FormatMessage id='NOTES.noNotes' />
+                </div>
+              </div>) :
+            <div className='skeleton h-48 w-full' />     
+          }
+        </div>
       </div>
     </ViewSkeleton>
   )

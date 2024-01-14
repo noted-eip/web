@@ -23,7 +23,7 @@ const HomeView: React.FC = () => {
 
   return (<ViewSkeleton title={formatMessage({ id: 'GENERIC.home' })} panels={['group-activity-no-group']}>
     <Container sx={{ mt: 3 }} >
-      <Box className='mb-4 rounded-3xl border border-gray-400'>
+      <Box className='mb-4 rounded-3xl border border-gray-300'>
         <Typography variant='h5' gutterBottom
           sx={{ color: grey[800] }}
           style={{
@@ -55,7 +55,7 @@ const HomeView: React.FC = () => {
           )}
         </div>
       </Box>
-      <Box className='rounded-3xl border border-gray-400'>
+      <Box className='rounded-3xl border border-gray-300'>
         <Typography variant='h5' gutterBottom
           sx={{ color: grey[800] }}
           style={{
@@ -64,18 +64,24 @@ const HomeView: React.FC = () => {
           }}>
           <FormatMessage id='HOME.lastNotes' />
         </Typography>
-        <div className='m-4 grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-3 lg:grid-cols-3 lg:gap-4 xl:grid-cols-4'>
-          {listNotesQ.isSuccess ? (
-            listNotesQ.data?.notes?.map((note, idx) => (
-              <NotesListGridItemNoGroup
-                key={`group-view-notes-tab-grid-${note.id}-${idx}`}
-                note={note}
-              />
-            ))
-          ) : (
-            <div className='skeleton h-48 w-full' />
-          )}
-        </div>
+        {listNotesQ.isSuccess ? 
+          (listNotesQ.data.notes?.length !== 0 ? 
+            <div className='m-4 grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-3 lg:grid-cols-3 lg:gap-4 xl:grid-cols-4'>
+              {listNotesQ.data?.notes?.map((note, idx) => (
+                <NotesListGridItemNoGroup
+                  key={`group-view-notes-tab-grid-${note.id}-${idx}`}
+                  note={note}
+                />
+              ))}
+            </div>
+            : 
+            <div className='flex h-full items-center justify-center lg:px-lg lg:pb-lg xl:px-xl xl:pb-xl'>
+              <div className='my-4 space-y-2 text-center'>
+                <FormatMessage id='NOTES.noNotes' />
+              </div>
+            </div>) :
+          <div className='skeleton h-48 w-full' />     
+        }
       </Box>
     </Container>
   </ViewSkeleton>)
