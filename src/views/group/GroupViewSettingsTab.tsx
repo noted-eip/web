@@ -8,7 +8,7 @@ import { EnvelopeIcon, PencilIcon, UserIcon } from '@heroicons/react/24/solid'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import moment from 'moment'
-import React from 'react'
+import React, { useState } from 'react'
 import { useDebounce } from 'usehooks-ts'
 
 import LoaderIcon from '../../components/icons/LoaderIcon'
@@ -34,6 +34,7 @@ export const GroupViewSettingsTabEditGroup: React.FC = () => {
   >(undefined)
   const newNameInputRef = React.createRef<HTMLInputElement>()
   const newDescriptionInputRef = React.createRef<HTMLInputElement>()
+  const [isWorkspace, setIsWorkspace] = useState(false)
 
   useClickOutside(newNameInputRef, () => {
     setEditName(false)
@@ -76,71 +77,89 @@ export const GroupViewSettingsTabEditGroup: React.FC = () => {
         </div>
         <div className='flex flex-col'>
           {getGroupQ.isSuccess ? (
-            <React.Fragment>
-              <div
-                className='group flex h-8 cursor-pointer items-center'
-                onClick={() => {
-                  setEditName(true)
-                  setEditDescription(false)
-                }}
-              >
-                {editName ? (
-                  <form onSubmit={onChangeName}>
-                    <input
-                      ref={newNameInputRef}
-                      autoFocus
-                      className='ml-[-5px] w-48 rounded border-gray-200 bg-white px-1 py-0 font-medium'
-                      type='text'
-                      value={newName}
-                      onChange={(e) => setNewName(e.target.value)}
-                    />
-                    <button type='submit' />
-                  </form>
-                ) : (
-                  <React.Fragment>
+            getGroupQ.data?.group?.name === 'My Workspace' ? 
+              <>
+                <div className='group flex h-8 items-center'>
+                  <>
                     <p className='font-medium'>
                       {getGroupQ.data?.group.name}
                     </p>
-                    <PencilIcon className='ml-2 hidden h-4 w-4 stroke-2 text-gray-400 group-hover:block' />
-                  </React.Fragment>
-                )}
-              </div>
-              <div
-                className='group flex h-6 cursor-pointer items-center'
-                onClick={() => {
-                  setEditName(false)
-                  setEditDescription(true)
-                }}
-              >
-                {editDescription ? (
-                  <form
-                    onSubmit={onChangeDescription}
-                    className='flex items-center'
-                  >
-                    <input
-                      ref={newDescriptionInputRef}
-                      autoFocus
-                      className='ml-[-5px] w-72 rounded border-gray-200 bg-white px-1 py-0 text-sm text-gray-500'
-                      type='text'
-                      value={newDescription}
-                      onChange={(e) => setNewDescription(e.target.value)}
-                    />
-                    <button type='submit' />
-                  </form>
-                ) : (
-                  <React.Fragment>
-                    <p className='cursor-pointer text-sm text-gray-500'>
+                  </>
+                </div>
+                <div className='group flex h-6 items-center'>
+                  <>
+                    <p className='text-sm text-gray-500'>
                       {getGroupQ.data?.group.description}
                     </p>
-                    <PencilIcon className='ml-2 hidden h-4 w-4 stroke-2 text-gray-400 group-hover:block' />
-                  </React.Fragment>
-                )}
-              </div>
-            </React.Fragment>
+                  </>
+                </div>
+              </>
+              :
+              <>
+                <div
+                  className='group flex h-8 items-center'
+                  onClick={() => {
+                    setEditName(true)
+                    setEditDescription(false)
+                  }}
+                >
+                  {editName ? (
+                    <form onSubmit={onChangeName}>
+                      <input
+                        ref={newNameInputRef}
+                        autoFocus
+                        className='ml-[-5px] w-48 rounded border-gray-200 bg-white px-1 py-0 font-medium'
+                        type='text'
+                        value={newName}
+                        onChange={(e) => setNewName(e.target.value)}
+                      />
+                      <button type='submit' />
+                    </form>
+                  ) : (
+                    <>
+                      <p className='font-medium'>
+                        {getGroupQ.data?.group.name}
+                      </p>
+                      <PencilIcon className='ml-2 hidden h-4 w-4 stroke-2 text-gray-400 group-hover:block' />
+                    </>
+                  )}
+                </div>
+                <div
+                  className='group flex h-6 cursor-pointer items-center'
+                  onClick={() => {
+                    setEditName(false)
+                    setEditDescription(true)
+                  }}
+                >
+                  {editDescription ? (
+                    <form
+                      onSubmit={onChangeDescription}
+                      className='flex items-center'
+                    >
+                      <input
+                        ref={newDescriptionInputRef}
+                        autoFocus
+                        className='ml-[-5px] w-72 rounded border-gray-200 bg-white px-1 py-0 text-sm text-gray-500'
+                        type='text'
+                        value={newDescription}
+                        onChange={(e) => setNewDescription(e.target.value)}
+                      />
+                      <button type='submit' />
+                    </form>
+                  ) : (
+                    <>
+                      <p className='cursor-pointer text-sm text-gray-500'>
+                        {getGroupQ.data?.group.description}
+                      </p>
+                      <PencilIcon className='ml-2 hidden h-4 w-4 stroke-2 text-gray-400 group-hover:block' />
+                    </>
+                  )}
+                </div>
+              </>
           ) : (
-            <React.Fragment>
+            <>
               <div className='skeleton h-6 w-48'></div>
-            </React.Fragment>
+            </>
           )}
         </div>
       </div>

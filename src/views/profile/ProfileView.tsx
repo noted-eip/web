@@ -65,7 +65,7 @@ const ProfileViewAccountSection: React.FC = () => {
         </div>
         <div className='flex flex-col'>
           {getAccountQ.isSuccess ? (
-            <React.Fragment>
+            <>
               <div
                 className='group flex h-8 cursor-pointer items-center'
                 onClick={() => {
@@ -85,21 +85,21 @@ const ProfileViewAccountSection: React.FC = () => {
                     <button type='submit' />
                   </form>
                 ) : (
-                  <React.Fragment>
+                  <>
                     <p className='font-medium'>{getAccountQ.data?.account.name}</p>
                     <PencilIcon className='ml-2 hidden h-4 w-4 stroke-2 text-gray-400 group-hover:block' />
-                  </React.Fragment>
+                  </>
                 )}
               </div>
               <div>
                 <p className='text-gray-700'>{getAccountQ?.data.account.email}</p>
               </div>
-            </React.Fragment>
+            </>
           ) : (
-            <React.Fragment>
+            <>
               <div className='skeleton h-4 w-48'></div>
               <div className='skeleton mt-4 h-4 w-64'></div>
-            </React.Fragment>
+            </>
           )}
         </div>
       </div>
@@ -152,7 +152,7 @@ const InviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
                 denyInviteQ.isLoading ?
                   <LoaderIcon className='h-5 w-5' />
                   :
-                  <ClearIcon style={{ color: 'red' }} />
+                  <ClearIcon style={{ color: '#d32f2f' }} />
               }
             >
               <FormatMessage id='PROFILE.invite.deny' />              
@@ -327,7 +327,7 @@ const ProfileViewDangerZoneSection: React.FC = () => {
 
 
   return (
-    <React.Fragment>
+    <>
       {open ? <ConfirmationPanel onValidate={onValidate} title='PROFILE.delete.title2' content='PROFILE.delete.desc'/> : null}
       <div className='mt-4 w-full rounded-md border border-gray-100 bg-gray-50'>
         {/* Header */}
@@ -355,7 +355,7 @@ const ProfileViewDangerZoneSection: React.FC = () => {
           </div>
         </div>
       </div>
-    </React.Fragment>
+    </>
   )
 }
 
@@ -403,9 +403,9 @@ const ProfileViewBetaSection: React.FC = () => {
               <FormatMessage id='PROFILE.beta.button' />
             </Button>
           ) : (sent ? formatMessage({id: 'PROFILE.beta.buttonResTrue'}) : formatMessage({id: 'PROFILE.beta.buttonResFalse'}))) :             
-            (<React.Fragment>
+            (<>
               <div className='skeleton h-8 w-24'></div>
-            </React.Fragment>)
+            </>)
           }
         </div>
       </div>
