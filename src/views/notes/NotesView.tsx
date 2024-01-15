@@ -1,8 +1,8 @@
 import { TrashIcon as TrashIconOutline } from '@heroicons/react/24/outline'
-import { Stack } from '@mui/material'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import Searchbar from '../../components/searchBar/Searchbar'
 import ViewSkeleton from '../../components/view/ViewSkeleton'
 import { useAuthContext } from '../../contexts/auth'
 import { useGroupContext } from '../../contexts/group'
@@ -48,33 +48,54 @@ export const NotesListGridItemNoGroup: React.FC<{ note: V1Note }> = (props) => {
   )
 }
 
+const FilterPrducts: React.FC<{ searchstring: string, notes: V1Note[] }> = (props) => {
+
+  const filteredNotes = props.notes.filter((element) => {
+    if (props.searchstring === '') {
+      return element
+    }
+    else {
+      return element.title.toLowerCase().includes(props.searchstring)
+    }
+  })
+  
+  return (
+    <>
+      {filteredNotes.map((note, idx) => (
+        <NotesListGridItemNoGroup
+          key={`group-view-notes-tab-grid-${note.id}-${idx}`}
+          note={note}
+        />
+      ))}
+    </>
+  )
+}
+
 const NotesView: React.FC = () => {
   const { formatMessage } = useOurIntl()
   const authContext = useAuthContext()
   const listNotesQ = useListNotes({authorAccountId: authContext.accountId})
+  const [input, setInput] = React.useState('')
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleInput = (e: any) => {
+    setInput(e.target.value.toLowerCase())
+  }
+ 
   return (
     <ViewSkeleton title={formatMessage({ id: 'GENERIC.notes' })} panels={['group-activity-no-group']}>
       <div className='mx-lg mb-lg w-full xl:mx-xl xl:mb-xl'>
         <div className='grid w-full grid-rows-1 gap-4'>
           {/* Search bar */}
-          <Stack direction='row' spacing={2}>
-            <input
-              className='w-full rounded-md border border-gray-200 p-2 text-sm placeholder:text-gray-400'
-              placeholder={`${formatMessage({ id: 'GROUP.search' })} une note`}
-              type='text'
-            />
-          </Stack>
+          {
+            (listNotesQ.isSuccess && listNotesQ.data.notes) &&
+            <Searchbar options={listNotesQ.data.notes.map((note) => (note.title))} placeholder={`${formatMessage({ id: 'GROUP.search' })} une note`} handleInput={handleInput} />
+          }
           {/* Notes Grid */}
           {listNotesQ.isSuccess ? 
-            (listNotesQ.data.notes?.length !== 0 ? 
+            (listNotesQ.data.notes && listNotesQ.data.notes?.length !== 0  ? 
               <div className='grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-3 lg:grid-cols-3 lg:gap-4 xl:grid-cols-4'>
-                {listNotesQ.data.notes?.map((note, idx) => (
-                  <NotesListGridItemNoGroup
-                    key={`group-view-notes-tab-grid-${note.id}-${idx}`}
-                    note={note}
-                  />
-                ))}
+                <FilterPrducts searchstring={input} notes={listNotesQ.data.notes} />
               </div>
               : 
               <div className='flex h-full items-center justify-center lg:px-lg lg:pb-lg xl:px-xl xl:pb-xl'>

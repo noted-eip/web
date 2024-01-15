@@ -3,9 +3,9 @@ import { Button, Stack } from '@mui/material'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import Searchbar from '../../components/searchBar/Searchbar'
 import { useNoteContext } from '../../contexts/note'
 import { useGetAccount } from '../../hooks/api/accounts'
-import { useGetCurrentGroup } from '../../hooks/api/groups'
 import { useCreateNoteInCurrentGroup, useDeleteNoteInCurrentGroup, useListNotesInCurrentGroup } from '../../hooks/api/notes'
 import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
 import { V1Note } from '../../protorepo/openapi/typescript-axios'
@@ -41,13 +41,40 @@ const NotesListGridItem: React.FC<{ note: V1Note }> = (props) => {
   )
 }
 
+const FilterPrducts: React.FC<{ searchstring: string, notes: V1Note[] }> = (props) => {
+
+  const filteredNotes = props.notes.filter((element) => {
+    if (props.searchstring === '') {
+      return element
+    }
+    else {
+      return element.title.toLowerCase().includes(props.searchstring)
+    }
+  })
+  
+  return (
+    <>
+      {filteredNotes.map((note, idx) => (
+        <NotesListGridItem
+          key={`group-view-notes-tab-grid-${note.id}-${idx}`}
+          note={note}
+        />
+      ))}
+    </>
+  )
+}
+
 const GroupViewNotesTab: React.FC = () => {
   const { formatMessage } = useOurIntl()
   const navigate = useNavigate()
   const listNotesQ = useListNotesInCurrentGroup({})
-  const getGroupQ = useGetCurrentGroup()
-
+  const [input, setInput] = React.useState('')
   const { clearBlocksContext } = useNoteContext()
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleInput = (e: any) => {
+    setInput(e.target.value.toLowerCase())
+  }
 
   React.useEffect(() => {
     clearBlocksContext()
@@ -63,18 +90,19 @@ const GroupViewNotesTab: React.FC = () => {
     <div className='grid w-full grid-rows-1 gap-4'>
       {/* Menu */}
       {/* Search bar */}
+      {
+        (listNotesQ.isSuccess && listNotesQ.data.notes) &&
       <Stack direction='row' spacing={2}>
-        <input
-          className='w-full rounded-md border border-gray-200 p-2 text-sm placeholder:text-gray-400'
-          placeholder={`${formatMessage({ id: 'GROUP.search' })} ${getGroupQ.data?.group.name || ''}`}
-          type='text'
+        <Searchbar 
+          style={{ flex: 5 }}
+          options={listNotesQ.data.notes.map((note) => (note.title))} placeholder={`${formatMessage({ id: 'GROUP.search' })} une note`} handleInput={handleInput}
         />
         <Button
           variant='outlined'
-          className='shrink-0'
           onClick={() => {
             createNoteQ.mutate({body: {title: formatMessage({ id: 'NOTE.untitledNote' })}})
           }}
+          style={{ flex: 1 }}
           endIcon={
             createNoteQ.isLoading ?
               <ArrowPathIcon className='h-5 w-5 animate-spin text-blue-500' /> : 
@@ -84,16 +112,12 @@ const GroupViewNotesTab: React.FC = () => {
           <FormatMessage id='NOTE.newNote' />
         </Button>
       </Stack>
+      }
       {/* Notes Grid */}
       {listNotesQ.isSuccess ? 
-        (listNotesQ.data.notes?.length !== 0 ? 
+        (listNotesQ.data.notes && listNotesQ.data.notes?.length !== 0  ? 
           <div className='grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-3 lg:grid-cols-3 lg:gap-4 xl:grid-cols-4'>
-            {listNotesQ.data.notes?.map((note, idx) => (
-              <NotesListGridItem
-                key={`group-view-notes-tab-grid-${note.id}-${idx}`}
-                note={note}
-              />
-            ))}
+            <FilterPrducts searchstring={input} notes={listNotesQ.data.notes} />
           </div>
           : 
           <div className='flex h-full items-center justify-center lg:px-lg lg:pb-lg xl:px-xl xl:pb-xl'>
