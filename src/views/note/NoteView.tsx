@@ -27,7 +27,7 @@ const NoteView: React.FC = () => {
   const analytics = getAnalytics()
   const noteId = useNoteIdFromUrl()
   const noteQuery = useGetNoteInCurrentGroup({ noteId })
-  const [isLoading, setIsLoading] = React.useState(true)
+  const [isLoading, setIsLoading] =  React.useState(true)
 
   React.useEffect(() => {
     const fetchData = async () => {

@@ -22,8 +22,8 @@ const ResetPasswordEmail: React.FC = () => {
   const { formatMessage } = useOurIntl()
   const navigate = useNavigate()
   const resetPasswordContext = useResetPasswordContext()
-  const [email, setEmail] = React.useState('')
-  const [emailValid, setEmailValid] = React.useState(false)
+  const [email, setEmail] =  React.useState('')
+  const [emailValid, setEmailValid] =  React.useState(false)
   const forgetAccountPasswordMutation = useForgetAccountPassword({
     onSuccess: (data: V1ForgetAccountPasswordResponse) => {
       resetPasswordContext.changeResetPassword({account_id: data.accountId, reset_token: null, auth_token: null})

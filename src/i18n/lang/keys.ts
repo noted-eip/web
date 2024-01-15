@@ -125,6 +125,8 @@ export enum TranslationKeys {
   'GROUP.createGroup',
   'GROUP.creatingGroup',
   'GROUP.inMyGroup',
+  'GROUP.myGroup',
+  'GROUP.createdOn',
 
   'GROUP.settings',
   'GROUP.upgrade',

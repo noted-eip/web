@@ -9,8 +9,8 @@ import {FormatMessage } from '../../i18n/TextComponent'
 
 const RecommendationFilters = () => {
   const recoModeContext = useRecoModeContext()
-  const [selectedOption, setSelectedOption] = React.useState(recoModeContext.recoMode == null ? 'note' : recoModeContext.recoMode)
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const [selectedOption, setSelectedOption] =  React.useState(recoModeContext.recoMode == null ? 'note' : recoModeContext.recoMode)
+  const [anchorEl, setAnchorEl] =  React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)

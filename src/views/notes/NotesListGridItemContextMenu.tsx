@@ -13,8 +13,8 @@ type NotesLiNotesListGridItemContextMenuProps = {
 }
   
 const NotesListGridItemContextMenu: React.FC<NotesLiNotesListGridItemContextMenuProps> = (props) => {
-  const [contextData, setContextData] = React.useState({ visible:false, posX: 0, posY: 0})
-  const contextRef = React.useRef<HTMLDivElement>(null)
+  const [contextData, setContextData] =  React.useState({ visible:false, posX: 0, posY: 0})
+  const contextRef =  React.useRef<HTMLDivElement>(null)
   
   React.useEffect(() => {
     const contextMenuEventHandler= (e) => {

@@ -8,7 +8,7 @@ import { EnvelopeIcon, PencilIcon, UserIcon } from '@heroicons/react/24/solid'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import moment from 'moment'
-import React, { useState } from 'react'
+import React from 'react'
 import { useDebounce } from 'usehooks-ts'
 
 import LoaderIcon from '../../components/icons/LoaderIcon'
@@ -23,18 +23,17 @@ import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
 import { V1GroupInvite, V1GroupMember } from '../../protorepo/openapi/typescript-axios'
 
 export const GroupViewSettingsTabEditGroup: React.FC = () => {
-  const [editName, setEditName] = React.useState(false)
-  const [editDescription, setEditDescription] = React.useState(false)
+  const [editName, setEditName] =  React.useState(false)
+  const [editDescription, setEditDescription] =  React.useState(false)
   const groupContext = useGroupContext()
   const getGroupQ = useGetGroup({ groupId: groupContext.groupId as string })
   const updateGroupQ = useUpdateCurrentGroup()
-  const [newName, setNewName] = React.useState<string | undefined>(undefined)
-  const [newDescription, setNewDescription] = React.useState<
+  const [newName, setNewName] =  React.useState<string | undefined>(undefined)
+  const [newDescription, setNewDescription] =  React.useState<
   string | undefined
   >(undefined)
   const newNameInputRef = React.createRef<HTMLInputElement>()
   const newDescriptionInputRef = React.createRef<HTMLInputElement>()
-  const [isWorkspace, setIsWorkspace] = useState(false)
 
   useClickOutside(newNameInputRef, () => {
     setEditName(false)
@@ -239,7 +238,7 @@ const GroupMemberListItem: React.FC<{ member: V1GroupMember }> = (props) => {
 const GroupViewSettingsTabMembersSection: React.FC = () => {
   const { formatMessage } = useOurIntl()
   const groupQ = useGetCurrentGroup()
-  const [accountEmailSearch, setAccountEmailSearch] = React.useState<string>('')
+  const [accountEmailSearch, setAccountEmailSearch] =  React.useState<string>('')
   const searchAccountQ = useSearchAccount({ email: accountEmailSearch }, { enabled: false, retry: false })
   const sendInviteQ = useSendInviteInCurrentGroup()
   const debouncedValue = useDebounce<string>(accountEmailSearch, 1000)

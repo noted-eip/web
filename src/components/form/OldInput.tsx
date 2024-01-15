@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes, useState } from 'react'
+import React, { InputHTMLAttributes } from 'react'
 
 type OldInputProps = {
   label?: string
@@ -20,8 +20,8 @@ const OldInput: React.FC<InputHTMLAttributes<HTMLInputElement> & OldInputProps> 
   tooltip,
   ...props
 }) => {
-  const [focus, setFocus] = useState(false)
-  const [showError, setShowError] = useState(false)
+  const [focus, setFocus] = React.useState(false)
+  const [showError, setShowError] = React.useState(false)
   const baseStyles = 'px-3 py-2 outline-none w-full lg:text-base'
   const baseContainerStyles = 'flex group rounded-lg overflow-hidden'
   const shadowStyles =

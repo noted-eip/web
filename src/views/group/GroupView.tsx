@@ -10,7 +10,7 @@ const GroupView: React.FC = () => {
   const groupContext = useGroupContext()
   const navigate = useNavigate()
   const routerParams = useParams()
-  const [isLoading, setIsLoading] = React.useState(true)
+  const [isLoading, setIsLoading] =  React.useState(true)
 
   // Synchronises the current group from the local storage
   // and the current group context.

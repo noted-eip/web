@@ -20,15 +20,15 @@ import ProfileView from './profile/ProfileView'
 // Describes routes that are available to authenticated users.
 const AuthenticatedRouter: React.FC = () => {
   const navigate = useNavigate()
-  const [groupID, setGroupID] = React.useState<string | null>(
+  const [groupID, setGroupID] =  React.useState<string | null>(
     window.localStorage.getItem(LS_GROUP_ID_KEY)
   )
 
-  const [recoMode, setRecoMode] = React.useState<string | null>(
+  const [recoMode, setRecoMode] =  React.useState<string | null>(
     window.localStorage.getItem(LS_RECO_MODE)
   )
 
-  const [blockId, setBlock] = React.useState<string | null>(null)
+  const [blockId, setBlock] =  React.useState<string | null>(null)
 
   const changeGroup = (val) => {
     setGroupID(val)

@@ -13,7 +13,7 @@ import MenuItem from '@mui/material/MenuItem'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { getAnalytics, logEvent } from 'firebase/analytics'
-import React, { useState } from 'react'
+import React from 'react'
 
 import LoaderIcon from '../../components/icons/LoaderIcon'
 import { StyledMenu } from '../../components/Menu/StyledMenu'
@@ -31,8 +31,8 @@ import { V1Account, V1GroupInvite } from '../../protorepo/openapi/typescript-axi
 
 const ProfileViewAccountSection: React.FC = () => {
   const authContext = useAuthContext()
-  const [editName, setEditName] = React.useState(false)
-  const [newName, setNewName] = React.useState<string | undefined>(undefined)
+  const [editName, setEditName] =  React.useState(false)
+  const [newName, setNewName] =  React.useState<string | undefined>(undefined)
   const updateAccountQ = useUpdateMyAccount()
   const getAccountQ = useGetAccount({accountId: authContext.accountId})
   const newNameInputRef = React.createRef<HTMLInputElement>()
@@ -220,7 +220,7 @@ const ProfileViewPendingInvitesSection: React.FC = () => {
 const ProfileChangeLangage: React.FC = () => {
   const context = React.useContext(LangageContext)
   const analytics = getAnalytics()
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const [anchorEl, setAnchorEl] =  React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
@@ -315,7 +315,7 @@ const ProfileViewFeedbackSection: React.FC = () => {
 
 const ProfileViewDangerZoneSection: React.FC = () => {
   const deleteAccountQ = useDeleteMyAccount()
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] =  React.useState(false)
 
   const handleOpen = () => {
     setOpen(true)
@@ -324,7 +324,6 @@ const ProfileViewDangerZoneSection: React.FC = () => {
   const onValidate = () => {
     deleteAccountQ.mutate(undefined)
   }
-
 
   return (
     <>
@@ -363,7 +362,7 @@ const ProfileViewBetaSection: React.FC = () => {
   const { formatMessage } = useOurIntl()
   const authContext = useAuthContext()
   const getAccountQ = useGetAccount({accountId: authContext.accountId})
-  const [sent, setSent] = useState(false)
+  const [sent, setSent] = React.useState(false)
   const registerToMobileBetaQ = useRegisterToMobileBeta()
 
   return (

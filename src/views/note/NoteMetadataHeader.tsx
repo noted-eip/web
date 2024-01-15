@@ -26,7 +26,7 @@ const extensions = ['md', 'pdf']
 export const NotesOptions = ( { noteId, groupId } : Props ) => {
   const url = `${API_BASE}/groups/${encodeURIComponent(groupId)}/notes/${encodeURIComponent(noteId)}/export`
   const auth : TAuthContext = useAuthContext()
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const [anchorEl, setAnchorEl] =  React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)

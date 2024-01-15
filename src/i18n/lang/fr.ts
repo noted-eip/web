@@ -104,6 +104,8 @@ const frTranslation: LocaleTypedMessages = {
   'GROUP.createGroup': 'Créer un groupe',
   'GROUP.creatingGroup': 'Création...',
   'GROUP.inMyGroup': 'Dans mon groupe...',
+  'GROUP.myGroup': 'Mon Groupe',
+  'GROUP.createdOn': 'Créer le ',
 
   'GROUP.settings': 'Paramètres',
   'GROUP.upgrade': 'Améliorer',
