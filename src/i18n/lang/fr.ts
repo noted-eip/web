@@ -175,7 +175,7 @@ const frTranslation: LocaleTypedMessages = {
   'PANEL.comments': 'Commentaires',
   'PANEL.comments.empty': 'Aucun commentaires',
   'PANEL.comments.loading': 'Chargement des commentaires du block...',
-  'PANEL.comments.noblock': 'No block selected',
+  'PANEL.comments.noblock': 'Aucun block sélectionné',
   'PANEL.comments.comment': 'Commentaire',
 
   /*    ACTIVITY    */

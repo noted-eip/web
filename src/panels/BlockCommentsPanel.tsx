@@ -4,7 +4,6 @@ import Lottie from 'lottie-react'
 import React from 'react'
 import toast from 'react-hot-toast'
 
-// import emptyAnim from '../assets/animations/empty-box.json'
 import processAnim from '../assets/animations/process.json'
 import PanelSkeleton from '../components/view/PanelSkeleton'
 import { TAuthContext, useAuthContext } from '../contexts/auth'
