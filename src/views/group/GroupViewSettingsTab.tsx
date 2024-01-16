@@ -282,7 +282,8 @@ const GroupViewSettingsTabMembersSection: React.FC = () => {
                 )}
               </div>
             </div>
-            <Button 
+            <Button
+              type='submit'
               tabIndex={2}
               variant='contained'
               size='small'
