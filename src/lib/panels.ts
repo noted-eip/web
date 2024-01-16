@@ -1,5 +1,4 @@
-import { BoltIcon, PencilIcon } from '@heroicons/react/24/solid'
-import { ChatBubble } from '@mui/icons-material'
+import { BoltIcon, ChatBubbleBottomCenterIcon, PencilIcon } from '@heroicons/react/24/solid'
 
 import BlockCommentsPanel from '../panels/BlockCommentsPanel'
 import GroupActivityNotesPanel from '../panels/GroupActivityNoGroup'
@@ -25,7 +24,7 @@ export const panelMetadata = {
   },
   'block-comments': {
     displayName: 'PANEL.comments',
-    icon: ChatBubble,
+    icon: ChatBubbleBottomCenterIcon,
     component: BlockCommentsPanel,
   },
 

@@ -2,12 +2,12 @@ import React from 'react'
 
 import { usePanelContext } from '../../contexts/panel'
 import { FormatMessage } from '../../i18n/TextComponent'
+import { LocaleTranslationKeys } from '../../i18n/types'
 import { panelMetadata } from '../../lib/panels'
 import RecommendationFilters from '../../views/recommendation/Filters'
 
 const PanelHeader: React.FC = () => {
   const { activePanel, setActivePanel, panels } = usePanelContext()
-
   const recoPanelOn = panels.some(panel => {
     if (panel == 'note-recommendations') {
       return true
@@ -37,7 +37,7 @@ const PanelHeader: React.FC = () => {
                 }`}
               />
               <span className='text-xs'>
-                <FormatMessage id={md.displayName == 'PANEL.activity' ? 'PANEL.activity' : 'PANEL.companion'}/>
+                <FormatMessage id={md.displayName as LocaleTranslationKeys || '-'} />
               </span>
             </div>
           </div>

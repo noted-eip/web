@@ -28,6 +28,7 @@ const Message: React.FC<{ comment: BlockComment, ctx: MessageContext, authContex
     {
       onSuccess: () => {
         toast.success('Comment deleted')
+        props.refresh()
       },
       onError: (e) => {
         toast.error(e.response?.data.error as string)
@@ -48,7 +49,6 @@ const Message: React.FC<{ comment: BlockComment, ctx: MessageContext, authContex
               onClick={() => 
               { 
                 deleteCommentQ.mutate({noteId: context.noteId, blockId: context.blockId as string, commentId: comment.id as string })
-                props.refresh()
               }              
               }/>
           }
@@ -65,10 +65,20 @@ const ListMessages: React.FC = () => {
   const noteId = useNoteIdFromUrl()
   const blockContext = useBlockContext()
   const authContext = useAuthContext()
-  const createBlockCommentM = useCreateBlockCommentInCurrentGroupNote()
   const listBlockCommentM = useListBlockCommentsRequest({ groupId: groupId, noteId: noteId, blockId: blockContext.blockId as string })
+  const refreshList = () => {
+    listBlockCommentM.refetch()
+  }
+  const createBlockCommentM = useCreateBlockCommentInCurrentGroupNote(
+    {
+      onSuccess: () => {
+        refreshList()        
+      }
+    }
+  )
   const { formatMessage } = useOurIntl()
-
+  const list = listBlockCommentM.data?.comments
+  
   if (noteId == null) {
     return (
       <div className='my-4 text-center text-sm text-gray-400'>
@@ -81,9 +91,6 @@ const ListMessages: React.FC = () => {
       <FormatMessage id='PANEL.comments.noblock' />
     </div>)
   }
-
-  const list = listBlockCommentM.data?.comments
-  const refreshList = () => {listBlockCommentM.refetch()}
 
   if (listBlockCommentM.isLoading) {
     return  (<div className='h-screen text-center'>
@@ -99,8 +106,8 @@ const ListMessages: React.FC = () => {
   }
 
   return(
-    <div className='h-full overflow-y-scroll lg:px-lg lg:pb-lg xl:px-xl xl:pb-xl'>
-      <div className='space-y-2'>
+    <div className='flex h-full flex-col lg:px-lg lg:pb-lg xl:px-xl xl:pb-xl overflow-y-auto space-y-6'>
+      <div className='scroll-smooth grow space-y-2'>
         {
           list?.map((comment) => 
             <Message 
@@ -117,12 +124,12 @@ const ListMessages: React.FC = () => {
         id='outlined-basic' 
         label={formatMessage({ id: 'PANEL.comments.comment' })}
         variant='filled' 
-        className='w-full py-10' 
+        className='w-full'
         inputProps={{
           onKeyDown: (e:React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>) => {
             if (e.key === 'Enter') {
               createBlockCommentM.mutate({noteId: noteId, blockId: blockContext.blockId as string, content: e.currentTarget.value})
-              refreshList()
+              e.currentTarget.value = ''
             }
           },
         }}/>
