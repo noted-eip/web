@@ -212,7 +212,7 @@ const frTranslation: LocaleTypedMessages = {
   'QUIZS.button.next': 'Suivant',
   'QUIZS.button.quit': 'Retourner à la note',
   'QUIZS.score': 'Votre score est de',
-  'QUIZS.noQuiz': 'Chargement de votre quizs...',
+  'QUIZS.noQuiz': 'Chargement de votre quiz...',
 }
 
 export default frTranslation
