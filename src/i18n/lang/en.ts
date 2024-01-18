@@ -32,6 +32,10 @@ const enTranslation: LocaleTypedMessages = {
   'SIGNUP.wantSignIn': 'Already have an account',
   'SIGNUP.wantSignUp': 'I want to create an account',
 
+  /* Home */
+  'HOME.lastGroups': 'Last groups',
+  'HOME.lastNotes': 'Last notes',
+  
   /*    RESETPASSWORD   */
 
   /* ResetPassword Email  */
@@ -44,8 +48,10 @@ const enTranslation: LocaleTypedMessages = {
   /* ResetPassword Token  */
   'RESETPWD.Token.title': 'Verification',
   'RESETPWD.Token.desc': 'Enter the verification code we just sent you on your email address',
-  'RESETPWD.Token.form': 'Your token',
-  'RESETPWD.Token.button': 'Send token',
+  'RESETPWD.Token.noCode': 'You didn\'t receive the token ? ',
+  'RESETPWD.Token.resend': 'Resend your token',
+  'RESETPWD.Token.badToken': 'Bad token',
+  'RESETPWD.Token.tokenResend': 'We sent you another token !',
 
   /*  ResetPassword Password  */
   'RESETPWD.Pwd.title': 'Create a new password',
@@ -65,10 +71,12 @@ const enTranslation: LocaleTypedMessages = {
 
   /* Timeline */
   'TIMELINE': 'Timeline',
-  'TIMELINE.desc1': 'During this sprint we try different technologies and libraries for the backend and for web, mobile and desktop frontend.',
-  'TIMELINE.desc2': 'During this sprint we choose which technologies and libraries will be used and which platform will be supported. Then we begin to create the main feature of Noted.',
-  'TIMELINE.desc3': 'During this sprint we improved and finalize the features from the last sprint and begin the next core features.',
-  'TIMELINE.desc4': 'During this sprint we implemented the most important features of our application for the notes edition and recommendation. Noted have his first beta usable !',
+  'TIMELINE.desc1': 'During this sprint, we try different technologies and libraries for the backend and for web, mobile and desktop frontend.',
+  'TIMELINE.desc2': 'During this sprint, we choose which technologies and libraries will be used and which platform will be supported. Then we begin to create the main feature of Noted.',
+  'TIMELINE.desc3': 'During this sprint, we improved and finalize the features from the last sprint and begin the next core features.',
+  'TIMELINE.desc4': 'During this sprint, we implemented the most important features of our application for the notes edition and recommendation. Noted have his first beta usable !',
+  'TIMELINE.desc5': 'During this sprint, we continued implementing the application\'s major functionalities.',
+  'TIMELINE.desc6': 'During this sprint, we developed graphic uniqueness between frontend and mobile, implemented the latest features such as quizzes and solved all the last graphic and logic problems.',
 
   /* Team */
   'TEAM': 'The team',
@@ -76,7 +84,7 @@ const enTranslation: LocaleTypedMessages = {
   'TEAM.roleRespFront': 'Frontend responsible',
   'TEAM.roleRespBack': 'Backend responsible',
   'TEAM.roleRespPres': 'Presentation responsible',
-  'TEAM.roleDev': 'Developer',
+  'TEAM.rolePersona': 'Persona responsible',
   'TEAM.descBackDevops': 'Backend and devops developer',
   'TEAM.descMobile': 'Mobile developer',
   'TEAM.descFront': 'Frontend developer',
@@ -128,6 +136,9 @@ const enTranslation: LocaleTypedMessages = {
   'NOTE.export.button2': 'Export in Markdown',
   'NOTE.export.button3': 'Export',
 
+  /* Notes */
+  'NOTES.noNotes': 'No notes',
+
   /*    PROFILE    */
   'PROFILE.invite.deny': 'Deny',
   'PROFILE.invite.accept': 'Accept',
@@ -161,6 +172,13 @@ const enTranslation: LocaleTypedMessages = {
   'PANEL.companion,buton1': 'Filter by block',
   'PANEL.companion,buton2': 'Filter by entire note',
   'PANEL.companion,buton3': 'Apply',
+  'PANEL.quizs': 'Quizs',
+  'PANEL.quizs.notFound': 'Your quiz has not been found.',
+  'PANEL.quizs.next': 'Next',
+  'PANEL.quizs.generate': 'Generate',
+  'PANEL.leaderboard': 'Leaderboard',
+  'PANEL.leaderboard.loading': 'Loading the leaderboard...',
+  'PANEL.leaderboard.none': 'No quiz taken yet',
 
   /*    ACTIVITY    */
   'ACTIVITY': 'Activity',
@@ -171,6 +189,14 @@ const enTranslation: LocaleTypedMessages = {
   'SETTINGS.langage.options': 'Options',
   'SETTINGS.langage.french': 'French',
   'SETTINGS.langage.english': 'English',
+
+  /*    CONFIRMATION    */
+  'CONFIRMATION.form.desc0': 'Please type',
+  'CONFIRMATION.form.desc1': 'understood',
+  'CONFIRMATION.form.desc3': 'to confirm.',
+  'CONFIRMATION.button': 'I understand the consequences',
+  'CONFIRMATION.title.note': 'Delete my note',
+  'CONFIRMATION.title.group': 'Delete my group',
 
   /*    VALIDATION    */
   'VALIDATION.title': 'Please validate your account',
@@ -188,6 +214,12 @@ const enTranslation: LocaleTypedMessages = {
   'ERROR.creation.input_invalid' : 'Invalid email or password.',
   'ERROR.validation.token_does_not_match' : 'Invalid token.',
   'ERROR.unknown' : 'Unknown error',
+  /*    QUIZS    */
+  'QUIZS.button.check': 'Verify',
+  'QUIZS.button.next': 'Next',
+  'QUIZS.button.quit': 'Go back to the note',
+  'QUIZS.score': 'Your score is',
+  'QUIZS.noQuiz': 'Loading your quizs...',
 }
 
 export default enTranslation

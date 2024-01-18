@@ -53,6 +53,10 @@ export enum TranslationKeys {
   'SIGNUP.wantSignIn',
   'SIGNUP.wantSignUp',
 
+  /* Home */
+  'HOME.lastGroups',
+  'HOME.lastNotes',
+
   /*    RESETPASSWORD   */
 
   /* ResetPassword Email  */
@@ -65,8 +69,10 @@ export enum TranslationKeys {
   /* ResetPassword Token  */
   'RESETPWD.Token.title',
   'RESETPWD.Token.desc',
-  'RESETPWD.Token.form',
-  'RESETPWD.Token.button',
+  'RESETPWD.Token.resend',
+  'RESETPWD.Token.noCode',
+  'RESETPWD.Token.badToken',
+  'RESETPWD.Token.tokenResend',
 
   /*  ResetPassword Password  */
   'RESETPWD.Pwd.title',
@@ -90,6 +96,8 @@ export enum TranslationKeys {
   'TIMELINE.desc2',
   'TIMELINE.desc3',
   'TIMELINE.desc4',
+  'TIMELINE.desc5',
+  'TIMELINE.desc6',
 
   /* Team */
   'TEAM',
@@ -97,7 +105,7 @@ export enum TranslationKeys {
   'TEAM.roleRespFront',
   'TEAM.roleRespBack',
   'TEAM.roleRespPres',
-  'TEAM.roleDev',
+  'TEAM.rolePersona',
   'TEAM.descBackDevops',
   'TEAM.descMobile',
   'TEAM.descFront',
@@ -149,6 +157,9 @@ export enum TranslationKeys {
   'NOTE.export.button2',
   'NOTE.export.button3',
 
+  /* Notes */
+  'NOTES.noNotes',
+
   /*    PROFILE    */
   'PROFILE.invite.deny',
   'PROFILE.invite.accept',
@@ -182,6 +193,14 @@ export enum TranslationKeys {
   'PANEL.companion,buton1',
   'PANEL.companion,buton2',
   'PANEL.companion,buton3',
+  'PANEL.quizs',
+  'PANEL.quizs.notFound',
+  'PANEL.quizs.next',
+  'PANEL.quizs.generate',
+  'PANEL.leaderboard',
+  'PANEL.leaderboard.loading',
+  'PANEL.leaderboard.none',
+
 
   /*    ACTIVITY   */
   'ACTIVITY',
@@ -192,6 +211,14 @@ export enum TranslationKeys {
   'SETTINGS.langage.options',
   'SETTINGS.langage.french',
   'SETTINGS.langage.english',
+
+  /*    CONFIRMATION    */
+  'CONFIRMATION.form.desc0',
+  'CONFIRMATION.form.desc1',
+  'CONFIRMATION.form.desc3',
+  'CONFIRMATION.button',
+  'CONFIRMATION.title.note',
+  'CONFIRMATION.title.group',
 
   /*    VALIDATION    */
   'VALIDATION.title',
@@ -210,4 +237,11 @@ export enum TranslationKeys {
   'ERROR.creation.input_invalid',
   'ERROR.validation.token_does_not_match',
   'ERROR.unknown',
+  
+  /*    QUIZS    */
+  'QUIZS.button.check',
+  'QUIZS.button.next',
+  'QUIZS.button.quit',
+  'QUIZS.score',
+  'QUIZS.noQuiz',
 }

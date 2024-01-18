@@ -58,6 +58,7 @@ const NoteViewHeader: React.FC = () => {
           {
             type: 'TYPE_PARAGRAPH',
             children: [{ text: noteQ.data.note.title }],
+            style: []
           },
         ]} >
         <Editable

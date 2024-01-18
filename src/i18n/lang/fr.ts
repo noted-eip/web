@@ -33,6 +33,10 @@ const frTranslation: LocaleTypedMessages = {
   'SIGNUP.wantSignIn': 'J\'ai déjà un compte',
   'SIGNUP.wantSignUp': 'Je veux créer un compte',
 
+  /* Home */
+  'HOME.lastGroups': 'Derniers groupes',
+  'HOME.lastNotes': 'Dernières notes',
+  
   /*    RESETPASSWORD   */
 
   /* ResetPassword Email  */
@@ -45,8 +49,10 @@ const frTranslation: LocaleTypedMessages = {
   /* ResetPassword Token  */
   'RESETPWD.Token.title': 'Vérification',
   'RESETPWD.Token.desc': 'Entrez le code de vérification que nous venons de vous envoyer sur votre adresse e-mail',
-  'RESETPWD.Token.form': 'Votre jeton',
-  'RESETPWD.Token.button': 'Envoyer token',
+  'RESETPWD.Token.noCode': 'Vous n\'avez pas reçu le code ? ',
+  'RESETPWD.Token.resend': 'Renvoyez le code',
+  'RESETPWD.Token.badToken': 'Mauvais token',
+  'RESETPWD.Token.tokenResend': 'Un nouveau code a été envoyé !',
 
   /*  ResetPassword Password  */
   'RESETPWD.Pwd.title': 'Crée un nouveau mot de passe',
@@ -69,18 +75,19 @@ const frTranslation: LocaleTypedMessages = {
   'TIMELINE.desc1': 'Au cours de ce sprint, nous essayons différentes technologies et bibliothèques pour le backend et pour le web, le mobile et le bureau.',
   'TIMELINE.desc2': 'Au cours de ce sprint, nous choisissons quelles technologies et bibliothèques seront utilisées et quelle plate-forme sera prise en charge. Ensuite, nous commençons à créer la fonctionnalité principale de Noted.',
   'TIMELINE.desc3': 'Au cours de ce sprint, nous avons amélioré et finalisé les fonctionnalités du dernier sprint et commencé les prochaines fonctionnalités de base.',
-  'TIMELINE.desc4': 'Au cours de ce sprint, nous avons implémenté les fonctionnalités les plus importantes de notre application pour l\'édition et la recommandation de notes. A noté avoir sa première beta utilisable !',
-
+  'TIMELINE.desc4': 'Au cours de ce sprint, nous avons implémenté les fonctionnalités les plus importantes de notre application pour l\'édition et la recommandation de notes. Noted a sa première beta utilisable !',
+  'TIMELINE.desc5': 'Au cours de ce sprint, nous avons continué l\'implémentation des fonctionnalités majeures de l\'application.',
+  'TIMELINE.desc6': 'Au cours de ce sprint, nous avons développé l\'unicité graphique entre le frontend et le mobile, implémenté les dernières fonctionnalités comme le quiz et réglé tous les derniers problèmes graphiquent et de logique.',
   /* Team */
   'TEAM': 'L\'équipe',
   'TEAM.roleRespDeadDocs': 'Responsable Deadlines and docs',
   'TEAM.roleRespFront': 'Responsable Frontend',
   'TEAM.roleRespBack': 'Responsable Backend',
   'TEAM.roleRespPres': 'Responsable Presentation',
-  'TEAM.roleDev': 'Développeur',
+  'TEAM.rolePersona': 'Responsable Persona',
   'TEAM.descBackDevops': 'Développeur backend et devops',
   'TEAM.descMobile': 'Développeur mobile',
-  'TEAM.descFront': 'Développeur frontend web',
+  'TEAM.descFront': 'Développeur frontend',
 
   /* Contact */
   'CONTACT': 'Contact',
@@ -129,6 +136,9 @@ const frTranslation: LocaleTypedMessages = {
   'NOTE.export.button2': 'Exporter en Markdown',
   'NOTE.export.button3': 'Exporter',
 
+  /* Notes */
+  'NOTES.noNotes': 'Aucune notes',
+
   /*    PROFILE    */
   'PROFILE.invite.deny': 'Refuser',
   'PROFILE.invite.accept': 'Accepter',
@@ -162,6 +172,14 @@ const frTranslation: LocaleTypedMessages = {
   'PANEL.companion,buton1': 'Filtrer par block',
   'PANEL.companion,buton2': 'Filtrer avec la note entière',
   'PANEL.companion,buton3': 'Appliquer',
+  'PANEL.quizs': 'Quizs',
+  'PANEL.quizs.notFound': 'Votre quiz n\' a pas été trouvé',
+  'PANEL.quizs.next': 'Suivant',
+  'PANEL.quizs.generate': 'Générer',
+  'PANEL.leaderboard': 'Classement',
+  'PANEL.leaderboard.loading': 'Chargement du classement..',
+  'PANEL.leaderboard.none': 'Pas de classement',
+
 
   /*    ACTIVITY    */
   'ACTIVITY': 'Activity',
@@ -172,6 +190,14 @@ const frTranslation: LocaleTypedMessages = {
   'SETTINGS.langage.options': 'Options',
   'SETTINGS.langage.french': 'Français',
   'SETTINGS.langage.english': 'Anglais',
+
+  /*    CONFIRMATION    */
+  'CONFIRMATION.form.desc0': 'Veuilliez entrer',
+  'CONFIRMATION.form.desc1': 'compris',
+  'CONFIRMATION.form.desc3': 'pour confirmer',
+  'CONFIRMATION.button': 'Je comprends les conséquences, ',
+  'CONFIRMATION.title.note': 'Supprimer ma note',
+  'CONFIRMATION.title.group': 'Supprimer un membre',
 
   /*    VALIDATION    */
   'VALIDATION.title': 'Veuillez valider votre compte',
@@ -190,6 +216,13 @@ const frTranslation: LocaleTypedMessages = {
   'ERROR.creation.input_invalid' : 'Veuillez remplir tous les champs.',
   'ERROR.validation.token_does_not_match' : 'Le code ne correspond pas.',
   'ERROR.unknown' : 'Erreur inconnue',
+
+  /*    QUIZS    */
+  'QUIZS.button.check': 'Vérifier',
+  'QUIZS.button.next': 'Suivant',
+  'QUIZS.button.quit': 'Retourner à la note',
+  'QUIZS.score': 'Votre score est de',
+  'QUIZS.noQuiz': 'Chargement de votre quiz...',
 }
 
 export default frTranslation

@@ -1,8 +1,11 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { FormatMessage } from '../../../i18n/TextComponent'
 
 const ContactLanding: React.FC = () => {
+  const navigate = useNavigate()
+
   return (
     <div id='contact'>
       <div className='mx-auto max-w-7xl px-6 md:px-12 xl:px-6'>
@@ -15,23 +18,6 @@ const ContactLanding: React.FC = () => {
             </div>
           </div>
           <div className='flex flex-wrap'>
-            {/* <div className='mb-12 w-full shrink-0 grow-0 basis-auto px-3 lg:mb-0 lg:w-5/12 lg:px-6'>
-              <form>
-                <div className=' mb-6'>
-                  <input type='text' className='m-0 block w-full rounded border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-1.5 text-base font-normal text-gray-700 transition ease-in-out focus:border-black focus:bg-white focus:text-gray-700 focus:outline-none'
-                    placeholder='Name' />
-                </div>
-                <div className=' mb-6'>
-                  <input type='email' className='m-0 block w-full rounded border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-1.5 text-base font-normal text-gray-700 transition ease-in-out focus:border-black focus:bg-white focus:text-gray-700 focus:outline-none'
-                    placeholder='Email address' />
-                </div>
-                <div className=' mb-6'>
-                  <textarea className='m-0 block w-full rounded border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-1.5 text-base font-normal text-gray-700 transition ease-in-out focus:border-black focus:bg-white focus:text-gray-700 focus:outline-none'
-                    rows={3} placeholder='Message'></textarea>
-                </div>
-                <button type='submit' className='w-full rounded bg-black px-6 py-2.5 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-black hover:shadow-lg focus:bg-black focus:shadow-lg focus:outline-none focus:ring-0 active:bg-black active:shadow-lg'>Send</button>
-              </form>
-            </div> */}
             <div className='w-full shrink-0 grow-0 basis-auto lg:w-7/12'>
               <div className='flex flex-wrap'>
                 <div className='mb-12 w-full shrink-0 grow-0 basis-auto px-3 lg:w-6/12 lg:px-6'>
@@ -53,6 +39,50 @@ const ContactLanding: React.FC = () => {
                       <p className='text-gray-500'>maxime.dodin@epitech.eu</p>
                     </div>
                   </div>
+                </div>
+                <div className='mb-12 w-full shrink-0 grow-0 basis-auto px-3 lg:w-6/12 lg:px-6'>
+                  <div className='flex items-start'>
+                    <div className='shrink-0'>
+                      <div
+                        style={{
+                          cursor: 'pointer',
+                        }}
+                        onClick={() => window.location.href = 'https://www.instagram.com/noted_org?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=='}
+                        className='flex h-14 w-14 items-center justify-center rounded-md border border-black p-4 shadow-md'>
+                        <svg xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' width='100' height='100' viewBox='0 0 50 50'>
+                          <path d='M 16 3 C 8.83 3 3 8.83 3 16 L 3 34 C 3 41.17 8.83 47 16 47 L 34 47 C 41.17 47 47 41.17 47 34 L 47 16 C 47 8.83 41.17 3 34 3 L 16 3 z M 37 11 C 38.1 11 39 11.9 39 13 C 39 14.1 38.1 15 37 15 C 35.9 15 35 14.1 35 13 C 35 11.9 35.9 11 37 11 z M 25 14 C 31.07 14 36 18.93 36 25 C 36 31.07 31.07 36 25 36 C 18.93 36 14 31.07 14 25 C 14 18.93 18.93 14 25 14 z M 25 16 C 20.04 16 16 20.04 16 25 C 16 29.96 20.04 34 25 34 C 29.96 34 34 29.96 34 25 C 34 20.04 29.96 16 25 16 z'></path>
+                        </svg>
+                      </div>
+                    </div>
+                    <div className='ml-6 grow'>
+                      <p className='mb-1 font-bold'>
+                        Instagram
+                      </p>
+                      <p className='text-gray-500'>noted_org</p>
+                    </div>
+                  </div>
+                </div>
+                <div className='mb-12 w-full shrink-0 grow-0 basis-auto px-3 lg:w-6/12 lg:px-6'>
+                  <div className='flex items-start'>
+                    <div className='shrink-0'>
+                      <div
+                        style={{
+                          cursor: 'pointer',
+                        }}
+                        onClick={() => window.location.href = 'https://x.com/Noted_Org?s=20'}
+                        className='flex h-14 w-14 items-center justify-center rounded-md border border-black p-4 shadow-md'>
+                        <svg xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' width='100' height='100' viewBox='0 0 50 50'>
+                          <path d='M 5.9199219 6 L 20.582031 27.375 L 6.2304688 44 L 9.4101562 44 L 21.986328 29.421875 L 31.986328 44 L 44 44 L 28.681641 21.669922 L 42.199219 6 L 39.029297 6 L 27.275391 19.617188 L 17.933594 6 L 5.9199219 6 z M 9.7167969 8 L 16.880859 8 L 40.203125 42 L 33.039062 42 L 9.7167969 8 z'></path>
+                        </svg>
+                      </div>
+                    </div>
+                    <div className='ml-6 grow'>
+                      <p className='mb-1 font-bold'>
+                        X
+                      </p>
+                      <p className='text-gray-500'>@Noted_Org</p>
+                    </div>
+                  </div>                  
                 </div>
               </div>
             </div>
