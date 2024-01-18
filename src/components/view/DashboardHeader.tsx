@@ -46,25 +46,25 @@ const GroupSelectDropdown: React.FC = () => {
           <Menu.Button as='button' className='flex items-center !outline-none'>
             <div className='flex cursor-pointer rounded border border-gray-300 text-sm'>
               <div className='flex h-[34px] items-center font-medium text-gray-800'>
-                <React.Fragment>
+                <>
                   {getGroupQ.isSuccess ? (
-                    <React.Fragment>
+                    <>
                       <div className='mx-2 h-4 w-4 rounded bg-gradient-to-br from-orange-400 to-pink-400' />
                       {getGroupQ.data?.group.name}
-                    </React.Fragment>
+                    </>
                   ) : getGroupQ.isFetching ? (
-                    <React.Fragment>
+                    <>
                       <div className='mx-2 h-4 w-4 rounded bg-gradient-to-br from-orange-400 to-pink-400' />
                       <div className='skeleton h-4 w-24'></div>
-                    </React.Fragment>
+                    </>
                   ) : (
-                    <React.Fragment>
+                    <>
                       <div className='ml-3 mr-1 text-gray-700'>
                         <FormatMessage id='DASHBOARD.selectGroup' />
                       </div>
-                    </React.Fragment>
+                    </>
                   )}
-                </React.Fragment>
+                </>
               </div>
               <div className='ml-2 flex items-center justify-center border-l border-gray-300 px-1'>
                 <ChevronDownIcon className='h-4 w-4 stroke-[10px] text-gray-500' />
@@ -115,15 +115,15 @@ const GroupSelectDropdown: React.FC = () => {
               }}
             >
               {createGroupQ.isLoading ? (
-                <React.Fragment>
+                <>
                   <LoaderIcon className='mr-3 h-6 w-6 text-gray-400' />
                   Creating...
-                </React.Fragment>
+                </>
               ) : (
-                <React.Fragment>
+                <>
                   <PlusIcon className='mr-3 h-6 w-6 text-gray-400' />
                   <FormatMessage id='GROUP.createGroup' />
-                </React.Fragment>
+                </>
               )}
             </div>
           </Menu.Items>

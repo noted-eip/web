@@ -25,10 +25,10 @@ const SigninView: React.FC = () => {
   const analytics = getAnalytics()
   const navigate = useNavigate()
   const auth = useNoAuthContext()
-  const [password, setPassword] = React.useState('')
-  const [showPassword, setShowPassword] = React.useState(false)
-  const [email, setEmail] = React.useState('')
-  const [emailValid, setEmailValid] = React.useState(false)
+  const [password, setPassword] =  React.useState('')
+  const [showPassword, setShowPassword] =  React.useState(false)
+  const [email, setEmail] =  React.useState('')
+  const [emailValid, setEmailValid] =  React.useState(false)
   const developmentContext = useDevelopmentContext()
 
   const isAccountValidate = useIsAccountValidate({

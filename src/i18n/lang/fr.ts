@@ -104,6 +104,8 @@ const frTranslation: LocaleTypedMessages = {
   'GROUP.createGroup': 'Créer un groupe',
   'GROUP.creatingGroup': 'Création...',
   'GROUP.inMyGroup': 'Dans mon groupe...',
+  'GROUP.myGroup': 'Mon Groupe',
+  'GROUP.createdOn': 'Créer le ',
 
   'GROUP.settings': 'Paramètres',
   'GROUP.upgrade': 'Améliorer',
@@ -162,6 +164,7 @@ const frTranslation: LocaleTypedMessages = {
   'PROFILE.langage.options': 'Options',
   'PROFILE.langage.fr': 'Français',
   'PROFILE.langage.en': 'Anglais',
+  'PROFIILE.beta': 'Vous avez maintenant accès à la version bêta',
 
   /*    PANEL   */
   'PANEL.activity': 'Activité',

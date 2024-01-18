@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React from 'react'
 import { IntlProvider } from 'react-intl'
 
 import { LangageContext } from '../contexts/langage'
@@ -20,13 +20,13 @@ interface ILocaleInformation {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const LocaleManager: React.FC<any> = ({children}) => {
   const context = React.useContext(LangageContext)
-  const browserLocales = useMemo(getBrowserLocales, [getBrowserLocales])
-  const [localeInfo, setLocaleInfo] = useState<ILocaleInformation>({
+  const browserLocales = React.useMemo(getBrowserLocales, [getBrowserLocales])
+  const [localeInfo, setLocaleInfo] = React.useState<ILocaleInformation>({
     locale: 'fr',
     messages: frTranslation,
   })
 
-  const changeLocale = useCallback(
+  const changeLocale =  React.useCallback(
     async (locale: string): Promise<boolean> => {
       try {
         const translation = await loadTranslation(locale)
@@ -44,7 +44,7 @@ const LocaleManager: React.FC<any> = ({children}) => {
     [setLocaleInfo],
   )
 
-  useEffect((): void => {
+  React.useEffect((): void => {
     if (context?.langage === 'fr') {
       changeLocale('fr')
     } else if (context?.langage === 'en') {
@@ -52,7 +52,7 @@ const LocaleManager: React.FC<any> = ({children}) => {
     }
   }, [context?.langage])
 
-  useEffect((): void => {
+  React.useEffect((): void => {
     for (let i = 0; i < browserLocales.length; i++) {
       if (isASupportedLocale(browserLocales[i])) {
         changeLocale(browserLocales[i]).then((res) => {

@@ -2,8 +2,9 @@ import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
-import React, { RefObject, useEffect, useRef, useState } from 'react'
+import React, { RefObject } from 'react'
 import toast from 'react-hot-toast'
+import { FormattedMessage } from 'react-intl'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import Notification from '../../components/notification/Notification'
@@ -17,12 +18,12 @@ const ResetPasswordEmail: React.FC = () => {
   const { formatMessage } = useOurIntl()
   const navigate = useNavigate()
   const resetPasswordContext = useResetPasswordContext()
-  const [isAccountIdValid, ] = React.useState(resetPasswordContext.account?.account_id !== null)
-  const [isEmailResend, setIsEmailResend] = React.useState(false)
+  const [isAccountIdValid, ] =  React.useState(resetPasswordContext.account?.account_id !== null)
+  const [isEmailResend, setIsEmailResend] =  React.useState(false)
   const location = useLocation()
   const email = location.state?.email || ''
-  const [codes, setCodes] = useState(['', '', '', ''])
-  const inputRefs = useRef<Array<RefObject<HTMLInputElement>>>(Array(4).fill(null).map(() => React.createRef()))
+  const [codes, setCodes] = React.useState(['', '', '', ''])
+  const inputRefs = React.useRef<Array<RefObject<HTMLInputElement>>>(Array(4).fill(null).map(() => React.createRef()))
   
   const handleChange = (index: number, value: string) => {
     const newCodes = [...codes]
@@ -61,7 +62,7 @@ const ResetPasswordEmail: React.FC = () => {
     },
   })
 
-  useEffect(() => {
+  React.useEffect(() => {
     const areAllNumbers = codes.every((element) => !isNaN(parseFloat(element)) && typeof parseFloat(element) === 'number')
 
     if (areAllNumbers) {
@@ -116,12 +117,12 @@ const ResetPasswordEmail: React.FC = () => {
                 setIsEmailResend(true)
               }}
             >
-              {formatMessage({ id: 'RESETPWD.Token.resend' })}
+              <FormattedMessage id='RESETPWD.Token.resend' />
             </Button>
           </Typography>
           {isEmailResend && 
            <Typography variant='body2' align='center' color='primary' mt={2}>
-             {formatMessage({ id: 'RESETPWD.Token.tokenResend' })}
+             <FormattedMessage id='RESETPWD.Token.tokenResend' />
            </Typography>
           }
         </Stack>
