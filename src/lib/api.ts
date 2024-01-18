@@ -54,9 +54,10 @@ export const beautifyError = (error: string | undefined, module: module_type, fo
     case 'quiz':
       return formatMessage({ id: 'ERROR.quiz.something_wrong' })
     case 'invite':
-      if (error.includes('already invited')) {
+      if (error.includes('not found')) {
         return formatMessage({ id: 'ERROR.invite.already_exist' })
       }
+      console.log('test ' + error)
       return formatMessage({ id: 'ERROR.invite.something_wrong' })
     default:
       return formatMessage({ id: 'ERROR.unknown' })

@@ -9,9 +9,11 @@ import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import moment from 'moment'
 import React from 'react'
+import { toast } from 'react-hot-toast'
 import { useDebounce } from 'usehooks-ts'
 
 import LoaderIcon from '../../components/icons/LoaderIcon'
+import Notification from '../../components/notification/Notification'
 import { useAuthContext } from '../../contexts/auth'
 import { useGroupContext } from '../../contexts/group'
 import { useGetAccount, useSearchAccount } from '../../hooks/api/accounts'
@@ -214,6 +216,7 @@ const GroupMemberListItem: React.FC<{ member: V1GroupMember }> = (props) => {
             }
           </div>}
       </div>
+      <Notification />
     </div>
   )
 }
@@ -224,7 +227,7 @@ const GroupViewSettingsTabMembersSection: React.FC = () => {
   const [accountEmailSearch, setAccountEmailSearch] = React.useState<string>('')
   const searchAccountQ = useSearchAccount({email: accountEmailSearch}, {enabled: false, retry: false})
   const sendInviteQ = useSendInviteInCurrentGroup(
-    {onError: (e) => {beautifyError(e.response?.data.error, 'invite', formatMessage)}}
+    {onError: (e) => {toast.error(beautifyError(e.response?.data.error, 'invite', formatMessage))}}
   )
   const debouncedValue = useDebounce<string>(accountEmailSearch, 1000)
 
