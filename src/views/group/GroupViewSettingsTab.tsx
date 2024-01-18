@@ -20,6 +20,7 @@ import { useRevokeInviteInCurrentGroup, useSendInviteInCurrentGroup } from '../.
 import { useRemoveMemberInCurrentGroup, useUpdateMemberInCurrentGroup } from '../../hooks/api/members'
 import useClickOutside from '../../hooks/click'
 import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
+import { beautifyError } from '../../lib/api'
 import { V1GroupInvite, V1GroupMember } from '../../protorepo/openapi/typescript-axios'
 
 export const GroupViewSettingsTabEditGroup: React.FC = () => {
@@ -221,8 +222,10 @@ const GroupViewSettingsTabMembersSection: React.FC = () => {
   const { formatMessage } = useOurIntl()
   const groupQ = useGetCurrentGroup()
   const [accountEmailSearch, setAccountEmailSearch] = React.useState<string>('')
-  const searchAccountQ = useSearchAccount({ email: accountEmailSearch }, { enabled: false, retry: false })
-  const sendInviteQ = useSendInviteInCurrentGroup()
+  const searchAccountQ = useSearchAccount({email: accountEmailSearch}, {enabled: false, retry: false})
+  const sendInviteQ = useSendInviteInCurrentGroup(
+    {onError: (e) => {beautifyError(e.response?.data.error, 'invite', formatMessage)}}
+  )
   const debouncedValue = useDebounce<string>(accountEmailSearch, 1000)
 
   React.useEffect(() => {

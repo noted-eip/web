@@ -215,6 +215,10 @@ const frTranslation: LocaleTypedMessages = {
   'ERROR.creation.already_exist' : 'Ce compte existe déjà.',
   'ERROR.creation.input_invalid' : 'Veuillez remplir tous les champs.',
   'ERROR.validation.token_does_not_match' : 'Le code ne correspond pas.',
+  'ERROR.export.something_wrong' : 'Une erreur est survenue lors de l\'exportation.',
+  'ERROR.quiz.something_wrong' : 'Une erreur est survenue lors de la génération du quiz.',
+  'ERROR.invite.something_wrong': 'Une erreur est survenue lors de l\'envoi de l\'invitation.',
+  'ERROR.invite.already_exist': 'cette personne à déjà reçus une invitation.',
   'ERROR.unknown' : 'Erreur inconnue',
 
   /*    QUIZS    */

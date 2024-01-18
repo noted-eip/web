@@ -214,6 +214,11 @@ const enTranslation: LocaleTypedMessages = {
   'ERROR.creation.input_invalid' : 'Invalid email or password.',
   'ERROR.validation.token_does_not_match' : 'Invalid token.',
   'ERROR.unknown' : 'Unknown error',
+  'ERROR.export.something_wrong': 'An error occured while exporting.',
+  'ERROR.quiz.something_wrong': 'An error occured while creating the quiz.',
+  'ERROR.invite.something_wrong': 'An error occured while sending the invite.',
+  'ERROR.invite.already_exist': 'This user is already invited.',
+
   /*    QUIZS    */
   'QUIZS.button.check': 'Verify',
   'QUIZS.button.next': 'Next',
