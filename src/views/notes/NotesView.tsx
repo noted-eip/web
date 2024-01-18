@@ -39,8 +39,6 @@ export const NotesListGridItemNoGroup: React.FC<{ note: V1Note }> = (props) => {
       <NotesListGridItemContextMenu
         targetId={`group-view-notes-tab-grid-${props.note.id}`}
         options={[
-          // TODO: on le dev ca ?
-          // {icon: PencilIconOutline, name: 'Rename', onClick: () => { alert('Not implemented, you can rename the note when clicking on it and editing the title.') }},
           {icon: TrashIconOutline, name: 'Delete', onClick: () => { deleteNoteQ.mutate({ noteId: props.note.id }) }},
         ]}
         note={props.note} />
