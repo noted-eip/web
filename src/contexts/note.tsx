@@ -1,14 +1,11 @@
 import React from 'react'
 
-import {
-  V1Block,
-} from '../protorepo/openapi/typescript-axios'
-
+import { SlateText } from '../lib/editor'
 
 type BlockContext = {
   id: string
   type: string
-  content: string
+  children: SlateText[]
   index: number
   isFocused: boolean
 }
@@ -17,9 +14,6 @@ interface TNoteContext {
   blocks: BlockContext[]
   setBlocks: React.Dispatch<BlockContext[]>
   clearBlocksContext: () => void
-  insertBlock: (notedId: string, index: number | undefined, block: V1Block) => void
-  updateBlock: (index: number, block: BlockContext) => void
-  deleteBlock: (notedId: string, blockId: string) => void
 }
 
 const NoteContext = React.createContext<TNoteContext | undefined>(undefined)
@@ -42,38 +36,15 @@ const TNoteContextProvider: React.FC<React.PropsWithChildren> = ({
   {
     setBlocks([])
   }
-      
-  const insertBlock = (notedId: string, index: number | undefined, block: V1Block) => 
-  {
-    console.log(`insert ${notedId} ${index} ${block}`)
-    return null
-  }
-  
-  const updateBlock = (index: number, block: BlockContext) => 
-  {
-    const newBlocks = [...blocks]
-    newBlocks.splice(index, 1, block)
-    setBlocks(newBlocks)//comme je setBlocks ca tej cqui a avant
-    console.log('0-Context : in updateBlock ', blocks)
-  }
 
-  const deleteBlock = (notedId: string, blockId: string) => 
-  {
-    console.log(`udpate ${notedId} ${blockId}`)
-    return null
-  }
-
-  console.log('0-Context : ', blocks)
+  //console.log('0-Context : ', blocks)
 
   return (
     <NoteContext.Provider
       value={{
         blocks,
         clearBlocksContext,
-        setBlocks,
-        insertBlock,
-        updateBlock,
-        deleteBlock, 
+        setBlocks
       }}
     >
       {children}

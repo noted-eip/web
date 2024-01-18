@@ -8,6 +8,7 @@ export const EditorElement: React.FC<RenderElementProps> = ({
   attributes,
   children
 }) => {
+
   switch (element.type) {
     case 'TYPE_HEADING_1':
       return (

@@ -15,11 +15,11 @@ import { BlockContext } from '../../contexts/note'
 import {
   useUpdateBlockInCurrentGroup
 } from '../../hooks/api/notes'
-import { 
-  blockContextToNoteBlock,
-  defaultBgColor,
-  noteBlocksContextToSlateElements,
-  slateElementsToString, 
+import {
+  blockContextToNoteBlockAPI,
+  blockContextToSlateElements, 
+  defaultSlateText,
+  SlateText,
   withShortcuts 
 } from '../../lib/editor'
 import {
@@ -41,17 +41,17 @@ export const BlockEditorItem: React.FC<{
   const updateBlockMutation = useUpdateBlockInCurrentGroup()
   const { blocks } = useNoteContext()
 
-  const initialEditorState = noteBlocksContextToSlateElements([blocks[block.index]])
+  const initialEditorState = blockContextToSlateElements(blocks[block.index])
+  //console.log('2-BlockEditorItem : initialEditorState', initialEditorState)
   const editorState = React.useRef<Descendant[]>(initialEditorState)
   editorState.current = initialEditorState
   const editor = React.useMemo(() => withShortcuts(withReact(withHistory(createEditor()))), [])
 
-
   if (!Editor.hasPath(editor, [0, 0])) {
     Transforms.insertNodes (
       editor,
-      { type: 'TYPE_PARAGRAPH', children: [{ text: '', bold: false, italic: false, code: false, underline: false, color: defaultBgColor }] },
-      { at: [editor.children.length] }
+      { type: 'TYPE_PARAGRAPH', children: defaultSlateText },
+      { at: [0] }
     )
     editor.history = { undos: [], redos: [] }
   }
@@ -76,20 +76,40 @@ export const BlockEditorItem: React.FC<{
   {
     editorState.current = value
 
-    const updatedContent = slateElementsToString(value)
+    const lines = editorState.current as any
+
+    const childrens: SlateText[] = []
+
+    for (let i = 0; i < lines.length;++i) {
+      let text = ''
+      text += lines[i].children[0]?.text ?? ''
+      if (i < lines.length - 1) {
+        text += '\n'
+      }
+      const children = {
+        text: text, 
+        bold: lines[i].children[0]?.bold ?? {state: false},
+        italic: lines[i].children[0]?.italic ?? {state: false},
+        underline: lines[i].children[0]?.underline ?? {state: false},
+        color: lines[i].children[0]?.color ?? {state: false},
+        bgColor: lines[i].children[0]?.bgColor ?? {state: false},
+      } as SlateText
+
+      childrens.push(children)
+    }
 
     const newBlock: BlockContext = {
       id: block.id, 
-      type: (editorState.current[0] as any).type,
-      content: updatedContent,
+      type: (editorState.current[0] as any)?.type ?? 'TYPE_PARAGRAPH',
+      children: childrens,
       index: block.index, 
       isFocused: block.isFocused
     }
 
-    //console.log('2-BlockEditorItem : in callback ', blocks)
-
-    updateBlockBackend(note.id, block?.id, blockContextToNoteBlock(newBlock))
+    updateBlockBackend(note.id, block?.id, blockContextToNoteBlockAPI(newBlock))
     blocks[blockIndex] = newBlock
+    
+    //console.log('2-BlockEditorItem : in callback ', blocks)
   
   }, [blocks])
   
@@ -98,6 +118,7 @@ export const BlockEditorItem: React.FC<{
     blockId: string | undefined,
     block: V1Block
   ) => {
+    //console.log('2-BlockEditorItem : Blocks update backend', block)
     updateBlockMutation.mutate({
       noteId: noteId,
       blockId: blockId == undefined ? '' : blockId,
@@ -123,9 +144,7 @@ export const BlockEditorItem: React.FC<{
     setIsHovered(false)
   }
 
-
   return (
-
     <div
       className={`mx-xl flex max-w-screen-xl items-center justify-between rounded-md ${isHovered ? 'border-gray-50 bg-gray-50 bg-gradient-to-br shadow-inner' : ''} overflow-x-hidden`}
       onMouseEnter={handleHover}
@@ -164,6 +183,5 @@ export const BlockEditorItem: React.FC<{
         <div className='h-2 w-8 px-2'/>
       </div>
     </div>
-    
   )
 }

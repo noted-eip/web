@@ -16,13 +16,14 @@ import {
 } from '../../hooks/api/notes'
 import { useOurIntl } from '../../i18n/TextComponent'
 import { 
-  blockContextToNoteBlock,
-  defaultBgColor,
+  blockContextToNoteBlockAPI,
   getSplitContentByCursorFromEditor,
-  HOTKEYS,
-  stringToNoteBlock} from '../../lib/editor'
+  HOTKEYS} from '../../lib/editor'
 import {
+  BlockTextStyle,
   NotesAPIInsertBlockRequest,
+  TextStylePosition,
+  TextStyleStyle,
   V1Block,
   V1Note
 } from '../../protorepo/openapi/typescript-axios'
@@ -60,6 +61,7 @@ export const EditableNoted: React.FC<{
     index: number | undefined,
     block: V1Block
   ) => {
+    //console.log('3-EditableNoted : Blocks insert backend', block)
     const res = await insertBlockMutation.mutateAsync({
       noteId: notedId,
       body: {
@@ -75,6 +77,7 @@ export const EditableNoted: React.FC<{
     blockId: string | undefined,
     block: V1Block
   ) => {
+    //console.log('3-EditableNoted : Blocks update backend', block)
     updateBlockMutation.mutate({
       noteId: notedId,
       blockId: blockId == undefined ? '' : blockId,
@@ -86,18 +89,22 @@ export const EditableNoted: React.FC<{
     notedId: string,
     blockId: string | undefined
   ) => {
-    if (block == undefined) return
     deleteBlockMutation.mutate({
       noteId: notedId,
       blockId: blockId == undefined ? '' : blockId,
     })
   }
 
+  // @Todo : merge content before cursor
   const handleBackspace = () => {
-    const element = editorState[0] as any
+    const childrens = editor.children[0] as any
+    if (childrens === undefined) return
+    const firstLine = childrens?.children[0]
+    if (firstLine === undefined) return
+    const firstLineContent = firstLine?.text ?? 'error'
 
-    console.log('handleBackspace')
-    if (element.children[0].text.length < 1 && blockIndex != 0) {
+    if (firstLineContent.length < 1 && blockIndex != 0) {
+      //console.log('3-EditableNoted : handleBackspace ok')
       const newBlocks = [...blocks]
       newBlocks[blockIndex - 1].isFocused = true
       newBlocks[blockIndex].isFocused = false
@@ -114,30 +121,25 @@ export const EditableNoted: React.FC<{
       return
 
     const [contentBeforeEnter, contentAfterEnter] = getSplitContentByCursorFromEditor(editor, selection)
-    const columnPosition = selection.focus.path[0]
-    const beforeEnterContentArray = contentBeforeEnter.split('\n') as string[]
-    const lastLineContentBeforeEnter = beforeEnterContentArray[beforeEnterContentArray.length - 1]
-    
+
     const oldLocalBlock = { 
       id: block?.id, 
       type: blocks[blockIndex].type,
-      content: contentBeforeEnter, 
+      children: contentBeforeEnter,
       index: blockIndex,
       isFocused: false
     } as BlockContext
 
-    updateBlockBackend(note.id, block?.id ?? '', blockContextToNoteBlock(oldLocalBlock))
-    
-    const newBlockId = await insertBlockBackend(note.id, blockIndex + 1 ?? 1000, stringToNoteBlock(contentAfterEnter))
-    
     const newLocalBlock = { 
-      id: newBlockId, 
+      id: 'tmp-id', 
       type: 'TYPE_PARAGRAPH',
-      content: contentAfterEnter, 
+      children: contentAfterEnter,
       index: blockIndex + 1,
       isFocused: true
     } as BlockContext
 
+    updateBlockBackend(note.id, block?.id ?? '', blockContextToNoteBlockAPI(oldLocalBlock))
+    newLocalBlock.id = await insertBlockBackend(note.id, blockIndex + 1 ?? 1000, blockContextToNoteBlockAPI(newLocalBlock))
 
     //console.log('3-EditableNoted : blocks begin handle enter ', blocks)
     
@@ -150,29 +152,15 @@ export const EditableNoted: React.FC<{
 
     // @note: replacing the current block with updated content
     if (contentAfterEnter.length > 0) {
-      for (let i = Editor.end(editor, []).path[0]; i >= columnPosition; --i) {
-        Transforms.removeNodes(editor, { at: [i] })
-      }
-
-      Transforms.insertNodes(
-        editor,
-        { type: 'TYPE_PARAGRAPH', children: [
-          {
-            text: lastLineContentBeforeEnter, 
-            bold: false, italic: false, code: false, underline: false,
-            color: defaultBgColor
-          }]
-        },
-        { at: [columnPosition] }
-      )
+      Transforms.removeNodes(editor, { at: [0] })
+      Transforms.insertNodes(editor, { type: 'TYPE_PARAGRAPH', children: contentBeforeEnter }, { at: [0] })
     }
   }
 
-  // TEST
+  // TEST rich text
   const isMarkActive = (editor, format) => {
     const marks = Editor.marks(editor)
     
-    console.log('Marks : ', marks)
     return marks ? marks[format] === true : false
   }
 
@@ -185,9 +173,42 @@ export const EditableNoted: React.FC<{
     } else {
       console.log('addMarkMark ', format)
       Editor.addMark(editor, format, true)
+
+      // TEST Backend
+      const { selection } = editor
+      if (selection == null) return
+      const cursorRowPosition = selection.focus.path[0]
+      const cursorColumnPosition = selection.focus.offset
+      
+      const oldLocalBlock = { 
+        id: blocks[blockIndex].id, 
+        type: blocks[blockIndex].type,
+        children: blocks[blockIndex].children,
+        //content: blocks[blockIndex].content, 
+        index: blockIndex,
+        isFocused: blocks[blockIndex].isFocused
+      } as BlockContext
+
+      const apiBlock = blockContextToNoteBlockAPI(oldLocalBlock)
+      const marks = Editor.marks(editor)
+
+      console.log('Marks : ', marks)
+      apiBlock.styles?.push(
+        {
+          style: 'STYLE_BOLD' as TextStyleStyle,
+          pos: { start: cursorRowPosition, length: cursorColumnPosition } as TextStylePosition,
+          //color: { r: marks?.color.color.r, g: marks?.color.color.g, b: marks?.color.color.b } as TextStyleColor
+        } as BlockTextStyle
+      )
+      
+      console.log('apiBlock : ', apiBlock)
+      console.log('apiBlock id: ', apiBlock.id)
+      console.log('apiBlock styles : ', apiBlock.styles)
+      updateBlockBackend(note.id, apiBlock.id, apiBlock)
+      //!TEST Backend
     }
   }
-  // TEST
+  // !TEST rich text
   
   
   return (
@@ -209,7 +230,6 @@ export const EditableNoted: React.FC<{
             && selection?.focus.offset === Editor.start(editor, []).offset) 
           {
             event.preventDefault()
-            // @Todo : merge content before cursor
             handleBackspace()
           }
         }
@@ -259,6 +279,7 @@ export const EditableNoted: React.FC<{
             setBlocks(newBlocks)
           }
         }
+
       }}
       readOnly={authContext.accountId !== note.authorAccountId}
       renderElement={renderElement}

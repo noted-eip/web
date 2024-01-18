@@ -140,7 +140,6 @@ const GroupViewNotesTab: React.FC = () => {
           variant='outlined'
           className='shrink-0'
           onClick={() => {
-            //handleCreateNote()
             createNoteQ.mutate({body: {title: formatMessage({ id: 'NOTE.untitledNote' })}})
           }}
           endIcon={

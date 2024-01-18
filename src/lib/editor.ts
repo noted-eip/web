@@ -3,7 +3,7 @@ import { BaseRange } from 'slate'
 import { ReactEditor } from 'slate-react'
 
 import { BlockContext } from '../contexts/note'
-import { V1Block, V1BlockType } from '../protorepo/openapi/typescript-axios'
+import { BlockTextStyle, V1Block, V1BlockType, V1Note } from '../protorepo/openapi/typescript-axios'
 
 export type NoteTitleElement = { type: 'TYPE_NOTE_TITLE'; children: SlateText[] }
 export type ParagraphElement = { type: 'TYPE_PARAGRAPH'; children: SlateText[] }
@@ -14,35 +14,55 @@ export type BulletListElement = { type: 'TYPE_BULLET_LIST'; children: ListItemEl
 export type NumberListElement = { type: 'TYPE_NUMBER_LIST'; children: ListItemElement[] }
 export type ListItemElement = { type: 'TYPE_LIST_ITEM'; children: SlateText[] }
 
-export type BackgroundColor = {
+export type BasicColor = {
   r: number,
   g: number,
   b: number,
   a: number
 }
 
-export const defaultBgColor: BackgroundColor = {
-  r: 0, g: 0, b: 0, a: 0
+export const defaultTextColor: BasicColor = {
+  r: 0, g: 0, b: 0, a: 1
+}
+
+export const defaultBgColor: BasicColor = {
+  r: 255, g: 255, b: 255, a: 1
+}
+
+export type TextStyle = {
+  start?: number,
+  length?: number,
+  state: boolean
+}
+
+export type ColorStyle = {
+  start?: number,
+  length?: number,
+  color?: BasicColor
+  state: boolean
 }
 
 
 export type SlateText = {
   text: string, 
-  bold: boolean, 
-  italic: boolean, 
-  code: boolean, 
-  underline: boolean,
-  color: BackgroundColor
+  bold: TextStyle, 
+  italic: TextStyle,
+  underline: TextStyle,
+  color: ColorStyle,
+  bgColor: ColorStyle
 }
 
-export const defaultSlateText: SlateText = {
-  text: '',
-  bold: false,
-  italic: false,
-  code: false,
-  underline: false,
-  color: defaultBgColor
-}
+export const defaultSlateText: SlateText[] = [ 
+  {
+    text: '',
+    bold: { state: false } as TextStyle,
+    italic: { state: false } as TextStyle,
+    underline: { state: false } as TextStyle,
+    color: { state: false } as ColorStyle,
+    bgColor: { state: false } as ColorStyle
+  }
+]
+
 
 declare module 'slate' {
   interface CustomTypes {
@@ -172,104 +192,77 @@ export const withShortcuts = editor => {
   return editor
 }
 
-export const getSplitContentByCursorFromEditor = (editor: BaseEditor & ReactEditor, selection: BaseRange): [string, string] => {
 
-  const cursorRowPosition = selection.focus.path[0]
-  const cursorColumnPosition = selection.focus.offset
+export const getSplitContentByCursorFromEditor = (editor: BaseEditor & ReactEditor, selection: BaseRange): [SlateText[], SlateText[]] => {
+  const cursorRow = selection.focus.path[1]
+  const cursorColumn = selection.focus.offset
   
-  let contentBeforeEnter = ''
-  let contentAfterEnter = ''
-
-  const lines = editor.children as any
-
-  for (let i = 0; i < lines.length; ++i) {
-    const line = lines[i].children[0]
-    
-    for (let j = 0; j < line.text.length; ++j) {
-
-      if (i < cursorRowPosition) {
-        contentBeforeEnter += line.text[j]
-        if (j == line.text.length - 1) {
-          contentBeforeEnter += '\n'
-        }
-      } else if (i == cursorRowPosition && cursorColumnPosition > j) {
-        contentBeforeEnter += line.text[j]
+  const content = (editor.children[0] as any).children as any
+  
+  const charactersBefore: SlateText[] = []
+  const charactersAfter: SlateText[] = []
+  
+  for (let i = 0; i < content.length; ++i) {
+    const line = content[i].text
+    const isCursorLine = i === cursorRow
+  
+    let lineBefore = ''
+    let lineAfter = ''
+  
+    for (let j = 0; j < line.length; ++j) {
+      const char = line[j]
+  
+      if (isCursorLine && j === cursorColumn) {
+        // Cursor position reached, split the character
+        lineBefore += char
+        lineAfter = line.substring(j)
+        break
       } else {
-        contentAfterEnter += line.text[j]
-        if (i != lines.length - 1 && j == line.text.length - 1) {
-          contentAfterEnter += '\n'
-        }
+        lineBefore += char
       }
-
     }
-
+  
+    if (isCursorLine) {
+      charactersBefore.push({
+        text: lineBefore,
+        ...content[i]
+      })
+  
+      if (lineAfter !== '') {
+        charactersAfter.push({
+          text: lineAfter,
+          ...content[i]
+        })
+      }
+      break // Stop processing after the cursor line
+    } else {
+      charactersBefore.push({
+        text: lineBefore,
+        ...content[i]
+      })
+    }
   }
   
-  return [contentBeforeEnter, contentAfterEnter]
-}
-
-export const slateElementsToString = (value: Descendant[]): string => {
-  const lines = value as any
-  let res = ''
-
-  lines.forEach((line, index) => {
-    res += line?.children[0]?.text ?? ''
-    if (index != lines.length - 1) {
-      res += '\n'
-    }
-  })
-
-  return res
-}
-
-export const noteBlocksToContextBlocks = (blocks: V1Block[]): BlockContext[] => {
-  const blocksContext: BlockContext[] = []
-
-  for (let i = 0; i < blocks.length; i++) {
-    switch (blocks[i].type) {
-      case 'TYPE_HEADING_1':
-        blocksContext.push({
-          id: blocks[i].id,
-          type: 'TYPE_HEADING_1',
-          content: blocks[i]?.heading || '',
-          index: i,
-          isFocused: false
-        })
-        break
-      case 'TYPE_HEADING_2':
-        blocksContext.push({
-          id: blocks[i].id,
-          type: 'TYPE_HEADING_2',
-          content: blocks[i]?.heading || '',
-          index: i,
-          isFocused: false
-        })
-        break
-      case 'TYPE_HEADING_3':
-        blocksContext.push({
-          id: blocks[i].id,
-          type: 'TYPE_HEADING_3',
-          content: blocks[i]?.heading || '',
-          index: i,
-          isFocused: false
-        })
-        break
-      case 'TYPE_PARAGRAPH':
-        blocksContext.push({
-          id: blocks[i].id,
-          type: 'TYPE_PARAGRAPH',
-          content: blocks[i]?.paragraph || '',
-          index: i,
-          isFocused: false
-        })
-        break
-      default:
-        console.warn(`Block with type ${blocks[i].type} is not known, it will be overwritten.`)
-    }
+  // Add the remaining lines to charactersAfter
+  for (let i = cursorRow + 1; i < content.length; ++i) {
+    charactersAfter.push({
+      text: content[i].text,
+      ...content[i]
+    })
   }
 
-  return blocksContext
-
+  // Remove characters before cursorColumnPosition in charactersAfter
+  if (charactersAfter.length > 0) {
+    charactersAfter[0].text = charactersAfter[0].text.substring(cursorColumn)
+  }
+  
+  // Remove characters after cursorColumnPosition in charactersBefore[cursorRowPosition]
+  if (charactersBefore.length > cursorRow) {
+    charactersBefore[cursorRow].text = charactersBefore[cursorRow].text.substring(0, cursorColumn)
+  }
+    
+  
+  return [charactersBefore, charactersAfter]
 }
 
 export const noteBlocksToSlateElements = (blocks: V1Block[]): Descendant[] => {
@@ -278,21 +271,76 @@ export const noteBlocksToSlateElements = (blocks: V1Block[]): Descendant[] => {
   for (let i = 0; i < blocks.length; i++) {
     switch (blocks[i].type) {
       case 'TYPE_HEADING_1':
-        slateElements.push({ type: 'TYPE_HEADING_1', children: [{ text: blocks[i].heading || '', bold: false, italic: false, code: false, underline: false, color: defaultBgColor }] })
+        slateElements.push({ 
+          type: 'TYPE_HEADING_1', 
+          children: [
+            { 
+              text: blocks[i].heading || '', 
+              bold: { state: false } as TextStyle, 
+              italic: { state: false } as TextStyle, 
+              underline: { state: false } as TextStyle, 
+              color: { color: defaultTextColor } as ColorStyle, 
+              bgColor: { color: defaultBgColor } as ColorStyle 
+            }] 
+        })
         break
       case 'TYPE_HEADING_2':
-        slateElements.push({ type: 'TYPE_HEADING_2', children: [{ text: blocks[i].heading || '', bold: false, italic: false, code: false, underline: false, color: defaultBgColor }] })
+        slateElements.push({ 
+          type: 'TYPE_HEADING_2', 
+          children: [
+            { 
+              text: blocks[i].heading || '', 
+              bold: { state: false } as TextStyle, 
+              italic: { state: false } as TextStyle, 
+              underline: { state: false } as TextStyle, 
+              color: { color: defaultTextColor } as ColorStyle, 
+              bgColor: { color: defaultBgColor } as ColorStyle 
+            }] 
+        })
         break
       case 'TYPE_HEADING_3':
-        slateElements.push({ type: 'TYPE_HEADING_3', children: [{ text: blocks[i].heading || '', bold: false, italic: false, code: false, underline: false, color: defaultBgColor }] })
+        slateElements.push({ 
+          type: 'TYPE_HEADING_3', 
+          children: [
+            { 
+              text: blocks[i].heading || '', 
+              bold: { state: false } as TextStyle, 
+              italic: { state: false } as TextStyle, 
+              underline: { state: false } as TextStyle, 
+              color: { color: defaultTextColor } as ColorStyle, 
+              bgColor: { color: defaultBgColor } as ColorStyle 
+            }] 
+        })
         break
       case 'TYPE_PARAGRAPH':
-        slateElements.push({ type: 'TYPE_PARAGRAPH', children: [{ text: blocks[i].paragraph || '', bold: false, italic: false, code: false, underline: false, color: defaultBgColor }] })
+        slateElements.push({ 
+          type: 'TYPE_PARAGRAPH', 
+          children: [
+            { 
+              text: blocks[i].paragraph || '', 
+              bold: { state: false } as TextStyle, 
+              italic: { state: false } as TextStyle, 
+              underline: { state: false } as TextStyle, 
+              color: { color: defaultTextColor } as ColorStyle, 
+              bgColor: { color: defaultBgColor } as ColorStyle 
+            }] 
+        })
         break
       case 'TYPE_BULLET_POINT': {
         const bulletPoints: ListItemElement[] = []
         for (; i < blocks.length && blocks[i].type === 'TYPE_BULLET_POINT';) {
-          bulletPoints.push({ type: 'TYPE_LIST_ITEM', children: [{ text: blocks[i].bulletPoint || '', bold: false, italic: false, code: false, underline: false, color: defaultBgColor }] })
+          bulletPoints.push({ 
+            type: 'TYPE_LIST_ITEM', 
+            children: [
+              { 
+                text: blocks[i].bulletPoint || '', 
+                bold: { state: false } as TextStyle, 
+                italic: { state: false } as TextStyle, 
+                underline: { state: false } as TextStyle, 
+                color: { color: defaultTextColor } as ColorStyle, 
+                bgColor: { color: defaultBgColor } as ColorStyle 
+              }]
+          })
           if (i + 1 < blocks.length && blocks[i + 1].type === 'TYPE_BULLET_POINT') i++
           else break
         }
@@ -302,7 +350,18 @@ export const noteBlocksToSlateElements = (blocks: V1Block[]): Descendant[] => {
       case 'TYPE_NUMBER_POINT': {
         const numberPoints: ListItemElement[] = []
         for (; i < blocks.length && blocks[i].type === 'TYPE_NUMBER_POINT';) {
-          numberPoints.push({ type: 'TYPE_LIST_ITEM', children: [{ text: blocks[i].numberPoint || '', bold: false, italic: false, code: false, underline: false, color: defaultBgColor }] })
+          numberPoints.push({ 
+            type: 'TYPE_LIST_ITEM', 
+            children: [
+              { 
+                text: blocks[i].numberPoint || '', 
+                bold: { state: false } as TextStyle, 
+                italic: { state: false } as TextStyle, 
+                underline: { state: false } as TextStyle, 
+                color: { color: defaultTextColor } as ColorStyle, 
+                bgColor: { color: defaultBgColor } as ColorStyle 
+              }] 
+          })
           if (i + 1 < blocks.length && blocks[i + 1].type === 'TYPE_NUMBER_POINT') i++
           else break
         }
@@ -326,51 +385,67 @@ export const noteBlocksToSlateElements = (blocks: V1Block[]): Descendant[] => {
   return slateElements
 }
 
-export const noteBlocksContextToSlateElements = (blocks: BlockContext[]): Descendant[] => {
+export const blockContextToSlateElements = (blockContext: BlockContext): Descendant[] => {
   const slateElements: Descendant[] = []
+  const blockType = blockContext.type
 
-  const blockType = blocks[0].type
-  const stringArray = blocks[0].content.split('\n') as string[]
+  //console.log('0-Editor : blockContext.children', blockContext.children)
 
-  for (let i = 0; i < stringArray.length; i++) {
-    switch (blockType) {
-      case 'TYPE_HEADING_1':
-        slateElements.push({ type: 'TYPE_HEADING_1', children: [{ text: stringArray[i] || '', bold: false, italic: false, code: false, underline: false, color: defaultBgColor }] })
-        break
-      case 'TYPE_HEADING_2':
-        slateElements.push({ type: 'TYPE_HEADING_2', children: [{ text: stringArray[i] || '', bold: false, italic: false, code: false, underline: false, color: defaultBgColor }] })
-        break
-      case 'TYPE_HEADING_3':
-        slateElements.push({ type: 'TYPE_HEADING_3', children: [{ text: stringArray[i] || '', bold: false, italic: false, code: false, underline: false, color: defaultBgColor }] })
-        break
-      case 'TYPE_PARAGRAPH':
-        slateElements.push({ type: 'TYPE_PARAGRAPH', children: [{ text: stringArray[i] || '', bold: false, italic: false, code: false, underline: false, color: defaultBgColor }] })
-        break
-      case 'TYPE_BULLET_POINT': {
-        //const bulletPoints: ListItemElement[] = []
-        //for (; i < blocks.length && blockType === 'TYPE_BULLET_POINT';) {
-        //bulletPoints.push({ type: 'TYPE_LIST_ITEM', children: [{ text: blocks[i].content || '' }] })
-        //  if (i + 1 < blocks.length && blocks[i + 1].type === 'TYPE_BULLET_POINT') i++
-        //  else break
-        //}
-        //slateElements.push({ type: 'TYPE_BULLET_LIST', children: bulletPoints })
-        slateElements.push({ type: 'TYPE_LIST_ITEM', children: [{ text: stringArray[i] || '', bold: false, italic: false, code: false, underline: false, color: defaultBgColor }] })
-        break
-      }
-      case 'TYPE_NUMBER_POINT': {
-        //const numberPoints: ListItemElement[] = []
-        //for (; i < blocks.length && blockType === 'TYPE_NUMBER_POINT';) {
-        //  numberPoints.push({ type: 'TYPE_LIST_ITEM', children: [{ text: blocks[i].content || '' }] })
-        //  if (i + 1 < blocks.length && blocks[i + 1].type === 'TYPE_NUMBER_POINT') i++
-        //  else break
-        //}
-        //slateElements.push({ type: 'TYPE_NUMBER_LIST', children: numberPoints })
-        slateElements.push({ type: 'TYPE_LIST_ITEM', children: [{ text: stringArray[i] || '', bold: false, italic: false, code: false, underline: false, color: defaultBgColor }] })
-        break
-      }
-      default:
-        console.warn(`Block with type ${blockType} is not known, it will be overwritten.`)
+  switch (blockType) {
+    case 'TYPE_HEADING_1':
+      slateElements.push({ 
+        type: 'TYPE_HEADING_1', 
+        children: (blockContext.children.length < 1) ? defaultSlateText : blockContext.children
+      })
+      break
+    case 'TYPE_HEADING_2':
+      slateElements.push({ 
+        type: 'TYPE_HEADING_2', 
+        children: (blockContext.children.length < 1) ? defaultSlateText : blockContext.children
+      })
+      break
+    case 'TYPE_HEADING_3':
+      slateElements.push({ 
+        type: 'TYPE_HEADING_3', 
+        children: (blockContext.children.length < 1) ? defaultSlateText : blockContext.children
+      })
+      break
+    case 'TYPE_PARAGRAPH':
+      slateElements.push({ 
+        type: 'TYPE_PARAGRAPH', 
+        children: (blockContext.children.length < 1) ? defaultSlateText : blockContext.children
+      })
+      break
+    case 'TYPE_BULLET_POINT': {
+      //const bulletPoints: ListItemElement[] = []
+      //for (; i < blockContext.length && blockType === 'TYPE_BULLET_POINT';) {
+      //bulletPoints.push({ type: 'TYPE_LIST_ITEM', children: [{ text: blockContext.content || '' }] })
+      //  if (i + 1 < blockContext.length && blockContext[i + 1].type === 'TYPE_BULLET_POINT') i++
+      //  else break
+      //}
+      //slateElements.push({ type: 'TYPE_BULLET_LIST', children: bulletPoints })
+      slateElements.push({ 
+        type: 'TYPE_LIST_ITEM', 
+        children: (blockContext.children.length < 1) ? defaultSlateText : blockContext.children
+      })
+      break
     }
+    case 'TYPE_NUMBER_POINT': {
+      //const numberPoints: ListItemElement[] = []
+      //for (; i < blockContext.length && blockType === 'TYPE_NUMBER_POINT';) {
+      //  numberPoints.push({ type: 'TYPE_LIST_ITEM', children: [{ text: blockContext.content || '' }] })
+      //  if (i + 1 < blockContext.length && blockContext[i + 1].type === 'TYPE_NUMBER_POINT') i++
+      //  else break
+      //}
+      //slateElements.push({ type: 'TYPE_NUMBER_LIST', children: numberPoints })
+      slateElements.push({ 
+        type: 'TYPE_LIST_ITEM', 
+        children: (blockContext.children.length < 1) ? defaultSlateText : blockContext.children
+      })
+      break
+    }
+    default:
+      console.warn(`Block with type ${blockType} is not known, it will be overwritten.`)
   }
 
   return slateElements
@@ -459,44 +534,179 @@ export const noteBlockstoStringArray = (blocks: V1Block[] | undefined): string[]
   return arr
 } 
 
-export const blockContextToNoteBlock = (blockContext: BlockContext): V1Block => {
+// WIP
+export const blockAPIToSlateTextArray = (blockAPIContent: string, blockAPIStyle: BlockTextStyle[]): SlateText[] => {
+  const slateText: SlateText[] = []
+  //console.log('1.5 editor : linesArray', blockAPIContent)
+  //console.log('1.5 editor : blockAPIStyle', blockAPIStyle)
+
+  if (blockAPIStyle.length < 1) {
+    slateText.push({
+      text: blockAPIContent,
+      bold: { state: false },
+      italic: { state: false },
+      underline: { state: false },
+      color: {state: false},
+      bgColor: {state: false}
+    })
+    return slateText
+  }
+
+  let lastStartPos = 0
+  let lastEndPos = 0
+
+  for (let i = 0; i < blockAPIStyle.length; ++i)
+  {
+    const indexStart = parseInt(blockAPIStyle[i].pos?.start ?? '0')
+    const indexEnd = parseInt(blockAPIStyle[i].pos?.length ?? '0') + indexStart
+
+    //si y a un \n faire +1
+    const contentBlock1 = blockAPIContent.substring(lastEndPos, indexStart)
+    const contentBlock2 = blockAPIContent.substring(indexStart, indexEnd)
+
+    if (lastEndPos + 1 == indexStart) {
+      slateText.push({
+        text: contentBlock1, bold: { state: false },
+        italic: { state: false }, underline: { state: false },
+        color: {state: false}, bgColor: {state: false}
+      })
+    }
+
+    slateText.push({
+      text: contentBlock2,
+      bold: { state: blockAPIStyle[i].style == 'STYLE_BOLD' },
+      italic: { state: blockAPIStyle[i].style == 'STYLE_ITALIC' },
+      underline: { state: blockAPIStyle[i].style == 'STYLE_UNDERLINE' },
+      color: { 
+        state: blockAPIStyle[i].style == 'STYLE_TXT_COLOR', 
+        color: (blockAPIStyle[i].style == 'STYLE_TXT_COLOR' ? {
+          r: blockAPIStyle[i].color?.r ?? 0,
+          g: blockAPIStyle[i].color?.g ?? 0,
+          b: blockAPIStyle[i].color?.b ?? 0,
+          a: 1
+        } : defaultTextColor) 
+      },
+      bgColor: {
+        state: blockAPIStyle[i].style == 'STYLE_BG_COLOR', 
+        color: (blockAPIStyle[i].style == 'STYLE_BG_COLOR' ? {
+          r: blockAPIStyle[i].color?.r ?? 255,
+          g: blockAPIStyle[i].color?.g ?? 255,
+          b: blockAPIStyle[i].color?.b ?? 255,
+          a: 1
+        } : defaultBgColor) 
+      }
+    })
+
+    lastStartPos = indexStart
+    lastEndPos = indexEnd
+  }
+
+  if (lastEndPos != blockAPIContent.length) {
+    const contentBlockEnd = blockAPIContent.substring(lastEndPos, blockAPIContent.length)
+    slateText.push({
+      text: contentBlockEnd, bold: { state: false },
+      italic: { state: false }, underline: { state: false },
+      color: { state: false }, bgColor: { state: false }
+    })
+  }
+
+  return slateText
+}
+
+export const noteAPIToContextBlocks = (noteAPI: V1Note): BlockContext[] => {
+  const blocksContext: BlockContext[] = []
+
+  if (noteAPI?.blocks == undefined) {
+    return blocksContext
+  }
+
+  for (let idx = 0; idx < noteAPI.blocks.length; idx++) {
+    switch (noteAPI.blocks[idx].type) {
+      case 'TYPE_HEADING_1':
+        blocksContext.push({
+          id: noteAPI.blocks[idx].id,
+          type: 'TYPE_HEADING_1',
+          children: blockAPIToSlateTextArray(noteAPI.blocks[idx].heading ?? '', noteAPI.blocks[idx].styles ?? []),
+          index: idx,
+          isFocused: false
+        })
+        break
+      case 'TYPE_HEADING_2':
+        blocksContext.push({
+          id: noteAPI.blocks[idx].id,
+          type: 'TYPE_HEADING_2',
+          children: blockAPIToSlateTextArray(noteAPI.blocks[idx].heading ?? '', noteAPI.blocks[idx].styles ?? []),
+          index: idx,
+          isFocused: false
+        })
+        break
+      case 'TYPE_HEADING_3':
+        blocksContext.push({
+          id: noteAPI.blocks[idx].id,
+          type: 'TYPE_HEADING_3',
+          children: blockAPIToSlateTextArray(noteAPI.blocks[idx].heading ?? '', noteAPI.blocks[idx].styles ?? []),
+          index: idx,
+          isFocused: false
+        })
+        break
+      case 'TYPE_PARAGRAPH':
+        blocksContext.push({
+          id: noteAPI.blocks[idx].id,
+          type: 'TYPE_PARAGRAPH',
+          children: blockAPIToSlateTextArray(noteAPI.blocks[idx].paragraph ?? '', noteAPI.blocks[idx].styles ?? []),
+          index: idx,
+          isFocused: false
+        })
+        break
+      default:
+        console.warn(`Block with type ${noteAPI.blocks[idx].type} is not known, it will be overwritten.`)
+        break
+    }
+  }
+
+  //console.log('1.5 editor : blocksContext', blocksContext)
+
+  return blocksContext
+}
+
+// TODO
+export const blockContextToNoteBlockAPI = (blockContext: BlockContext): V1Block => {
   
   const block: V1Block = 
   {
     id: blockContext.id, 
     type: blockContext.type as V1BlockType,
+    styles: []
+  }
+
+  let content = ''
+
+  for (let i = 0; i < blockContext.children.length; i++) {
+    content += blockContext.children[i].text
   }
 
   switch (blockContext.type) {
     case 'TYPE_HEADING_1':
-      block.heading = blockContext.content
+      block.heading = content
       break
     case 'TYPE_HEADING_2':
-      block.heading = blockContext.content
+      block.heading = content
       break
     case 'TYPE_HEADING_3':
-      block.heading = blockContext.content
+      block.heading = content
       break
     case 'TYPE_PARAGRAPH':
-      block.paragraph = blockContext.content
+      block.paragraph = content
       break
     case 'TYPE_BULLET_LIST':
-      block.bulletPoint = blockContext.content
+      block.bulletPoint = content
       break
     case 'TYPE_NUMBER_LIST':
-      block.numberPoint = blockContext.content
+      block.numberPoint = content
       break
     default:
       break
   }
-
-  return block
-}
-
-export const stringToNoteBlock = (content: string): V1Block => {
-  const block: V1Block = {id: '', type: 'TYPE_PARAGRAPH'}
-
-  block.paragraph = content
 
   return block
 }

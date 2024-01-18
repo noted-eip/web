@@ -2,6 +2,8 @@ import { getAnalytics, logEvent } from 'firebase/analytics'
 import React from 'react'
 
 import ViewSkeleton from '../../components/view/ViewSkeleton'
+import { useAuthContext } from '../../contexts/auth'
+import { axiosRequestOptionsWithAuthorization } from '../../hooks/api/helpers'
 import { useGetNoteInCurrentGroup } from '../../hooks/api/notes'
 import { useNoteIdFromUrl } from '../../hooks/url'
 import { TOGGLE_DEV_FEATURES } from '../../lib/env'
@@ -28,6 +30,14 @@ const NoteView: React.FC = () => {
   const noteId = useNoteIdFromUrl()
   const noteQuery = useGetNoteInCurrentGroup({ noteId })
   const [isLoading, setIsLoading] = React.useState(true)
+
+
+  const authContext = useAuthContext()
+  React.useEffect(() => {
+    const res = axiosRequestOptionsWithAuthorization(authContext)
+    console.log(res)
+  }, [])
+
 
   React.useEffect(() => {
     const fetchData = async () => {
