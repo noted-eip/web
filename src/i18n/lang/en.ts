@@ -177,6 +177,13 @@ const enTranslation: LocaleTypedMessages = {
   'PANEL.comments.loading': 'Loading comments...',
   'PANEL.comments.noblock': 'No selected blocks',
   'PANEL.comments.comment': 'Comment',
+  'PANEL.quizs': 'Quizs',
+  'PANEL.quizs.notFound': 'Your quiz has not been found.',
+  'PANEL.quizs.next': 'Next',
+  'PANEL.quizs.generate': 'Generate',
+  'PANEL.leaderboard': 'Leaderboard',
+  'PANEL.leaderboard.loading': 'Loading the leaderboard...',
+  'PANEL.leaderboard.none': 'No quiz taken yet',
 
   /*    ACTIVITY    */
   'ACTIVITY': 'Activity',
@@ -203,6 +210,24 @@ const enTranslation: LocaleTypedMessages = {
   'VALIDATION.button': 'Validate',
   'VALIDATION.resend': 'I did not receive the code',
   'VALIDATION.resend_link': 'send again',
+
+  /*    ERRORS    */
+  'ERROR.connection.created_with_google' : 'Please login with Google.',
+  'ERROR.input_invalid' : 'Invalid email or password.',
+  'ERROR.creation.already_exist' : 'This email is already used.',
+  'ERROR.validation.token_does_not_match' : 'Invalid token.',
+  'ERROR.unknown' : 'Unknown error',
+  'ERROR.export.something_wrong': 'An error occured while exporting.',
+  'ERROR.quiz.something_wrong': 'An error occured while creating the quiz.',
+  'ERROR.invite.something_wrong': 'An error occured while sending the invite.',
+  'ERROR.invite.already_exist': 'This user is already invited.',
+
+  /*    QUIZS    */
+  'QUIZS.button.check': 'Verify',
+  'QUIZS.button.next': 'Next',
+  'QUIZS.button.quit': 'Go back to the note',
+  'QUIZS.score': 'Your score is',
+  'QUIZS.noQuiz': 'Loading your quizs...',
 }
 
 export default enTranslation

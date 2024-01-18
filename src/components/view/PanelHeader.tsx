@@ -18,6 +18,7 @@ const PanelHeader: React.FC = () => {
   return (
     <div className='mt-xl flex h-[36px] min-h-[36px] items-center justify-around lg:mx-lg lg:mb-lg xl:mx-xl xl:mb-xl'>
       {panels.map((panelKey, idx) => {
+        // console.log(panelKey)
         const md = panelMetadata[panelKey]
         return (
           <div
@@ -32,13 +33,16 @@ const PanelHeader: React.FC = () => {
               onClick={() => setActivePanel(panelKey)}
             >
               <md.icon
-                className={`mr-2 h-3 w-3 text-gray-500 ${
+                className={`${panels.length <= 3 && 'mr-2 h-3'} w-3 text-gray-500 ${
                   activePanel === panelKey && '!text-purple-700'
                 }`}
               />
-              <span className='text-xs'>
-                <FormatMessage id={md.displayName as LocaleTranslationKeys || '-'} />
-              </span>
+              {
+                panels.length <= 3 && 
+                <span className='text-xs'>
+                  <FormatMessage id={md.displayName as LocaleTranslationKeys || '-'} />
+                </span>
+              }
             </div>
           </div>
         )

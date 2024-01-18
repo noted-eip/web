@@ -29,7 +29,7 @@ const GroupView: React.FC = () => {
   }
 
   return (
-    <ViewSkeleton element={<GroupViewMenu activeTab={location.pathname.endsWith('/settings') ? 'settings' : ''} />} panels={['group-activity']}>
+    <ViewSkeleton element={<GroupViewMenu activeTab={location.pathname.endsWith('/settings') ? 'settings' : ''} />} panels={['group-activity', 'quiz-leaderboard']}>
       {groupContext.groupId ? (
         <div className='mx-lg mb-lg w-full xl:mx-xl xl:mb-xl'>
           <Outlet />

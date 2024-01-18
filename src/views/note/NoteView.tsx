@@ -51,7 +51,7 @@ const NoteView: React.FC = () => {
     })
   }
 
-  const panelKeys: TPanelKey[] = ['group-activity', 'note-recommendations']
+  const panelKeys: TPanelKey[] = ['group-activity', 'note-recommendations', 'note-quizs']
   return (
     <ViewSkeleton titleElement={<NoteViewHeader />} panels={panelKeys.concat((group.data?.group.workspaceAccountId?.length ?? 0) > 0 ? [] : ['block-comments'])}>
       <div className='w-full'>

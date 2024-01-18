@@ -1,9 +1,10 @@
 import React from 'react'
 
 import { useNoteContext } from '../../contexts/note'
-import {noteBlocksToContextBlocks} from '../../lib/editor'
+import { noteBlocksToContextBlocks } from '../../lib/editor'
 import { V1Note } from '../../protorepo/openapi/typescript-axios'
 import { BlockEditorItem } from './BlockEditorItem'
+
 
 const NoteViewEditor: React.FC<{ note: V1Note }> = ({ note }) => {
   
