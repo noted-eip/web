@@ -3,11 +3,13 @@ import toast from 'react-hot-toast'
 
 import { useGenerateQuiz,useListQuizs } from '../hooks/api/recommendations'
 import { useNoteIdFromUrl } from '../hooks/url'
+import { useOurIntl } from '../i18n/TextComponent'
+import { beautifyError } from '../lib/api'
 import { V1GenerateQuizResponse,V1Quiz } from '../protorepo/openapi/typescript-axios'
 
 export const useQuizsPanel = () => {
   const noteId = useNoteIdFromUrl()
-
+  const { formatMessage } = useOurIntl()
   const [toggleQuizModal, setToggleQuizModal] = useState(false)
   const quitQuizModal = () => setToggleQuizModal(false)
   const openQuizModal = () => setToggleQuizModal(true)
@@ -20,7 +22,7 @@ export const useQuizsPanel = () => {
       quizList.refetch()
     },
     onError: (e) => {
-      toast.error(e.response?.data.error as string)
+      toast.error(beautifyError(e.response?.data.error, 'quiz', formatMessage))
     }
   })
 
