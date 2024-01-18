@@ -1,6 +1,6 @@
-import { AcademicCapIcon, BoltIcon, PencilIcon } from '@heroicons/react/24/solid'
-import { QuestionAnswer } from '@mui/icons-material'
+import { AcademicCapIcon, BoltIcon, ChatBubbleBottomCenterIcon,CheckCircleIcon,PencilIcon } from '@heroicons/react/24/solid'
 
+import BlockCommentsPanel from '../panels/BlockCommentsPanel'
 import GroupActivityNotesPanel from '../panels/GroupActivityNoGroup'
 import GroupActivityPanel from '../panels/GroupActivityPanel'
 import NoteRecommendationsPanel from '../panels/NoteRecommendationsPanel'
@@ -24,9 +24,14 @@ export const panelMetadata = {
     icon: PencilIcon,
     component: NoteRecommendationsPanel,
   },
+  'block-comments': {
+    displayName: 'PANEL.comments',
+    icon: ChatBubbleBottomCenterIcon,
+    component: BlockCommentsPanel,
+  },
   'note-quizs': {
     displayName: 'PANEL.quizs',
-    icon: QuestionAnswer,
+    icon: CheckCircleIcon,
     component: NoteQuizsPanel,
   },
   'quiz-leaderboard': {
