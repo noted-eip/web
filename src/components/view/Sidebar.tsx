@@ -2,7 +2,7 @@ import { ExpandLess, ExpandMore, Group, GroupAdd,Home, Logout, Notes, Person } f
 import { Collapse, Typography } from '@mui/material'
 import Button from '@mui/material/Button'
 import { grey } from '@mui/material/colors'
-import React, { useMemo, useState } from 'react'
+import React from 'react'
 import { LoaderIcon } from 'react-hot-toast'
 import { FormattedMessage } from 'react-intl'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
@@ -11,6 +11,7 @@ import notedLogo from '../../assets/logo/noted_logo.png'
 import { useAuthContext } from '../../contexts/auth'
 import { useCreateGroup, useListGroups } from '../../hooks/api/groups'
 import { useListInvites } from '../../hooks/api/invites'
+import { useOurIntl } from '../../i18n/TextComponent'
 import { LocaleTranslationKeys } from '../../i18n/types'
 
 interface IChildItems {
@@ -31,8 +32,8 @@ interface INavbarItem {
 function createChildItems(
   children: IChildItems[],
   currentLocation: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  createGroupQ: any,
+  buttonChildrenState: boolean,
+  buttonChildrenFn: () => void,
 ): JSX.Element[] {
   const childrenLenght = children.length
 
@@ -43,17 +44,10 @@ function createChildItems(
         variant='outlined'
         color='primary'
         className='mb-1'
-        startIcon={!createGroupQ.isLoading && <GroupAdd style={{ color: '#2a777d' }} />}
-        onClick={() => {
-          createGroupQ.mutate({
-            body: {
-              name: 'My Group',
-              description: 'Created on ' + new Date().toDateString(),
-            },
-          })
-        }}
+        startIcon={!buttonChildrenState && <GroupAdd style={{ color: '#2a777d' }} />}
+        onClick={buttonChildrenFn}
       >
-        {createGroupQ.isLoading ? (
+        {buttonChildrenState ? (
           <>
             <LoaderIcon className='mr-4' style={{ width: '20px', height: '20px' }} /> 
             <Typography variant='h6' fontSize='16px'>
@@ -85,8 +79,8 @@ function createParentItems(
   items: INavbarItem[],
   currentLocation: string,
   collapseCallback: (tradKey: LocaleTranslationKeys) => void,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  createGroupQ: any,
+  buttonChildrenState: boolean,
+  buttonChildrenFn: () => void,
   activeCollapse?: LocaleTranslationKeys | null,
 ): JSX.Element[] {
   return items.map(({ tradKey, url, icon, children, childrenStatus, numNotification }) => {
@@ -122,7 +116,7 @@ function createParentItems(
             {childrenStatus === 'success' && children ?
               <Collapse in={shouldCollapse}>
                 <div className='flex flex-col'>
-                  {createChildItems(children, currentLocation, createGroupQ)}
+                  {createChildItems(children, currentLocation, buttonChildrenState, buttonChildrenFn)}
                 </div>
               </Collapse> : (childrenStatus === 'loading' ? <></> : 
                 childrenStatus === 'error' && (
@@ -162,8 +156,9 @@ export const Sidebar: React.FC = () => {
   const authContext = useAuthContext()
   const listInvitesQ = useListInvites({ recipientAccountId: authContext.accountId })
   const listGroupsQ = useListGroups({ accountId: authContext.accountId })
+  const { formatMessage } = useOurIntl()
   const [activeCollapse, setActiveCollapse] =
-		useState<LocaleTranslationKeys | null>('GENERIC.groups')
+		React.useState<LocaleTranslationKeys | null>('GENERIC.groups')
   const createGroupQ = useCreateGroup()
 
   const handleCollapseClick = (tradKey: LocaleTranslationKeys): void => {
@@ -174,7 +169,7 @@ export const Sidebar: React.FC = () => {
 
   const buttonCreateGroup: IChildItems = {name: 'button_create_group', url: ''}
 
-  const navBarContent = useMemo(
+  const navBarContent = React.useMemo(
     (): INavbarItem[] => {
       return [{
         tradKey: 'GENERIC.home',
@@ -203,14 +198,20 @@ export const Sidebar: React.FC = () => {
           : 0
       },]}, [listGroupsQ, listInvitesQ]
   )
-  const menuItems = useMemo(
+  const menuItems = React.useMemo(
     (): JSX.Element => (
       <>
         {createParentItems(
           navBarContent,  
           location.pathname,
           handleCollapseClick,
-          createGroupQ,
+          createGroupQ.isLoading,
+          () => createGroupQ.mutate({
+            body: {
+              name: formatMessage({id: 'GROUP.myGroup'}) as string,
+              description: formatMessage({id: 'GROUP.createdOn'}) as string + new Date().toDateString(),
+            }
+          }),
           activeCollapse,
         )}
       </>

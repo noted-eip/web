@@ -77,20 +77,6 @@ const TimelineLanding: React.FC = () => {
             {timelineArr.map((el) => {
               return (
                 <TimelineCard key={el.title} title={el.title} desc={el.desc} />
-              // <div className='group relative bg-white transition hover:z-[1] hover:shadow-2xl hover:shadow-gray-600/10 dark:bg-gray-800' key={el.title}>
-              //   <div className='relative space-y-8 p-8'>
-              //     <div className='space-y-2'>
-              //       <h5
-              //         className='text-xl font-semibold text-gray-700 transition dark:text-white'
-              //       >
-              //         {el.title}
-              //       </h5>
-              //       <p className='text-gray-600 dark:text-gray-300'>
-              //         {el. desc}
-              //       </p>
-              //     </div>
-              //   </div>
-              // </div>
               )
             }) }
           </Timeline>

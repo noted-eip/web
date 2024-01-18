@@ -1,6 +1,6 @@
 import { ChatBubbleOvalLeftEllipsisIcon } from '@heroicons/react/24/outline'
 import { Bars3Icon } from '@heroicons/react/24/outline'
-import React, { useCallback } from 'react'
+import React from 'react'
 import { createEditor, Descendant, Editor, Transforms } from 'slate'
 import { withHistory } from 'slate-history'
 import {
@@ -33,16 +33,16 @@ export const BlockEditorItem: React.FC<{
 }> = ({ note, block, blockIndex }) => {
   if (block == undefined) return <div/>
 
-  const [isHovered, setIsHovered] = React.useState(false)
+  const [isHovered, setIsHovered] =  React.useState(false)
 
   const blockContext = useBlockContext()
   const updateBlockMutation = useUpdateBlockInCurrentGroup()
   const { blocks } = useNoteContext()
 
   const initialEditorState = noteBlocksContextToSlateElements([blocks[block.index]])
-  const editorState = React.useRef<Descendant[]>(initialEditorState)
+  const editorState =  React.useRef<Descendant[]>(initialEditorState)
   editorState.current = initialEditorState
-  const editor = React.useMemo(() => withShortcuts(withReact(withHistory(createEditor()))), [])
+  const editor =  React.useMemo(() => withShortcuts(withReact(withHistory(createEditor()))), [])
 
 
   if (!Editor.hasPath(editor, [0, 0])) {
@@ -70,7 +70,7 @@ export const BlockEditorItem: React.FC<{
   }, [editor, blocks])
 
 
-  const updateBlockFromSlateValue = useCallback((value: Descendant[]) => 
+  const updateBlockFromSlateValue =  React.useCallback((value: Descendant[]) => 
   {
     editorState.current = value
 

@@ -125,6 +125,8 @@ export enum TranslationKeys {
   'GROUP.createGroup',
   'GROUP.creatingGroup',
   'GROUP.inMyGroup',
+  'GROUP.myGroup',
+  'GROUP.createdOn',
 
   'GROUP.settings',
   'GROUP.upgrade',
@@ -183,6 +185,7 @@ export enum TranslationKeys {
   'PROFILE.langage.options',
   'PROFILE.langage.fr',
   'PROFILE.langage.en',
+  'PROFIILE.beta',
 
   /*    PANEL   */
   'PANEL.activity',

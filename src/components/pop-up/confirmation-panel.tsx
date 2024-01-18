@@ -1,17 +1,18 @@
 import { TextField } from '@mui/material'
 import Dialog from '@mui/material/Dialog'
-import * as React from 'react'
+import React from 'react'
 
 import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
+import { LocaleTranslationKeys } from '../../i18n/types'
 
-const ConfirmationPanel: React.FC<{onValidate: any, title: any, content?: any}> = (props) => {
+const ConfirmationPanel: React.FC<{onValidate: () => void, title: string, content?: string}> = (props) => {
   const {
     onValidate,
     title,
     content,
   } = props
-  const [open, setOpen] = React.useState(true)
-  const [enable, setEnable] = React.useState(false)
+  const [open, setOpen] =  React.useState(true)
+  const [enable, setEnable] =  React.useState(false)
   const { formatMessage } = useOurIntl()
 
   const handleType = (e: string) => {
@@ -21,25 +22,27 @@ const ConfirmationPanel: React.FC<{onValidate: any, title: any, content?: any}> 
       setEnable(false)
     }
   }
+
   const handleClose = () => {
     setOpen(false)
   }
-
 
   return (
     <div>
       <Dialog open={open} onClose={handleClose}>
         <div className='py-4'>
           <div className='border-b-2 p-4 text-lg font-semibold'>
-            <FormatMessage id={title} />
+            <FormatMessage id={title as LocaleTranslationKeys} />
           </div>
           {content && <div className='border-b-2 bg-orange-200 p-4 font-medium'>
-            <FormatMessage id={content}/>
+            <FormatMessage id={content as LocaleTranslationKeys}/>
           </div>}
           <div className='flex border-white p-4 pb-2 font-medium'>
-            <FormatMessage id={'CONFIRMATION.form.desc0'}/>
-            <div className='px-1 font-bold'> <FormatMessage id={'CONFIRMATION.form.desc1'}/> </div>
-            <FormatMessage id={'CONFIRMATION.form.desc3'}/>
+            <FormatMessage id='CONFIRMATION.form.desc0'/>
+            <div className='px-1 font-bold'>
+              <FormatMessage id='CONFIRMATION.form.desc1'/>
+            </div>
+            <FormatMessage id='CONFIRMATION.form.desc3'/>
           </div>
           <div className='mx-4 mb-2'>
             <TextField
@@ -56,10 +59,12 @@ const ConfirmationPanel: React.FC<{onValidate: any, title: any, content?: any}> 
           <div className='flex place-content-center border-t-2 p-2'>
             {enable ?
               <button onClick={onValidate} className='rounded border border-red-500 bg-red-100 py-2 px-4 font-semibold text-red-700 hover:border-transparent hover:bg-red-300 hover:text-white'>
-                <FormatMessage id={'CONFIRMATION.button'} /> <FormatMessage id={title} />
+                <FormatMessage id='CONFIRMATION.button' />
+                <FormatMessage id={title as LocaleTranslationKeys} />
               </button>
               : <button disabled className='rounded border border-red-100 bg-transparent py-2 px-4 font-semibold text-red-300'>
-                <FormatMessage id={'CONFIRMATION.button'} /> <FormatMessage id={title} />
+                <FormatMessage id='CONFIRMATION.button' />
+                <FormatMessage id={title as LocaleTranslationKeys} />
               </button>
             }
 

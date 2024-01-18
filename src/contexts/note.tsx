@@ -36,7 +36,7 @@ const TNoteContextProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
     
-  const [blocks, setBlocks] = React.useState<BlockContext[]>([])
+  const [blocks, setBlocks] =  React.useState<BlockContext[]>([])
 
   const clearBlocksContext = () =>
   {

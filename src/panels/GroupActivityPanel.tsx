@@ -168,15 +168,15 @@ const ActivityListItem: React.FC<{ activity: V1GroupActivity }> = (props) => {
     >
       <div className='flex items-center'>
         <div className='flex flex-col'>
-          <React.Fragment>
+          <>
             <p className='font-normal'>{event}</p>
-          </React.Fragment>
+          </>
           <div className='flex flex-col'>
-            <React.Fragment>
+            <>
               <div>
                 <p className='text-gray-700'>{dateFormat}</p>
               </div>
-            </React.Fragment>
+            </>
           </div>
         </div>
       </div>
