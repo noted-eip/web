@@ -2,6 +2,8 @@ import { getAnalytics, logEvent } from 'firebase/analytics'
 import React from 'react'
 
 import ViewSkeleton from '../../components/view/ViewSkeleton'
+import { TPanelKey } from '../../contexts/panel'
+import { useGetCurrentGroup } from '../../hooks/api/groups'
 import { useGetNoteInCurrentGroup } from '../../hooks/api/notes'
 import { useNoteIdFromUrl } from '../../hooks/url'
 import { TOGGLE_DEV_FEATURES } from '../../lib/env'
@@ -27,7 +29,8 @@ const NoteView: React.FC = () => {
   const analytics = getAnalytics()
   const noteId = useNoteIdFromUrl()
   const noteQuery = useGetNoteInCurrentGroup({ noteId })
-  const [isLoading, setIsLoading] =  React.useState(true)
+  const [isLoading, setIsLoading] = React.useState(true)
+  const group = useGetCurrentGroup()
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -48,8 +51,9 @@ const NoteView: React.FC = () => {
     })
   }
 
+  const panelKeys: TPanelKey[] = ['group-activity', 'note-recommendations', 'note-quizs']
   return (
-    <ViewSkeleton titleElement={<NoteViewHeader />} panels={['group-activity', 'note-recommendations', 'note-quizs']}>
+    <ViewSkeleton titleElement={<NoteViewHeader />} panels={panelKeys.concat((group.data?.group.workspaceAccountId?.length ?? 0) > 0 ? [] : ['block-comments'])}>
       <div className='w-full'>
         <NoteViewMetadataHeader />
         <div className='p-2'/>
