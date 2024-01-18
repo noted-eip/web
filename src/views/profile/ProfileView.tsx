@@ -14,9 +14,11 @@ import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { getAnalytics, logEvent } from 'firebase/analytics'
 import React from 'react'
+import toast from 'react-hot-toast'
 
 import LoaderIcon from '../../components/icons/LoaderIcon'
 import { StyledMenu } from '../../components/Menu/StyledMenu'
+import Notification from '../../components/notification/Notification'
 import ConfirmationPanel from '../../components/pop-up/confirmation-panel'
 import ViewSkeleton from '../../components/view/ViewSkeleton'
 import { useAuthContext } from '../../contexts/auth'
@@ -397,17 +399,17 @@ const ProfileViewBetaSection: React.FC = () => {
               onClick={() => {
                 registerToMobileBetaQ.mutate(undefined)
                 setSent(true)
+                toast.success(formatMessage({id: 'PROFIILE.beta'}))
               }}
             >
               <FormatMessage id='PROFILE.beta.button' />
             </Button>
           ) : (sent ? formatMessage({id: 'PROFILE.beta.buttonResTrue'}) : formatMessage({id: 'PROFILE.beta.buttonResFalse'}))) :             
-            (<>
-              <div className='skeleton h-8 w-24'></div>
-            </>)
+            <div className='skeleton h-8 w-24'></div>
           }
         </div>
       </div>
+      <Notification />
     </div>
   )
 }

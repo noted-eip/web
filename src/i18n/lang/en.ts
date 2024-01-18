@@ -164,6 +164,7 @@ const enTranslation: LocaleTypedMessages = {
   'PROFILE.langage.options': 'Options',
   'PROFILE.langage.fr': 'French',
   'PROFILE.langage.en': 'English',
+  'PROFIILE.beta': 'You now have access to the beta',
 
   /*    PANEL   */
   'PANEL.activity': 'Activity',
