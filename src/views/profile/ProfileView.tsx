@@ -367,7 +367,15 @@ const ProfileViewBetaSection: React.FC = () => {
   const authContext = useAuthContext()
   const getAccountQ = useGetAccount({accountId: authContext.accountId})
   const [sent, setSent] = React.useState(false)
-  const registerToMobileBetaQ = useRegisterToMobileBeta()
+  const registerToMobileBetaQ = useRegisterToMobileBeta({
+    onSuccess: () => {
+      setSent(true)
+      toast.success(formatMessage({id: 'PROFIILE.beta'}))
+    },
+    onError: (e) => {
+      toast.error(e.cause?.message || 'error sending beta invite')
+    }
+  })
 
   return (
     <div className='relative mt-4 w-full rounded-md border border-gray-100 bg-gray-50'>
@@ -396,12 +404,10 @@ const ProfileViewBetaSection: React.FC = () => {
           </Typography>
         </div>
         <div className='flex items-center justify-end'>
-          {getAccountQ.isSuccess ? (getAccountQ.data?.account.isInMobileBeta === false ? (
+          {getAccountQ.isSuccess  ? (getAccountQ.data?.account.isInMobileBeta === false && !sent ? (
             <Button variant='outlined'
               onClick={() => {
                 registerToMobileBetaQ.mutate(undefined)
-                setSent(true)
-                toast.success(formatMessage({id: 'PROFIILE.beta'}))
               }}
             >
               <FormatMessage id='PROFILE.beta.button' />
