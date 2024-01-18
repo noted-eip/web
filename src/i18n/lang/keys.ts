@@ -231,10 +231,8 @@ export enum TranslationKeys {
   /*    ERROR    */
 
   'ERROR.connection.created_with_google',
-  'ERROR.connection.input_invalid',
-  'ERROR.connection.input_does_not_match',
+  'ERROR.input_invalid',
   'ERROR.creation.already_exist',
-  'ERROR.creation.input_invalid',
   'ERROR.validation.token_does_not_match',
   'ERROR.export.something_wrong',
   'ERROR.quiz.something_wrong',

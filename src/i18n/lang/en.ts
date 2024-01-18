@@ -208,10 +208,8 @@ const enTranslation: LocaleTypedMessages = {
 
   /*    ERRORS    */
   'ERROR.connection.created_with_google' : 'Please login with Google.',
-  'ERROR.connection.input_invalid' : 'Invalid email or password.',
-  'ERROR.connection.input_does_not_match' : 'Invalid email or password.',
+  'ERROR.input_invalid' : 'Invalid email or password.',
   'ERROR.creation.already_exist' : 'This email is already used.',
-  'ERROR.creation.input_invalid' : 'Invalid email or password.',
   'ERROR.validation.token_does_not_match' : 'Invalid token.',
   'ERROR.unknown' : 'Unknown error',
   'ERROR.export.something_wrong': 'An error occured while exporting.',

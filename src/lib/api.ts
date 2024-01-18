@@ -36,17 +36,17 @@ export const beautifyError = (error: string | undefined, module: module_type, fo
   switch (module) {
     case 'connection':
       if (error.includes('wrong password or email')) {
-        return formatMessage({ id: 'ERROR.connection.input_invalid' })
+        return formatMessage({ id: 'ERROR.input_invalid' })
       }
       if (error.includes('google')) {
         return formatMessage({ id: 'ERROR.connection.created_with_google' })
       }
-      return formatMessage({ id: 'ERROR.connection.input_does_not_match' })
+      return formatMessage({ id: 'ERROR.input_invalid' })
     case 'creation':
       if (error.includes('already exists')) {
         return formatMessage({ id: 'ERROR.creation.already_exist' })
       }
-      return formatMessage({ id: 'ERROR.creation.input_invalid' })
+      return formatMessage({ id: 'ERROR.input_invalid' })
     case 'validation':
       return formatMessage({ id: 'ERROR.validation.token_does_not_match' })
     case 'export':
@@ -57,7 +57,6 @@ export const beautifyError = (error: string | undefined, module: module_type, fo
       if (error.includes('not found')) {
         return formatMessage({ id: 'ERROR.invite.already_exist' })
       }
-      console.log('test ' + error)
       return formatMessage({ id: 'ERROR.invite.something_wrong' })
     default:
       return formatMessage({ id: 'ERROR.unknown' })
