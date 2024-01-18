@@ -10,7 +10,7 @@ import ResetPasswordPassword from './reset-password/ResetPasswordPassword'
 import ResetPasswordToken from './reset-password/ResetPasswordToken'
 import SigninView from './signin/SigninView'
 import SignupView from './signup/SignupView'
-import WelcomeView from './welcome/WelcomeView'
+import WelcomeView from './welcome/WelcomeView' 
 
 // Describes routes that are available to unauthenticated users.
 const UnauthenticatedRouter: React.FC = () => {
