@@ -306,7 +306,9 @@ const ProfileViewFeedbackSection: React.FC = () => {
           <FormatMessage id='PROFILE.feedback.desc' />
         </Typography>
         <div className='flex items-center justify-end'>
-          <Button variant='outlined'>
+          <Button variant='outlined'
+            onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSdkkpJ6Y_sXB74Hpr1kXHVn2nQF37ktCVX7vtdUTUnJhfWsZw/viewform?usp=pp_url&entry.368849087=Compr%C3%A9hensible&entry.708712048=Bien&entry.1430431403=Bien&entry.402690215=Tr%C3%A8s+utile&entry.1070466955=Oui', '_blank')}
+          >
             <FormatMessage id='PROFILE.feedback.button' />
           </Button>
         </div>
