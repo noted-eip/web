@@ -1,3 +1,4 @@
+import { NoteAdd, PersonAdd, PersonRemove } from '@mui/icons-material'
 import Lottie from 'lottie-react'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -120,15 +121,15 @@ function getRoute(activityType: string, currentGroupId: string, redirectId: stri
   let url
   switch (activityType) {
     case 'ADD-NOTE': {
-      url = `./group/${currentGroupId}/note/${redirectId}`
+      url = `/group/${currentGroupId}/note/${redirectId}`
       break
     }
     case 'ADD-MEMBER': {
-      url = `./group/${redirectId}`
+      url = `/group/${redirectId}`
       break
     }
     case 'REMOVE-MEMBER': {
-      url = `./group/${redirectId}`
+      url = `/group/${redirectId}`
       break
     }
   }
@@ -161,22 +162,34 @@ const ActivityListItem: React.FC<{ activity: V1GroupActivity }> = (props) => {
 
   const dateFormat = getDateFormat(props.activity?.createdAt)
 
+  const handleNavigation = () => {
+    navigate(getRoute(props.activity.type, groupContext.groupId as string, redirectId))
+    window.location.reload()
+  }
+
+  const getIcon = () => {
+    if (props.activity.type === 'ADD-NOTE') {
+      return (<NoteAdd className='mr-2' />)
+    } else if (props.activity.type === 'ADD-MEMBER') {
+      return (<PersonAdd className='mr-2' />)
+    } else {
+      return (<PersonRemove className='mr-2' />)
+    }
+  }
+
   return (
     <div
       className='cursor-pointer rounded-md border border-gray-100 bg-gray-50 bg-gradient-to-br p-4 hover:bg-gray-100 hover:shadow-inner'
-      onClick={() => navigate(getRoute(props.activity.type, groupContext.groupId as string, redirectId))}
+      onClick={handleNavigation}
     >
       <div className='flex items-center'>
+        {getIcon()}
         <div className='flex flex-col'>
-          <>
-            <p className='font-normal'>{event}</p>
-          </>
+          <p className='font-normal'>{event}</p>
           <div className='flex flex-col'>
-            <>
-              <div>
-                <p className='text-gray-700'>{dateFormat}</p>
-              </div>
-            </>
+            <div>
+              <p className='text-gray-700'>{dateFormat}</p>
+            </div>
           </div>
         </div>
       </div>
