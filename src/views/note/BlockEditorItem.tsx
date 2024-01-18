@@ -9,8 +9,10 @@ import {
   withReact} from 'slate-react'
 
 import { useBlockContext } from '../../contexts/block'
+import { useGroupContext } from '../../contexts/group'
 import { useNoteContext } from '../../contexts/note'
 import { BlockContext } from '../../contexts/note'
+import { useGetGroup } from '../../hooks/api/groups'
 import {
   useUpdateBlockInCurrentGroup
 } from '../../hooks/api/notes'
@@ -32,7 +34,8 @@ export const BlockEditorItem: React.FC<{
   blockIndex: number
 }> = ({ note, block, blockIndex }) => {
   if (block == undefined) return <div/>
-
+  const groupContext = useGroupContext()
+  const getGroupQ = useGetGroup({ groupId: groupContext.groupId as string })
   const [isHovered, setIsHovered] =  React.useState(false)
 
   const blockContext = useBlockContext()
@@ -85,7 +88,6 @@ export const BlockEditorItem: React.FC<{
       isFocused: block.isFocused
     }
 
-
     updateBlockBackend(note.id, block?.id, blockContextToNoteBlock(newBlock))
     blocks[blockIndex] = newBlock
   
@@ -121,22 +123,19 @@ export const BlockEditorItem: React.FC<{
     setIsHovered(false)
   }
 
-
   return (
-
     <div
       className={`mx-xl flex max-w-screen-xl items-center justify-between rounded-md ${isHovered ? 'border-gray-50 bg-gray-50 bg-gradient-to-br shadow-inner' : ''} overflow-x-hidden`}
       onMouseEnter={handleHover}
       onMouseLeave={handleLeave}
     >
       <div className='h-6 w-8 px-2'>
-        {isHovered ? (
+        {isHovered && getGroupQ.isSuccess && getGroupQ.data?.group?.name !== 'My Workspace' ? (
           <Bars3Icon className='h-6 w-6 text-gray-400' />
         ) : (
           <div className='flex h-6 w-6 items-center justify-center'></div>
         )}
       </div>
-
       <div className='grow rounded-md bg-transparent p-4' style={{ maxWidth: 'full', overflowX: 'hidden' }}>
         <Slate
           onChange={handleEditorChange}
@@ -152,9 +151,8 @@ export const BlockEditorItem: React.FC<{
           />
         </Slate>
       </div>
-
       <div className='h-6 w-8'>
-        {isHovered ? (
+        {isHovered && getGroupQ.isSuccess && getGroupQ.data?.group?.name !== 'My Workspace' ? (
           <ChatBubbleOvalLeftEllipsisIcon className='h-6 w-6 text-gray-400' />
         ) : (
           <div className='flex h-6 w-6 items-center justify-center'></div>
