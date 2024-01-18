@@ -10,7 +10,7 @@ import { addAccountToDevelopmentContext, useDevelopmentContext } from '../../con
 import { useNoAuthContext } from '../../contexts/noauth'
 import { useAuthenticate, useSendValidationToken, useValidateAccount, ValidateAccountRequest } from '../../hooks/api/accounts'
 import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
-import { decodeToken } from '../../lib/api'
+import { beautifyError, decodeToken } from '../../lib/api'
 import { TOGGLE_DEV_FEATURES } from '../../lib/env'
 import { V1AuthenticateResponse } from '../../protorepo/openapi/typescript-axios'
 
@@ -64,7 +64,7 @@ const ValidateAccountView: React.FC = () => {
       navigate('/')
     },
     onError: (e) => {
-      toast.error(e.response?.data.error as string)
+      toast.error(beautifyError(e.response?.data.error, 'validation', formatMessage))
     }
   })
 
@@ -72,9 +72,8 @@ const ValidateAccountView: React.FC = () => {
     onSuccess: () => {
       authenticateMutation.mutate({ body: { email, password } })
     },
-    onError: () => {
-      // TODO: oui ca poiurrai etre une autre erreur peut etre
-      toast.error(formatMessage({ id: 'RESETPWD.Token.badToken' }) as string)
+    onError: (e) => {
+      toast.error(beautifyError(e.response?.data.error, 'validation', formatMessage))
       setCodes(['', '', '', ''])
       inputRefs.current.map((e) => {e.current?.blur()})
     },

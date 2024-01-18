@@ -207,6 +207,18 @@ const frTranslation: LocaleTypedMessages = {
   'VALIDATION.resend': 'Je n\'ai pas reçus le code',
   'VALIDATION.resend_link': 'l\'envoyer à nouveau',
 
+  /*    ERROR    */
+
+  'ERROR.connection.created_with_google' : 'Veuillez vous connecter avec Google.',
+  'ERROR.input_invalid' : 'Les mots de passe ne correspondent pas.',
+  'ERROR.creation.already_exist' : 'Ce compte existe déjà.',
+  'ERROR.validation.token_does_not_match' : 'Le code ne correspond pas.',
+  'ERROR.export.something_wrong' : 'Une erreur est survenue lors de l\'exportation.',
+  'ERROR.quiz.something_wrong' : 'Une erreur est survenue lors de la génération du quiz.',
+  'ERROR.invite.something_wrong': 'Une erreur est survenue lors de l\'envoi de l\'invitation.',
+  'ERROR.invite.already_exist': 'cette personne à déjà reçus une invitation.',
+  'ERROR.unknown' : 'Erreur inconnue',
+
   /*    QUIZS    */
   'QUIZS.button.check': 'Vérifier',
   'QUIZS.button.next': 'Suivant',

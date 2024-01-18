@@ -2,11 +2,11 @@ import { BookOpenIcon } from '@heroicons/react/24/outline'
 import { Button, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import React from 'react'
 
+import Notification from '../components/notification/Notification'
 import PanelSkeleton from '../components/view/PanelSkeleton'
 import { FormatMessage } from '../i18n/TextComponent'
 import QuizsModal from './components/QuizsModal'
 import { useQuizsPanel } from './useQuizsPanel'
-
 const ListQuizs: React.FC = () => {
   const { 
     noteId, 
@@ -67,6 +67,7 @@ const ListQuizs: React.FC = () => {
           </p>
         </div>
       }
+      <Notification />
     </React.Fragment>
   )
 }

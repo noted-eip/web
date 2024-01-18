@@ -5,7 +5,7 @@ import Stack from '@mui/material/Stack'
 import { useGoogleLogin } from '@react-oauth/google'
 import { getAnalytics, logEvent } from 'firebase/analytics'
 import React from 'react'
-import { toast } from 'react-hot-toast'
+import toast from 'react-hot-toast'
 import { Link, useNavigate } from 'react-router-dom'
 
 import GoogleIcon from '../../components/icons/GoogleIcon'
@@ -15,7 +15,7 @@ import { addAccountToDevelopmentContext, useDevelopmentContext } from '../../con
 import { useNoAuthContext } from '../../contexts/noauth'
 import { IsAccountValidateRequest, useAuthenticate, useAuthenticateGoogle, useIsAccountValidate } from '../../hooks/api/accounts'
 import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
-import { decodeToken } from '../../lib/api'
+import { beautifyError, decodeToken } from '../../lib/api'
 import { TOGGLE_DEV_FEATURES } from '../../lib/env'
 import { validateEmail } from '../../lib/validators'
 import { V1AuthenticateGoogleResponse, V1AuthenticateResponse, V1IsAccountValidateResponse } from '../../protorepo/openapi/typescript-axios'
@@ -40,7 +40,7 @@ const SigninView: React.FC = () => {
       }
     },
     onError: (e) => {
-      toast.error(e.response?.data.error as string)
+      toast.error(beautifyError(e.response?.data.error, 'connection', formatMessage))
     }
   })
   const authenticateMutation = useAuthenticate({
@@ -62,7 +62,7 @@ const SigninView: React.FC = () => {
       navigate('/')
     },
     onError: (e) => {
-      toast.error(e.response?.data.error as string)
+      toast.error(beautifyError(e.response?.data.error, 'connection', formatMessage))
     }
   })
   const authenticateGoogleMutation = useAuthenticateGoogle({
@@ -84,7 +84,7 @@ const SigninView: React.FC = () => {
       navigate('/')
     },
     onError: (e) => {
-      toast.error(e.response?.data.error as string)
+      toast.error(beautifyError(e.response?.data.error, 'connection', formatMessage))
     }
   })
   const googleLogin = useGoogleLogin({
