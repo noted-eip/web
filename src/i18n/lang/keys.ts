@@ -237,7 +237,7 @@ export enum TranslationKeys {
   'VALIDATION.resend_link',
 
   /*    EDITOR    */
-  'EDITOR.placeholder'
+  'EDITOR.placeholder',
 
   /*    ERROR    */
   'ERROR.connection.created_with_google',
