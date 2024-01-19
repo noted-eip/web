@@ -17,6 +17,8 @@ import {
 import { useOurIntl } from '../../i18n/TextComponent'
 import { 
   blockContextToNoteBlockAPI,
+  getCharPositionFromEditor,
+  getChildrensFromEditor,
   getSplitContentByCursorFromEditor,
   HOTKEYS} from '../../lib/editor'
 import {
@@ -77,10 +79,10 @@ export const EditableNoted: React.FC<{
     blockId: string | undefined,
     block: V1Block
   ) => {
-    //console.log('3-EditableNoted : Blocks update backend', block)
+    console.log('3-EditableNoted : block update backend', block)
     updateBlockMutation.mutate({
       noteId: notedId,
-      blockId: blockId == undefined ? '' : blockId,
+      blockId: blockId === undefined ? '' : blockId,
       body: block
     })
   }
@@ -157,58 +159,72 @@ export const EditableNoted: React.FC<{
     }
   }
 
-  // TEST rich text
-  const isMarkActive = (editor, format) => {
+  const isStyleActive = (editor, format) => {
     const marks = Editor.marks(editor)
-    
-    return marks ? marks[format] === true : false
+    return marks?.[format]?.state === true
   }
 
-  const toggleMark = (editor, format) => {
-    const isActive = isMarkActive(editor, format)
-  
+  const updateStyle = (editor, format) => {
+    const isActive = isStyleActive(editor, format)
+
     if (isActive) {
-      console.log('removeMark ', format)
       Editor.removeMark(editor, format)
     } else {
-      console.log('addMarkMark ', format)
-      Editor.addMark(editor, format, true)
-
-      // TEST Backend
       const { selection } = editor
       if (selection == null) return
-      const cursorRowPosition = selection.focus.path[0]
-      const cursorColumnPosition = selection.focus.offset
+      if (editor.children[0] === undefined) return
       
+      const childrens = getChildrensFromEditor(editor)
+
       const oldLocalBlock = { 
         id: blocks[blockIndex].id, 
         type: blocks[blockIndex].type,
-        children: blocks[blockIndex].children,
-        //content: blocks[blockIndex].content, 
+        children: childrens,
         index: blockIndex,
         isFocused: blocks[blockIndex].isFocused
       } as BlockContext
 
       const apiBlock = blockContextToNoteBlockAPI(oldLocalBlock)
-      const marks = Editor.marks(editor)
 
-      console.log('Marks : ', marks)
+      // convert new style to API styles
+      let style = ''
+      if (format === 'bold') {
+        style = 'STYLE_BOLD' as TextStyleStyle
+      } else if (format === 'italic') {
+        style = 'STYLE_ITALIC' as TextStyleStyle
+      } else if (format === 'underline') {
+        style = 'STYLE_UNDERLINE' as TextStyleStyle
+      }
+      if (style === '') return
+
+      // look for indexes (start & end selection)
+      const { anchor, focus } = selection
+      const lineIdx = selection.focus.path[1]
+      const anchorOffset = Editor.point(editor, anchor, { edge: 'start' }).offset
+      const focusOffset = Editor.point(editor, focus, { edge: 'end' }).offset
+
+      if (anchorOffset === focusOffset) return
+
+      // convert selection to character of start & length of selection
+      const startIdx = anchorOffset < focusOffset ? anchorOffset : focusOffset
+      const endIdx = focusOffset < anchorOffset ? anchorOffset : focusOffset
+      const startCharPosition = getCharPositionFromEditor(editor, lineIdx, startIdx)
+      const lengthStyle = endIdx - startIdx
+
+      Editor.addMark(editor, format, {state: true, start: startCharPosition, length: lengthStyle})
+
+      // set new style to API styles
       apiBlock.styles?.push(
         {
-          style: 'STYLE_BOLD' as TextStyleStyle,
-          pos: { start: cursorRowPosition, length: cursorColumnPosition } as TextStylePosition,
-          //color: { r: marks?.color.color.r, g: marks?.color.color.g, b: marks?.color.color.b } as TextStyleColor
+          style: style as TextStyleStyle,
+          pos: { start: startCharPosition.toString(), length: endIdx.toString() } as TextStylePosition,
+        //color: { r: marks?.color.color.r, g: marks?.color.color.g, b: marks?.color.color.b } as TextStyleColor
         } as BlockTextStyle
       )
       
-      console.log('apiBlock : ', apiBlock)
-      console.log('apiBlock id: ', apiBlock.id)
-      console.log('apiBlock styles : ', apiBlock.styles)
       updateBlockBackend(note.id, apiBlock.id, apiBlock)
-      //!TEST Backend
     }
   }
-  // !TEST rich text
   
   
   return (
@@ -221,7 +237,7 @@ export const EditableNoted: React.FC<{
             console.log('hotkey = ', hotkey)
             event.preventDefault()
             const mark = HOTKEYS[hotkey]
-            toggleMark(editor, mark)
+            updateStyle(editor, mark)
           }
         }
 
@@ -242,20 +258,24 @@ export const EditableNoted: React.FC<{
         if (event.key == 'ArrowUp' && !event.shiftKey) {
           if (selection?.focus.path[0] === Editor.start(editor, []).path[0])
           {
-            const newBlocks = [...blocks]
-            newBlocks[blockIndex].isFocused = false
-            newBlocks[blockIndex - 1].isFocused = true
-            setBlocks(newBlocks)
+            if (blocks[blockIndex - 1] !== undefined && blocks[blockIndex] !== undefined) {
+              const newBlocks = [...blocks]
+              newBlocks[blockIndex].isFocused = false
+              newBlocks[blockIndex - 1].isFocused = true
+              setBlocks(newBlocks)
+            }
           }
         }
 
         if (event.key == 'ArrowDown' && !event.shiftKey) {
           if (selection?.focus.path[0] == Editor.end(editor, []).path[0])
           {
-            const newBlocks = [...blocks]
-            newBlocks[blockIndex].isFocused = false
-            newBlocks[blockIndex + 1].isFocused = true
-            setBlocks(newBlocks)
+            if (blocks[blockIndex + 1] !== undefined && blocks[blockIndex] !== undefined) {
+              const newBlocks = [...blocks]
+              newBlocks[blockIndex].isFocused = false
+              newBlocks[blockIndex + 1].isFocused = true
+              setBlocks(newBlocks)
+            }
           }
         }
         
@@ -263,20 +283,26 @@ export const EditableNoted: React.FC<{
           if (selection?.focus.path[0] === Editor.start(editor, []).path[0] 
             && selection?.focus.offset === Editor.start(editor, []).offset)
           {
-            const newBlocks = [...blocks]
-            newBlocks[blockIndex].isFocused = false
-            newBlocks[blockIndex - 1].isFocused = true
-            setBlocks(newBlocks)
+            if (blocks[blockIndex - 1] !== undefined && blocks[blockIndex] !== undefined) {
+              const newBlocks = [...blocks]
+              newBlocks[blockIndex].isFocused = false
+              newBlocks[blockIndex - 1].isFocused = true
+              setBlocks(newBlocks)
+            }
           }
         }
+
         if (event.key == 'ArrowRight' && !event.shiftKey) {
           if (selection?.focus.path[0] === Editor.end(editor, []).path[0] 
             && selection?.focus.offset === Editor.end(editor, []).offset)
           {
-            const newBlocks = [...blocks]
-            newBlocks[blockIndex].isFocused = false
-            newBlocks[blockIndex + 1].isFocused = true
-            setBlocks(newBlocks)
+            if (blocks[blockIndex + 1] !== undefined && blocks[blockIndex] !== undefined) {
+              const newBlocks = [...blocks]
+              newBlocks[blockIndex].isFocused = false
+              newBlocks[blockIndex + 1].isFocused = true
+              setBlocks(newBlocks)
+            }
+
           }
         }
 

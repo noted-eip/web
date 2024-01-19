@@ -76,26 +76,30 @@ export const BlockEditorItem: React.FC<{
   {
     editorState.current = value
 
+    // Convert editor childrens to context children
     const lines = editorState.current as any
+    if (lines[0]?.children === undefined) return
 
     const childrens: SlateText[] = []
-
-    for (let i = 0; i < lines.length;++i) {
-      let text = ''
-      text += lines[i].children[0]?.text ?? ''
-      if (i < lines.length - 1) {
-        text += '\n'
+    
+    for (let i = 0; i < lines.length; ++i) {
+      for (let j = 0; j < lines[i].children.length; ++j) {
+        let text = ''
+        text += lines[i].children[j]?.text ?? ''
+        if (i < lines.length - 1) {
+          text += '\n'
+        }
+        const children = {
+          text: text, 
+          bold: lines[i].children[j]?.bold ?? {state: false},
+          italic: lines[i].children[j]?.italic ?? {state: false},
+          underline: lines[i].children[j]?.underline ?? {state: false},
+          color: lines[i].children[j]?.color ?? {state: false},
+          bgColor: lines[i].children[j]?.bgColor ?? {state: false},
+        } as SlateText
+      
+        childrens.push(children)
       }
-      const children = {
-        text: text, 
-        bold: lines[i].children[0]?.bold ?? {state: false},
-        italic: lines[i].children[0]?.italic ?? {state: false},
-        underline: lines[i].children[0]?.underline ?? {state: false},
-        color: lines[i].children[0]?.color ?? {state: false},
-        bgColor: lines[i].children[0]?.bgColor ?? {state: false},
-      } as SlateText
-
-      childrens.push(children)
     }
 
     const newBlock: BlockContext = {
@@ -105,6 +109,9 @@ export const BlockEditorItem: React.FC<{
       index: block.index, 
       isFocused: block.isFocused
     }
+
+    console.log('2-BlockEditorItem : newBlock', newBlock)
+    console.log('2-BlockEditorItem : editorState.current', editorState.current)
 
     updateBlockBackend(note.id, block?.id, blockContextToNoteBlockAPI(newBlock))
     blocks[blockIndex] = newBlock
@@ -118,7 +125,7 @@ export const BlockEditorItem: React.FC<{
     blockId: string | undefined,
     block: V1Block
   ) => {
-    //console.log('2-BlockEditorItem : Blocks update backend', block)
+    console.log('2-BlockEditorItem : Blocks update backend', block)
     updateBlockMutation.mutate({
       noteId: noteId,
       blockId: blockId == undefined ? '' : blockId,
