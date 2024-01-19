@@ -20,7 +20,7 @@ const ViewSkeleton: React.FC<PropsWithChildren & TViewSkeletonProps> = (props) =
     if (!props.panels.includes(activePanel)) {
       setActivePanel(props.panels[0])
     }
-  }, [])
+  }, [props.panels])
 
   return (
     <div className='flex h-screen !max-h-screen w-full flex-col'>

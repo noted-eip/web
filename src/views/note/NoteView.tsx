@@ -3,9 +3,9 @@ import React from 'react'
 
 import ViewSkeleton from '../../components/view/ViewSkeleton'
 import { TPanelKey } from '../../contexts/panel'
-import { useGetCurrentGroup } from '../../hooks/api/groups'
+import {  useGetGroup } from '../../hooks/api/groups'
 import { useGetNoteInCurrentGroup } from '../../hooks/api/notes'
-import { useNoteIdFromUrl } from '../../hooks/url'
+import { useGroupIdFromUrl, useNoteIdFromUrl } from '../../hooks/url'
 import { TOGGLE_DEV_FEATURES } from '../../lib/env'
 import {NoteViewMetadataHeader} from './NoteMetadataHeader'
 import NoteViewEditor from './NoteViewEditor'
@@ -30,7 +30,7 @@ const NoteView: React.FC = () => {
   const noteId = useNoteIdFromUrl()
   const noteQuery = useGetNoteInCurrentGroup({ noteId })
   const [isLoading, setIsLoading] = React.useState(true)
-  const group = useGetCurrentGroup()
+  const group = useGetGroup({groupId: useGroupIdFromUrl()})
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -53,7 +53,7 @@ const NoteView: React.FC = () => {
 
   const panelKeys: TPanelKey[] = ['group-activity', 'note-recommendations', 'note-quizs']
   return (
-    <ViewSkeleton titleElement={<NoteViewHeader />} panels={panelKeys.concat((group.data?.group.workspaceAccountId?.length ?? 0) > 0 ? [] : ['block-comments'])}>
+    <ViewSkeleton titleElement={<NoteViewHeader />} panels={panelKeys.concat((group.isLoading == true || ((group.data?.group.workspaceAccountId?.length ?? 0) > 0)) ? [] : ['block-comments'])}>
       <div className='w-full'>
         <NoteViewMetadataHeader />
         <div className='p-2'/>
