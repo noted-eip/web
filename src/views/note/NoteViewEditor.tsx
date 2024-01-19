@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { useNoteContext } from '../../contexts/note'
-import { noteBlocksToContextBlocks } from '../../lib/editor'
+import {noteAPIToContextBlocks} from '../../lib/editor'
 import { V1Note } from '../../protorepo/openapi/typescript-axios'
 import { BlockEditorItem } from './BlockEditorItem'
 
@@ -11,7 +11,7 @@ const NoteViewEditor: React.FC<{ note: V1Note }> = ({ note }) => {
   const { blocks, setBlocks } = useNoteContext()
 
   React.useEffect(() => {
-    setBlocks(noteBlocksToContextBlocks(note?.blocks ?? []))
+    setBlocks(noteAPIToContextBlocks(note ?? []))
   }, [note?.blocks])
 
 

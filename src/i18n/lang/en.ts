@@ -214,6 +214,9 @@ const enTranslation: LocaleTypedMessages = {
   'VALIDATION.resend': 'I did not receive the code',
   'VALIDATION.resend_link': 'send again',
 
+  /*    EDITOR    */
+  'EDITOR.placeholder': 'Insert your text here...',
+  
   /*    ERRORS    */
   'ERROR.connection.created_with_google' : 'Please login with Google.',
   'ERROR.input_invalid' : 'Invalid email or password.',

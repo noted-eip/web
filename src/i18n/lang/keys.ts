@@ -236,8 +236,10 @@ export enum TranslationKeys {
   'VALIDATION.resend',
   'VALIDATION.resend_link',
 
-  /*    ERROR    */
+  /*    EDITOR    */
+  'EDITOR.placeholder',
 
+  /*    ERROR    */
   'ERROR.connection.created_with_google',
   'ERROR.input_invalid',
   'ERROR.creation.already_exist',

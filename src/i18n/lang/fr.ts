@@ -215,8 +215,10 @@ const frTranslation: LocaleTypedMessages = {
   'VALIDATION.resend': 'Je n\'ai pas reçus le code',
   'VALIDATION.resend_link': 'l\'envoyer à nouveau',
 
-  /*    ERROR    */
+  /*    EDITOR    */
+  'EDITOR.placeholder': 'Insérez votre text ici...',
 
+  /*    ERROR    */
   'ERROR.connection.created_with_google' : 'Veuillez vous connecter avec Google.',
   'ERROR.input_invalid' : 'Les mots de passe ne correspondent pas.',
   'ERROR.creation.already_exist' : 'Ce compte existe déjà.',

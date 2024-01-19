@@ -16,10 +16,11 @@ import { useGetGroup } from '../../hooks/api/groups'
 import {
   useUpdateBlockInCurrentGroup
 } from '../../hooks/api/notes'
-import { 
-  blockContextToNoteBlock,
-  noteBlocksContextToSlateElements,
-  slateElementsToString, 
+import {
+  blockContextToNoteBlockAPI,
+  blockContextToSlateElements, 
+  defaultSlateText,
+  SlateText,
   withShortcuts 
 } from '../../lib/editor'
 import {
@@ -42,17 +43,16 @@ export const BlockEditorItem: React.FC<{
   const updateBlockMutation = useUpdateBlockInCurrentGroup()
   const { blocks } = useNoteContext()
 
-  const initialEditorState = noteBlocksContextToSlateElements([blocks[block.index]])
-  const editorState =  React.useRef<Descendant[]>(initialEditorState)
+  const initialEditorState = blockContextToSlateElements(blocks[block.index])
+  const editorState = React.useRef<Descendant[]>(initialEditorState)
   editorState.current = initialEditorState
   const editor =  React.useMemo(() => withShortcuts(withReact(withHistory(createEditor()))), [])
-
 
   if (!Editor.hasPath(editor, [0, 0])) {
     Transforms.insertNodes (
       editor,
-      { type: 'TYPE_PARAGRAPH', children: [{ text: '' }], style: [] },
-      { at: [editor.children.length] }
+      { type: 'TYPE_PARAGRAPH', children: defaultSlateText },
+      { at: [0] }
     )
     editor.history = { undos: [], redos: [] }
   }
@@ -77,18 +77,41 @@ export const BlockEditorItem: React.FC<{
   {
     editorState.current = value
 
-    const updatedContent = slateElementsToString(value)
+    // Convert editor childrens to context children
+    const lines = editorState.current as any
+    if (lines[0]?.children === undefined) return
+
+    const childrens: SlateText[] = []
+    
+    for (let i = 0; i < lines.length; ++i) {
+      for (let j = 0; j < lines[i].children.length; ++j) {
+        let text = ''
+        text += lines[i].children[j]?.text ?? ''
+        if (i < lines.length - 1) {
+          text += '\n'
+        }
+        const children = {
+          text: text, 
+          bold: lines[i].children[j]?.bold ?? {state: false},
+          italic: lines[i].children[j]?.italic ?? {state: false},
+          underline: lines[i].children[j]?.underline ?? {state: false},
+          color: lines[i].children[j]?.color ?? {state: false},
+          bgColor: lines[i].children[j]?.bgColor ?? {state: false},
+        } as SlateText
+      
+        childrens.push(children)
+      }
+    }
 
     const newBlock: BlockContext = {
       id: block.id, 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      type: (editorState.current[0] as any).type,
-      content: updatedContent,
+      type: (editorState.current[0] as any)?.type ?? 'TYPE_PARAGRAPH',
+      children: childrens,
       index: block.index, 
       isFocused: block.isFocused
     }
 
-    updateBlockBackend(note.id, block?.id, blockContextToNoteBlock(newBlock))
+    updateBlockBackend(note.id, block?.id, blockContextToNoteBlockAPI(newBlock))
     blocks[blockIndex] = newBlock
   
   }, [blocks])
@@ -160,6 +183,5 @@ export const BlockEditorItem: React.FC<{
         <div className='h-2 w-8 px-2'/>
       </div>
     </div>
-    
   )
 }
