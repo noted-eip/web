@@ -253,6 +253,8 @@ export const getSplitContentByCursorFromEditor = (editor: BaseEditor & ReactEdit
   
     let lineBefore = ''
     let lineAfter = ''
+
+    if (line === undefined) continue
   
     for (let j = 0; j < line.length; ++j) {
       const char = line[j]
