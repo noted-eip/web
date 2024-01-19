@@ -63,7 +63,6 @@ export const EditableNoted: React.FC<{
     index: number | undefined,
     block: V1Block
   ) => {
-    //console.log('3-EditableNoted : Blocks insert backend', block)
     const res = await insertBlockMutation.mutateAsync({
       noteId: notedId,
       body: {
@@ -79,7 +78,6 @@ export const EditableNoted: React.FC<{
     blockId: string | undefined,
     block: V1Block
   ) => {
-    console.log('3-EditableNoted : block update backend', block)
     updateBlockMutation.mutate({
       noteId: notedId,
       blockId: blockId === undefined ? '' : blockId,
@@ -106,7 +104,6 @@ export const EditableNoted: React.FC<{
     const firstLineContent = firstLine?.text ?? 'error'
 
     if (firstLineContent.length < 1 && blockIndex != 0) {
-      //console.log('3-EditableNoted : handleBackspace ok')
       const newBlocks = [...blocks]
       newBlocks[blockIndex - 1].isFocused = true
       newBlocks[blockIndex].isFocused = false
@@ -142,15 +139,11 @@ export const EditableNoted: React.FC<{
 
     updateBlockBackend(note.id, block?.id ?? '', blockContextToNoteBlockAPI(oldLocalBlock))
     newLocalBlock.id = await insertBlockBackend(note.id, blockIndex + 1 ?? 1000, blockContextToNoteBlockAPI(newLocalBlock))
-
-    //console.log('3-EditableNoted : blocks begin handle enter ', blocks)
     
     const newBlocks = [...blocks]
     newBlocks[blockIndex] = oldLocalBlock
     newBlocks.splice(blockIndex + 1, 0, newLocalBlock)
     setBlocks(newBlocks)
-    
-    //console.log('3-EditableNoted : newBlocks after handle enter ', newBlocks)
 
     // @note: replacing the current block with updated content
     if (contentAfterEnter.length > 0) {
@@ -218,7 +211,6 @@ export const EditableNoted: React.FC<{
         {
           style: style as TextStyleStyle,
           pos: { start: startCharPosition.toString(), length: endIdx.toString() } as TextStylePosition,
-        //color: { r: marks?.color.color.r, g: marks?.color.color.g, b: marks?.color.color.b } as TextStyleColor
         } as BlockTextStyle
       )
       

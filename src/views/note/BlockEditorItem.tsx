@@ -42,7 +42,6 @@ export const BlockEditorItem: React.FC<{
   const { blocks } = useNoteContext()
 
   const initialEditorState = blockContextToSlateElements(blocks[block.index])
-  //console.log('2-BlockEditorItem : initialEditorState', initialEditorState)
   const editorState = React.useRef<Descendant[]>(initialEditorState)
   editorState.current = initialEditorState
   const editor = React.useMemo(() => withShortcuts(withReact(withHistory(createEditor()))), [])
@@ -110,13 +109,8 @@ export const BlockEditorItem: React.FC<{
       isFocused: block.isFocused
     }
 
-    console.log('2-BlockEditorItem : newBlock', newBlock)
-    console.log('2-BlockEditorItem : editorState.current', editorState.current)
-
     updateBlockBackend(note.id, block?.id, blockContextToNoteBlockAPI(newBlock))
     blocks[blockIndex] = newBlock
-    
-    //console.log('2-BlockEditorItem : in callback ', blocks)
   
   }, [blocks])
   
@@ -125,7 +119,6 @@ export const BlockEditorItem: React.FC<{
     blockId: string | undefined,
     block: V1Block
   ) => {
-    console.log('2-BlockEditorItem : Blocks update backend', block)
     updateBlockMutation.mutate({
       noteId: noteId,
       blockId: blockId == undefined ? '' : blockId,

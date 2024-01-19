@@ -37,8 +37,6 @@ const TNoteContextProvider: React.FC<React.PropsWithChildren> = ({
     setBlocks([])
   }
 
-  //console.log('0-Context : ', blocks)
-
   return (
     <NoteContext.Provider
       value={{

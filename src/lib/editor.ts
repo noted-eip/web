@@ -204,9 +204,6 @@ export const getChildrensFromEditor = (editor: BaseEditor & ReactEditor): SlateT
   for (let i = 0; i < lines.length;++i) {
     let text = ''
     text += lines[i]?.text ?? ''
-    //if (i < lines.length - 1) {
-    //  text += '\n'
-    //}
     const children = {
       text: text, 
       bold: lines[i]?.bold ?? {state: false},
@@ -437,8 +434,6 @@ export const blockContextToSlateElements = (blockContext: BlockContext): Descend
   const slateElements: Descendant[] = []
   const blockType = blockContext.type
 
-  //console.log('0-Editor : blockContext.children', blockContext.children)
-
   switch (blockType) {
     case 'TYPE_HEADING_1':
       slateElements.push({ 
@@ -465,13 +460,6 @@ export const blockContextToSlateElements = (blockContext: BlockContext): Descend
       })
       break
     case 'TYPE_BULLET_POINT': {
-      //const bulletPoints: ListItemElement[] = []
-      //for (; i < blockContext.length && blockType === 'TYPE_BULLET_POINT';) {
-      //bulletPoints.push({ type: 'TYPE_LIST_ITEM', children: [{ text: blockContext.content || '' }] })
-      //  if (i + 1 < blockContext.length && blockContext[i + 1].type === 'TYPE_BULLET_POINT') i++
-      //  else break
-      //}
-      //slateElements.push({ type: 'TYPE_BULLET_LIST', children: bulletPoints })
       slateElements.push({ 
         type: 'TYPE_LIST_ITEM', 
         children: (blockContext.children.length < 1) ? defaultSlateText : blockContext.children
@@ -479,13 +467,6 @@ export const blockContextToSlateElements = (blockContext: BlockContext): Descend
       break
     }
     case 'TYPE_NUMBER_POINT': {
-      //const numberPoints: ListItemElement[] = []
-      //for (; i < blockContext.length && blockType === 'TYPE_NUMBER_POINT';) {
-      //  numberPoints.push({ type: 'TYPE_LIST_ITEM', children: [{ text: blockContext.content || '' }] })
-      //  if (i + 1 < blockContext.length && blockContext[i + 1].type === 'TYPE_NUMBER_POINT') i++
-      //  else break
-      //}
-      //slateElements.push({ type: 'TYPE_NUMBER_LIST', children: numberPoints })
       slateElements.push({ 
         type: 'TYPE_LIST_ITEM', 
         children: (blockContext.children.length < 1) ? defaultSlateText : blockContext.children
@@ -503,7 +484,6 @@ export const slateElementsToNoteBlock = (elements: Descendant[]): V1Block => {
   const block: V1Block = {id: '', type: 'TYPE_PARAGRAPH'}
 
   for (let i = 0; i < elements.length; i++) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const element = elements[i] as any
 
     if (element.type) {
@@ -585,99 +565,15 @@ export const noteBlockstoStringArray = (blocks: V1Block[] | undefined): string[]
 
 export const blockAPIToSlateTextArray = (blockAPIContent: string, blockAPIStyle: BlockTextStyle[]): SlateText[] => {
   const slateText: SlateText[] = []
-  //console.log('1.5 editor : linesArray', blockAPIContent)
-  //console.log('1.5 editor : blockAPIStyle', blockAPIStyle)
 
-  if (blockAPIStyle.length < 1) {
-    slateText.push({
-      text: blockAPIContent,
-      bold: { state: false },
-      italic: { state: false },
-      underline: { state: false },
-      color: {state: false},
-      bgColor: {state: false}
-    })
-    return slateText
-  }
-
-  let lastStartPos = 0
-  let lastEndPos = 0
-
-  for (let i = 0; i < blockAPIStyle.length; ++i)
-  {
-    const indexStart = parseInt(blockAPIStyle[i].pos?.start ?? '0')
-    const length = parseInt(blockAPIStyle[i].pos?.length ?? '0')
-    const indexEnd = length + indexStart
-
-    //si y a un \n faire +1
-    const contentBlock1 = blockAPIContent.substring(lastEndPos, indexStart)
-    const contentBlock2 = blockAPIContent.substring(indexStart, indexEnd)
-
-    if (lastEndPos == 0 && indexStart != 0) {
-      slateText.push({
-        text: contentBlock1, bold: { state: false },
-        italic: { state: false }, underline: { state: false },
-        color: {state: false}, bgColor: {state: false}
-      })
-    } else  if (lastEndPos + 1 == indexStart) {
-      slateText.push({
-        text: contentBlock1, bold: { state: false },
-        italic: { state: false }, underline: { state: false },
-        color: {state: false}, bgColor: {state: false}
-      })
-    }
-
-    // mettre start & lenght
-    slateText.push({
-      text: contentBlock2,
-      bold: { 
-        state: blockAPIStyle[i].style == 'STYLE_BOLD',
-        start: blockAPIStyle[i].style == 'STYLE_BOLD' ? indexStart : undefined,
-        length: blockAPIStyle[i].style == 'STYLE_BOLD' ? length : undefined
-      },
-      italic: {
-        state: blockAPIStyle[i].style == 'STYLE_ITALIC',
-        start: blockAPIStyle[i].style == 'STYLE_ITALIC' ? indexStart : undefined,
-        length: blockAPIStyle[i].style == 'STYLE_ITALIC' ? length : undefined
-      },
-      underline: {
-        state: blockAPIStyle[i].style == 'STYLE_UNDERLINE',
-        start: blockAPIStyle[i].style == 'STYLE_UNDERLINE' ? indexStart : undefined,
-        length: blockAPIStyle[i].style == 'STYLE_UNDERLINE' ? length : undefined
-      },
-      color: { 
-        state: blockAPIStyle[i].style == 'STYLE_TXT_COLOR', 
-        color: (blockAPIStyle[i].style == 'STYLE_TXT_COLOR' ? {
-          r: blockAPIStyle[i].color?.r ?? 0, g: blockAPIStyle[i].color?.g ?? 0,
-          b: blockAPIStyle[i].color?.b ?? 0, a: 1
-        } : defaultTextColor),
-        start: blockAPIStyle[i].style == 'STYLE_TXT_COLOR' ? indexStart : undefined,
-        length: blockAPIStyle[i].style == 'STYLE_TXT_COLOR' ? length : undefined
-      },
-      bgColor: {
-        state: blockAPIStyle[i].style == 'STYLE_BG_COLOR', 
-        color: (blockAPIStyle[i].style == 'STYLE_BG_COLOR' ? {
-          r: blockAPIStyle[i].color?.r ?? 255, g: blockAPIStyle[i].color?.g ?? 255,
-          b: blockAPIStyle[i].color?.b ?? 255, a: 1
-        } : defaultBgColor),
-        start: blockAPIStyle[i].style == 'STYLE_BG_COLOR' ? indexStart : undefined,
-        length: blockAPIStyle[i].style == 'STYLE_BG_COLOR' ? length : undefined
-      }
-    })
-
-    lastStartPos = indexStart
-    lastEndPos = indexEnd
-  }
-
-  if (lastEndPos != blockAPIContent.length) {
-    const contentBlockEnd = blockAPIContent.substring(lastEndPos, blockAPIContent.length)
-    slateText.push({
-      text: contentBlockEnd, bold: { state: false },
-      italic: { state: false }, underline: { state: false },
-      color: { state: false }, bgColor: { state: false }
-    })
-  }
-
+  slateText.push({
+    text: blockAPIContent,
+    bold: { state: false },
+    italic: { state: false },
+    underline: { state: false },
+    color: {state: false},
+    bgColor: {state: false}
+  })
   return slateText
 }
 
@@ -733,8 +629,6 @@ export const noteAPIToContextBlocks = (noteAPI: V1Note): BlockContext[] => {
     }
   }
 
-  //console.log('1.5 editor : blocksContext', blocksContext)
-
   return blocksContext
 }
 
@@ -766,7 +660,6 @@ export const blockContextToNoteBlockAPI = (blockContext: BlockContext): V1Block 
           start: blockContext.children[i].bold.start as any, 
           length: blockContext.children[i].bold.length 
         } as TextStylePosition,
-        //color: { r: marks?.color.color.r, g: marks?.color.color.g, b: marks?.color.color.b } as TextStyleColor
       } as BlockTextStyle
     )
   }
@@ -813,7 +706,6 @@ export const slateElementsToNoteBlocks = (elements: Descendant[]): V1Block[] => 
   const blocks: V1Block[] = []
 
   for (let i = 0; i < elements.length; i++) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const element = elements[i] as any
 
     if (element.type) {
