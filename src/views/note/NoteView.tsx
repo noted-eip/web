@@ -38,7 +38,6 @@ const NoteView: React.FC = () => {
   const authContext = useAuthContext()
   React.useEffect(() => {
     const res = axiosRequestOptionsWithAuthorization(authContext)
-    console.log(res)
   }, [])
 
 
