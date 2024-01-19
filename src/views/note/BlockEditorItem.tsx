@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChatBubbleOvalLeftEllipsisIcon } from '@heroicons/react/24/outline'
 import { Bars3Icon } from '@heroicons/react/24/outline'
-import React, { useCallback } from 'react'
+import React from 'react'
 import { createEditor, Descendant, Editor, Transforms } from 'slate'
 import { withHistory } from 'slate-history'
 import {
@@ -10,8 +9,10 @@ import {
   withReact} from 'slate-react'
 
 import { useBlockContext } from '../../contexts/block'
+import { useGroupContext } from '../../contexts/group'
 import { useNoteContext } from '../../contexts/note'
 import { BlockContext } from '../../contexts/note'
+import { useGetGroup } from '../../hooks/api/groups'
 import {
   useUpdateBlockInCurrentGroup
 } from '../../hooks/api/notes'
@@ -34,8 +35,9 @@ export const BlockEditorItem: React.FC<{
   blockIndex: number
 }> = ({ note, block, blockIndex }) => {
   if (block == undefined) return <div/>
-
-  const [isHovered, setIsHovered] = React.useState(false)
+  const groupContext = useGroupContext()
+  const getGroupQ = useGetGroup({ groupId: groupContext.groupId as string })
+  const [isHovered, setIsHovered] =  React.useState(false)
 
   const blockContext = useBlockContext()
   const updateBlockMutation = useUpdateBlockInCurrentGroup()
@@ -44,7 +46,7 @@ export const BlockEditorItem: React.FC<{
   const initialEditorState = blockContextToSlateElements(blocks[block.index])
   const editorState = React.useRef<Descendant[]>(initialEditorState)
   editorState.current = initialEditorState
-  const editor = React.useMemo(() => withShortcuts(withReact(withHistory(createEditor()))), [])
+  const editor =  React.useMemo(() => withShortcuts(withReact(withHistory(createEditor()))), [])
 
   if (!Editor.hasPath(editor, [0, 0])) {
     Transforms.insertNodes (
@@ -71,7 +73,7 @@ export const BlockEditorItem: React.FC<{
   }, [editor, blocks])
 
 
-  const updateBlockFromSlateValue = useCallback((value: Descendant[]) => 
+  const updateBlockFromSlateValue =  React.useCallback((value: Descendant[]) => 
   {
     editorState.current = value
 
@@ -151,13 +153,12 @@ export const BlockEditorItem: React.FC<{
       onMouseLeave={handleLeave}
     >
       <div className='h-6 w-8 px-2'>
-        {isHovered ? (
+        {isHovered && getGroupQ.isSuccess && getGroupQ.data?.group?.name !== 'My Workspace' ? (
           <Bars3Icon className='h-6 w-6 text-gray-400' />
         ) : (
           <div className='flex h-6 w-6 items-center justify-center'></div>
         )}
       </div>
-
       <div className='grow rounded-md bg-transparent p-4' style={{ maxWidth: 'full', overflowX: 'hidden' }}>
         <Slate
           onChange={handleEditorChange}
@@ -173,9 +174,8 @@ export const BlockEditorItem: React.FC<{
           />
         </Slate>
       </div>
-
       <div className='h-6 w-8'>
-        {isHovered ? (
+        {isHovered && getGroupQ.isSuccess && getGroupQ.data?.group?.name !== 'My Workspace' ? (
           <ChatBubbleOvalLeftEllipsisIcon className='h-6 w-6 text-gray-400' />
         ) : (
           <div className='flex h-6 w-6 items-center justify-center'></div>

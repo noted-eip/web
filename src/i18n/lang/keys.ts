@@ -12,7 +12,7 @@ export enum AvailableLang {
 		- The page and the location can be optional depending on the category
 		- Put in caps the first letter of the page
 		- Locate the word with the html tags and in UpperCamelCase
-		- If the key is in multiple pages, put "Generic" for the page of the word
+		- If the key isin mult iple pages, put "Generic" for the page of the word
 		- Categories of word:
 				- Authentication
 				- Profile information
@@ -53,6 +53,10 @@ export enum TranslationKeys {
   'SIGNUP.wantSignIn',
   'SIGNUP.wantSignUp',
 
+  /* Home */
+  'HOME.lastGroups',
+  'HOME.lastNotes',
+
   /*    RESETPASSWORD   */
 
   /* ResetPassword Email  */
@@ -92,6 +96,8 @@ export enum TranslationKeys {
   'TIMELINE.desc2',
   'TIMELINE.desc3',
   'TIMELINE.desc4',
+  'TIMELINE.desc5',
+  'TIMELINE.desc6',
 
   /* Team */
   'TEAM',
@@ -99,7 +105,7 @@ export enum TranslationKeys {
   'TEAM.roleRespFront',
   'TEAM.roleRespBack',
   'TEAM.roleRespPres',
-  'TEAM.roleDev',
+  'TEAM.rolePersona',
   'TEAM.descBackDevops',
   'TEAM.descMobile',
   'TEAM.descFront',
@@ -119,6 +125,8 @@ export enum TranslationKeys {
   'GROUP.createGroup',
   'GROUP.creatingGroup',
   'GROUP.inMyGroup',
+  'GROUP.myGroup',
+  'GROUP.createdOn',
 
   'GROUP.settings',
   'GROUP.upgrade',
@@ -151,6 +159,9 @@ export enum TranslationKeys {
   'NOTE.export.button2',
   'NOTE.export.button3',
 
+  /* Notes */
+  'NOTES.noNotes',
+
   /*    PROFILE    */
   'PROFILE.invite.deny',
   'PROFILE.invite.accept',
@@ -174,6 +185,7 @@ export enum TranslationKeys {
   'PROFILE.langage.options',
   'PROFILE.langage.fr',
   'PROFILE.langage.en',
+  'PROFIILE.beta',
 
   /*    PANEL   */
   'PANEL.activity',
@@ -184,6 +196,19 @@ export enum TranslationKeys {
   'PANEL.companion,buton1',
   'PANEL.companion,buton2',
   'PANEL.companion,buton3',
+  'PANEL.comments',
+  'PANEL.comments.empty',
+  'PANEL.comments.loading',
+  'PANEL.comments.noblock',
+  'PANEL.comments.comment',
+  'PANEL.quizs',
+  'PANEL.quizs.notFound',
+  'PANEL.quizs.next',
+  'PANEL.quizs.generate',
+  'PANEL.leaderboard',
+  'PANEL.leaderboard.loading',
+  'PANEL.leaderboard.none',
+
 
   /*    ACTIVITY   */
   'ACTIVITY',
@@ -213,4 +238,22 @@ export enum TranslationKeys {
 
   /*    EDITOR    */
   'EDITOR.placeholder'
+
+  /*    ERROR    */
+  'ERROR.connection.created_with_google',
+  'ERROR.input_invalid',
+  'ERROR.creation.already_exist',
+  'ERROR.validation.token_does_not_match',
+  'ERROR.export.something_wrong',
+  'ERROR.quiz.something_wrong',
+  'ERROR.invite.something_wrong',
+  'ERROR.invite.already_exist',
+  'ERROR.unknown',
+  
+  /*    QUIZS    */
+  'QUIZS.button.check',
+  'QUIZS.button.next',
+  'QUIZS.button.quit',
+  'QUIZS.score',
+  'QUIZS.noQuiz',
 }

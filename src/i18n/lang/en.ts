@@ -32,6 +32,10 @@ const enTranslation: LocaleTypedMessages = {
   'SIGNUP.wantSignIn': 'Already have an account',
   'SIGNUP.wantSignUp': 'I want to create an account',
 
+  /* Home */
+  'HOME.lastGroups': 'Last groups',
+  'HOME.lastNotes': 'Last notes',
+  
   /*    RESETPASSWORD   */
 
   /* ResetPassword Email  */
@@ -67,10 +71,12 @@ const enTranslation: LocaleTypedMessages = {
 
   /* Timeline */
   'TIMELINE': 'Timeline',
-  'TIMELINE.desc1': 'During this sprint we try different technologies and libraries for the backend and for web, mobile and desktop frontend.',
-  'TIMELINE.desc2': 'During this sprint we choose which technologies and libraries will be used and which platform will be supported. Then we begin to create the main feature of Noted.',
-  'TIMELINE.desc3': 'During this sprint we improved and finalize the features from the last sprint and begin the next core features.',
-  'TIMELINE.desc4': 'During this sprint we implemented the most important features of our application for the notes edition and recommendation. Noted have his first beta usable !',
+  'TIMELINE.desc1': 'During this sprint, we try different technologies and libraries for the backend and for web, mobile and desktop frontend.',
+  'TIMELINE.desc2': 'During this sprint, we choose which technologies and libraries will be used and which platform will be supported. Then we begin to create the main feature of Noted.',
+  'TIMELINE.desc3': 'During this sprint, we improved and finalize the features from the last sprint and begin the next core features.',
+  'TIMELINE.desc4': 'During this sprint, we implemented the most important features of our application for the notes edition and recommendation. Noted have his first beta usable !',
+  'TIMELINE.desc5': 'During this sprint, we continued implementing the application\'s major functionalities.',
+  'TIMELINE.desc6': 'During this sprint, we developed graphic uniqueness between frontend and mobile, implemented the latest features such as quizzes and solved all the last graphic and logic problems.',
 
   /* Team */
   'TEAM': 'The team',
@@ -78,7 +84,7 @@ const enTranslation: LocaleTypedMessages = {
   'TEAM.roleRespFront': 'Frontend responsible',
   'TEAM.roleRespBack': 'Backend responsible',
   'TEAM.roleRespPres': 'Presentation responsible',
-  'TEAM.roleDev': 'Developer',
+  'TEAM.rolePersona': 'Persona responsible',
   'TEAM.descBackDevops': 'Backend and devops developer',
   'TEAM.descMobile': 'Mobile developer',
   'TEAM.descFront': 'Frontend developer',
@@ -98,6 +104,8 @@ const enTranslation: LocaleTypedMessages = {
   'GROUP.createGroup': 'Create a group',
   'GROUP.creatingGroup': 'Creating...',
   'GROUP.inMyGroup': 'In my group...',
+  'GROUP.myGroup': 'My Group',
+  'GROUP.createdOn': 'Created on ',
 
   'GROUP.settings': 'Settings',
   'GROUP.upgrade': 'Upgrade',
@@ -130,6 +138,9 @@ const enTranslation: LocaleTypedMessages = {
   'NOTE.export.button2': 'Export in Markdown',
   'NOTE.export.button3': 'Export',
 
+  /* Notes */
+  'NOTES.noNotes': 'No notes',
+
   /*    PROFILE    */
   'PROFILE.invite.deny': 'Deny',
   'PROFILE.invite.accept': 'Accept',
@@ -153,6 +164,7 @@ const enTranslation: LocaleTypedMessages = {
   'PROFILE.langage.options': 'Options',
   'PROFILE.langage.fr': 'French',
   'PROFILE.langage.en': 'English',
+  'PROFIILE.beta': 'You now have access to the beta',
 
   /*    PANEL   */
   'PANEL.activity': 'Activity',
@@ -163,6 +175,18 @@ const enTranslation: LocaleTypedMessages = {
   'PANEL.companion,buton1': 'Filter by block',
   'PANEL.companion,buton2': 'Filter by entire note',
   'PANEL.companion,buton3': 'Apply',
+  'PANEL.comments': 'Comments',
+  'PANEL.comments.empty': 'No comments on this block',
+  'PANEL.comments.loading': 'Loading comments...',
+  'PANEL.comments.noblock': 'No selected blocks',
+  'PANEL.comments.comment': 'Comment',
+  'PANEL.quizs': 'Quizs',
+  'PANEL.quizs.notFound': 'Your quiz has not been found.',
+  'PANEL.quizs.next': 'Next',
+  'PANEL.quizs.generate': 'Generate',
+  'PANEL.leaderboard': 'Leaderboard',
+  'PANEL.leaderboard.loading': 'Loading the leaderboard...',
+  'PANEL.leaderboard.none': 'No quiz taken yet',
 
   /*    ACTIVITY    */
   'ACTIVITY': 'Activity',
@@ -192,6 +216,24 @@ const enTranslation: LocaleTypedMessages = {
 
   /*    EDITOR    */
   'EDITOR.placeholder': 'Insert your text here...',
+  
+  /*    ERRORS    */
+  'ERROR.connection.created_with_google' : 'Please login with Google.',
+  'ERROR.input_invalid' : 'Invalid email or password.',
+  'ERROR.creation.already_exist' : 'This email is already used.',
+  'ERROR.validation.token_does_not_match' : 'Invalid token.',
+  'ERROR.unknown' : 'Unknown error',
+  'ERROR.export.something_wrong': 'An error occured while exporting.',
+  'ERROR.quiz.something_wrong': 'An error occured while creating the quiz.',
+  'ERROR.invite.something_wrong': 'An error occured while sending the invite.',
+  'ERROR.invite.already_exist': 'This user is already invited.',
+
+  /*    QUIZS    */
+  'QUIZS.button.check': 'Verify',
+  'QUIZS.button.next': 'Next',
+  'QUIZS.button.quit': 'Go back to the note',
+  'QUIZS.score': 'Your score is',
+  'QUIZS.noQuiz': 'Loading your quizs...',
 }
 
 export default enTranslation

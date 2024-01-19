@@ -9,9 +9,11 @@ import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import moment from 'moment'
 import React from 'react'
+import { toast } from 'react-hot-toast'
 import { useDebounce } from 'usehooks-ts'
 
 import LoaderIcon from '../../components/icons/LoaderIcon'
+import Notification from '../../components/notification/Notification'
 import { useAuthContext } from '../../contexts/auth'
 import { useGroupContext } from '../../contexts/group'
 import { useGetAccount, useSearchAccount } from '../../hooks/api/accounts'
@@ -20,16 +22,17 @@ import { useRevokeInviteInCurrentGroup, useSendInviteInCurrentGroup } from '../.
 import { useRemoveMemberInCurrentGroup, useUpdateMemberInCurrentGroup } from '../../hooks/api/members'
 import useClickOutside from '../../hooks/click'
 import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
+import { beautifyError } from '../../lib/api'
 import { V1GroupInvite, V1GroupMember } from '../../protorepo/openapi/typescript-axios'
 
 export const GroupViewSettingsTabEditGroup: React.FC = () => {
-  const [editName, setEditName] = React.useState(false)
-  const [editDescription, setEditDescription] = React.useState(false)
+  const [editName, setEditName] =  React.useState(false)
+  const [editDescription, setEditDescription] =  React.useState(false)
   const groupContext = useGroupContext()
   const getGroupQ = useGetGroup({ groupId: groupContext.groupId as string })
   const updateGroupQ = useUpdateCurrentGroup()
-  const [newName, setNewName] = React.useState<string | undefined>(undefined)
-  const [newDescription, setNewDescription] = React.useState<
+  const [newName, setNewName] =  React.useState<string | undefined>(undefined)
+  const [newDescription, setNewDescription] =  React.useState<
   string | undefined
   >(undefined)
   const newNameInputRef = React.createRef<HTMLInputElement>()
@@ -76,71 +79,89 @@ export const GroupViewSettingsTabEditGroup: React.FC = () => {
         </div>
         <div className='flex flex-col'>
           {getGroupQ.isSuccess ? (
-            <React.Fragment>
-              <div
-                className='group flex h-8 cursor-pointer items-center'
-                onClick={() => {
-                  setEditName(true)
-                  setEditDescription(false)
-                }}
-              >
-                {editName ? (
-                  <form onSubmit={onChangeName}>
-                    <input
-                      ref={newNameInputRef}
-                      autoFocus
-                      className='ml-[-5px] w-48 rounded border-gray-200 bg-white px-1 py-0 font-medium'
-                      type='text'
-                      value={newName}
-                      onChange={(e) => setNewName(e.target.value)}
-                    />
-                    <button type='submit' />
-                  </form>
-                ) : (
-                  <React.Fragment>
+            getGroupQ.data?.group?.name === 'My Workspace' ? 
+              <>
+                <div className='group flex h-8 items-center'>
+                  <>
                     <p className='font-medium'>
                       {getGroupQ.data?.group.name}
                     </p>
-                    <PencilIcon className='ml-2 hidden h-4 w-4 stroke-2 text-gray-400 group-hover:block' />
-                  </React.Fragment>
-                )}
-              </div>
-              <div
-                className='group flex h-6 cursor-pointer items-center'
-                onClick={() => {
-                  setEditName(false)
-                  setEditDescription(true)
-                }}
-              >
-                {editDescription ? (
-                  <form
-                    onSubmit={onChangeDescription}
-                    className='flex items-center'
-                  >
-                    <input
-                      ref={newDescriptionInputRef}
-                      autoFocus
-                      className='ml-[-5px] w-72 rounded border-gray-200 bg-white px-1 py-0 text-sm text-gray-500'
-                      type='text'
-                      value={newDescription}
-                      onChange={(e) => setNewDescription(e.target.value)}
-                    />
-                    <button type='submit' />
-                  </form>
-                ) : (
-                  <React.Fragment>
-                    <p className='cursor-pointer text-sm text-gray-500'>
+                  </>
+                </div>
+                <div className='group flex h-6 items-center'>
+                  <>
+                    <p className='text-sm text-gray-500'>
                       {getGroupQ.data?.group.description}
                     </p>
-                    <PencilIcon className='ml-2 hidden h-4 w-4 stroke-2 text-gray-400 group-hover:block' />
-                  </React.Fragment>
-                )}
-              </div>
-            </React.Fragment>
+                  </>
+                </div>
+              </>
+              :
+              <>
+                <div
+                  className='group flex h-8 items-center'
+                  onClick={() => {
+                    setEditName(true)
+                    setEditDescription(false)
+                  }}
+                >
+                  {editName ? (
+                    <form onSubmit={onChangeName}>
+                      <input
+                        ref={newNameInputRef}
+                        autoFocus
+                        className='ml-[-5px] w-48 rounded border-gray-200 bg-white px-1 py-0 font-medium'
+                        type='text'
+                        value={newName}
+                        onChange={(e) => setNewName(e.target.value)}
+                      />
+                      <button type='submit' />
+                    </form>
+                  ) : (
+                    <>
+                      <p className='font-medium'>
+                        {getGroupQ.data?.group.name}
+                      </p>
+                      <PencilIcon className='ml-2 hidden h-4 w-4 stroke-2 text-gray-400 group-hover:block' />
+                    </>
+                  )}
+                </div>
+                <div
+                  className='group flex h-6 cursor-pointer items-center'
+                  onClick={() => {
+                    setEditName(false)
+                    setEditDescription(true)
+                  }}
+                >
+                  {editDescription ? (
+                    <form
+                      onSubmit={onChangeDescription}
+                      className='flex items-center'
+                    >
+                      <input
+                        ref={newDescriptionInputRef}
+                        autoFocus
+                        className='ml-[-5px] w-72 rounded border-gray-200 bg-white px-1 py-0 text-sm text-gray-500'
+                        type='text'
+                        value={newDescription}
+                        onChange={(e) => setNewDescription(e.target.value)}
+                      />
+                      <button type='submit' />
+                    </form>
+                  ) : (
+                    <>
+                      <p className='cursor-pointer text-sm text-gray-500'>
+                        {getGroupQ.data?.group.description}
+                      </p>
+                      <PencilIcon className='ml-2 hidden h-4 w-4 stroke-2 text-gray-400 group-hover:block' />
+                    </>
+                  )}
+                </div>
+              </>
           ) : (
-            <React.Fragment>
+            <>
               <div className='skeleton h-6 w-48'></div>
-            </React.Fragment>
+            </>
           )}
         </div>
       </div>
@@ -183,7 +204,7 @@ const GroupMemberListItem: React.FC<{ member: V1GroupMember }> = (props) => {
           <div className='float-right rounded-full bg-purple-200 p-1 px-2 text-xs font-medium text-purple-600'>
             Admin
           </div>
-          // Dirty way of checking that the current user is an admin.
+          // Way of checking that the current user is an admin.
         ) : groupQ.data?.group.members?.find((acc) => { return acc.accountId === authContext.accountId && acc.isAdmin }) && (
           <div
             className='invisible float-right cursor-pointer rounded-full border-2 border-dashed border-gray-400 bg-gray-200 p-[2px] px-[6px] text-xs font-medium text-gray-600 opacity-75 hover:opacity-100 group-hover:visible'
@@ -213,6 +234,7 @@ const GroupMemberListItem: React.FC<{ member: V1GroupMember }> = (props) => {
             }
           </div>}
       </div>
+      <Notification />
     </div>
   )
 }
@@ -221,8 +243,10 @@ const GroupViewSettingsTabMembersSection: React.FC = () => {
   const { formatMessage } = useOurIntl()
   const groupQ = useGetCurrentGroup()
   const [accountEmailSearch, setAccountEmailSearch] = React.useState<string>('')
-  const searchAccountQ = useSearchAccount({ email: accountEmailSearch }, { enabled: false, retry: false })
-  const sendInviteQ = useSendInviteInCurrentGroup()
+  const searchAccountQ = useSearchAccount({email: accountEmailSearch}, {enabled: false, retry: false})
+  const sendInviteQ = useSendInviteInCurrentGroup(
+    {onError: (e) => {toast.error(beautifyError(e.response?.data.error, 'invite', formatMessage))}}
+  )
   const debouncedValue = useDebounce<string>(accountEmailSearch, 1000)
 
   React.useEffect(() => {
@@ -282,7 +306,8 @@ const GroupViewSettingsTabMembersSection: React.FC = () => {
                 )}
               </div>
             </div>
-            <Button 
+            <Button
+              type='submit'
               tabIndex={2}
               variant='contained'
               size='small'

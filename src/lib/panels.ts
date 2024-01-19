@@ -1,8 +1,12 @@
-import { BoltIcon, PencilIcon } from '@heroicons/react/24/solid'
+import { AcademicCapIcon, BoltIcon, ChatBubbleBottomCenterIcon,CheckCircleIcon,PencilIcon } from '@heroicons/react/24/solid'
 
+import BlockCommentsPanel from '../panels/BlockCommentsPanel'
+import GroupActivityNotesPanel from '../panels/GroupActivityNoGroup'
 import GroupActivityPanel from '../panels/GroupActivityPanel'
 import NoteRecommendationsPanel from '../panels/NoteRecommendationsPanel'
-import { V1Block, V1Widget } from '../protorepo/openapi/typescript-axios'
+import QuizLeaderboardPanel from '../panels/QuizsLeaderBoardPanel'
+import NoteQuizsPanel from '../panels/QuizsPanels'
+import { V1Block,V1Widget } from '../protorepo/openapi/typescript-axios'
 
 export const panelMetadata = {
   'group-activity': {
@@ -10,10 +14,30 @@ export const panelMetadata = {
     icon: BoltIcon,
     component: GroupActivityPanel,
   },
+  'group-activity-no-group': {
+    displayName: 'PANEL.activity',
+    icon: BoltIcon,
+    component: GroupActivityNotesPanel,
+  },
   'note-recommendations': {
     displayName: 'PANEL.companion',
     icon: PencilIcon,
     component: NoteRecommendationsPanel,
+  },
+  'block-comments': {
+    displayName: 'PANEL.comments',
+    icon: ChatBubbleBottomCenterIcon,
+    component: BlockCommentsPanel,
+  },
+  'note-quizs': {
+    displayName: 'PANEL.quizs',
+    icon: CheckCircleIcon,
+    component: NoteQuizsPanel,
+  },
+  'quiz-leaderboard': {
+    displayName: 'PANEL.leaderboard',
+    icon: AcademicCapIcon,
+    component: QuizLeaderboardPanel,
   },
 }
 

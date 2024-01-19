@@ -1,15 +1,17 @@
-import { ExpandLess, ExpandMore, Group, Home, Logout, Notes, Person } from '@mui/icons-material'
+import { ExpandLess, ExpandMore, Group, GroupAdd,Home, Logout, Notes, Person } from '@mui/icons-material'
 import { Collapse, Typography } from '@mui/material'
+import Button from '@mui/material/Button'
 import { grey } from '@mui/material/colors'
-import React, { useMemo, useState } from 'react'
+import React from 'react'
 import { LoaderIcon } from 'react-hot-toast'
 import { FormattedMessage } from 'react-intl'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 import notedLogo from '../../assets/logo/noted_logo.png'
 import { useAuthContext } from '../../contexts/auth'
-import { useListGroups } from '../../hooks/api/groups'
+import { useCreateGroup, useListGroups } from '../../hooks/api/groups'
 import { useListInvites } from '../../hooks/api/invites'
+import { useOurIntl } from '../../i18n/TextComponent'
 import { LocaleTranslationKeys } from '../../i18n/types'
 
 interface IChildItems {
@@ -30,16 +32,42 @@ interface INavbarItem {
 function createChildItems(
   children: IChildItems[],
   currentLocation: string,
+  buttonChildrenState: boolean,
+  buttonChildrenFn: () => void,
 ): JSX.Element[] {
   const childrenLenght = children.length
 
   return children.map(({ name, url }, idx) => {
+    if (name === 'button_create_group') {
+      return (<Button
+        key={name}
+        variant='outlined'
+        color='primary'
+        className='mb-1'
+        startIcon={!buttonChildrenState && <GroupAdd style={{ color: '#2a777d' }} />}
+        onClick={buttonChildrenFn}
+      >
+        {buttonChildrenState ? (
+          <>
+            <LoaderIcon className='mr-4' style={{ width: '20px', height: '20px' }} /> 
+            <Typography variant='h6' fontSize='16px'>
+              <FormattedMessage id='GROUP.creatingGroup' />
+            </Typography>
+          </>
+        ) : (
+          <Typography variant='h6' fontSize='16px'>
+            <FormattedMessage id='GROUP.createGroup' />
+          </Typography>
+        )}
+      </Button>
+      )
+    }
     return (<Link
       key={url}
       to={url ? url : '/'}
-      className={`ml-8 ${idx !== childrenLenght - 1 && 'mb-1'} flex items-center justify-between rounded-md p-1 pl-2 hover:bg-gray-100 ${
+      className={`ml-8 ${idx !== childrenLenght - 1 && 'mb-1'} ${idx === 0 && 'mt-1'} flex items-center justify-between rounded-md p-1 pl-2 hover:bg-gray-100 ${
         url && currentLocation.includes(url) ? 'bg-gray-100' : ''
-      }`}    >
+      }`}>
       <Typography variant='h6' sx={{ color: grey[700] }} fontSize='16px'>
         {name}
       </Typography>
@@ -51,6 +79,8 @@ function createParentItems(
   items: INavbarItem[],
   currentLocation: string,
   collapseCallback: (tradKey: LocaleTranslationKeys) => void,
+  buttonChildrenState: boolean,
+  buttonChildrenFn: () => void,
   activeCollapse?: LocaleTranslationKeys | null,
 ): JSX.Element[] {
   return items.map(({ tradKey, url, icon, children, childrenStatus, numNotification }) => {
@@ -85,10 +115,8 @@ function createParentItems(
             </a>
             {childrenStatus === 'success' && children ?
               <Collapse in={shouldCollapse}>
-                <div>
-                  <div className='flex flex-col'>
-                    {createChildItems(children, currentLocation)}
-                  </div>
+                <div className='flex flex-col'>
+                  {createChildItems(children, currentLocation, buttonChildrenState, buttonChildrenFn)}
                 </div>
               </Collapse> : (childrenStatus === 'loading' ? <></> : 
                 childrenStatus === 'error' && (
@@ -128,8 +156,10 @@ export const Sidebar: React.FC = () => {
   const authContext = useAuthContext()
   const listInvitesQ = useListInvites({ recipientAccountId: authContext.accountId })
   const listGroupsQ = useListGroups({ accountId: authContext.accountId })
+  const { formatMessage } = useOurIntl()
   const [activeCollapse, setActiveCollapse] =
-		useState<LocaleTranslationKeys | null>('GENERIC.groups')
+		React.useState<LocaleTranslationKeys | null>('GENERIC.groups')
+  const createGroupQ = useCreateGroup()
 
   const handleCollapseClick = (tradKey: LocaleTranslationKeys): void => {
     setActiveCollapse((oldTradKey) =>
@@ -137,7 +167,9 @@ export const Sidebar: React.FC = () => {
     )
   }
 
-  const navBarContent = useMemo(
+  const buttonCreateGroup: IChildItems = {name: 'button_create_group', url: ''}
+
+  const navBarContent = React.useMemo(
     (): INavbarItem[] => {
       return [{
         tradKey: 'GENERIC.home',
@@ -148,7 +180,7 @@ export const Sidebar: React.FC = () => {
         tradKey: 'GENERIC.groups',
         icon: <Group />,
         url: '/groups',
-        children: listGroupsQ?.data?.groups ? listGroupsQ.data.groups.map((el) => ({name: el.name, url: `/group/${el.id}`})) : [],
+        children: listGroupsQ?.data?.groups ? [...listGroupsQ.data.groups.map((el) => ({name: el.name, url: `/group/${el.id}`})), buttonCreateGroup] : [buttonCreateGroup],
         childrenStatus: listGroupsQ.status,
       },
       {
@@ -166,13 +198,20 @@ export const Sidebar: React.FC = () => {
           : 0
       },]}, [listGroupsQ, listInvitesQ]
   )
-  const menuItems = useMemo(
+  const menuItems = React.useMemo(
     (): JSX.Element => (
       <>
         {createParentItems(
-          navBarContent,
+          navBarContent,  
           location.pathname,
           handleCollapseClick,
+          createGroupQ.isLoading,
+          () => createGroupQ.mutate({
+            body: {
+              name: formatMessage({id: 'GROUP.myGroup'}) as string,
+              description: formatMessage({id: 'GROUP.createdOn'}) as string + new Date().toDateString(),
+            }
+          }),
           activeCollapse,
         )}
       </>

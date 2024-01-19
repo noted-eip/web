@@ -1,5 +1,5 @@
 import React from 'react'
-import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Outlet, useNavigate, useParams } from 'react-router-dom'
 
 import ViewSkeleton from '../../components/view/ViewSkeleton'
 import { useGroupContext } from '../../contexts/group'
@@ -10,8 +10,7 @@ const GroupView: React.FC = () => {
   const groupContext = useGroupContext()
   const navigate = useNavigate()
   const routerParams = useParams()
-  const location = useLocation()
-  const [isLoading, setIsLoading] = React.useState(true)
+  const [isLoading, setIsLoading] =  React.useState(true)
 
   // Synchronises the current group from the local storage
   // and the current group context.
@@ -30,7 +29,7 @@ const GroupView: React.FC = () => {
   }
 
   return (
-    <ViewSkeleton element={<GroupViewMenu activeTab={location.pathname.endsWith('/settings') ? 'settings' : ''} />} panels={['group-activity']}>
+    <ViewSkeleton element={<GroupViewMenu activeTab={location.pathname.endsWith('/settings') ? 'settings' : ''} />} panels={['group-activity', 'quiz-leaderboard']}>
       {groupContext.groupId ? (
         <div className='mx-lg mb-lg w-full xl:mx-xl xl:mb-xl'>
           <Outlet />

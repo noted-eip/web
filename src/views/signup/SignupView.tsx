@@ -15,7 +15,7 @@ import { addAccountToDevelopmentContext, useDevelopmentContext } from '../../con
 import { useNoAuthContext } from '../../contexts/noauth'
 import { useAuthenticate, useAuthenticateGoogle, useCreateAccount } from '../../hooks/api/accounts'
 import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
-import { decodeToken } from '../../lib/api'
+import { beautifyError, decodeToken } from '../../lib/api'
 import { TOGGLE_DEV_FEATURES } from '../../lib/env'
 import { validateEmail, validateName, validatePassword } from '../../lib/validators'
 import { V1AuthenticateGoogleResponse, V1AuthenticateResponse, V1CreateAccountResponse } from '../../protorepo/openapi/typescript-axios'
@@ -26,13 +26,13 @@ const SignupView: React.FC = () => {
   const analytics = getAnalytics()
   const navigate = useNavigate()
   const auth = useNoAuthContext()
-  const [name, setName] = React.useState('')
-  const [nameValid, setNameValid] = React.useState(false)
-  const [email, setEmail] = React.useState('')
-  const [emailValid, setEmailValid] = React.useState(false)
-  const [password, setPassword] = React.useState('')
-  const [passwordValid, setPasswordValid] = React.useState(false)
-  const [showPassword, setShowPassword] = React.useState(false)
+  const [name, setName] =  React.useState('')
+  const [nameValid, setNameValid] =  React.useState(false)
+  const [email, setEmail] =  React.useState('')
+  const [emailValid, setEmailValid] =  React.useState(false)
+  const [password, setPassword] =  React.useState('')
+  const [passwordValid, setPasswordValid] =  React.useState(false)
+  const [showPassword, setShowPassword] =  React.useState(false)
   const developmentContext = useDevelopmentContext()
   const authenticateMutation = useAuthenticate({
     onSuccess: (data: V1AuthenticateResponse) => {
@@ -52,7 +52,7 @@ const SignupView: React.FC = () => {
       }
     },
     onError: (e) => {
-      toast.error(e.response?.data.error as string)
+      toast.error(beautifyError(e.response?.data.error, 'creation', formatMessage))
     }
   })
   const createAccountMutation = useCreateAccount({
@@ -60,7 +60,7 @@ const SignupView: React.FC = () => {
       navigate('/validate_account', {state: {email: data.account.email, password: password}})
     },
     onError: (e) => {
-      toast.error(e.response?.data.error as string)
+      toast.error(beautifyError(e.response?.data.error, 'creation', formatMessage))
     }
   })
   const authenticateGoogleMutation = useAuthenticateGoogle({
@@ -82,7 +82,7 @@ const SignupView: React.FC = () => {
       navigate('/')
     },
     onError: (e) => {
-      toast.error(e.response?.data.error as string)
+      toast.error(beautifyError(e.response?.data.error, 'creation', formatMessage))
     }
   })
   const googleLogin = useGoogleLogin({

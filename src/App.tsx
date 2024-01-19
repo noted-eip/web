@@ -19,14 +19,14 @@ import AuthenticatedRouter from './views/AuthenticatedRouter'
 import UnauthenticatedRouter from './views/UnauthenticatedRouter'
 
 const App: React.FC = () => {
-  const [token, setToken] = React.useState<null | string>(null)
-  const [hasLoaded, setHasLoaded] = React.useState(false)
-  const [accounts, setAccounts] = React.useState<TAccountsMap>(
+  const [token, setToken] =  React.useState<null | string>(null)
+  const [hasLoaded, setHasLoaded] =  React.useState(false)
+  const [accounts, setAccounts] =  React.useState<TAccountsMap>(
     JSON.parse(window.localStorage.getItem(LS_DEVELOPMENT_DATA_KEY) || '{}')
   )
   const noAuthContext = new NoAuthContextManager(setToken)
   const authContext = new AuthContextManager(token, setToken)
-  const [currentLangage, setCurrentLangage] = React.useState<string | null>(
+  const [currentLangage, setCurrentLangage] =  React.useState<string | null>(
     window.localStorage.getItem(LS_LANGAGE) || navigator.language
   )
   const firebaseConfig = {

@@ -17,8 +17,8 @@ const NoteViewHeader: React.FC = () => {
   const noteId = useNoteIdFromUrl()
   const noteQ = useGetNoteInCurrentGroup({ noteId })
   const updateNoteQ = useUpdateNoteInCurrentGroup()
-  const [editor] = React.useState(() => withReact(createEditor()))
-  const [title, setTitle] = React.useState<string | undefined>(noteQ.data?.note.title)
+  const [editor] =  React.useState(() => withReact(createEditor()))
+  const [title, setTitle] =  React.useState<string | undefined>(noteQ.data?.note.title)
   const debouncedTitle = useDebounce<string | undefined>(title, 1000)
 
   React.useEffect(() => {

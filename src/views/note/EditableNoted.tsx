@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import isHotkey from 'is-hotkey'
 import React from 'react'
 import { BaseEditor, Descendant, Editor, Transforms } from 'slate'

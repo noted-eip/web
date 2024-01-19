@@ -7,7 +7,6 @@ import { NotesAPICreateNoteRequest, NotesAPIInsertBlockRequest, V1Block, V1Creat
 import { newNoteCacheKey, newNotesCacheKey } from './cache'
 import { axiosRequestOptionsWithAuthorization, MutationHookOptions, QueryHookOptions } from './helpers'
 
-// TODO: Side Effects
 export type CreateNoteRequest = { body: NotesAPICreateNoteRequest };
 export const useCreateNoteInCurrentGroup = (options?: MutationHookOptions<CreateNoteRequest, V1CreateNoteResponse>) => {
   const authContext = useAuthContext()
@@ -15,7 +14,6 @@ export const useCreateNoteInCurrentGroup = (options?: MutationHookOptions<Create
 
   return useMutation({
     mutationFn: async (req: CreateNoteRequest) => {
-      // TODO: make it possible to change the language with a dropdown on the note ?
       req.body.lang = 'fr'
       return (await openapiClient.notesAPICreateNote(groupContext.groupId as string, req.body, await axiosRequestOptionsWithAuthorization(authContext))).data
     },
@@ -45,20 +43,6 @@ export const useListNotesInCurrentGroup = (req: ListNotesInCurrentGroupRequest, 
   })
 }
 
-/*
-export const useGetCurrentNote = (options?: QueryHookOptions<GetGroupRequest, V1GetGroupResponse>) => {
-  const groupContext = useGroupContext()
-  return useGetGroup({groupId: groupContext.groupId as string}, {
-    ...options,
-    // If no access to the group, switch group.
-    onError: (error) => {
-      groupContext.changeGroup(null)
-      if (options?.onError) options.onError(error)
-    }
-  })
-}
-*/
-
 export type GetNoteInCurrentGroupRequest = { noteId: string }
 export const useGetNoteInCurrentGroup = (req: GetNoteInCurrentGroupRequest, options?: QueryHookOptions<GetNoteInCurrentGroupRequest, V1GetNoteResponse>) => {
   const authContext = useAuthContext()
@@ -83,7 +67,7 @@ export const useListNotes = (req: ListNotesRequest, options?: QueryHookOptions<L
   return useQuery({
     queryKey: queryKey,
     queryFn: async () => {
-      return (await openapiClient.notesAPIListNotes(req.groupId, req.authorAccountId, req.limit, req.offset, await axiosRequestOptionsWithAuthorization(authContext))).data
+      return (await openapiClient.notesAPIListNotes2('', req.authorAccountId, req.limit, req.offset, await axiosRequestOptionsWithAuthorization(authContext))).data
     },
     ...options,
   })
@@ -182,7 +166,6 @@ export const useUpdateNoteInCurrentGroup = (options?: MutationHookOptions<Update
   const currentGroupId = groupContext.groupId as string
 
   return useMutation(async (req: UpdateNoteInCurrentGroup) => {
-    console.log(req.body)
     return (await openapiClient.notesAPIUpdateNote(currentGroupId, req.noteId, req.body, await axiosRequestOptionsWithAuthorization(authContext))).data
   },
   {

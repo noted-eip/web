@@ -1,7 +1,8 @@
 import { Button,Stack, TextField, Typography } from '@mui/material'
 import { getAnalytics, logEvent } from 'firebase/analytics'
-import React, { RefObject, useEffect, useRef, useState } from 'react'
+import React, { RefObject } from 'react'
 import toast from 'react-hot-toast'
+import { FormattedMessage } from 'react-intl'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import Notification from '../../components/notification/Notification'
@@ -10,7 +11,7 @@ import { addAccountToDevelopmentContext, useDevelopmentContext } from '../../con
 import { useNoAuthContext } from '../../contexts/noauth'
 import { useAuthenticate, useSendValidationToken, useValidateAccount, ValidateAccountRequest } from '../../hooks/api/accounts'
 import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
-import { decodeToken } from '../../lib/api'
+import { beautifyError, decodeToken } from '../../lib/api'
 import { TOGGLE_DEV_FEATURES } from '../../lib/env'
 import { V1AuthenticateResponse } from '../../protorepo/openapi/typescript-axios'
 
@@ -19,12 +20,12 @@ const ValidateAccountView: React.FC = () => {
   const navigate = useNavigate()
   const auth = useNoAuthContext()
   const location = useLocation()
-  const [isEmailResend, setIsEmailResend] = React.useState(false)
+  const [isEmailResend, setIsEmailResend] =  React.useState(false)
 
   const { formatMessage } = useOurIntl()
   const { email, password } = location.state as { email: string, password: string }
-  const [codes, setCodes] = useState(['', '', '', ''])
-  const inputRefs = useRef<Array<RefObject<HTMLInputElement>>>(Array(4).fill(null).map(() => React.createRef()))
+  const [codes, setCodes] = React.useState(['', '', '', ''])
+  const inputRefs = React.useRef<Array<RefObject<HTMLInputElement>>>(Array(4).fill(null).map(() => React.createRef()))
   
   const handleChange = (index: number, value: string) => {
     const newCodes = [...codes]
@@ -64,7 +65,7 @@ const ValidateAccountView: React.FC = () => {
       navigate('/')
     },
     onError: (e) => {
-      toast.error(e.response?.data.error as string)
+      toast.error(beautifyError(e.response?.data.error, 'validation', formatMessage))
     }
   })
 
@@ -72,15 +73,14 @@ const ValidateAccountView: React.FC = () => {
     onSuccess: () => {
       authenticateMutation.mutate({ body: { email, password } })
     },
-    onError: () => {
-      // TODO: oui ca poiurrai etre une autre erreur peut etre
-      toast.error(formatMessage({ id: 'RESETPWD.Token.badToken' }) as string)
+    onError: (e) => {
+      toast.error(beautifyError(e.response?.data.error, 'validation', formatMessage))
       setCodes(['', '', '', ''])
       inputRefs.current.map((e) => {e.current?.blur()})
     },
   })
 
-  useEffect(() => {
+  React.useEffect(() => {
     const areAllNumbers = codes.every((element) => !isNaN(parseFloat(element)) && typeof parseFloat(element) === 'number')
 
     if (areAllNumbers) {
@@ -132,12 +132,12 @@ const ValidateAccountView: React.FC = () => {
                 setIsEmailResend(true)
               }}
             >
-              {formatMessage({ id: 'VALIDATION.resend_link' })}
+              <FormattedMessage id='VALIDATION.resend_link' />
             </Button>
           </Typography>
           {isEmailResend && 
            <Typography variant='body2' align='center' color='primary' mt={2}>
-             {formatMessage({ id: 'RESETPWD.Token.tokenResend' })}
+             <FormattedMessage id='RESETPWD.Token.tokenResend' />
            </Typography>
           }
         </Stack>

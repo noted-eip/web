@@ -17,13 +17,13 @@ import { validatePassword } from '../../lib/validators'
 const ResetPasswordPassword: React.FC = () => {
   const navigate = useNavigate()
   const resetPasswordContext = useResetPasswordContext()
-  const [password, setPassword] = React.useState('')
-  const [passwordValid, setPasswordValid] = React.useState(false)
-  const [showPassword, setShowPassword] = React.useState(false)
-  const [confirmPassword, setConfirmPassword] = React.useState('')
-  const [isResetPasswordValid, ] = React.useState(resetPasswordContext.account?.account_id !== null 
+  const [password, setPassword] =  React.useState('')
+  const [passwordValid, setPasswordValid] =  React.useState(false)
+  const [showPassword, setShowPassword] =  React.useState(false)
+  const [confirmPassword, setConfirmPassword] =  React.useState('')
+  const [isResetPasswordValid, ] =  React.useState(resetPasswordContext.account?.account_id !== null 
     || resetPasswordContext.account?.auth_token !== null || resetPasswordContext.account?.reset_token !== null)
-  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] =  React.useState(false)
   const updateAccountMutation = useUpdateAccountPassword({
     onSuccess: () => {
       resetPasswordContext.changeResetPassword(null)

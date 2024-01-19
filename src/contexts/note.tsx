@@ -2,7 +2,7 @@ import React from 'react'
 
 import { SlateText } from '../lib/editor'
 
-type BlockContext = {
+export type BlockContext = {
   id: string
   type: string
   children: SlateText[]
@@ -18,7 +18,7 @@ interface TNoteContext {
 
 const NoteContext = React.createContext<TNoteContext | undefined>(undefined)
 
-const useNoteContext = () => {
+export const useNoteContext = () => {
   const context = React.useContext(NoteContext)
   if (context === undefined) {
     throw new Error('NoteContext used outside of provider')
@@ -30,7 +30,7 @@ const TNoteContextProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
     
-  const [blocks, setBlocks] = React.useState<BlockContext[]>([])
+  const [blocks, setBlocks] =  React.useState<BlockContext[]>([])
 
   const clearBlocksContext = () =>
   {
@@ -49,7 +49,5 @@ const TNoteContextProvider: React.FC<React.PropsWithChildren> = ({
     </NoteContext.Provider>
   )
 }
-  
-export type { BlockContext }
-export { useNoteContext }
+
 export default TNoteContextProvider

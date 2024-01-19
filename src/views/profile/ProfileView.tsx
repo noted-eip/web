@@ -13,10 +13,12 @@ import MenuItem from '@mui/material/MenuItem'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { getAnalytics, logEvent } from 'firebase/analytics'
-import React, { useState } from 'react'
+import React from 'react'
+import toast from 'react-hot-toast'
 
 import LoaderIcon from '../../components/icons/LoaderIcon'
 import { StyledMenu } from '../../components/Menu/StyledMenu'
+import Notification from '../../components/notification/Notification'
 import ConfirmationPanel from '../../components/pop-up/confirmation-panel'
 import ViewSkeleton from '../../components/view/ViewSkeleton'
 import { useAuthContext } from '../../contexts/auth'
@@ -31,8 +33,8 @@ import { V1Account, V1GroupInvite } from '../../protorepo/openapi/typescript-axi
 
 const ProfileViewAccountSection: React.FC = () => {
   const authContext = useAuthContext()
-  const [editName, setEditName] = React.useState(false)
-  const [newName, setNewName] = React.useState<string | undefined>(undefined)
+  const [editName, setEditName] =  React.useState(false)
+  const [newName, setNewName] =  React.useState<string | undefined>(undefined)
   const updateAccountQ = useUpdateMyAccount()
   const getAccountQ = useGetAccount({accountId: authContext.accountId})
   const newNameInputRef = React.createRef<HTMLInputElement>()
@@ -65,7 +67,7 @@ const ProfileViewAccountSection: React.FC = () => {
         </div>
         <div className='flex flex-col'>
           {getAccountQ.isSuccess ? (
-            <React.Fragment>
+            <>
               <div
                 className='group flex h-8 cursor-pointer items-center'
                 onClick={() => {
@@ -85,21 +87,21 @@ const ProfileViewAccountSection: React.FC = () => {
                     <button type='submit' />
                   </form>
                 ) : (
-                  <React.Fragment>
+                  <>
                     <p className='font-medium'>{getAccountQ.data?.account.name}</p>
                     <PencilIcon className='ml-2 hidden h-4 w-4 stroke-2 text-gray-400 group-hover:block' />
-                  </React.Fragment>
+                  </>
                 )}
               </div>
               <div>
                 <p className='text-gray-700'>{getAccountQ?.data.account.email}</p>
               </div>
-            </React.Fragment>
+            </>
           ) : (
-            <React.Fragment>
+            <>
               <div className='skeleton h-4 w-48'></div>
               <div className='skeleton mt-4 h-4 w-64'></div>
-            </React.Fragment>
+            </>
           )}
         </div>
       </div>
@@ -120,7 +122,7 @@ const InviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
     })
   }
   return (
-    <div className='my-2 grid h-12 grid-cols-3'>
+    <div className='my-2 grid h-12 grid-cols-6'>
       <div className='flex items-center'>
         <div className='h-9 w-9 rounded-md bg-gradient-to-br from-orange-300 to-red-300' />
         <div className='pl-3 text-sm font-medium text-gray-800'>
@@ -131,14 +133,16 @@ const InviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
           )}
         </div>
       </div>
-      <div className='flex items-center text-sm'>
+      <div className='col-start-2 col-end-4 flex items-center text-sm'>
         {getGroupQ.isSuccess ? (
-          <p className='text-sm text-gray-500'>{getGroupQ.data.group.description}</p>
+          <div className='my-4 text-center text-sm text-gray-400'>
+            {getGroupQ.data.group.description}
+          </div>
         ) : (
           <div className='skeleton h-4 w-48' />
         )}
       </div>
-      <div className='flex items-center justify-end'>
+      <div className='col-start-6 flex items-center justify-end'>
         {getGroupQ.isSuccess && (
           <Stack direction='row' spacing={2}>
             <Button 
@@ -150,7 +154,7 @@ const InviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
                 denyInviteQ.isLoading ?
                   <LoaderIcon className='h-5 w-5' />
                   :
-                  <ClearIcon color='error' />
+                  <ClearIcon style={{ color: '#d32f2f' }} />
               }
             >
               <FormatMessage id='PROFILE.invite.deny' />              
@@ -164,7 +168,7 @@ const InviteListItem: React.FC<{ invite: V1GroupInvite }> = (props) => {
                 acceptInviteQ.isLoading ?
                   <LoaderIcon className='h-5 w-5' />
                   :
-                  <CheckIcon color='success' />
+                  <CheckIcon style={{ color: 'green' }} />
               }
             >
               <FormatMessage id='PROFILE.invite.accept' />            
@@ -218,7 +222,7 @@ const ProfileViewPendingInvitesSection: React.FC = () => {
 const ProfileChangeLangage: React.FC = () => {
   const context = React.useContext(LangageContext)
   const analytics = getAnalytics()
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const [anchorEl, setAnchorEl] =  React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
@@ -302,7 +306,9 @@ const ProfileViewFeedbackSection: React.FC = () => {
           <FormatMessage id='PROFILE.feedback.desc' />
         </Typography>
         <div className='flex items-center justify-end'>
-          <Button variant='outlined'>
+          <Button variant='outlined'
+            onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSdkkpJ6Y_sXB74Hpr1kXHVn2nQF37ktCVX7vtdUTUnJhfWsZw/viewform?usp=pp_url&entry.368849087=Compr%C3%A9hensible&entry.708712048=Bien&entry.1430431403=Bien&entry.402690215=Tr%C3%A8s+utile&entry.1070466955=Oui', '_blank')}
+          >
             <FormatMessage id='PROFILE.feedback.button' />
           </Button>
         </div>
@@ -313,7 +319,7 @@ const ProfileViewFeedbackSection: React.FC = () => {
 
 const ProfileViewDangerZoneSection: React.FC = () => {
   const deleteAccountQ = useDeleteMyAccount()
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] =  React.useState(false)
 
   const handleOpen = () => {
     setOpen(true)
@@ -323,9 +329,8 @@ const ProfileViewDangerZoneSection: React.FC = () => {
     deleteAccountQ.mutate(undefined)
   }
 
-
   return (
-    <React.Fragment>
+    <>
       {open ? <ConfirmationPanel onValidate={onValidate} title='PROFILE.delete.title2' content='PROFILE.delete.desc'/> : null}
       <div className='mt-4 w-full rounded-md border border-gray-100 bg-gray-50'>
         {/* Header */}
@@ -353,7 +358,7 @@ const ProfileViewDangerZoneSection: React.FC = () => {
           </div>
         </div>
       </div>
-    </React.Fragment>
+    </>
   )
 }
 
@@ -361,8 +366,16 @@ const ProfileViewBetaSection: React.FC = () => {
   const { formatMessage } = useOurIntl()
   const authContext = useAuthContext()
   const getAccountQ = useGetAccount({accountId: authContext.accountId})
-  const [sent, setSent] = useState(false)
-  const registerToMobileBetaQ = useRegisterToMobileBeta()
+  const [sent, setSent] = React.useState(false)
+  const registerToMobileBetaQ = useRegisterToMobileBeta({
+    onSuccess: () => {
+      setSent(true)
+      toast.success(formatMessage({id: 'PROFIILE.beta'}))
+    },
+    onError: (e) => {
+      toast.error(e.cause?.message || 'error sending beta invite')
+    }
+  })
 
   return (
     <div className='relative mt-4 w-full rounded-md border border-gray-100 bg-gray-50'>
@@ -391,111 +404,23 @@ const ProfileViewBetaSection: React.FC = () => {
           </Typography>
         </div>
         <div className='flex items-center justify-end'>
-          {getAccountQ.isSuccess ? (getAccountQ.data?.account.isInMobileBeta === false ? (
+          {getAccountQ.isSuccess  ? (getAccountQ.data?.account.isInMobileBeta === false && !sent ? (
             <Button variant='outlined'
               onClick={() => {
                 registerToMobileBetaQ.mutate(undefined)
-                setSent(true)
               }}
             >
               <FormatMessage id='PROFILE.beta.button' />
             </Button>
           ) : (sent ? formatMessage({id: 'PROFILE.beta.buttonResTrue'}) : formatMessage({id: 'PROFILE.beta.buttonResFalse'}))) :             
-            (<React.Fragment>
-              <div className='skeleton h-8 w-24'></div>
-            </React.Fragment>)
+            <div className='skeleton h-8 w-24'></div>
           }
         </div>
       </div>
+      <Notification />
     </div>
   )
 }
-
-// TODO: ca branle quoi la
-// function hrefFunction() {
-//   window.open('https://docs.google.com/forms/d/e/1FAIpQLSdkkpJ6Y_sXB74Hpr1kXHVn2nQF37ktCVX7vtdUTUnJhfWsZw/viewform?usp=pp_url&entry.368849087=Compr%C3%A9hensible&entry.708712048=Bien&entry.1430431403=Bien&entry.402690215=Tr%C3%A8s+utile&entry.1070466955=Oui', '_blank')
-// }
-// TODO: est ce que ya eu des modifs dedans ouuuu ?
-// const ProfileChangeLangage: React.FC = () => {
-//   const context = React.useContext(LangageContext)
-//   const analytics = getAnalytics()
-
-//   if (!TOGGLE_DEV_FEATURES) {
-//     logEvent(analytics, 'page_view', {
-//       page_title: 'settings'
-//     })
-//   }
-//   function classNames(...classes) {
-//     return classes.filter(Boolean).join(' ')
-//   }
-
-//   return (
-//     <div className='relative mt-4 w-full rounded-md border border-gray-100 bg-gray-50'>
-//       {/* Header */}
-//       <div className='flex items-center justify-between border-b border-[#efefef] p-5'>
-//         <div className='flex items-center'>
-//           <CodeBracketIcon className='mr-2 h-5 w-5 text-gray-600' />
-//           <p className='text-base font-medium text-gray-600'>
-//             <FormatMessage id='SETTINGS.langage.title' />
-//           </p>
-//         </div>
-//       </div>
-//       <div className='grid grid-cols-[40%_60%] p-5'>
-//         <div className='relative inline-block text-left'>
-//           <Menu as='div' className='relative inline-block text-left'>
-//             <div>
-//               <Menu.Button className='inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50'>
-//                 <FormatMessage id='SETTINGS.langage.options' />
-//                 <ChevronDownIcon className='-mr-1 h-5 w-5 text-gray-400' aria-hidden='true' />
-//               </Menu.Button>
-//             </div>
-//             <Transition
-//               as={Fragment}
-//               enter='transition ease-out duration-100'
-//               enterFrom='transform opacity-0 scale-95'
-//               enterTo='transform opacity-100 scale-100'
-//               leave='transition ease-in duration-75'
-//               leaveFrom='transform opacity-100 scale-100'
-//               leaveTo='transform opacity-0 scale-95'
-//             >
-//               <Menu.Items className='absolute left-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black focus:outline-none'>
-//                 <div className='py-1'>
-//                   <Menu.Item>
-//                     {({ active }) => (
-//                       <a
-//                         className={classNames(
-//                           active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-//                           'block px-4 py-2 text-sm'
-//                         )}
-//                         onClick={() => {context?.changeLangage('fr')}}
-//                       >
-//                         <FormatMessage id='SETTINGS.langage.french' />
-//                       </a>
-//                     )}
-//                   </Menu.Item>
-//                   <Menu.Item>
-//                     {({ active }) => (
-//                       <a
-//                         className={classNames(
-//                           active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-//                           'block px-4 py-2 text-sm'
-//                         )}
-//                         onClick={() => {context?.changeLangage('en')}}
-//                       >
-//                         <FormatMessage id='SETTINGS.langage.english' />
-//                       </a>
-//                     )}
-//                   </Menu.Item>
-//                 </div>
-//               </Menu.Items>
-//             </Transition>
-//           </Menu>
-//         </div>
-//       </div>
-//     </div>
-//   )
-// }
-
 
 const ProfileView: React.FC = () => {
   const { formatMessage } = useOurIntl()

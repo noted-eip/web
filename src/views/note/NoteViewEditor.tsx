@@ -5,6 +5,7 @@ import {noteAPIToContextBlocks} from '../../lib/editor'
 import { V1Note } from '../../protorepo/openapi/typescript-axios'
 import { BlockEditorItem } from './BlockEditorItem'
 
+
 const NoteViewEditor: React.FC<{ note: V1Note }> = ({ note }) => {
   
   const { blocks, setBlocks } = useNoteContext()
