@@ -28,7 +28,6 @@ const HeaderLanding: React.FC = () => {
                 </div>
                 <span className='text-2xl font-bold text-gray-900'>Noted</span>
               </a>
-
               <div className='relative flex max-h-10 items-center lg:hidden'>
                 <label role='button' htmlFor='toggle_nav' aria-label='humburger' id='hamburger' className='relative  -mr-6 p-6'>
                   <div aria-hidden='true' id='line' className='m-auto h-0.5 w-5 rounded bg-sky-900 transition duration-300'/>
