@@ -4,12 +4,13 @@ import { Outlet, useNavigate, useParams } from 'react-router-dom'
 import ViewSkeleton from '../../components/view/ViewSkeleton'
 import { useGroupContext } from '../../contexts/group'
 import GroupViewEmptyState from './GroupViewEmptyState'
+import GroupViewMenu from './GroupViewMenu'
 
 const GroupView: React.FC = () => {
   const groupContext = useGroupContext()
   const navigate = useNavigate()
   const routerParams = useParams()
-  const [isLoading, setIsLoading] = React.useState(true)
+  const [isLoading, setIsLoading] =  React.useState(true)
 
   // Synchronises the current group from the local storage
   // and the current group context.
@@ -28,7 +29,7 @@ const GroupView: React.FC = () => {
   }
 
   return (
-    <ViewSkeleton title='Home' panels={['group-chat', 'group-activity']}>
+    <ViewSkeleton element={<GroupViewMenu activeTab={location.pathname.endsWith('/settings') ? 'settings' : ''} />} panels={['group-activity', 'quiz-leaderboard']}>
       {groupContext.groupId ? (
         <div className='mx-lg mb-lg w-full xl:mx-xl xl:mb-xl'>
           <Outlet />

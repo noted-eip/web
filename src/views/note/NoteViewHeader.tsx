@@ -6,7 +6,7 @@ import { useDebounce } from 'usehooks-ts'
 import EditorTitleElement from '../../components/editor/EditorTitleElement'
 import { useGetNoteInCurrentGroup, useUpdateNoteInCurrentGroup } from '../../hooks/api/notes'
 import { useNoteIdFromUrl } from '../../hooks/url'
-import { NoteTitleElement } from '../../lib/editor'
+import { ColorStyle, defaultBgColor, defaultTextColor, NoteTitleElement, TextStyle } from '../../lib/editor'
 import { V1Note } from '../../protorepo/openapi/typescript-axios'
 
 const renderElement = (props: RenderElementProps) => {
@@ -17,8 +17,8 @@ const NoteViewHeader: React.FC = () => {
   const noteId = useNoteIdFromUrl()
   const noteQ = useGetNoteInCurrentGroup({ noteId })
   const updateNoteQ = useUpdateNoteInCurrentGroup()
-  const [editor] = React.useState(() => withReact(createEditor()))
-  const [title, setTitle] = React.useState<string | undefined>(noteQ.data?.note.title)
+  const [editor] =  React.useState(() => withReact(createEditor()))
+  const [title, setTitle] =  React.useState<string | undefined>(noteQ.data?.note.title)
   const debouncedTitle = useDebounce<string | undefined>(title, 1000)
 
   React.useEffect(() => {
@@ -57,7 +57,15 @@ const NoteViewHeader: React.FC = () => {
         value={[
           {
             type: 'TYPE_PARAGRAPH',
-            children: [{ text: noteQ.data.note.title }],
+            children: [
+              { 
+                text: noteQ.data.note.title, 
+                bold: { state: false } as TextStyle, 
+                italic: { state: false } as TextStyle, 
+                underline: { state: false } as TextStyle, 
+                color: { color: defaultTextColor } as ColorStyle, 
+                bgColor: { color: defaultBgColor } as ColorStyle 
+              }]
           },
         ]} >
         <Editable

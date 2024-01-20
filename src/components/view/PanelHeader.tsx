@@ -1,14 +1,24 @@
 import React from 'react'
 
 import { usePanelContext } from '../../contexts/panel'
+import { FormatMessage } from '../../i18n/TextComponent'
+import { LocaleTranslationKeys } from '../../i18n/types'
 import { panelMetadata } from '../../lib/panels'
+import RecommendationFilters from '../../views/recommendation/Filters'
 
 const PanelHeader: React.FC = () => {
   const { activePanel, setActivePanel, panels } = usePanelContext()
+  const recoPanelOn = panels.some(panel => {
+    if (panel == 'note-recommendations') {
+      return true
+    }
+    return false
+  })
 
   return (
     <div className='mt-xl flex h-[36px] min-h-[36px] items-center justify-around lg:mx-lg lg:mb-lg xl:mx-xl xl:mb-xl'>
       {panels.map((panelKey, idx) => {
+        // console.log(panelKey)
         const md = panelMetadata[panelKey]
         return (
           <div
@@ -23,15 +33,26 @@ const PanelHeader: React.FC = () => {
               onClick={() => setActivePanel(panelKey)}
             >
               <md.icon
-                className={`mr-2 h-3 w-3 text-gray-500 ${
+                className={`${panels.length <= 3 && 'mr-2 h-3'} w-3 text-gray-500 ${
                   activePanel === panelKey && '!text-purple-700'
                 }`}
               />
-              <span className='text-xs'>{md.displayName}</span>
+              {
+                panels.length <= 3 && 
+                <span className='text-xs'>
+                  <FormatMessage id={md.displayName as LocaleTranslationKeys || '-'} />
+                </span>
+              }
             </div>
           </div>
         )
       })}
+      {
+        recoPanelOn ? 
+          <RecommendationFilters/> : 
+          null
+      }
+      
     </div>
   )
 }

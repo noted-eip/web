@@ -61,6 +61,15 @@ export const newWidgetsCacheKey = (groupId: string, noteId: string) => {
   return ['groups/note/widgets', groupId, noteId]
 }
 
+export const newQuizsCacheKey = (groupId: string, noteId: string) => {
+  return ['groups/note/quizs', groupId, noteId]
+}
+
 export const newWikipediaImageCacheKey = (imageUrl: string) => {
   return ['groups/note/widgets/wikipedia/img', imageUrl]
+}
+
+
+export const newBlockCommentCacheKey = (groupId: string, noteId: string, blockId: string) => {
+  return ['groups/note/blocks/comments', groupId, noteId, blockId]
 }

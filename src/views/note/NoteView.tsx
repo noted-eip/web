@@ -1,11 +1,18 @@
+import { getAnalytics, logEvent } from 'firebase/analytics'
 import React from 'react'
 
 import ViewSkeleton from '../../components/view/ViewSkeleton'
+import { useAuthContext } from '../../contexts/auth'
+import { TPanelKey } from '../../contexts/panel'
+import {  useGetGroup } from '../../hooks/api/groups'
+import { axiosRequestOptionsWithAuthorization } from '../../hooks/api/helpers'
 import { useGetNoteInCurrentGroup } from '../../hooks/api/notes'
-import { useNoteIdFromUrl } from '../../hooks/url'
-import NoteViewMetadataHeader from './NoteMetadataHeader'
+import { useGroupIdFromUrl, useNoteIdFromUrl } from '../../hooks/url'
+import { TOGGLE_DEV_FEATURES } from '../../lib/env'
+import {NoteViewMetadataHeader} from './NoteMetadataHeader'
 import NoteViewEditor from './NoteViewEditor'
 import NoteViewHeader from './NoteViewHeader'
+
 
 function editorLoadingSkeleton(): React.ReactElement<unknown, string> | null {
   return <div className='m-lg grid gap-2 opacity-50 xl:m-xl'>
@@ -21,20 +28,52 @@ function editorLoadingSkeleton(): React.ReactElement<unknown, string> | null {
 }
 
 const NoteView: React.FC = () => {
+  const analytics = getAnalytics()
   const noteId = useNoteIdFromUrl()
   const noteQuery = useGetNoteInCurrentGroup({ noteId })
+  const [isLoading, setIsLoading] = React.useState(true)
+  const group = useGetGroup({groupId: useGroupIdFromUrl()})
 
-  return <ViewSkeleton titleElement={<NoteViewHeader />} panels={['group-chat', 'group-activity', 'note-recommendations']}>
-    <div className='w-full'>
-      <NoteViewMetadataHeader />
-      {
-        noteQuery.data ?
-          <NoteViewEditor note={noteQuery.data.note} />
-          :
-          editorLoadingSkeleton()
+
+  const authContext = useAuthContext()
+  React.useEffect(() => {
+    const res = axiosRequestOptionsWithAuthorization(authContext)
+  }, [])
+
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await noteQuery.refetch()
+        setIsLoading(false)
+      } catch (error) {
+        console.error('Error fetching data:', error)
       }
-    </div>
-  </ViewSkeleton>
+    }
+
+    fetchData()
+  }, [noteId])
+
+  if (!TOGGLE_DEV_FEATURES) {
+    logEvent(analytics, 'page_view', {
+      page_title: 'note_page'
+    })
+  }
+
+  const panelKeys: TPanelKey[] = ['group-activity', 'note-recommendations', 'note-quizs']
+  return (
+    <ViewSkeleton titleElement={<NoteViewHeader />} panels={panelKeys.concat((group.isLoading == true || ((group.data?.group.workspaceAccountId?.length ?? 0) > 0)) ? [] : ['block-comments'])}>
+      <div className='w-full'>
+        <NoteViewMetadataHeader />
+        <div className='p-2'/>
+        {isLoading ? (
+          editorLoadingSkeleton()
+        ) : (
+          noteQuery.data && <NoteViewEditor note={noteQuery.data.note} />
+        )}
+      </div>
+    </ViewSkeleton>
+  )
 }
 
 export default NoteView

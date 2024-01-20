@@ -1,19 +1,33 @@
+import { VisibilityOffOutlined, VisibilityOutlined } from '@mui/icons-material'
+import { FormControl, FormHelperText, IconButton,InputAdornment, InputLabel, OutlinedInput, TextField, Typography } from '@mui/material'
+import { FormControlLabel } from '@mui/material'
+import Button from '@mui/material/Button'
+import Checkbox from '@mui/material/Checkbox'
+import Stack from '@mui/material/Stack'
 import { useGoogleLogin } from '@react-oauth/google'
+import { getAnalytics, logEvent } from 'firebase/analytics'
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-hot-toast'
+import { Link, useNavigate } from 'react-router-dom'
 
-import ContainerMd from '../../components/container/ContainerMd'
-import OldInput from '../../components/form/OldInput'
+import GoogleIcon from '../../components/icons/GoogleIcon'
 import Modals from '../../components/modals/Modal'
+import Notification from '../../components/notification/Notification'
+import Authentication from '../../components/view/Authentication'
 import { addAccountToDevelopmentContext, useDevelopmentContext } from '../../contexts/dev'
 import { useNoAuthContext } from '../../contexts/noauth'
 import { useAuthenticate, useAuthenticateGoogle, useCreateAccount } from '../../hooks/api/accounts'
 import { useModal } from '../../hooks/modals'
-import { decodeToken } from '../../lib/api'
+import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
+import { beautifyError, decodeToken } from '../../lib/api'
+import { TOGGLE_DEV_FEATURES } from '../../lib/env'
 import { validateEmail, validateName, validatePassword } from '../../lib/validators'
-import { V1AuthenticateGoogleResponse, V1AuthenticateResponse } from '../../protorepo/openapi/typescript-axios'
+import { V1AuthenticateGoogleResponse, V1AuthenticateResponse, V1CreateAccountResponse } from '../../protorepo/openapi/typescript-axios'
 
 const SignupView: React.FC = () => {
+
+  const { formatMessage } = useOurIntl()
+  const analytics = getAnalytics()
   const navigate = useNavigate()
   const auth = useNoAuthContext()
   const {isShown, toggle} = useModal()
@@ -25,7 +39,7 @@ const SignupView: React.FC = () => {
   const [email, setEmail] = React.useState('')
   const [emailValid, setEmailValid] = React.useState(false)
   const [cguIsChecked, setCguIsChecked] = React.useState(false)
-
+  const [showPassword, setShowPassword] =  React.useState(false)
   const developmentContext = useDevelopmentContext()
   const authenticateMutation = useAuthenticate({
     onSuccess: (data: V1AuthenticateResponse) => {
@@ -38,13 +52,23 @@ const SignupView: React.FC = () => {
         )
       }
       auth.signin(data.token)
-      navigate('/')
+      if (!TOGGLE_DEV_FEATURES) {
+        logEvent(analytics, 'sign_up', {
+          method: 'mail'
+        })
+      }
     },
+    onError: (e) => {
+      toast.error(beautifyError(e.response?.data.error, 'creation', formatMessage))
+    }
   })
   const createAccountMutation = useCreateAccount({
-    onSuccess: () => {
-      authenticateMutation.mutate({body: {email, password}})
+    onSuccess: (data: V1CreateAccountResponse) => {
+      navigate('/va lidate_account', {state: {email: data.account.email, password: password}})
     },
+    onError: (e) => {
+      toast.error(beautifyError(e.response?.data.error, 'creation', formatMessage))
+    }
   })
   const authenticateGoogleMutation = useAuthenticateGoogle({
     onSuccess: (data: V1AuthenticateGoogleResponse) => {
@@ -57,115 +81,176 @@ const SignupView: React.FC = () => {
         )
       }
       auth.signin(data.token)
+      if (!TOGGLE_DEV_FEATURES) {
+        logEvent(analytics, 'sign_up', {
+          method: 'google'
+        })
+      }
       navigate('/')
     },
+    onError: (e) => {
+      toast.error(beautifyError(e.response?.data.error, 'creation', formatMessage))
+    }
   })
   const googleLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => {
       authenticateGoogleMutation.mutate({body: {clientAccessToken: tokenResponse.access_token}})
-    },
+    }
   })
 
   const formIsValid = () => {
     return nameValid && passwordValid && emailValid && cguIsChecked
   }
+  
+  const handleClickShowPassword = () => setShowPassword((show) => !show)
+
+  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault()
+  }
 
   return (
-    <div className='flex h-screen w-screen items-center justify-center'>
+    <Authentication animName='login'>
       <form
-        className='grid basis-1/2 grid-cols-1 gap-2'
         onSubmit={(e) => {
           e.preventDefault()
           createAccountMutation.mutate({body: {name, email, password}}, )
         }}
       >
-        <ContainerMd>
-          <h2 className='mb-4 text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl'>
-              Create an account
-          </h2>
-          <OldInput
-            label='Name'
+        <Stack direction='column' spacing={2}>
+          <Typography variant='h4' align='center' fontWeight='bold'>
+            <FormatMessage id='SIGNUP.title' />
+          </Typography>
+          <TextField
+            id='outlined-name-input'
+            label={formatMessage({ id: 'GENERIC.name' })}
+            type='name'
             value={name}
             onChange={(e) => {
               const val = e.target.value as string
               setName(val)
               setNameValid(validateName(val) === undefined)
             }}
-            isInvalidBlur={!nameValid}
-            errorMessage='Invalid name'
+            onBlur={() => {
+              setNameValid(validateName(name) === undefined)
+            }}
+            error={!nameValid && name.length != 0}
+            helperText={(!nameValid && name.length != 0) && 'name must be 4'}
           />
-          <OldInput
-            label='Email'
+          <TextField
+            id='outlined-email-input'
+            label={formatMessage({ id: 'AUTH.email' })}
+            type='email'
             value={email}
             onChange={(e) => {
               const val = e.target.value as string
               setEmail(val)
-              setEmailValid(validateEmail(val) === undefined)
-            }}
-            isInvalidBlur={!emailValid}
-            errorMessage='Invalid email address'
-          />
-          <OldInput
-            label='Password'
-            type='password'
-            tooltip='6 characters, letters numbers and symbols'
-            value={password}
-            onChange={(e) => {
-              const val = e.target.value as string
-              setPassword(val)
-              setPasswordValid(validatePassword(val) === undefined)
-            }}
-            isInvalidBlur={!passwordValid}
-          />
-          <div className='flex items-center my-2'>
-            <input type='checkbox' onChange={() => setCguIsChecked((prev) => !prev)}  className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'/>
-            <label className='ml-4 text-sm font-medium text-gray-900 dark:text-gray-300'>I agree with the <button onClick={toggle} type='button' className='text-blue-600 dark:text-blue-500 hover:underline'>terms and conditions</button>.</label>
-          </div>
-          <Modals headerText='Terms of Service' isShown={isShown} hide={toggle}/>
-
-          <button
-            className='my-2 w-full rounded-lg bg-blue-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:bg-gray-600 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
-            disabled={
-              !formIsValid() ||
-            authenticateMutation.isLoading ||
-            createAccountMutation.isLoading
+              setEmailValid(validateEmail(val) === undefined)}
             }
+            onBlur={() => {
+              setEmailValid(validateEmail(email) === undefined)
+            }}
+            error={!emailValid && email.length != 0}
+            helperText={(!emailValid && email.length != 0) && formatMessage({ id: 'AUTH.error.email' })}
+          />
+          <FormControl
+            error={!passwordValid && password.length != 0}
           >
-          Submit
-          </button>
-          <div style={{cursor: 'pointer'}} className='flex items-center justify-center rounded border border-gray-500 bg-white px-3 py-2 text-sm font-medium text-gray-800 dark:border-gray-500 dark:bg-gray-400'
-            onClick={() => googleLogin()}>
-            <p className='mr-2 dark:text-gray-400'>Sign up with Google</p>
-            <svg
-              className='h-5 w-5'
-              xmlns='http://www.w3.org/2000/svg'
-              viewBox='0 0 24 24'
-              width='24'
-              height='24'
-            >
-              <g transform='matrix(1, 0, 0, 1, 27.009001, -39.238998)'>
-                <path
-                  fill='#4285F4'
-                  d='M -3.264 51.509 C -3.264 50.719 -3.334 49.969 -3.454 49.239 L -14.754 49.239 L -14.754 53.749 L -8.284 53.749 C -8.574 55.229 -9.424 56.479 -10.684 57.329 L -10.684 60.329 L -6.824 60.329 C -4.564 58.239 -3.264 55.159 -3.264 51.509 Z'
-                />
-                <path
-                  fill='#34A853'
-                  d='M -14.754 63.239 C -11.514 63.239 -8.804 62.159 -6.824 60.329 L -10.684 57.329 C -11.764 58.049 -13.134 58.489 -14.754 58.489 C -17.884 58.489 -20.534 56.379 -21.484 53.529 L -25.464 53.529 L -25.464 56.619 C -23.494 60.539 -19.444 63.239 -14.754 63.239 Z'
-                />
-                <path
-                  fill='#FBBC05'
-                  d='M -21.484 53.529 C -21.734 52.809 -21.864 52.039 -21.864 51.239 C -21.864 50.439 -21.724 49.669 -21.484 48.949 L -21.484 45.859 L -25.464 45.859 C -26.284 47.479 -26.754 49.299 -26.754 51.239 C -26.754 53.179 -26.284 54.999 -25.464 56.619 L -21.484 53.529 Z'
-                />
-                <path
-                  fill='#EA4335'
-                  d='M -14.754 43.989 C -12.984 43.989 -11.404 44.599 -10.154 45.789 L -6.734 42.369 C -8.804 40.429 -11.514 39.239 -14.754 39.239 C -19.444 39.239 -23.494 41.939 -25.464 45.859 L -21.484 48.949 C -20.534 46.099 -17.884 43.989 -14.754 43.989 Z'
-                />
-              </g>
-            </svg>
+            <InputLabel htmlFor='outlined-adornment-password'>
+              <FormatMessage id='AUTH.pwd' />
+            </InputLabel>
+            <OutlinedInput
+              sx={{ borderRadius: '16px' }}
+              id='outlined-adornment-password'
+              type={showPassword ? 'text' : 'password'}
+              value={password}
+              endAdornment={
+                <InputAdornment position='end'>
+                  <IconButton
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge='end'
+                  >
+                    {showPassword ? <VisibilityOffOutlined /> : <VisibilityOutlined />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              onChange={(e) => {
+                const val = e.target.value as string
+                setPassword(val)
+                setPasswordValid(validatePassword(val) === undefined)
+              }}
+              onBlur={() => {
+                setPasswordValid(validatePassword(password) === undefined)
+              }}
+              label={formatMessage({ id: 'AUTH.pwd' })}
+            />
+            <FormHelperText id='outlined-weight-helper-text'><FormatMessage id='AUTH.error.pwd' /></FormHelperText>
+          </FormControl>
+          <div className='relative my-5 mx-10'>
+            <p className='text-sm italic text-gray-500'>
+              Once registered, you can ask an early access to our mobile&apos;s
+              app through your account&apos;s settings !
+            </p>
+            <p className='text-xs italic text-gray-400'>
+              Only works for emails linked to a Google account.
+            </p>
+            <span className='absolute right-auto top-0 -left-2 -translate-y-1/2 -translate-x-1/2 -rotate-12 rounded-full bg-red-400 p-0.5 px-2 text-center text-xs font-medium leading-none text-white outline outline-red-100 dark:bg-blue-900 dark:text-blue-200'>
+              BETA
+            </span>
           </div>
-        </ContainerMd>
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={() => setCguIsChecked((prev) => !prev)}
+                checked={cguIsChecked}
+                className='h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600'
+              />
+            }
+            label={
+              <span className='ml-4 text-sm font-medium text-gray-500'>
+          I agree with the
+                <Button
+                  onClick={toggle}
+                  type='button'
+                  className='text-blue-600 hover:underline dark:text-blue-500'
+                >
+            terms and conditions
+                </Button>
+          .
+              </span>
+            }
+          />
+          <Modals headerText='Terms of Service' isShown={isShown} hide={toggle}/>
+          <Button
+            type='submit'
+            sx={{ borderRadius: '16px' }}
+            size='large'
+            variant='contained'
+            className='w-full'
+            disabled={!formIsValid() || authenticateMutation.isLoading || createAccountMutation.isLoading}
+          >
+            <FormatMessage id='AUTH.register' />
+          </Button>
+          <Button 
+            sx={{ borderRadius: '16px' }}
+            size='large'
+            variant='outlined'
+            className='w-full'
+            onClick={() => googleLogin()}
+            endIcon={<GoogleIcon />}
+          >
+            <FormatMessage id='SIGNUP.signupGoogle' />
+          </Button>
+          <Link
+            to='/signin'>
+            <Typography variant='body1' color='primary' sx={{ textDecoration: 'underline' }}>
+              <FormatMessage id='SIGNUP.wantSignIn' />
+            </Typography>
+          </Link>
+        </Stack>
+        <Notification />
       </form>
-    </div>
+    </Authentication>        
   )
 }
 

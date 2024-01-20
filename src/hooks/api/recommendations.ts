@@ -1,12 +1,12 @@
-import { useQuery } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 
 import { useAuthContext } from '../../contexts/auth'
 import { useGroupContext } from '../../contexts/group'
 import { openapiClient } from '../../lib/api'
 import { getWikipediaImage } from '../../lib/widget'
-import { V1GenerateWidgetsResponse } from '../../protorepo/openapi/typescript-axios'
-import { newWidgetsCacheKey, newWikipediaImageCacheKey } from '../api/cache'
-import { axiosRequestOptionsWithAuthorization, QueryHookOptions } from './helpers'
+import { V1GenerateQuizResponse, V1GenerateWidgetsResponse, V1ListQuizsResponse } from '../../protorepo/openapi/typescript-axios'
+import { newQuizsCacheKey, newWidgetsCacheKey, newWikipediaImageCacheKey } from '../api/cache'
+import { axiosRequestOptionsWithAuthorization, MutationHookOptions, QueryHookOptions } from './helpers'
 
 export type GenerateWidgetsRequest = { noteId: string };
 export const useGenerateWidgets = (req: GenerateWidgetsRequest, options?: QueryHookOptions<GenerateWidgetsRequest, V1GenerateWidgetsResponse>) => {
@@ -32,6 +32,37 @@ export const useGetWikipediaImage = (req: GetWikipediaImageRequest, options?: Qu
     queryKey: queryKey,
     queryFn: async () => {
       return (await getWikipediaImage(req.imageUrl))
+    },
+    ...options,
+  })
+}
+
+export type GenerateQuizRequest = { noteId : string };
+export const useGenerateQuiz = (options?: MutationHookOptions<GenerateQuizRequest, V1GenerateQuizResponse>) => {
+  const authContext = useAuthContext()
+  const groupContext = useGroupContext()
+  const currentGroupId = groupContext.groupId as string
+  // const queryKey = newQuizsCacheKey(currentGroupId, req.noteId)
+
+  return useMutation(async (req: GenerateQuizRequest) => {
+    return (await openapiClient.notesAPIGenerateQuiz(currentGroupId, req.noteId, await axiosRequestOptionsWithAuthorization(authContext))).data
+  },
+  {
+    ...options,
+  })
+}
+
+export type ListQuizsRequest = { noteId : string };
+export const useListQuizs = (req: ListQuizsRequest, options?: QueryHookOptions<ListQuizsRequest, V1ListQuizsResponse>) => {
+  const authContext = useAuthContext()
+  const groupContext = useGroupContext()
+  const currentGroupId = groupContext.groupId as string
+  const queryKey = newQuizsCacheKey(currentGroupId, req.noteId)
+
+  return useQuery({
+    queryKey: queryKey,
+    queryFn: async () => {
+      return (await openapiClient.notesAPIListQuizs(currentGroupId, req.noteId, await axiosRequestOptionsWithAuthorization(authContext))).data
     },
     ...options,
   })

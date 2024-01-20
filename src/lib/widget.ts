@@ -15,7 +15,6 @@ export const getWikipediaImageNameFromUrl = (imageUrl: string) => {
   
 export const getWikipediaImage = async(imgName: string) => {
   let imgUrl ='' 
-  console.log('start get')
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data } = await axios.get<any>(

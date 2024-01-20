@@ -8,7 +8,7 @@ export const validateEmail = (email: string): undefined | string => {
 }
 
 export const validateName = (name: string): undefined | string => {
-  const regex = /^[A-Za-z]{3,}$/
+  const regex = /^[A-Za-z]{4,}$/
   if (regex.test(name)) {
     return undefined
   }
@@ -21,4 +21,11 @@ export const validatePassword = (password: string): undefined | string => {
     return undefined
   }
   return 'Invalid password'
+}
+
+export const validateCode = (code: string): undefined | string => {
+  if (code.match('[0-9]+') && code.length === 4) {
+    return undefined
+  }
+  return 'Code must be 0-9 and 4 characters long'
 }

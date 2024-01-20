@@ -3,6 +3,7 @@ import React from 'react'
 import noteLogo from '../../../assets/icon/note.svg'
 import shareLogo from '../../../assets/icon/share.svg'
 import notedHome from '../../../assets/noted_front_page.jpg'
+import { FormatMessage, useOurIntl } from '../../../i18n/TextComponent'
 
 type TDesc = {
   title: string
@@ -12,12 +13,13 @@ type TDesc = {
 }
 
 const DescriptionLanding: React.FC = () => {
+  const { formatMessage } = useOurIntl()
   const descArr: TDesc[] = [
     {
-      title: 'Take notes',  desc: 'You can create and edit notes with a system of recommendations.', imgSrc: noteLogo, color: 'indigo'
+      title: formatMessage({ id: 'DESCRIPTION.title1' }),  desc: formatMessage({ id: 'DESCRIPTION.title1.desc' }), imgSrc: noteLogo, color: 'indigo'
     },
     {
-      title: 'Share your notes',  desc: 'You have all the notes of your group.', imgSrc: shareLogo, color: 'teal'
+      title: formatMessage({ id: 'DESCRIPTION.title2' }),  desc: formatMessage({ id: 'DESCRIPTION.title2.desc' }), imgSrc: shareLogo, color: 'teal'
     }
   ]
 
@@ -36,14 +38,13 @@ const DescriptionLanding: React.FC = () => {
             />
           </div>
           <div className='md:basis-7/12 lg:w-1/2'>
-            <h2 className='text-3xl font-bold text-gray-900 dark:text-white md:text-4xl'>
-            Noted
+            <h2 className='text-3xl font-bold text-gray-800 dark:text-white md:text-4xl'>
+              <FormatMessage id='DESCRIPTION' />
             </h2>
             <p className='my-8 text-gray-600 dark:text-gray-300'>
-            Noted is an ergonomic workspace destined to university students.
-            It is a web application where they can share their notes and organize them. <br /> <br />
-            Noted’s strength is its unique editing mode which includes recommendations based on notes published by students.
-            It will allow students to improve their notes by facilitating collaboration. 
+              <FormatMessage id='DESCRIPTION.descP1' />
+              <br /> <br />
+              <FormatMessage id='DESCRIPTION.descP2' />
             </p>
             <div className='space-y-4 divide-y divide-gray-100 dark:divide-gray-800'>
               {descArr.map((el) => {
