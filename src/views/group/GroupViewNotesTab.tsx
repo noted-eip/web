@@ -97,9 +97,7 @@ const GroupViewNotesTab: React.FC = () => {
         />
         <Button
           variant='outlined'
-          onClick={() => {
-            createNoteQ.mutate({body: {title: formatMessage({ id: 'NOTE.untitledNote' })}})
-          }}
+          onClick={() => createNoteQ.mutate({body: {title: formatMessage({ id: 'NOTE.untitledNote' })}})}
           style={{ flex: 1 }}
           endIcon={
             createNoteQ.isLoading ?

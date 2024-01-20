@@ -10,6 +10,7 @@ const enTranslation: LocaleTypedMessages = {
   'GENERIC.role': 'Role',
   'GENERIC.actions': 'Actions',
   'GENERIC.logout': 'Logout',
+  'GENERIC.copy': 'Copy',
 
   /*		AUTHENTICATION		*/
   /*  Auth  */

@@ -9,7 +9,7 @@ import { axiosRequestOptionsWithAuthorization } from '../../hooks/api/helpers'
 import { useGetNoteInCurrentGroup } from '../../hooks/api/notes'
 import { useGroupIdFromUrl, useNoteIdFromUrl } from '../../hooks/url'
 import { TOGGLE_DEV_FEATURES } from '../../lib/env'
-import {NoteViewMetadataHeader} from './NoteMetadataHeader'
+import NoteViewMetadataHeader from './NoteMetadataHeader'
 import NoteViewEditor from './NoteViewEditor'
 import NoteViewHeader from './NoteViewHeader'
 
@@ -37,7 +37,7 @@ const NoteView: React.FC = () => {
 
   const authContext = useAuthContext()
   React.useEffect(() => {
-    const res = axiosRequestOptionsWithAuthorization(authContext)
+    axiosRequestOptionsWithAuthorization(authContext)
   }, [])
 
 

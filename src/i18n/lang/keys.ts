@@ -31,6 +31,7 @@ export enum TranslationKeys {
   'GENERIC.role',
   'GENERIC.actions',
   'GENERIC.logout',
+  'GENERIC.copy',
 
   /*		AUTHENTICATION		*/
   /*  Auth  */

@@ -10,20 +10,18 @@ import { useNavigate } from 'react-router-dom'
 
 import { StyledMenu } from '../../components/Menu/StyledMenu'
 import { TAuthContext, useAuthContext } from '../../contexts/auth'
+import { BlockContext } from '../../contexts/note'
 import { useGetAccount } from '../../hooks/api/accounts'
-import { useDeleteNoteInCurrentGroup,useGetNoteInCurrentGroup } from '../../hooks/api/notes'
+import { useCreateNoteInCurrentGroup, useDeleteNoteInCurrentGroup,useGetNoteInCurrentGroup, useInsertBlockInCurrentGroup, useUpdateBlockInCurrentGroup } from '../../hooks/api/notes'
 import { useGroupIdFromUrl,useNoteIdFromUrl } from '../../hooks/url'
-import { FormatMessage } from '../../i18n/TextComponent'
+import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
+import { blockContextToNoteBlockAPI } from '../../lib/editor'
 import { API_BASE } from '../../lib/env'
-
-interface Props {
-  noteId: string 
-  groupId: string 
-}
+import { NotesAPIInsertBlockRequest,V1Block } from '../../protorepo/openapi/typescript-axios'
 
 const extensions = ['md', 'pdf']
 
-export const NotesOptions = ( { noteId, groupId } : Props ) => {
+const NotesOptions: React.FC<{noteId: string, groupId: string}> = ({ noteId, groupId }) => {
   const url = `${API_BASE}/groups/${encodeURIComponent(groupId)}/notes/${encodeURIComponent(noteId)}/export`
   const auth : TAuthContext = useAuthContext()
   const [anchorEl, setAnchorEl] =  React.useState<null | HTMLElement>(null)
@@ -75,7 +73,6 @@ export const NotesOptions = ( { noteId, groupId } : Props ) => {
       console.error(error)
     }
   }
-
   return (
     <div>
       <IconButton
@@ -115,7 +112,8 @@ export const NotesOptions = ( { noteId, groupId } : Props ) => {
   )
 }
 
-export const NoteViewMetadataHeader: React.FC = () => {
+const NoteViewMetadataHeader: React.FC = () => {
+  const { formatMessage } = useOurIntl()
   const navigate = useNavigate()
   const authContext = useAuthContext()
   const noteId = useNoteIdFromUrl()
@@ -123,17 +121,80 @@ export const NoteViewMetadataHeader: React.FC = () => {
   const modifiedAtRelative = noteQ.data && noteQ.data.note.modifiedAt && moment(noteQ.data.note.modifiedAt, 'YYYY-MM-DDTHH:mm:ss.SSSZ').fromNow()
   const authorAccountQ = useGetAccount({ accountId: noteQ.data?.note.authorAccountId as string }, { enabled: !!noteQ.data?.note.authorAccountId })
   const canIEdit = noteQ.data?.note.authorAccountId === authContext.accountId
-
-  const deleteNoteQ = useDeleteNoteInCurrentGroup(
-    {
-      onSuccess: () => {
-        navigate(`/group/${noteQ.data?.note.groupId}`)
+  const [newNoteId, setNewNoteId] = React.useState('')
+  const insertBlockMutation = useInsertBlockInCurrentGroup()
+  const updateBlockMutation = useUpdateBlockInCurrentGroup({
+    onSuccess: (data) => {
+      if (noteQ.data?.note.blocks && data.block.paragraph === noteQ.data?.note.blocks[noteQ.data?.note.blocks?.length - 1].paragraph) {
+        navigate(`/group/${noteQ.data?.note.groupId}/note/${newNoteId}`)
+        window.location.reload()
       }
+    }
+  })
+  
+  const insertBlockBackend = async (
+    notedId: string,
+    index: number | undefined,
+    block: V1Block
+  ) => {
+    const res = await insertBlockMutation.mutateAsync({
+      noteId: notedId,
+      body: {
+        index: index,
+        block: block
+      } as NotesAPIInsertBlockRequest
     })
-
-  const handleDeleteNote = () => {
-    deleteNoteQ.mutate({ noteId })
+    return res.block.id
   }
+  const updateBlockBackend = (
+    notedId: string,
+    blockId: string | undefined,
+    block: V1Block
+  ) => {
+    updateBlockMutation.mutate({
+      noteId: notedId,
+      blockId: blockId === undefined ? '' : blockId,
+      body: block
+    })
+  }
+
+  const createNoteQ = useCreateNoteInCurrentGroup({
+    onSuccess: (data) => {
+      setNewNoteId(data.note.id)
+      if (!noteQ.data?.note.blocks) {
+        return
+      }
+      if (!data.note.blocks){
+        return
+      }
+      const tmp = noteQ.data?.note.blocks[0]
+      tmp.id = data?.note.blocks[0].id
+      updateBlockBackend(data.note.id, data?.note.blocks[0].id, tmp)
+      noteQ.data?.note.blocks.map(async (e: V1Block, idx) => {
+        if (idx === 0) {
+          return
+        }
+        const blockId = await insertBlockBackend(data.note.id, idx, blockContextToNoteBlockAPI({ 
+          id: 'tmp-id', 
+          type: e.type,
+          children: [],
+          index: idx,
+          isFocused: true
+        } as BlockContext))
+        const newBlock = e
+        newBlock.id = blockId
+        updateBlockBackend(data.note.id, blockId, newBlock)
+      })
+    }
+  })
+
+
+  const deleteNoteQ = useDeleteNoteInCurrentGroup({
+    onSuccess: () => {
+      navigate(`/group/${noteQ.data?.note.groupId}`)
+    }
+  })
+
 
   return <div className='mx-xl flex h-10 items-center justify-between rounded-md border border-gray-100 bg-gray-50 p-1 px-2'>
     {/* Last edited by */}
@@ -148,14 +209,15 @@ export const NoteViewMetadataHeader: React.FC = () => {
     {/* Menu */}
     <div className='grid grid-cols-[auto_auto_auto_auto] gap-2'>
       {/* Duplicate */}
-      <div className='group flex cursor-pointer items-center rounded p-1 hover:bg-blue-50' onClick={() => alert('Not Implemented')}>
-        <DocumentDuplicateIcon className='mr-1 h-4 w-4 text-gray-500 group-hover:text-blue-500' />
+      {canIEdit && noteQ.data?.note.title && <div className='group flex cursor-pointer items-center rounded p-1 hover:bg-blue-50' onClick={() => createNoteQ.mutate({body: {title: noteQ.data.note.title + ' ' + formatMessage({id: 'GENERIC.copy'})}})}>
+        {createNoteQ.isLoading ? <ArrowPathIcon className='mr-1 h-4 w-4 animate-spin text-gray-500 group-hover:text-red-600' /> : <DocumentDuplicateIcon className='mr-1 h-4 w-4 text-gray-500 group-hover:text-blue-500' />}
         <h5 className='text-gray-500 group-hover:text-blue-500'>
           <FormatMessage id='NOTE.duplicate' />
         </h5>
       </div>
+      }
       {/* Delete */}
-      {canIEdit && <div className='group flex cursor-pointer items-center rounded p-1 hover:bg-red-50' onClick={handleDeleteNote}>
+      {canIEdit && <div className='group flex cursor-pointer items-center rounded p-1 hover:bg-red-50' onClick={() => deleteNoteQ.mutate({ noteId })}>
         {deleteNoteQ.isLoading ? <ArrowPathIcon className='mr-1 h-4 w-4 animate-spin text-gray-500 group-hover:text-red-600' /> : <TrashIcon className='mr-1 h-4 w-4 text-gray-500 group-hover:text-red-600' />}
         <h5 className='text-gray-500 group-hover:text-red-600'>
           <FormatMessage id='NOTE.delete' />
@@ -169,8 +231,9 @@ export const NoteViewMetadataHeader: React.FC = () => {
                 groupId={useGroupIdFromUrl()}
               />
         }
-
       </div>
     </div>
   </div>
 }
+
+export default NoteViewMetadataHeader

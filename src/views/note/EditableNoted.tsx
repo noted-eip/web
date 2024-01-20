@@ -136,6 +136,7 @@ export const EditableNoted: React.FC<{
       isFocused: true
     } as BlockContext
 
+    console.log(contentAfterEnter)
     updateBlockBackend(note.id, block?.id ?? '', blockContextToNoteBlockAPI(oldLocalBlock))
     newLocalBlock.id = await insertBlockBackend(note.id, blockIndex + 1 ?? 1000, blockContextToNoteBlockAPI(newLocalBlock))
     
