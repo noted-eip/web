@@ -380,7 +380,7 @@ const ProfileViewBetaSection: React.FC = () => {
   return (
     <div className='relative mt-4 w-full rounded-md border border-gray-100 bg-gray-50'>
       {/* Header */}
-      <span className='absolute right-auto top-0 left-3 -translate-y-1/2 -translate-x-1/2 -rotate-12 rounded-full bg-red-400 p-0.5 px-2 text-center text-xs font-medium leading-none text-white outline outline-red-100 dark:bg-blue-900 dark:text-blue-200'>
+      <span className='absolute right-auto top-0 left-3 -translate-y-1/2 -translate-x-1/2 -rotate-12 rounded-full bg-red-400 p-0.5 px-2 text-center text-xs font-medium leading-none text-white outline outline-red-100'>
         BETA
       </span>
       <div className='flex items-center justify-between border-b border-[#efefef] px-5 py-3'>

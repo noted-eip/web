@@ -62,7 +62,7 @@ const ResetPasswordPassword: React.FC = () => {
             <FormatMessage id='RESETPWD.Pwd.title' />
           </Typography>
           {!isResetPasswordValid && 
-            <div className='leading-tight tracking-tight dark:text-white'>
+            <div className='leading-tight tracking-tight'>
               <span className='text-red-500'>Account Error</span>
             </div>}
           <p 

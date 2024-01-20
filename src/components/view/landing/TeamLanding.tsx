@@ -36,10 +36,10 @@ const TeamLanding: React.FC = () => {
   
 
   return (
-    <div className='text-gray-600 dark:text-gray-300' id='team'>
+    <div className='text-gray-600' id='team'>
       <div className='mx-auto max-w-7xl px-6 md:px-12 xl:px-6'>
         <div className='mb-20 space-y-4 px-6 md:px-0'>
-          <h2 className='text-center text-2xl font-bold text-gray-800 dark:text-white md:text-4xl'>
+          <h2 className='text-center text-2xl font-bold text-gray-800 md:text-4xl'>
             <FormatMessage id='TEAM' />
           </h2>
         </div>
@@ -47,12 +47,12 @@ const TeamLanding: React.FC = () => {
           {
             teamArr.map((el) => {
               return (
-                <div className='aspect-auto rounded-3xl border border-gray-400 bg-white p-8 shadow-2xl shadow-gray-600/10 dark:border-gray-700 dark:bg-gray-800 dark:shadow-none' key={el.name}>
+                <div className='aspect-auto rounded-3xl border border-gray-400 bg-white p-8 shadow-2xl shadow-gray-600/10' key={el.name}>
                   <div className='flex gap-4'>
                     <img className='h-12 w-12 rounded-full' src={el.imgSrc} alt={el.name} width='200' height='200' loading='lazy' />
                     <div>
-                      <h6 className='text-lg font-medium text-gray-700 dark:text-white'>{el.name}</h6>
-                      <p className='text-sm text-gray-500 dark:text-gray-300'>{el.role}</p>
+                      <h6 className='text-lg font-medium text-gray-700'>{el.name}</h6>
+                      <p className='text-sm text-gray-500'>{el.role}</p>
                     </div>
                   </div>
                   <p className='mt-8'>{el.desc}</p>

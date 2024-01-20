@@ -38,26 +38,29 @@ const DescriptionLanding: React.FC = () => {
             />
           </div>
           <div className='md:basis-7/12 lg:w-1/2'>
-            <h2 className='text-3xl font-bold text-gray-800 dark:text-white md:text-4xl'>
+            <h2 className='text-3xl font-bold text-gray-800 md:text-4xl'>
               <FormatMessage id='DESCRIPTION' />
             </h2>
-            <p className='my-8 text-gray-600 dark:text-gray-300'>
+            <p className='my-8 text-gray-600'>
               <FormatMessage id='DESCRIPTION.descP1' />
               <br /> <br />
               <FormatMessage id='DESCRIPTION.descP2' />
             </p>
-            <div className='space-y-4 divide-y divide-gray-100 dark:divide-gray-800'>
+            <div className='space-y-4 divide-y divide-gray-100'>
               {descArr.map((el) => {
-                const colorStyleImage = `bg-${el.color}-100 dark:bg-${el.color}-900/20`
-                const colorStyleText = `dark:text-${el.color}-300`
+                const colorStyleImage = `bg-${el.color}-100`
                 return (
                   <div className='mt-8 flex gap-4 md:items-center' key={el.title}>
                     <div className={`flex h-12 w-12 gap-4 rounded-full ${colorStyleImage}`}>
-                      <img src={el.imgSrc} alt='note logo' height='16.5px' width='20.5px' className='m-auto h-6 w-6 text-indigo-500 dark:text-indigo-400' />
+                      <img src={el.imgSrc} alt='note logo' height='16.5px' width='20.5px' className='m-auto h-6 w-6 text-indigo-500' />
                     </div>
                     <div className='w-5/6'>
-                      <h4 className={`text-lg font-semibold text-gray-700 ${colorStyleText}`}>{el.title}</h4>
-                      <p className='text-gray-500 dark:text-gray-400'>{el.desc}</p>
+                      <h4 className='text-lg font-semibold text-gray-700'>
+                        {el.title}
+                      </h4>
+                      <p className='text-gray-500'>
+                        {el.desc}
+                      </p>
                     </div> 
                   </div> 
                 )
