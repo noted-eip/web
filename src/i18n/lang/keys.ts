@@ -52,6 +52,18 @@ export enum TranslationKeys {
   'SIGNUP.signupGoogle',
   'SIGNUP.wantSignIn',
   'SIGNUP.wantSignUp',
+  'SIGNUP.formHelperText',
+  'SIGNUP.accessBeta1',
+  'SIGNUP.accessBeta2',
+  'SIGNUP.termsCheckbox1',
+  'SIGNUP.termsCheckbox2',
+  'SIGNUP.terms1',
+  'SIGNUP.terms2',
+  'SIGNUP.terms3',
+  'SIGNUP.terms4',
+  'SIGNUP.terms5',
+  'SIGNUP.closeModal',
+  'SIGNUP.termsService',  
 
   /* Home */
   'HOME.lastGroups',

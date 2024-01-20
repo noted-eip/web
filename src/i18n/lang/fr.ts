@@ -32,6 +32,18 @@ const frTranslation: LocaleTypedMessages = {
   'SIGNUP.signupGoogle': 'S\'inscrire avec Google',
   'SIGNUP.wantSignIn': 'J\'ai déjà un compte',
   'SIGNUP.wantSignUp': 'Je veux créer un compte',
+  'SIGNUP.formHelperText': '4 caractères requis',
+  'SIGNUP.accessBeta1': 'Une fois enregistré, vous pouvez demander un accès anticipé à notre application mobile dans les paramètres de votre compte ! ',
+  'SIGNUP.accessBeta2': 'Ne fonctionne que pour les courriels liés à un compte Google.',
+  'SIGNUP.termsCheckbox1': 'Je suis d\'accord avec les',
+  'SIGNUP.termsCheckbox2': 'conditions d\'utilisation',
+  'SIGNUP.terms1': 'Les présentes CGU ou Conditions Générales d’Utilisation encadrent juridiquement l’utilisation des services du site noted.',
+  'SIGNUP.terms2': 'Constituant le contrat entre la société Noted, l’Utilisateur, l’accès au site doit être précédé de l’acceptation de ces CGU. L’accès à cette plateforme signifie l’acceptation des présentes CGU.',
+  'SIGNUP.terms3': 'Pour la création du compte de l’Utilisateur, la collecte des informations au moment de l’inscription sur le site est nécessaire et obligatoire. Conformément à la loi n°78-17 du 6 janvier relative à l’informatique, aux fichiers et aux libertés, la collecte et le traitement d’informations personnelles s’effectuent dans le respect de la vie privée.',
+  'SIGNUP.terms4': 'Les marques, logos ainsi que les contenus du site noted (illustrations graphiques, textes…) sont protégés par le Code de la propriété intellectuelle et par le droit d’auteur.',
+  'SIGNUP.terms5': 'Noted dispose du droit d’exercer une modération à priori sur les publications et peut refuser leur mise en ligne sans avoir à fournir de justification.',
+  'SIGNUP.closeModal': 'Fermer la fenêtre',
+  'SIGNUP.termsService': 'Terms of Service',
 
   /* Home */
   'HOME.lastGroups': 'Derniers groupes',

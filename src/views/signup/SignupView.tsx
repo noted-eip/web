@@ -6,12 +6,12 @@ import Checkbox from '@mui/material/Checkbox'
 import Stack from '@mui/material/Stack'
 import { useGoogleLogin } from '@react-oauth/google'
 import { getAnalytics, logEvent } from 'firebase/analytics'
-import React from 'react'
+import React, { FunctionComponent } from 'react'
+import ReactDOM from 'react-dom'
 import { toast } from 'react-hot-toast'
 import { Link, useNavigate } from 'react-router-dom'
 
 import GoogleIcon from '../../components/icons/GoogleIcon'
-import Modals from '../../components/modals/Modal'
 import Notification from '../../components/notification/Notification'
 import Authentication from '../../components/view/Authentication'
 import { addAccountToDevelopmentContext, useDevelopmentContext } from '../../contexts/dev'
@@ -24,8 +24,48 @@ import { TOGGLE_DEV_FEATURES } from '../../lib/env'
 import { validateEmail, validateName, validatePassword } from '../../lib/validators'
 import { V1AuthenticateGoogleResponse, V1AuthenticateResponse, V1CreateAccountResponse } from '../../protorepo/openapi/typescript-axios'
 
-const SignupView: React.FC = () => {
+const TermsModals: FunctionComponent<{isShown: boolean, hide: () => void, headerText: string}> = (props) => {
+  const modal = (
+    <div data-tabindex='-1' aria-hidden='false' className='fixed  z-50 h-[calc(100%-1rem)] max-h-full w-full overflow-hidden md:inset-0'>
+      <div className='relative mx-auto my-[10%] max-h-full w-full max-w-2xl'>
+        <div className='relative rounded-lg bg-white shadow dark:bg-gray-700'>
+          <div className='flex items-start justify-between rounded-t border-b p-4 dark:border-gray-600'>
+            <h3 className='text-xl font-semibold text-gray-900 dark:text-white'>
+              {props.headerText}
+            </h3>
+            <button type='button' className='ml-auto inline-flex items-center rounded-lg bg-transparent p-1.5 text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-white' onClick={props.hide}>
+              <svg aria-hidden='true' className='h-5 w-5' fill='currentColor' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'><path fillRule='evenodd' d='M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z' clipRule='evenodd'></path></svg>
+              <span className='sr-only'>
+                <FormatMessage id='SIGNUP.closeModal' />
+              </span>
+            </button>
+          </div>
+          <div className='space-y-6 p-6'>
+            <p className='text-base leading-relaxed text-gray-500 dark:text-gray-400'>
+              <FormatMessage id='SIGNUP.terms1' />
+            </p>
+            <p className='text-base leading-relaxed text-gray-500 dark:text-gray-400'>
+              <FormatMessage id='SIGNUP.terms2' />
+            </p>
+            <p className='text-base leading-relaxed text-gray-500 dark:text-gray-400'>
+              <FormatMessage id='SIGNUP.terms3' />
+            </p>
+            <p className='text-base leading-relaxed text-gray-500 dark:text-gray-400'>
+              <FormatMessage id='SIGNUP.terms4' />
+            </p>
+            <p className='text-base leading-relaxed text-gray-500 dark:text-gray-400'>
+              <FormatMessage id='SIGNUP.terms5' />
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 
+  return props.isShown ? ReactDOM.createPortal(modal, document.body) : null
+}
+
+const SignupView: React.FC = () => {
   const { formatMessage } = useOurIntl()
   const analytics = getAnalytics()
   const navigate = useNavigate()
@@ -35,7 +75,6 @@ const SignupView: React.FC = () => {
   const [nameValid, setNameValid] = React.useState(false)
   const [password, setPassword] = React.useState('')
   const [passwordValid, setPasswordValid] = React.useState(false)
-  // const [cguAccept] = React.useState(false)
   const [email, setEmail] = React.useState('')
   const [emailValid, setEmailValid] = React.useState(false)
   const [cguIsChecked, setCguIsChecked] = React.useState(false)
@@ -134,7 +173,7 @@ const SignupView: React.FC = () => {
               setNameValid(validateName(name) === undefined)
             }}
             error={!nameValid && name.length != 0}
-            helperText={(!nameValid && name.length != 0) && 'name must be 4'}
+            helperText={(!nameValid && name.length != 0) && formatMessage({ id: 'SIGNUP.formHelperText' })}
           />
           <TextField
             id='outlined-email-input'
@@ -188,11 +227,10 @@ const SignupView: React.FC = () => {
           </FormControl>
           <div className='relative my-5 mx-10'>
             <p className='text-sm italic text-gray-500'>
-              Once registered, you can ask an early access to our mobile&apos;s
-              app through your account&apos;s settings !
+              <FormatMessage id='SIGNUP.accessBeta1' />
             </p>
             <p className='text-xs italic text-gray-400'>
-              Only works for emails linked to a Google account.
+              <FormatMessage id='SIGNUP.accessBeta2' />
             </p>
             <span className='absolute right-auto top-0 -left-2 -translate-y-1/2 -translate-x-1/2 -rotate-12 rounded-full bg-red-400 p-0.5 px-2 text-center text-xs font-medium leading-none text-white outline outline-red-100 dark:bg-blue-900 dark:text-blue-200'>
               BETA
@@ -208,19 +246,18 @@ const SignupView: React.FC = () => {
             }
             label={
               <span className='ml-4 text-sm font-medium text-gray-500'>
-          I agree with the
+                <FormatMessage id='SIGNUP.termsCheckbox1' />
                 <Button
                   onClick={toggle}
                   type='button'
                   className='text-blue-600 hover:underline dark:text-blue-500'
                 >
-            terms and conditions
+                  <FormatMessage id='SIGNUP.termsCheckbox2' />
                 </Button>
-          .
               </span>
             }
           />
-          <Modals headerText='Terms of Service' isShown={isShown} hide={toggle}/>
+          <TermsModals headerText={formatMessage({ id: 'SIGNUP.termsService' })} isShown={isShown} hide={toggle}/>
           <Button
             type='submit'
             sx={{ borderRadius: '16px' }}
