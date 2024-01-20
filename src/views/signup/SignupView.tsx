@@ -1,6 +1,8 @@
 import { VisibilityOffOutlined, VisibilityOutlined } from '@mui/icons-material'
 import { FormControl, FormHelperText, IconButton,InputAdornment, InputLabel, OutlinedInput, TextField, Typography } from '@mui/material'
+import { FormControlLabel } from '@mui/material'
 import Button from '@mui/material/Button'
+import Checkbox from '@mui/material/Checkbox'
 import Stack from '@mui/material/Stack'
 import { useGoogleLogin } from '@react-oauth/google'
 import { getAnalytics, logEvent } from 'firebase/analytics'
@@ -9,11 +11,13 @@ import { toast } from 'react-hot-toast'
 import { Link, useNavigate } from 'react-router-dom'
 
 import GoogleIcon from '../../components/icons/GoogleIcon'
+import Modals from '../../components/modals/Modal'
 import Notification from '../../components/notification/Notification'
 import Authentication from '../../components/view/Authentication'
 import { addAccountToDevelopmentContext, useDevelopmentContext } from '../../contexts/dev'
 import { useNoAuthContext } from '../../contexts/noauth'
 import { useAuthenticate, useAuthenticateGoogle, useCreateAccount } from '../../hooks/api/accounts'
+import { useModal } from '../../hooks/modals'
 import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
 import { beautifyError, decodeToken } from '../../lib/api'
 import { TOGGLE_DEV_FEATURES } from '../../lib/env'
@@ -26,12 +30,15 @@ const SignupView: React.FC = () => {
   const analytics = getAnalytics()
   const navigate = useNavigate()
   const auth = useNoAuthContext()
-  const [name, setName] =  React.useState('')
-  const [nameValid, setNameValid] =  React.useState(false)
-  const [email, setEmail] =  React.useState('')
-  const [emailValid, setEmailValid] =  React.useState(false)
-  const [password, setPassword] =  React.useState('')
-  const [passwordValid, setPasswordValid] =  React.useState(false)
+  const {isShown, toggle} = useModal()
+  const [name, setName] = React.useState('')
+  const [nameValid, setNameValid] = React.useState(false)
+  const [password, setPassword] = React.useState('')
+  const [passwordValid, setPasswordValid] = React.useState(false)
+  // const [cguAccept] = React.useState(false)
+  const [email, setEmail] = React.useState('')
+  const [emailValid, setEmailValid] = React.useState(false)
+  const [cguIsChecked, setCguIsChecked] = React.useState(false)
   const [showPassword, setShowPassword] =  React.useState(false)
   const developmentContext = useDevelopmentContext()
   const authenticateMutation = useAuthenticate({
@@ -57,7 +64,7 @@ const SignupView: React.FC = () => {
   })
   const createAccountMutation = useCreateAccount({
     onSuccess: (data: V1CreateAccountResponse) => {
-      navigate('/validate_account', {state: {email: data.account.email, password: password}})
+      navigate('/va lidate_account', {state: {email: data.account.email, password: password}})
     },
     onError: (e) => {
       toast.error(beautifyError(e.response?.data.error, 'creation', formatMessage))
@@ -92,7 +99,7 @@ const SignupView: React.FC = () => {
   })
 
   const formIsValid = () => {
-    return nameValid && passwordValid && emailValid
+    return nameValid && passwordValid && emailValid && cguIsChecked
   }
   
   const handleClickShowPassword = () => setShowPassword((show) => !show)
@@ -191,6 +198,29 @@ const SignupView: React.FC = () => {
               BETA
             </span>
           </div>
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={() => setCguIsChecked((prev) => !prev)}
+                checked={cguIsChecked}
+                className='h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600'
+              />
+            }
+            label={
+              <span className='ml-4 text-sm font-medium text-gray-500'>
+          I agree with the
+                <Button
+                  onClick={toggle}
+                  type='button'
+                  className='text-blue-600 hover:underline dark:text-blue-500'
+                >
+            terms and conditions
+                </Button>
+          .
+              </span>
+            }
+          />
+          <Modals headerText='Terms of Service' isShown={isShown} hide={toggle}/>
           <Button
             type='submit'
             sx={{ borderRadius: '16px' }}
