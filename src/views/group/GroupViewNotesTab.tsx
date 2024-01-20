@@ -1,4 +1,4 @@
-import { ArrowPathIcon, PlusIcon, TrashIcon as TrashIconOutline } from '@heroicons/react/24/outline'
+import { ArrowPathIcon, LinkIcon as LinkIconOutline,PencilIcon as PencilIconOutline,PlusIcon, TrashIcon as TrashIconOutline } from '@heroicons/react/24/outline'
 import { Button, Stack } from '@mui/material'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -6,16 +6,30 @@ import { useNavigate } from 'react-router-dom'
 import Searchbar from '../../components/searchBar/Searchbar'
 import { useNoteContext } from '../../contexts/note'
 import { useGetAccount } from '../../hooks/api/accounts'
-import { useCreateNoteInCurrentGroup, useDeleteNoteInCurrentGroup, useListNotesInCurrentGroup } from '../../hooks/api/notes'
+import { useCreateNoteInCurrentGroup, useDeleteNoteInCurrentGroup, useListNotesInCurrentGroup, useUpdateNoteInCurrentGroup } from '../../hooks/api/notes'
 import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
 import { V1Note } from '../../protorepo/openapi/typescript-axios'
 import NotesListGridItemContextMenu from '../notes/NotesListGridItemContextMenu'
 
 const NotesListGridItem: React.FC<{ note: V1Note }> = (props) => {
+  const { formatMessage } = useOurIntl()
+  const [editTitle, setEditTitle] =  React.useState(false)
+  const [newTitle, setNewTitle] =  React.useState<string | undefined>(undefined)
+  const newTitleInputRef = React.createRef<HTMLInputElement>()
+
   const authorQ = useGetAccount({accountId: props.note.authorAccountId})
   const deleteNoteQ = useDeleteNoteInCurrentGroup()
   const navigate = useNavigate()
+  const updateNoteQ = useUpdateNoteInCurrentGroup()
 
+  const onChangeTitle = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const tmp = props.note
+    tmp.title = newTitle || ''
+    updateNoteQ.mutate({noteId: props.note.id, body: tmp})
+    setEditTitle(false)
+  }
+  
   return (
     <div>
       <div
@@ -25,14 +39,36 @@ const NotesListGridItem: React.FC<{ note: V1Note }> = (props) => {
       >
         <div className='mb-2 h-2/3 w-1/2 rounded-md bg-white shadow-md' />
         <div className='w-full text-center'>
-          <div className='text-xs font-medium text-gray-800'>{props.note.title}</div>
+          {editTitle ? (
+            <form onSubmit={onChangeTitle}>
+              <input
+                ref={newTitleInputRef}
+                autoFocus
+                className='ml-[-5px] w-48 rounded border-gray-200 bg-white px-1 py-0 font-medium'
+                type='text'
+                value={newTitle}
+                onChange={(e) => setNewTitle(e.target.value)}
+              />
+              <button type='submit' />
+            </form>
+          ) : (
+            <>
+              <p className='font-medium'>
+                {props.note.title}
+              </p>
+              <PencilIconOutline className='ml-2 hidden h-4 w-4 stroke-2 text-gray-400 group-hover:block' />
+            </>
+          )}
+          {/* <div className='text-xs font-medium text-gray-800'>{props.note.title}</div> */}
           <p className='text-xxs text-gray-500'>{authorQ.data?.account.name}</p>
         </div>
       </div>
       <NotesListGridItemContextMenu
         targetId={`group-view-notes-tab-grid-${props.note.id}`}
         options={[
-          {icon: TrashIconOutline, name: 'Delete', onClick: () => { deleteNoteQ.mutate({ noteId: props.note.id }) }},
+          {icon: PencilIconOutline, name: formatMessage({id:'GROUP.noteTab.rename'}), onClick: () => setEditTitle(true)},
+          {icon: LinkIconOutline, name: formatMessage({id:'GROUP.noteTab.rename'}), onClick: () => { alert('Not implemented') }},
+          {icon: TrashIconOutline, name: formatMessage({id:'GROUP.noteTab.delete'}), onClick: () => deleteNoteQ.mutate({ noteId: props.note.id })},
         ]}
         note={props.note} />
     </div>

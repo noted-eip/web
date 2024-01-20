@@ -138,6 +138,10 @@ const enTranslation: LocaleTypedMessages = {
   'GROUP.settings.invites.colTitle4': 'ACTIONS',
   'GROUP.settings.invites.desc': 'No pending invites for this group',
 
+  'GROUP.noteTab.rename': 'Rename',
+  'GROUP.noteTab.copyLink': 'Copy link',
+  'GROUP.noteTab.delete': 'Delete',
+
   /*    NOTE    */
   'NOTE.myNotes': 'My notes',
   'NOTE.newNote': 'New note',

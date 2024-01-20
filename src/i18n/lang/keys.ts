@@ -159,6 +159,10 @@ export enum TranslationKeys {
   'GROUP.settings.invites.colTitle4',
   'GROUP.settings.invites.desc',
 
+  'GROUP.noteTab.rename',
+  'GROUP.noteTab.copyLink',
+  'GROUP.noteTab.delete',
+
   /*    NOTE    */
   'NOTE.myNotes',
   'NOTE.newNote',
