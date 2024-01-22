@@ -12,7 +12,7 @@ import { useListActivitiesInCurrentGroup } from '../hooks/api/activities'
 import { useGetGroup } from '../hooks/api/groups'
 import { useGetNoteInCurrentGroup } from '../hooks/api/notes'
 import { FormatMessage } from '../i18n/TextComponent'
-import { V1GroupActivity } from '../protorepo/openapi/typescript-axios'
+import { V1GroupActivity, V1ListActivitiesResponse } from '../protorepo/openapi/typescript-axios'
 
 function getNoteIdInEvent(event: string) {
   let noteId = ''
@@ -197,8 +197,24 @@ const ActivityListItem: React.FC<{ activity: V1GroupActivity }> = (props) => {
   )
 }
 
-const ActivityListCurrentGroup: React.FC = () => {
-  const listActivitiesQ = useListActivitiesInCurrentGroup({ limit: 100 })
+const ActivityListCurrentGroup: React.FC<{groupId: string}> = (prop) => {
+  const [newListActivities, setNewActivities] = React.useState<V1GroupActivity[]>([])
+  const listActivitiesQ = useListActivitiesInCurrentGroup({ limit: 100 }, {
+    onSuccess: (data: V1ListActivitiesResponse) => {
+      console.log('data', data)
+      // setNewActivities([data.activities, ...newListActivities])
+    },
+    onError: (e) => {
+      const errorActivity: V1GroupActivity = {
+        id: `tmp-id-${newListActivities.length}`,
+        groupId: prop.groupId,
+        type: '',
+        event: '',
+        createdAt: '',
+      }
+      setNewActivities([errorActivity, ...newListActivities])
+      console.error('chat', e)
+    }})
 
   return (
     <div className={`h-full overflow-y-scroll ${(!listActivitiesQ.isSuccess || (listActivitiesQ.isSuccess && !listActivitiesQ.data?.activities?.length)) && 'flex items-center justify-center'} lg:px-lg lg:pb-lg xl:px-xl xl:pb-xl`}>
@@ -253,12 +269,11 @@ const ActivityListNoGroup: React.FC = () => {
 
 const GroupActivityPanel: React.FC = () => {
   const groupContext = useGroupContext()
-  const currentGroupId = groupContext.groupId as string
+  const currentGroupId: string = groupContext.groupId as string
 
   return (
     <PanelSkeleton>
-      {/* {currentGroupId ? <ActivityListCurrentGroup /> : <ActivityListNoGroup />} */}
-      <ActivityListNoGroup />
+      {currentGroupId ? <ActivityListCurrentGroup groupId={currentGroupId} /> : <ActivityListNoGroup />}
     </PanelSkeleton>
   )
 }
