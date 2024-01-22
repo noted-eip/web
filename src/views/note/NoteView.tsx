@@ -33,8 +33,6 @@ const NoteView: React.FC = () => {
   const noteQuery = useGetNoteInCurrentGroup({ noteId })
   const [isLoading, setIsLoading] = React.useState(true)
   const group = useGetGroup({groupId: useGroupIdFromUrl()})
-
-
   const authContext = useAuthContext()
   React.useEffect(() => {
     axiosRequestOptionsWithAuthorization(authContext)

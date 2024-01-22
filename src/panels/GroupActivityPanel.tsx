@@ -257,7 +257,8 @@ const GroupActivityPanel: React.FC = () => {
 
   return (
     <PanelSkeleton>
-      {currentGroupId ? <ActivityListCurrentGroup /> : <ActivityListNoGroup />}
+      {/* {currentGroupId ? <ActivityListCurrentGroup /> : <ActivityListNoGroup />} */}
+      <ActivityListNoGroup />
     </PanelSkeleton>
   )
 }

@@ -188,7 +188,6 @@ const NoteViewMetadataHeader: React.FC = () => {
     }
   })
 
-
   const deleteNoteQ = useDeleteNoteInCurrentGroup({
     onSuccess: () => {
       navigate(`/group/${noteQ.data?.note.groupId}`)
