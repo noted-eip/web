@@ -299,9 +299,7 @@ const ProfileViewFeedbackSection: React.FC = () => {
             <FormatMessage id='PROFILE.feedback.title' />
           </Typography>
         </div>
-      </div>
-
-      <div className='grid grid-cols-[40%_60%] p-5' >
+      </div>       <div className='grid grid-cols-[40%_60%] p-5' >
         <Typography variant='body2' sx={{ color: grey[600] }}>
           <FormatMessage id='PROFILE.feedback.desc' />
         </Typography>

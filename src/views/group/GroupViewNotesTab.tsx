@@ -1,9 +1,10 @@
 import { ArrowPathIcon, LinkIcon as LinkIconOutline,PencilIcon as PencilIconOutline,PlusIcon, TrashIcon as TrashIconOutline } from '@heroicons/react/24/outline'
-import { Button, Stack } from '@mui/material'
-import React from 'react'
+import { Button, MenuItem, Select, Stack } from '@mui/material'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import Searchbar from '../../components/searchBar/Searchbar'
+import { LangageContext } from '../../contexts/langage'
 import { useNoteContext } from '../../contexts/note'
 import { useGetAccount } from '../../hooks/api/accounts'
 import { useCreateNoteInCurrentGroup, useDeleteNoteInCurrentGroup, useGetNoteInCurrentGroup, useListNotesInCurrentGroup, useUpdateNoteInCurrentGroup } from '../../hooks/api/notes'
@@ -131,12 +132,8 @@ const GroupViewNotesTab: React.FC = () => {
   const listNotesQ = useListNotesInCurrentGroup({})
   const [input, setInput] = React.useState('')
   const { clearBlocksContext } = useNoteContext()
-
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleInput = (e: any) => {
-    setInput(e.target.value.toLowerCase())
-  }
+  const context = React.useContext(LangageContext)
+  const [selectedLanguage, setSelectedLanguage] = useState(context?.langage || 'fr')
 
   React.useEffect(() => {
     clearBlocksContext()
@@ -144,9 +141,18 @@ const GroupViewNotesTab: React.FC = () => {
 
   const createNoteQ = useCreateNoteInCurrentGroup({
     onSuccess: (data) => {
+      console.log(data)
       navigate(`./note/${data.note.id}`)
     },
   })
+
+  const handleInput = (e) => {
+    setInput(e.target.value.toLowerCase())
+  }
+
+  const handleLanguageSelect = (event) => {
+    setSelectedLanguage(event.target.value)
+  }
 
   return (
     <div className='grid w-full grid-rows-1 gap-4'>
@@ -156,13 +162,13 @@ const GroupViewNotesTab: React.FC = () => {
         (listNotesQ.isSuccess && listNotesQ.data.notes) &&
       <Stack direction='row' spacing={2}>
         <Searchbar 
-          style={{ flex: 5 }}
+          style={{ flex: 4, height: '40px' }}
           options={listNotesQ.data.notes.map((note) => (note.title))} placeholder={`${formatMessage({ id: 'GROUP.search' })} une note`} handleInput={handleInput}
         />
         <Button
           variant='outlined'
-          onClick={() => createNoteQ.mutate({body: {title: formatMessage({ id: 'NOTE.untitledNote' })}})}
-          style={{ flex: 1 }}
+          onClick={() => createNoteQ.mutate({body: {lang: selectedLanguage, title: formatMessage({ id: 'NOTE.untitledNote' })}})}
+          style={{ flex: 1, height: '40px' }}
           endIcon={
             createNoteQ.isLoading ?
               <ArrowPathIcon className='h-5 w-5 animate-spin text-blue-500' /> : 
@@ -171,6 +177,14 @@ const GroupViewNotesTab: React.FC = () => {
         >
           <FormatMessage id='NOTE.newNote' />
         </Button>
+        <Select
+          style={{ height: '40px' }}  
+          value={selectedLanguage}
+          onChange={handleLanguageSelect}
+        >
+          <MenuItem value='fr'>🇫🇷</MenuItem>
+          <MenuItem value='en'>🇬🇧</MenuItem>
+        </Select>
       </Stack>
       }
       {/* Notes Grid */}
