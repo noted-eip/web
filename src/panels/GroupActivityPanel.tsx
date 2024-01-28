@@ -12,7 +12,7 @@ import { useListActivitiesInCurrentGroup } from '../hooks/api/activities'
 import { useGetGroup } from '../hooks/api/groups'
 import { useGetNoteInCurrentGroup } from '../hooks/api/notes'
 import { FormatMessage } from '../i18n/TextComponent'
-import { V1GroupActivity, V1ListActivitiesResponse } from '../protorepo/openapi/typescript-axios'
+import { V1GroupActivity } from '../protorepo/openapi/typescript-axios'
 
 function getNoteIdInEvent(event: string) {
   let noteId = ''
@@ -65,8 +65,10 @@ function getAddNoteEvent(event: string) {
 
     const noteId = getNoteIdInEvent(event)
     const getNoteReponse = useGetNoteInCurrentGroup({ noteId: noteId })
-    if (getNoteReponse.data?.note.title != undefined) {
+    if (getNoteReponse.data?.note.id !== 'NOT_FOUND' && getNoteReponse.data?.note.title != undefined) {
       noteTitle = getNoteReponse.data?.note.title
+    } else if (getNoteReponse.data?.note.id === 'NOT_FOUND') {
+      return ('not_found')
     }
   }
   return (username + firstPart + noteTitle + secondPart + folder)
@@ -172,49 +174,35 @@ const ActivityListItem: React.FC<{ activity: V1GroupActivity }> = (props) => {
       return (<NoteAdd className='mr-2' />)
     } else if (props.activity.type === 'ADD-MEMBER') {
       return (<PersonAdd className='mr-2' />)
-    } else {
+    } else if (props.activity.type === 'REMOVE-MEMBER') {
       return (<PersonRemove className='mr-2' />)
     }
   }
 
   return (
-    <div
-      className='cursor-pointer rounded-md border border-gray-100 bg-gray-50 bg-gradient-to-br p-4 hover:bg-gray-100 hover:shadow-inner'
-      onClick={handleNavigation}
-    >
-      <div className='flex items-center'>
-        {getIcon()}
-        <div className='flex flex-col'>
-          <p className='font-normal'>{event}</p>
+    <>
+      {event === 'not_found' ? <></> : <div
+        className='cursor-pointer rounded-md border border-gray-100 bg-gray-50 bg-gradient-to-br p-4 hover:bg-gray-100 hover:shadow-inner'
+        onClick={handleNavigation}
+      >
+        <div className='flex items-center'>
+          {getIcon()}
           <div className='flex flex-col'>
-            <div>
-              <p className='text-gray-700'>{dateFormat}</p>
+            <p className='font-normal'>{event}</p>
+            <div className='flex flex-col'>
+              <div>
+                <p className='text-gray-700'>{dateFormat}</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </div>}
+    </>
   )
 }
 
-const ActivityListCurrentGroup: React.FC<{groupId: string}> = (prop) => {
-  const [newListActivities, setNewActivities] = React.useState<V1GroupActivity[]>([])
-  const listActivitiesQ = useListActivitiesInCurrentGroup({ limit: 100 }, {
-    onSuccess: (data: V1ListActivitiesResponse) => {
-      console.log('data', data)
-      // setNewActivities([data.activities, ...newListActivities])
-    },
-    onError: (e) => {
-      const errorActivity: V1GroupActivity = {
-        id: `tmp-id-${newListActivities.length}`,
-        groupId: prop.groupId,
-        type: '',
-        event: '',
-        createdAt: '',
-      }
-      setNewActivities([errorActivity, ...newListActivities])
-      console.error('chat', e)
-    }})
+const ActivityListCurrentGroup: React.FC<{groupId: string}> = () => {
+  const listActivitiesQ = useListActivitiesInCurrentGroup({ limit: 100 })
 
   return (
     <div className={`h-full overflow-y-scroll ${(!listActivitiesQ.isSuccess || (listActivitiesQ.isSuccess && !listActivitiesQ.data?.activities?.length)) && 'flex items-center justify-center'} lg:px-lg lg:pb-lg xl:px-xl xl:pb-xl`}>
@@ -231,7 +219,7 @@ const ActivityListCurrentGroup: React.FC<{groupId: string}> = (prop) => {
               />
             </>
           ) : (
-            listActivitiesQ.data?.activities?.map((activity, idx) => (
+            (listActivitiesQ.data?.activities || []).slice().reverse().map((activity, idx) => (
               <ActivityListItem key={`activity-list-${activity.id}-${idx}`} activity={activity} />
             ))
           )
