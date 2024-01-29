@@ -1,16 +1,12 @@
-import { TextField } from '@mui/material'
+import { TextField, ThemeProvider } from '@mui/material'
 import Dialog from '@mui/material/Dialog'
 import React from 'react'
 
 import { FormatMessage, useOurIntl } from '../../i18n/TextComponent'
 import { LocaleTranslationKeys } from '../../i18n/types'
+import { formTheme } from '../form/Input'
 
-const ConfirmationPanel: React.FC<{onValidate: () => void, title: string, content?: string}> = (props) => {
-  const {
-    onValidate,
-    title,
-    content,
-  } = props
+const ConfirmationPanel: React.FC<{onValidate: () => void, title: string, content?: string}> = ({onValidate, title, content }) => {
   const [open, setOpen] =  React.useState(true)
   const [enable, setEnable] =  React.useState(false)
   const { formatMessage } = useOurIntl()
@@ -45,16 +41,18 @@ const ConfirmationPanel: React.FC<{onValidate: () => void, title: string, conten
             <FormatMessage id='CONFIRMATION.form.desc3'/>
           </div>
           <div className='mx-4 mb-2'>
-            <TextField
-              margin='normal'
-              id='validationText'
-              fullWidth
-              size='small'
-              variant='filled'
-              onChange={(e) => {
-                handleType(e.target.value)
-              }}
-            />
+            <ThemeProvider theme={formTheme}>
+              <TextField
+                fullWidth
+                id='validationText'
+                variant='outlined'
+                size='small'
+                placeholder={formatMessage({ id: 'PANEL.comments.comment' })}
+                onChange={(e) => {
+                  handleType(e.target.value)
+                }}
+              />
+            </ThemeProvider>             
           </div>
           <div className='flex place-content-center border-t-2 p-2'>
             {enable ?

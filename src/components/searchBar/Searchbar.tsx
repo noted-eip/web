@@ -10,7 +10,6 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: '0.375rem',
-          padding: '3px',
           '& .MuiOutlinedInput-root': {
             '& fieldset': {
               borderColor: grey[200],

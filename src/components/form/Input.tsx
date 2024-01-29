@@ -1,5 +1,31 @@
+import { createTheme } from '@mui/material'
+import { grey } from '@mui/material/colors'
 import React, { InputHTMLAttributes } from 'react'
 import { twMerge } from 'tailwind-merge'
+
+export const formTheme = createTheme({
+  components: {
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          borderRadius: '0.375rem',
+          padding: '3px',
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              borderColor: grey[200],
+            },
+            '&:hover fieldset': {
+              borderColor: grey[400],
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: grey[400],
+            },
+          },
+        },
+      },
+    },
+  },
+})
 
 const Input: React.FC<InputHTMLAttributes<HTMLInputElement>> = (props) => {
   const { className, ...remainingProps } = props

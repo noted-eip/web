@@ -329,9 +329,8 @@ const ProfileViewDangerZoneSection: React.FC = () => {
 
   return (
     <>
-      {open ? <ConfirmationPanel onValidate={onValidate} title='PROFILE.delete.title2' content='PROFILE.delete.desc'/> : null}
+      {open && <ConfirmationPanel onValidate={onValidate} title='PROFILE.delete.title2' content='PROFILE.delete.desc'/>}
       <div className='mt-4 w-full rounded-md border border-gray-100 bg-gray-50'>
-        {/* Header */}
         <div className='flex items-center justify-between border-b border-[#efefef] px-5 py-3'>
           <div className='flex items-center'>
             <ReportProblemIcon sx={{ color: grey[700] }} />

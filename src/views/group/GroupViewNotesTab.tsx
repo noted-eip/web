@@ -1,5 +1,6 @@
 import { ArrowPathIcon, LinkIcon as LinkIconOutline,PencilIcon as PencilIconOutline,PlusIcon, TrashIcon as TrashIconOutline } from '@heroicons/react/24/outline'
 import { Button, MenuItem, Select, Stack } from '@mui/material'
+import copy from 'clipboard-copy'
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -58,14 +59,23 @@ const NotesListGridItem: React.FC<{ note: V1Note }> = (props) => {
     setEditTitle(false)
   }
   
-  const handleClick = (e) => {
-    if (e.target.type === 'submit') {
+  const handleClick = (event) => {
+    if (event.target.type === 'submit') {
       return
     }
-    e.preventDefault()
+    event.preventDefault()
     navigate(`./note/${props.note.id}`)
   }
   
+  const handleCopyToClipboard = () => {
+    const textToCopy = `https://notes-are-noted.vercel.app/group/${props.note.groupId}/note/${props.note.id}`
+    
+    copy(textToCopy)
+      .catch((err) => {
+        console.error('Erreur lors de la copie dans le presse-papiers :', err)
+      })
+  }
+
   return (
     <div>
       {isLoading ? (
@@ -105,7 +115,7 @@ const NotesListGridItem: React.FC<{ note: V1Note }> = (props) => {
         targetId={`group-view-notes-tab-grid-${props.note.id}`}
         options={[
           {icon: PencilIconOutline, name: formatMessage({id:'GROUP.noteTab.rename'}), onClick: () => setEditTitle(true)},
-          {icon: LinkIconOutline, name: formatMessage({id:'GROUP.noteTab.copyLink'}), onClick: () => { alert('Not implemented') }},
+          {icon: LinkIconOutline, name: formatMessage({id:'GROUP.noteTab.copyLink'}), onClick: handleCopyToClipboard},
           {icon: TrashIconOutline, name: formatMessage({id:'GROUP.noteTab.delete'}), onClick: () => deleteNoteQ.mutate({ noteId: props.note.id })},
         ]}
         note={props.note} />
@@ -161,7 +171,7 @@ const GroupViewNotesTab: React.FC = () => {
       {/* Search bar */}
       {
         (listNotesQ.isSuccess && listNotesQ.data.notes) &&
-      <Stack direction='row' spacing={2}>
+      <Stack direction='row' spacing={2} alignItems='center'>
         <Searchbar 
           style={{ flex: 4, height: '40px' }}
           options={listNotesQ.data.notes.map((note) => (note.title))} placeholder={`${formatMessage({ id: 'GROUP.search' })} une note`} handleInput={handleInput}
