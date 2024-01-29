@@ -133,6 +133,7 @@ const GroupViewNotesTab: React.FC = () => {
   const [input, setInput] = React.useState('')
   const { clearBlocksContext } = useNoteContext()
   const context = React.useContext(LangageContext)
+  // le back renvoie fr-FR ?
   const [selectedLanguage, setSelectedLanguage] = useState(context?.langage || 'fr')
 
   React.useEffect(() => {

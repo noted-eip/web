@@ -57,26 +57,10 @@ export const useGetNoteInCurrentGroup = (req: GetNoteInCurrentGroupRequest, opti
         res = (await openapiClient.notesAPIGetNote(currentGroupId, req.noteId, await axiosRequestOptionsWithAuthorization(authContext))).data
       } catch (e: any) {
         if (e.response.data.error === 'not found') {
-          console.log(res)
+          // console.log(res)
           return ({
             'note': {
               'id': 'NOT_FOUND',
-              'groupId': 'ZvGUZKbqNmMzl3y2UB5Vw',
-              'authorAccountId': 'WHKaPSzuLuY2JBgwrF5rg',
-              'title': '4',
-              'blocks': [
-                {
-                  'id': 'NGzhYneJWBMCV-qf5glP3',
-                  'type': 'TYPE_PARAGRAPH',
-                  'styles': [],
-                  'paragraph': '',
-                  'thread': []
-                }
-              ],
-              'createdAt': '2023-12-13T23:52:29.369Z',
-              'modifiedAt': '2023-12-13T23:52:32.660Z',
-              'analyzedAt': null,
-              'lang': 'fr'
             }
           })
         }

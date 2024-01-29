@@ -1,4 +1,4 @@
-import { NoteAdd, PersonAdd, PersonRemove } from '@mui/icons-material'
+import { DeleteForever, NoteAdd, PersonAdd, PersonRemove } from '@mui/icons-material'
 import Lottie from 'lottie-react'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -11,7 +11,7 @@ import { useGetAccount } from '../hooks/api/accounts'
 import { useListActivitiesInCurrentGroup } from '../hooks/api/activities'
 import { useGetGroup } from '../hooks/api/groups'
 import { useGetNoteInCurrentGroup } from '../hooks/api/notes'
-import { FormatMessage } from '../i18n/TextComponent'
+import { FormatMessage, useOurIntl } from '../i18n/TextComponent'
 import { V1GroupActivity } from '../protorepo/openapi/typescript-axios'
 
 function getNoteIdInEvent(event: string) {
@@ -68,7 +68,7 @@ function getAddNoteEvent(event: string) {
     if (getNoteReponse.data?.note.id !== 'NOT_FOUND' && getNoteReponse.data?.note.title != undefined) {
       noteTitle = getNoteReponse.data?.note.title
     } else if (getNoteReponse.data?.note.id === 'NOT_FOUND') {
-      return ('not_found')
+      return ('NOT_FOUND')
     }
   }
   return (username + firstPart + noteTitle + secondPart + folder)
@@ -139,10 +139,11 @@ function getRoute(activityType: string, currentGroupId: string, redirectId: stri
 }
 
 const ActivityListItem: React.FC<{ activity: V1GroupActivity }> = (props) => {
+  const { formatMessage } = useOurIntl()
   const groupContext = useGroupContext()
   const navigate = useNavigate()
-  let event
-  let redirectId
+  let event = ''
+  let redirectId = ''
 
   switch (props.activity.type) {
     case 'ADD-NOTE': {
@@ -164,40 +165,42 @@ const ActivityListItem: React.FC<{ activity: V1GroupActivity }> = (props) => {
 
   const dateFormat = getDateFormat(props.activity?.createdAt)
 
+  const isActivityDefine = () => {
+    return (event !== 'NOT_FOUND')
+  }
+
   const handleNavigation = () => {
     navigate(getRoute(props.activity.type, groupContext.groupId as string, redirectId))
     window.location.reload()
   }
 
   const getIcon = () => {
-    if (props.activity.type === 'ADD-NOTE') {
-      return (<NoteAdd className='mr-2' />)
+    if (!isActivityDefine()) {
+      return (<DeleteForever className='mr-2' />)
     } else if (props.activity.type === 'ADD-MEMBER') {
       return (<PersonAdd className='mr-2' />)
     } else if (props.activity.type === 'REMOVE-MEMBER') {
       return (<PersonRemove className='mr-2' />)
+    } else if (props.activity.type === 'ADD-NOTE') {
+      return (<NoteAdd className='mr-2' />)
     }
   }
 
   return (
-    <>
-      {event === 'not_found' ? <></> : <div
-        className='cursor-pointer rounded-md border border-gray-100 bg-gray-50 bg-gradient-to-br p-4 hover:bg-gray-100 hover:shadow-inner'
-        onClick={handleNavigation}
-      >
-        <div className='flex items-center'>
-          {getIcon()}
+    <div
+      className={`${isActivityDefine() && 'cursor-pointer hover:bg-gray-100 hover:shadow-inner'} rounded-md border border-gray-100 bg-gray-50 bg-gradient-to-br p-4`}
+      onClick={!isActivityDefine() ? undefined : handleNavigation}
+    >
+      <div className='flex items-center'>
+        {getIcon()}
+        <div className='flex flex-col'>
+          <p className='font-normal'>{!isActivityDefine() ? formatMessage({id: 'PANEL.activity.noteDeleted'}) : event}</p>
           <div className='flex flex-col'>
-            <p className='font-normal'>{event}</p>
-            <div className='flex flex-col'>
-              <div>
-                <p className='text-gray-700'>{dateFormat}</p>
-              </div>
-            </div>
+            <p className='text-gray-700'>{isActivityDefine() && dateFormat}</p>
           </div>
         </div>
-      </div>}
-    </>
+      </div>
+    </div>
   )
 }
 

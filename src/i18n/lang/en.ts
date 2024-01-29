@@ -188,6 +188,7 @@ const enTranslation: LocaleTypedMessages = {
   'PANEL.activity.loading': 'Loading your activities...',
   'PANEL.activity.none': 'No recent activity',
   'PANEL.activity.noGroup': 'No group selected',
+  'PANEL.activity.noteDeleted': 'This activity is linked to a note that no longer exists',
   'PANEL.companion': 'Companion',
   'PANEL.companion,buton1': 'Filter by block',
   'PANEL.companion,buton2': 'Filter by entire note',

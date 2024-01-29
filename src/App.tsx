@@ -58,8 +58,8 @@ const App: React.FC = () => {
       MuiSvgIcon: {
         styleOverrides: {
           root: {
-            width: '1.25rem',
-            height: '1.25rem',
+            // maxWidth: '1.3rem',
+            // maxHeight: '1.3rem',
             color: grey[700],
           },
         },
