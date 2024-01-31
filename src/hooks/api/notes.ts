@@ -14,7 +14,6 @@ export const useCreateNoteInCurrentGroup = (options?: MutationHookOptions<Create
 
   return useMutation({
     mutationFn: async (req: CreateNoteRequest) => {
-      req.body.lang = 'fr'
       return (await openapiClient.notesAPICreateNote(groupContext.groupId as string, req.body, await axiosRequestOptionsWithAuthorization(authContext))).data
     },
     ...options,
@@ -53,6 +52,20 @@ export const useGetNoteInCurrentGroup = (req: GetNoteInCurrentGroupRequest, opti
   return useQuery({
     queryKey: queryKey,
     queryFn: async () => {
+      let res
+      try  {
+        res = (await openapiClient.notesAPIGetNote(currentGroupId, req.noteId, await axiosRequestOptionsWithAuthorization(authContext))).data
+      } catch (e: any) {
+        if (e.response.data.error === 'not found') {
+          // console.log(res)
+          return ({
+            'note': {
+              'id': 'NOT_FOUND',
+            }
+          })
+        }
+      }
+      return (res)
       return (await openapiClient.notesAPIGetNote(currentGroupId, req.noteId, await axiosRequestOptionsWithAuthorization(authContext))).data
     },
     ...options,

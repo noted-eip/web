@@ -10,6 +10,7 @@ const enTranslation: LocaleTypedMessages = {
   'GENERIC.role': 'Role',
   'GENERIC.actions': 'Actions',
   'GENERIC.logout': 'Logout',
+  'GENERIC.copy': 'Copy',
 
   /*		AUTHENTICATION		*/
   /*  Auth  */
@@ -31,6 +32,18 @@ const enTranslation: LocaleTypedMessages = {
   'SIGNUP.signupGoogle': 'Sign up with Google',
   'SIGNUP.wantSignIn': 'Already have an account',
   'SIGNUP.wantSignUp': 'I want to create an account',
+  'SIGNUP.formHelperText': '4 characters required',
+  'SIGNUP.accessBeta1': 'Once registered, you can ask an early access to our mobiles app through your accounts settings !',
+  'SIGNUP.accessBeta2': 'Only works for emails linked to a Google account.',
+  'SIGNUP.termsCheckbox1': 'I agree with the',
+  'SIGNUP.termsCheckbox2': 'terms and conditions',
+  'SIGNUP.terms1': 'The present GTC or General Conditions of Use provide a legal framework for the use of the services of the Noted site.',
+  'SIGNUP.terms2': 'Access to the site constitutes a contract between Noted and the User, and must be preceded by acceptance of these GCU. Access to this platform implies acceptance of these GCU.',
+  'SIGNUP.terms3': 'For the creation of the User\'s account, the collection of information at the time of registration on the site is necessary and obligatory. In accordance with the French Data Protection Act no. 78-17 of January 6, the collection and processing of personal information is carried out with due respect for privacy.',
+  'SIGNUP.terms4': 'Trademarks, logos and the contents of the Noted site (graphic illustrations, text, etc.) are protected by the French Intellectual Property Code and by copyright.',
+  'SIGNUP.terms5': 'Noted has the right to exercise prior moderation on publications and may refuse to put them online without having to provide justification.',
+  'SIGNUP.closeModal': 'Close modal',
+  'SIGNUP.termsService': 'Conditions d\'utilisation',
 
   /* Home */
   'HOME.lastGroups': 'Last groups',
@@ -125,6 +138,10 @@ const enTranslation: LocaleTypedMessages = {
   'GROUP.settings.invites.colTitle4': 'ACTIONS',
   'GROUP.settings.invites.desc': 'No pending invites for this group',
 
+  'GROUP.noteTab.rename': 'Rename',
+  'GROUP.noteTab.copyLink': 'Copy link',
+  'GROUP.noteTab.delete': 'Delete',
+
   /*    NOTE    */
   'NOTE.myNotes': 'My notes',
   'NOTE.newNote': 'New note',
@@ -171,6 +188,7 @@ const enTranslation: LocaleTypedMessages = {
   'PANEL.activity.loading': 'Loading your activities...',
   'PANEL.activity.none': 'No recent activity',
   'PANEL.activity.noGroup': 'No group selected',
+  'PANEL.activity.noteDeleted': 'This activity is linked to a note that no longer exists',
   'PANEL.companion': 'Companion',
   'PANEL.companion,buton1': 'Filter by block',
   'PANEL.companion,buton2': 'Filter by entire note',

@@ -6,7 +6,6 @@ import { API_BASE } from './env'
 
 const openapiClient = DefaultApiFactory(undefined, API_BASE, undefined)
 
-
 const apiQueryClient = new QueryClient({
   defaultOptions: {
     queries: {

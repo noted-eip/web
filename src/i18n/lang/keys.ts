@@ -31,6 +31,7 @@ export enum TranslationKeys {
   'GENERIC.role',
   'GENERIC.actions',
   'GENERIC.logout',
+  'GENERIC.copy',
 
   /*		AUTHENTICATION		*/
   /*  Auth  */
@@ -52,6 +53,18 @@ export enum TranslationKeys {
   'SIGNUP.signupGoogle',
   'SIGNUP.wantSignIn',
   'SIGNUP.wantSignUp',
+  'SIGNUP.formHelperText',
+  'SIGNUP.accessBeta1',
+  'SIGNUP.accessBeta2',
+  'SIGNUP.termsCheckbox1',
+  'SIGNUP.termsCheckbox2',
+  'SIGNUP.terms1',
+  'SIGNUP.terms2',
+  'SIGNUP.terms3',
+  'SIGNUP.terms4',
+  'SIGNUP.terms5',
+  'SIGNUP.closeModal',
+  'SIGNUP.termsService',  
 
   /* Home */
   'HOME.lastGroups',
@@ -146,6 +159,10 @@ export enum TranslationKeys {
   'GROUP.settings.invites.colTitle4',
   'GROUP.settings.invites.desc',
 
+  'GROUP.noteTab.rename',
+  'GROUP.noteTab.copyLink',
+  'GROUP.noteTab.delete',
+
   /*    NOTE    */
   'NOTE.myNotes',
   'NOTE.newNote',
@@ -192,6 +209,7 @@ export enum TranslationKeys {
   'PANEL.activity.loading',
   'PANEL.activity.none',
   'PANEL.activity.noGroup',
+  'PANEL.activity.noteDeleted',
   'PANEL.companion',
   'PANEL.companion,buton1',
   'PANEL.companion,buton2',

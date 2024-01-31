@@ -53,3 +53,16 @@ html {
 .skeleton-error {
   @apply animate-pulse rounded bg-gradient-to-br from-red-100 to-red-200;
 }
+
+/* Si besoin de mettre le background de l'icone oeil du form de password de la meme couleur que le bg autofill */
+/* input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+input:-webkit-autofill + .MuiInputAdornment-root .MuiIconButton-root {
+  background-color: #3490dc;
+  color: #fff;
+} */

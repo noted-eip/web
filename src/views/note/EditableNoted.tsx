@@ -35,9 +35,9 @@ export const EditableNoted: React.FC<{
   note: V1Note
   block?: BlockContext
   blockIndex: number
-  editorState: Descendant[]
   editor: BaseEditor & ReactEditor
-}> = ({ editor, block, note, editorState, blockIndex }) => {
+  editorState?: Descendant[]
+}> = ({ editor, block, note, blockIndex }) => {
   
   const { formatMessage } = useOurIntl()
   const authContext = useAuthContext()
@@ -225,7 +225,6 @@ export const EditableNoted: React.FC<{
 
         for (const hotkey in HOTKEYS) {
           if (isHotkey(hotkey, event as any)) {
-            console.log('hotkey = ', hotkey)
             event.preventDefault()
             const mark = HOTKEYS[hotkey]
             updateStyle(editor, mark)

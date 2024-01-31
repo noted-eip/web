@@ -157,8 +157,7 @@ export const Sidebar: React.FC = () => {
   const listInvitesQ = useListInvites({ recipientAccountId: authContext.accountId })
   const listGroupsQ = useListGroups({ accountId: authContext.accountId })
   const { formatMessage } = useOurIntl()
-  const [activeCollapse, setActiveCollapse] =
-		React.useState<LocaleTranslationKeys | null>('GENERIC.groups')
+  const [activeCollapse, setActiveCollapse] = React.useState<LocaleTranslationKeys | null>('GENERIC.groups')
   const createGroupQ = useCreateGroup()
 
   const handleCollapseClick = (tradKey: LocaleTranslationKeys): void => {

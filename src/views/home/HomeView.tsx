@@ -35,22 +35,23 @@ const HomeView: React.FC = () => {
           </Typography>
           <div className='m-4 grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-3 lg:grid-cols-3 lg:gap-4 xl:grid-cols-4'>
             {listGroupsQ.isSuccess ? (
-              listGroupsQ.data?.groups?.map((group, idx) => {
-                const handleViewGroup = () => {
-                  groupContext.changeGroup(group.id)
-                  navigate(`/group/${group.id}`)
-                }
-                return (<div
+              listGroupsQ.data?.groups?.map((group, idx) => (
+                <div
                   className='flex h-24 w-full cursor-pointer flex-col items-center justify-center rounded-md border border-gray-100 bg-gray-50 p-2 transition-all hover:bg-gray-100 hover:shadow-inner'
-                  onClick={handleViewGroup}
+                  onClick={() => {
+                    groupContext.changeGroup(group.id)
+                    navigate(`/group/${group.id}`)
+                  }}
                   key={`group-view-notes-tab-grid-${group.id}-${idx}`}
                 >
                   <Group style={{ color: theme.palette.primary.main }} />
                   <div className='w-full text-center'>
-                    <div className='text-xs font-medium text-gray-800'>{group.name}</div>
+                    <div className='text-xs font-medium text-gray-800'>
+                      {group.name}
+                    </div>
                   </div>
-                </div>)
-              })
+                </div>
+              ))
             ) : (
               <div className='skeleton h-48 w-full' />
             )}
@@ -74,8 +75,7 @@ const HomeView: React.FC = () => {
                     note={note}
                   />
                 ))}
-              </div>
-              : 
+              </div> : 
               <div className='flex h-full items-center justify-center lg:px-lg lg:pb-lg xl:px-xl xl:pb-xl'>
                 <div className='my-4 space-y-2 text-center'>
                   <FormatMessage id='NOTES.noNotes' />

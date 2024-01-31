@@ -1,11 +1,11 @@
 import { Delete } from '@mui/icons-material'
-import { createTheme, TextField, ThemeProvider } from '@mui/material'
-import { grey } from '@mui/material/colors'
+import { TextField, ThemeProvider } from '@mui/material'
 import Lottie from 'lottie-react'
 import React from 'react'
 import toast from 'react-hot-toast'
 
 import processAnim from '../assets/animations/process.json'
+import { formTheme } from '../components/form/Input'
 import PanelSkeleton from '../components/view/PanelSkeleton'
 import { TAuthContext, useAuthContext } from '../contexts/auth'
 import {useBlockContext} from '../contexts/block'
@@ -57,30 +57,6 @@ const Message: React.FC<{ comment: BlockComment, ctx: MessageContext, authContex
     </div>
   )
 }
-
-const formTheme = createTheme({
-  components: {
-    MuiTextField: {
-      styleOverrides: {
-        root: {
-          borderRadius: '0.375rem',
-          padding: '3px',
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              borderColor: grey[200],
-            },
-            '&:hover fieldset': {
-              borderColor: grey[400],
-            },
-            '&.Mui-focused fieldset': {
-              borderColor: grey[400],
-            },
-          },
-        },
-      },
-    },
-  },
-})
 
 const ListMessages: React.FC = () => {
   const groupId = useGroupIdFromUrl()

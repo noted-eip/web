@@ -14,8 +14,9 @@ const WelcomeView: React.FC = () => {
   if (!TOGGLE_DEV_FEATURES) {
     logEvent(analytics, 'welcome_page')
   }
+  
   return (
-    <div className='bg-white dark:bg-gray-900'>
+    <div className='bg-white'>
       <HeaderLanding />
       <main className='mb-40 space-y-20'>
         <DescriptionLanding />

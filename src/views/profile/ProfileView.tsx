@@ -299,9 +299,7 @@ const ProfileViewFeedbackSection: React.FC = () => {
             <FormatMessage id='PROFILE.feedback.title' />
           </Typography>
         </div>
-      </div>
-
-      <div className='grid grid-cols-[40%_60%] p-5' >
+      </div>       <div className='grid grid-cols-[40%_60%] p-5' >
         <Typography variant='body2' sx={{ color: grey[600] }}>
           <FormatMessage id='PROFILE.feedback.desc' />
         </Typography>
@@ -331,9 +329,8 @@ const ProfileViewDangerZoneSection: React.FC = () => {
 
   return (
     <>
-      {open ? <ConfirmationPanel onValidate={onValidate} title='PROFILE.delete.title2' content='PROFILE.delete.desc'/> : null}
+      {open && <ConfirmationPanel onValidate={onValidate} title='PROFILE.delete.title2' content='PROFILE.delete.desc'/>}
       <div className='mt-4 w-full rounded-md border border-gray-100 bg-gray-50'>
-        {/* Header */}
         <div className='flex items-center justify-between border-b border-[#efefef] px-5 py-3'>
           <div className='flex items-center'>
             <ReportProblemIcon sx={{ color: grey[700] }} />
@@ -380,7 +377,7 @@ const ProfileViewBetaSection: React.FC = () => {
   return (
     <div className='relative mt-4 w-full rounded-md border border-gray-100 bg-gray-50'>
       {/* Header */}
-      <span className='absolute right-auto top-0 left-3 -translate-y-1/2 -translate-x-1/2 -rotate-12 rounded-full bg-red-400 p-0.5 px-2 text-center text-xs font-medium leading-none text-white outline outline-red-100 dark:bg-blue-900 dark:text-blue-200'>
+      <span className='absolute right-auto top-0 left-3 -translate-y-1/2 -translate-x-1/2 -rotate-12 rounded-full bg-red-400 p-0.5 px-2 text-center text-xs font-medium leading-none text-white outline outline-red-100'>
         BETA
       </span>
       <div className='flex items-center justify-between border-b border-[#efefef] px-5 py-3'>

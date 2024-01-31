@@ -14,7 +14,6 @@ const NoteViewEditor: React.FC<{ note: V1Note }> = ({ note }) => {
     setBlocks(noteAPIToContextBlocks(note ?? []))
   }, [note?.blocks])
 
-
   return (
     <div>
       {blocks?.map((block, index) => (

@@ -66,12 +66,12 @@ const TimelineLanding: React.FC = () => {
     <div id='timeline'>
       <div className='mx-auto max-w-7xl px-6 md:px-12 xl:px-6'>
         <div className='md:w-2/3 lg:w-1/2'>
-          <h2 className='my-8 text-2xl font-bold text-gray-700 dark:text-white md:text-4xl'>
+          <h2 className='my-8 text-2xl font-bold text-gray-700 md:text-4xl'>
             <FormatMessage id='TIMELINE' />
           </h2>
         </div>
         <div
-          className='mt-16 grid overflow-hidden rounded-3xl border border-gray-400 text-gray-600 dark:divide-gray-700 dark:border-gray-700'
+          className='mt-16 grid overflow-hidden rounded-3xl border border-gray-400 text-gray-600'
         >
           <Timeline position='alternate'>
             {timelineArr.map((el) => {
